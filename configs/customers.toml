@@ -1,0 +1,771 @@
+# ==============================================================================
+# CENTRAL CONFIGURATION: CUSTOMERS, SEGMENTS, SOCIAL MEDIA FUNNEL,
+#                        12 SEGMENT-BY-ANCILLARY SPENDING DISTRIBUTIONS &
+#                        PATH C SUBSCRIPTIONS
+# File: CaseComp/configs/customers.toml
+# Philosophy: Every assumption is modeled as a probability distribution
+#             (Truncated Normal / Beta) rather than a brittle static scalar.
+#             Simulation trajectories sample from these distributions each month
+#             and propagate state smoothly across the 60-month (2027–2031) horizon.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. BASELINE MONTHLY UNIQUE CUSTOMERS, VISITS & FOLLOWER-TO-CUSTOMER FUNNEL
+# Derivation & Explicit Team Assumption:
+#   - Case Page 2 ("PICK! At a glance"):
+#     * "3,600 unique customers; about 7,600 player visits; 1,150 free
+#        registered accounts; 42,000 TikTok and Instagram followers."
+#     * "Young customers find PICK! through friends, TikTok and Instagram."
+#   - Case Exhibit 2 ("Monthly Costs"):
+#     * "Marketing: Variable (PICK! chooses), VND 25 million."
+#   - EXPLICIT TEAM ASSUMPTION (NOTED FOR PRESENTATION & FINANCIAL MODELING):
+#     We assume that PICK!'s active monthly unique customers are strictly a
+#     subset of its 42,000 TikTok and Instagram followers:
+#       Follower-to-Customer Conversion Rate = 3,600 / 42,000 = 8.5714% (~8.57%)
+#     Every month, active unique customers are drawn from the active social
+#     follower pool via this conversion rate distribution (~8.57% mean).
+#   - Merged Segment Monthly Visits Distributions:
+#     Instead of maintaining separate static customer counts and visits/customer
+#     multipliers where unnecessary, we merge customer count and visits/month
+#     into direct monthly visits distributions for each of the 4 customer
+#     segments (Competitive: 3,240 visits/mo, Social: 2,520 visits/mo,
+#     Trend Explorers: 1,188 visits/mo, Families: 648 visits/mo; Total = 7,596
+#     exact visits/mo ~ 7,600 reported in Case Page 2).
+# ------------------------------------------------------------------------------
+
+[unique_customers_monthly]
+dist = "truncated_normal"
+mean = 3600.0
+std = 160.0
+min = 3100.0
+max = 4100.0
+unit = "customers/month"
+source = "Case Page 2 ('3,600 unique customers') & Exhibit 4"
+
+[registered_accounts_initial]
+# Case Exhibit 1: "1,150 free accounts (not paid memberships)" at start of Jan 2027
+dist = "truncated_normal"
+mean = 1150.0
+std = 35.0
+min = 1050.0
+max = 1250.0
+unit = "accounts"
+source = "Case Exhibit 1 ('1,150 free accounts')"
+
+[player_visits_per_month_anchor]
+# Sum across the 4 merged segment monthly visit distributions:
+#   3,240 (Competitive) + 2,520 (Social) + 1,188 (Trend Explorers) + 648 (Families)
+#   = 7,596 exact visits/month (~7,600 reported in Case Page 2).
+dist = "truncated_normal"
+mean = 7596.0
+std = 340.0
+min = 6500.0
+max = 8700.0
+unit = "visits/month"
+source = "Case Page 2 ('about 7,600 player visits') & Exhibit 4 (3,240 + 2,520 + 1,188 + 648 = 7,596)"
+
+# ------------------------------------------------------------------------------
+# 2. CUSTOMER SEGMENT DISTRIBUTIONS, MARKETING RESPONSE (VND/VISIT) &
+#    12 SEGMENT-BY-ANCILLARY REVENUE SPENDING DISTRIBUTIONS (3 LINES x 4 SEGMENTS)
+#
+# Mathematical Grounding in Case Exhibit 1, Exhibit 2 & Exhibit 4:
+#   A) Case Exhibit 4 Customer Segments (at 25,000,000 VND/month Baseline Marketing):
+#      1) Competitive Players : 20% of 3,600 =   720 customers | 4.5 visits/mo = 3,240 visits/mo (42.65%) | 95,000 VND/visit total
+#      2) Social Players      : 35% of 3,600 = 1,260 customers | 2.0 visits/mo = 2,520 visits/mo (33.18%) | 80,000 VND/visit total
+#      3) Trend Explorers     : 30% of 3,600 = 1,080 customers | 1.1 visits/mo = 1,188 visits/mo (15.64%) | 65,000 VND/visit total
+#      4) Families            : 15% of 3,600 =   540 customers | 1.2 visits/mo =   648 visits/mo ( 8.53%) | 85,000 VND/visit total
+#      -------------------------------------------------------------------------------------------------------------------------
+#      Total Baseline         : 100%         = 3,600 customers | 2.11 visits/mo = 7,596 visits/mo (100.0%) | 641.70M VND/mo (~640M Exhibit 1)
+#
+#   B) Baseline 25.00M VND/Month Marketing Split & Marketing VND Required per Visit:
+#      Splitting the current 25,000,000 VND/month marketing spend across the 4
+#      customer segments yields the exact VND marketing cost per player visit:
+#      1) Competitive Players : 20.0% of budget = 5.00M VND/mo -> 5,000,000 / 3,240 = 1,543.21 VND / visit (6,944.4 VND / customer)
+#         * Lowest marketing cost per visit because once acquired via tournament/league
+#           content, competitive players return organically 4.5 times/month.
+#      2) Social Players      : 34.0% of budget = 8.50M VND/mo -> 8,500,000 / 2,520 = 3,373.02 VND / visit (6,746.0 VND / customer)
+#         * Core group-play audience acquired via Instagram/TikTok social reels & friend referrals; visits 2.0x/month.
+#      3) Trend Explorers     : 30.0% of budget = 7.50M VND/mo -> 7,500,000 / 1,188 = 6,313.13 VND / visit (6,944.4 VND / customer)
+#         * Highest marketing cost per visit (4.09x Competitive!) because viral TikTok
+#           ads attract one-time curiosity seekers who only visit 1.1 times/month
+#           (Case Page 2: "Viral content can bring in first-time visitors without turning them into regulars").
+#      4) Families            : 16.0% of budget = 4.00M VND/mo -> 4,000,000 /   648 = 6,172.84 VND / visit (7,407.4 VND / customer)
+#         * Local neighborhood/school parent outreach; higher acquisition cost per visit
+#           (1.2 visits/mo) but generates the highest ancillary coaching & F&B margin per visit.
+#      Sum of 4 Segment Marketing Budgets = 5.00M + 8.50M + 7.50M + 4.00M = 25.00M VND/month (Exact Case Exhibit 2!).
+#
+#   C) Grounding the 12 Segment-by-Ancillary Spending Distributions (3 Ancillary Lines x 4 Segments):
+#      Case Exhibit 1 reports 3 ancillary revenue lines alongside Court Hire (435.00M VND):
+#        - Revenue Line 2: Paddle rental and balls =  15.00M VND/month ( 1.975 kVND/visit average across 7,596 visits)
+#        - Revenue Line 3: Coaching                = 115.00M VND/month (15.140 kVND/visit average across 7,596 visits)
+#        - Revenue Line 4: Food and drinks         =  75.00M VND/month ( 9.874 kVND/visit average across 7,596 visits)
+#        - Total Ancillary Revenue                 = 205.00M VND/month (26.988 kVND/visit average across 7,596 visits)
+#      Simultaneously, Case Exhibit 4 requires each segment's total spend per visit
+#      (Court Hire + Paddle/Balls + Coaching + Food & Drinks) to equal:
+#        - Competitive     : 95.00 kVND/visit = 62.90 kVND Court Hire + 32.10 kVND Ancillary ( 0.80k Paddle/Balls + 21.30k Coaching + 10.00k F&B)
+#        - Social          : 80.00 kVND/visit = 57.38 kVND Court Hire + 22.62 kVND Ancillary ( 1.60k Paddle/Balls +  9.52k Coaching + 11.50k F&B)
+#        - Trend Explorers : 65.00 kVND/visit = 49.01 kVND Court Hire + 15.99 kVND Ancillary ( 5.20k Paddle/Balls +  4.80k Coaching +  5.99k F&B)
+#        - Families        : 85.00 kVND/visit = 46.42 kVND Court Hire + 38.58 kVND Ancillary ( 3.40k Paddle/Balls + 25.15k Coaching + 10.03k F&B)
+#      Exact Reconciliation to Case Exhibit 1 at Baseline Visits (3,240 | 2,520 | 1,188 | 648):
+#        1) Paddle Rental & Balls : 3,240*0.80k (2.592M) + 2,520*1.60k (4.032M) + 1,188*5.20k (6.178M) + 648*3.40k (2.203M) =  15.005M VND/mo (~15.00M Exhibit 1!)
+#        2) Coaching              : 3,240*21.30k (69.012M) + 2,520*9.52k (23.990M) + 1,188*4.80k (5.702M) + 648*25.15k (16.297M) = 115.001M VND/mo (~115.00M Exhibit 1!)
+#        3) Food & Drinks (F&B)   : 3,240*10.00k (32.400M) + 2,520*11.50k (28.980M) + 1,188*5.99k (7.116M) + 648*10.03k (6.499M) =  74.995M VND/mo (~75.00M Exhibit 1!)
+# ------------------------------------------------------------------------------
+
+# --- SEGMENT 1: COMPETITIVE PLAYERS (20% Cust = 720 | 4.5 visits/mo = 3,240 visits/mo) ---
+[segments.competitive]
+label = "Competitive Players"
+main_need = "Improve skills and find good opponents"
+source = "Case Exhibit 4 (20% of customers, 4.5 visits/month, VND 95,000 spend/visit)"
+
+[segments.competitive.share]
+dist = "truncated_normal"
+mean = 0.20
+std = 0.012
+min = 0.16
+max = 0.24
+
+[segments.competitive.visits_per_month]
+dist = "truncated_normal"
+mean = 4.50
+std = 0.25
+min = 3.80
+max = 5.30
+
+[segments.competitive.monthly_visits_dist]
+# Merged distribution of monthly player visits from Competitive Players (720 cust * 4.5 visits/mo = 3,240 visits/mo)
+dist = "truncated_normal"
+mean = 3240.0
+std = 165.0
+min = 2750.0
+max = 3750.0
+unit = "visits/month"
+source = "Case Exhibit 4 (20% * 3,600 = 720 customers * 4.5 visits/month = 3,240 visits/month)"
+
+[segments.competitive.baseline_marketing_budget_mvnd_dist]
+# 20.0% of baseline 25.00M VND/month marketing budget = 5.00M VND/month
+dist = "truncated_normal"
+mean = 5.00
+std = 0.25
+min = 4.20
+max = 5.80
+unit = "M VND/month"
+source = "20.0% segment allocation of Case Exhibit 2 VND 25.00M/month marketing budget"
+
+[segments.competitive.marketing_vnd_per_visit_dist]
+# x = 5,000,000 VND / 3,240 visits = 1,543.21 VND per Competitive player visit (lowest cost/visit due to 4.5x repeat frequency)
+dist = "truncated_normal"
+mean = 1543.21
+std = 95.0
+min = 1280.0
+max = 1850.0
+unit = "VND/visit"
+source = "Derived: 5,000,000 VND segment marketing / 3,240 monthly Competitive visits = 1,543.21 VND/visit"
+
+[segments.competitive.marketing_elasticity_exponent]
+# Diminishing returns exponent when scaling segment marketing spend above/below 5.00M baseline
+dist = "truncated_normal"
+mean = 0.52
+std = 0.04
+min = 0.42
+max = 0.62
+unit = "elasticity"
+source = "Calibrated to competitive player tournament/DUPR digital acquisition response"
+
+[segments.competitive.spend_per_visit_kvnd]
+# Total spend per visit (Court Hire 62.90k + Ancillary 32.10k = 95.00k VND/visit)
+dist = "truncated_normal"
+mean = 95.00
+std = 4.50
+min = 82.00
+max = 110.00
+unit = "kVND/visit"
+source = "Case Exhibit 4 ('Competitive players: Average spend per visit VND 95,000')"
+
+[segments.competitive.court_hire_spend_per_visit_kvnd]
+dist = "truncated_normal"
+mean = 62.90
+std = 3.00
+min = 54.00
+max = 72.00
+unit = "kVND/visit"
+source = "Grounded in Case Exhibit 1 (435M court hire) & Exhibit 4 (Competitive players book peak/2-hr drill sessions)"
+
+[segments.competitive.paddle_balls_spend_per_visit_kvnd]
+# Distribution 1 of 12: Competitive players own carbon paddles; only purchase tournament balls (~0.80 kVND/visit -> 2.592M VND/mo)
+dist = "truncated_normal"
+mean = 0.80
+std = 0.12
+min = 0.45
+max = 1.20
+unit = "kVND/visit"
+source = "Case Exhibit 1 (15M Paddle/Balls) & Exhibit 4: Competitive players bring own paddles, buy replacement balls"
+
+[segments.competitive.coaching_spend_per_visit_kvnd]
+# Distribution 2 of 12: Main need is 'Improve skills and find good opponents' -> heavy advanced drill/clinic usage (~21.30 kVND/visit -> 69.012M VND/mo)
+dist = "truncated_normal"
+mean = 21.30
+std = 1.85
+min = 16.00
+max = 27.00
+unit = "kVND/visit"
+source = "Case Exhibit 1 (115M Coaching) & Exhibit 4 ('Competitive players: Improve skills and find good opponents')"
+
+[segments.competitive.fnb_spend_per_visit_kvnd]
+# Distribution 3 of 12: Isotonic sports drinks, water & post-match protein/recovery (~10.00 kVND/visit -> 32.400M VND/mo)
+dist = "truncated_normal"
+mean = 10.00
+std = 0.95
+min = 7.20
+max = 13.00
+unit = "kVND/visit"
+source = "Case Exhibit 1 (75M Food & Drinks) & Exhibit 4hydration/electrolyte spend during 4.5x/mo sessions"
+
+[segments.competitive.subscription_propensity_weight]
+# Competitive players play 4.5x/mo and strongly value ELO/DUPR matchmaking & league priority
+dist = "truncated_normal"
+mean = 1.65
+std = 0.10
+min = 1.35
+max = 1.95
+
+
+# --- SEGMENT 2: SOCIAL PLAYERS (35% Cust = 1,260 | 2.0 visits/mo = 2,520 visits/mo) ---
+[segments.social]
+label = "Social Players"
+main_need = "Play with friends and enjoy the atmosphere"
+source = "Case Exhibit 4 (35% of customers, 2.0 visits/month, VND 80,000 spend/visit)"
+
+[segments.social.share]
+dist = "truncated_normal"
+mean = 0.35
+std = 0.018
+min = 0.29
+max = 0.41
+
+[segments.social.visits_per_month]
+dist = "truncated_normal"
+mean = 2.00
+std = 0.15
+min = 1.55
+max = 2.50
+
+[segments.social.monthly_visits_dist]
+# Merged distribution of monthly player visits from Social Players (1,260 cust * 2.0 visits/mo = 2,520 visits/mo)
+dist = "truncated_normal"
+mean = 2520.0
+std = 135.0
+min = 2120.0
+max = 2920.0
+unit = "visits/month"
+source = "Case Exhibit 4 (35% * 3,600 = 1,260 customers * 2.0 visits/month = 2,520 visits/month)"
+
+[segments.social.baseline_marketing_budget_mvnd_dist]
+# 34.0% of baseline 25.00M VND/month marketing budget = 8.50M VND/month
+dist = "truncated_normal"
+mean = 8.50
+std = 0.40
+min = 7.30
+max = 9.70
+unit = "M VND/month"
+source = "34.0% segment allocation of Case Exhibit 2 VND 25.00M/month marketing budget"
+
+[segments.social.marketing_vnd_per_visit_dist]
+# y = 8,500,000 VND / 2,520 visits = 3,373.02 VND per Social player visit
+dist = "truncated_normal"
+mean = 3373.02
+std = 190.0
+min = 2820.0
+max = 3950.0
+unit = "VND/visit"
+source = "Derived: 8,500,000 VND segment marketing / 2,520 monthly Social visits = 3,373.02 VND/visit"
+
+[segments.social.marketing_elasticity_exponent]
+# High responsiveness to community open-play reels, friend-referral campaigns & university club events
+dist = "truncated_normal"
+mean = 0.58
+std = 0.04
+min = 0.48
+max = 0.68
+unit = "elasticity"
+source = "Calibrated to Social player word-of-mouth + Instagram/TikTok community campaign response"
+
+[segments.social.spend_per_visit_kvnd]
+# Total spend per visit (Court Hire 57.38k + Ancillary 22.62k = 80.00k VND/visit)
+dist = "truncated_normal"
+mean = 80.00
+std = 4.00
+min = 68.00
+max = 92.00
+unit = "kVND/visit"
+source = "Case Exhibit 4 ('Social players: Average spend per visit VND 80,000')"
+
+[segments.social.court_hire_spend_per_visit_kvnd]
+dist = "truncated_normal"
+mean = 57.38
+std = 2.80
+min = 49.00
+max = 66.00
+unit = "kVND/visit"
+source = "Grounded in Case Exhibit 1 (435M court hire) & Exhibit 4 group court-split patterns"
+
+[segments.social.paddle_balls_spend_per_visit_kvnd]
+# Distribution 4 of 12: Casual social groups occasionally rent extra paddles/balls for friends (~1.60 kVND/visit -> 4.032M VND/mo)
+dist = "truncated_normal"
+mean = 1.60
+std = 0.20
+min = 1.00
+max = 2.25
+unit = "kVND/visit"
+source = "Case Exhibit 1 (15M Paddle/Balls) & Exhibit 4 social group occasional equipment rental"
+
+[segments.social.coaching_spend_per_visit_kvnd]
+# Distribution 5 of 12: Group social clinics & intermediate cardio-pickleball sessions (~9.52 kVND/visit -> 23.990M VND/mo)
+dist = "truncated_normal"
+mean = 9.52
+std = 0.90
+min = 6.80
+max = 12.20
+unit = "kVND/visit"
+source = "Case Exhibit 1 (115M Coaching) & Exhibit 4 group clinic participation"
+
+[segments.social.fnb_spend_per_visit_kvnd]
+# Distribution 6 of 12: Main need is 'Play with friends and enjoy the atmosphere' -> highest café/beverage spend (~11.50 kVND/visit -> 28.980M VND/mo)
+dist = "truncated_normal"
+mean = 11.50
+std = 1.05
+min = 8.40
+max = 14.80
+unit = "kVND/visit"
+source = "Case Exhibit 1 (75M Food & Drinks) & Exhibit 4 ('Play with friends and enjoy the atmosphere')"
+
+[segments.social.subscription_propensity_weight]
+# Primary target segment for PICK! Social organised games & open-play lobbies (Exhibit 3)
+dist = "truncated_normal"
+mean = 1.35
+std = 0.09
+min = 1.10
+max = 1.65
+
+
+# --- SEGMENT 3: TREND EXPLORERS (30% Cust = 1,080 | 1.1 visits/mo = 1,188 visits/mo) ---
+[segments.trend_explorers]
+label = "Trend Explorers"
+main_need = "Try something seen online; many visit once or twice"
+source = "Case Exhibit 4 (30% of customers, 1.1 visits/month, VND 65,000 spend/visit)"
+
+[segments.trend_explorers.share]
+dist = "truncated_normal"
+mean = 0.30
+std = 0.020
+min = 0.24
+max = 0.36
+
+[segments.trend_explorers.visits_per_month]
+dist = "truncated_normal"
+mean = 1.10
+std = 0.10
+min = 0.85
+max = 1.45
+
+[segments.trend_explorers.monthly_visits_dist]
+# Merged distribution of monthly player visits from Trend Explorers (1,080 cust * 1.1 visits/mo = 1,188 visits/mo)
+dist = "truncated_normal"
+mean = 1188.0
+std = 95.0
+min = 920.0
+max = 1480.0
+unit = "visits/month"
+source = "Case Exhibit 4 (30% * 3,600 = 1,080 customers * 1.1 visits/month = 1,188 visits/month)"
+
+[segments.trend_explorers.baseline_marketing_budget_mvnd_dist]
+# 30.0% of baseline 25.00M VND/month marketing budget = 7.50M VND/month
+dist = "truncated_normal"
+mean = 7.50
+std = 0.38
+min = 6.40
+max = 8.60
+unit = "M VND/month"
+source = "30.0% segment allocation of Case Exhibit 2 VND 25.00M/month marketing budget"
+
+[segments.trend_explorers.marketing_vnd_per_visit_dist]
+# z = 7,500,000 VND / 1,188 visits = 6,313.13 VND per Trend Explorer visit (highest cost/visit due to 1.1x low retention)
+dist = "truncated_normal"
+mean = 6313.13
+std = 380.0
+min = 5200.0
+max = 7450.0
+unit = "VND/visit"
+source = "Derived: 7,500,000 VND segment marketing / 1,188 monthly Trend Explorer visits = 6,313.13 VND/visit"
+
+[segments.trend_explorers.marketing_elasticity_exponent]
+# Viral TikTok/IG ads can spike first-time curiosity visits, but with lower marginal retention
+dist = "truncated_normal"
+mean = 0.44
+std = 0.04
+min = 0.34
+max = 0.54
+unit = "elasticity"
+source = "Case Page 2 ('Viral content can bring in first-time visitors without turning them into regulars')"
+
+[segments.trend_explorers.spend_per_visit_kvnd]
+# Total spend per visit (Court Hire 49.01k + Ancillary 15.99k = 65.00k VND/visit)
+dist = "truncated_normal"
+mean = 65.00
+std = 3.50
+min = 55.00
+max = 76.00
+unit = "kVND/visit"
+source = "Case Exhibit 4 ('Trend explorers: Average spend per visit VND 65,000')"
+
+[segments.trend_explorers.court_hire_spend_per_visit_kvnd]
+dist = "truncated_normal"
+mean = 49.01
+std = 2.50
+min = 41.50
+max = 56.50
+unit = "kVND/visit"
+source = "Grounded in Case Exhibit 1 (435M court hire) & Exhibit 4 large group / off-peak social check-ins"
+
+[segments.trend_explorers.paddle_balls_spend_per_visit_kvnd]
+# Distribution 7 of 12: Highest paddle rental rate per visit! First-timers do not own paddles (~5.20 kVND/visit -> 6.178M VND/mo = 41.2% of all rental revenue!)
+dist = "truncated_normal"
+mean = 5.20
+std = 0.50
+min = 3.70
+max = 6.70
+unit = "kVND/visit"
+source = "Case Exhibit 1 (15M Paddle/Balls) & Exhibit 4 ('Try something seen online; many visit once or twice' -> rent paddles)"
+
+[segments.trend_explorers.coaching_spend_per_visit_kvnd]
+# Distribution 8 of 12: Low coaching spend; only occasional 30-min intro taster (~4.80 kVND/visit -> 5.702M VND/mo)
+dist = "truncated_normal"
+mean = 4.80
+std = 0.55
+min = 3.20
+max = 6.50
+unit = "kVND/visit"
+source = "Case Exhibit 1 (115M Coaching) & Exhibit 4 low repeat commitment among one-time visitors"
+
+[segments.trend_explorers.fnb_spend_per_visit_kvnd]
+# Distribution 9 of 12: Grab an iced drink/coffee for Instagram/TikTok photo (~5.99 kVND/visit -> 7.116M VND/mo)
+dist = "truncated_normal"
+mean = 5.99
+std = 0.65
+min = 4.10
+max = 7.90
+unit = "kVND/visit"
+source = "Case Exhibit 1 (75M Food & Drinks) & Exhibit 4 casual café beverage purchase"
+
+[segments.trend_explorers.subscription_propensity_weight]
+# Casual visitors have low direct membership conversion unless converted into social players
+dist = "truncated_normal"
+mean = 0.35
+std = 0.06
+min = 0.15
+max = 0.55
+
+
+# --- SEGMENT 4: FAMILIES (15% Cust = 540 | 1.2 visits/mo = 648 visits/mo) ---
+[segments.families]
+label = "Families"
+main_need = "A welcoming activity and beginner lessons"
+source = "Case Exhibit 4 (15% of customers, 1.2 visits/month, VND 85,000 spend/visit)"
+
+[segments.families.share]
+dist = "truncated_normal"
+mean = 0.15
+std = 0.010
+min = 0.12
+max = 0.18
+
+[segments.families.visits_per_month]
+dist = "truncated_normal"
+mean = 1.20
+std = 0.10
+min = 0.95
+max = 1.55
+
+[segments.families.monthly_visits_dist]
+# Merged distribution of monthly player visits from Families (540 cust * 1.2 visits/mo = 648 visits/mo)
+dist = "truncated_normal"
+mean = 648.0
+std = 48.0
+min = 510.0
+max = 790.0
+unit = "visits/month"
+source = "Case Exhibit 4 (15% * 3,600 = 540 customers * 1.2 visits/month = 648 visits/month)"
+
+[segments.families.baseline_marketing_budget_mvnd_dist]
+# 16.0% of baseline 25.00M VND/month marketing budget = 4.00M VND/month
+dist = "truncated_normal"
+mean = 4.00
+std = 0.22
+min = 3.30
+max = 4.70
+unit = "M VND/month"
+source = "16.0% segment allocation of Case Exhibit 2 VND 25.00M/month marketing budget"
+
+[segments.families.marketing_vnd_per_visit_dist]
+# w = 4,000,000 VND / 648 visits = 6,172.84 VND per Family visit
+dist = "truncated_normal"
+mean = 6172.84
+std = 350.0
+min = 5150.0
+max = 7250.0
+unit = "VND/visit"
+source = "Derived: 4,000,000 VND segment marketing / 648 monthly Family visits = 6,172.84 VND/visit"
+
+[segments.families.marketing_elasticity_exponent]
+# Strong response to weekend family clinics, school partnerships & daytime coaching promotions
+dist = "truncated_normal"
+mean = 0.56
+std = 0.04
+min = 0.46
+max = 0.66
+unit = "elasticity"
+source = "Calibrated to HCMC school/family weekend clinic & beginner lesson promotions"
+
+[segments.families.spend_per_visit_kvnd]
+# Total spend per visit (Court Hire 46.42k + Ancillary 38.58k = 85.00k VND/visit -> Highest Ancillary Spend per Visit!)
+dist = "truncated_normal"
+mean = 85.00
+std = 4.00
+min = 73.00
+max = 98.00
+unit = "kVND/visit"
+source = "Case Exhibit 4 ('Families: Average spend per visit VND 85,000')"
+
+[segments.families.court_hire_spend_per_visit_kvnd]
+dist = "truncated_normal"
+mean = 46.42
+std = 2.40
+min = 39.50
+max = 53.50
+unit = "kVND/visit"
+source = "Grounded in Case Exhibit 1 (435M court hire) & Exhibit 4 family 4-5 person shared court sessions"
+
+[segments.families.paddle_balls_spend_per_visit_kvnd]
+# Distribution 10 of 12: Parents & children rent junior/family paddles and low-compression balls (~3.40 kVND/visit -> 2.203M VND/mo)
+dist = "truncated_normal"
+mean = 3.40
+std = 0.35
+min = 2.35
+max = 4.45
+unit = "kVND/visit"
+source = "Case Exhibit 1 (15M Paddle/Balls) & Exhibit 4 family/kid paddle & ball rental"
+
+[segments.families.coaching_spend_per_visit_kvnd]
+# Distribution 11 of 12: Highest coaching spend per visit! Case Exhibit 4 explicitly states main need is 'A welcoming activity and beginner lessons' (~25.15 kVND/visit -> 16.297M VND/mo)
+dist = "truncated_normal"
+mean = 25.15
+std = 2.10
+min = 19.00
+max = 31.50
+unit = "kVND/visit"
+source = "Case Exhibit 1 (115M Coaching) & Exhibit 4 ('Families: A welcoming activity and beginner lessons')"
+
+[segments.families.fnb_spend_per_visit_kvnd]
+# Distribution 12 of 12: Family snacks, fruit juices, smoothies & café items (~10.03 kVND/visit -> 6.499M VND/mo)
+dist = "truncated_normal"
+mean = 10.03
+std = 0.95
+min = 7.20
+max = 13.00
+unit = "kVND/visit"
+source = "Case Exhibit 1 (75M Food & Drinks) & Exhibit 4 family weekend café & refreshment spend"
+
+[segments.families.subscription_propensity_weight]
+# Moderate conversion for weekend family clinics and junior coaching discounts
+dist = "truncated_normal"
+mean = 0.75
+std = 0.08
+min = 0.50
+max = 1.00
+
+# ------------------------------------------------------------------------------
+# 3. SOCIAL MEDIA FOLLOWER DYNAMICS & FOLLOWER-TO-CUSTOMER CONVERSION (~8.57%)
+# Derivation:
+#   - Case Page 2: "42,000 TikTok and Instagram followers; 3,600 unique customers;
+#     about 7,600 player visits."
+#   - EXPLICIT ASSUMPTION: Active monthly unique customers are strictly a subset
+#     of PICK!'s TikTok and Instagram followers:
+#       Conversion Rate = 3,600 / 42,000 = 0.085714 (8.5714% of followers become
+#       active unique customers each month).
+#   - Followers evolve monthly via both organic viral activity and paid segment
+#     marketing spend:
+#       Followers_t = Followers_{t-1} * (1 - unfollow_rate_t + new_follow_rate_t * mkt_lift_t)
+# ------------------------------------------------------------------------------
+
+[social_media.initial_followers]
+dist = "truncated_normal"
+mean = 42000.0
+std = 500.0
+min = 40500.0
+max = 43500.0
+unit = "followers"
+source = "Case Page 2 ('42,000 TikTok and Instagram followers')"
+
+[social_media.follower_to_customer_conversion_rate]
+# EXPLICIT TEAM ASSUMPTION: Customers are a subset of social media followers.
+# At baseline: 3,600 unique customers / 42,000 followers = 0.085714 (~8.57%).
+dist = "truncated_normal"
+mean = 0.085714
+std = 0.003800
+min = 0.074000
+max = 0.098000
+unit = "customers/follower"
+source = "Explicit Team Assumption from Case Page 2: 3,600 unique customers / 42,000 followers = 8.5714%"
+
+[social_media.monthly_new_follow_rate]
+# Organic + baseline 25M marketing-driven monthly follower acquisition rate (~2.4%/mo)
+dist = "truncated_normal"
+mean = 0.024
+std = 0.0045
+min = 0.012
+max = 0.040
+unit = "fraction/month"
+source = "Derived from PICK! 15-month viral growth trajectory to 42,000 followers at 25M VND/mo marketing"
+
+[social_media.monthly_unfollow_rate]
+# Monthly follower churn / attention decay as viral hype cools (~1.4%/mo)
+dist = "truncated_normal"
+mean = 0.014
+std = 0.0030
+min = 0.007
+max = 0.025
+unit = "fraction/month"
+source = "Case Page 2 ('if today's excitement starts to fade')"
+
+# ------------------------------------------------------------------------------
+# 4. EXHIBIT 3 CUSTOMER SURVEY INTENTIONS & FOLLOW-THROUGH DISTRIBUTIONS
+# Derivation:
+#   - Case Exhibit 3 (500 current customers surveyed):
+#     * "38% expect to still play regularly in three years; 42% are unsure; 20% say no."
+#     * "31% would consider paying VND 399,000 a month for a membership with
+#        organised games and discounts."
+#     * "18% would consider buying a PICK! paddle for VND 1.2 million."
+#     * "Surveys measure intentions, not sales: in real markets, fewer people
+#        usually follow through than say they will."
+#   - Standard sampling error on N=500 survey is sqrt(p*(1-p)/500) ~ 2.1%.
+# ------------------------------------------------------------------------------
+
+[survey_exhibit3.expect_regular_play_3y_rate]
+dist = "truncated_normal"
+mean = 0.380
+std = 0.022
+min = 0.310
+max = 0.450
+source = "Case Exhibit 3 (38% of N=500 expect to play regularly in 3 years)"
+
+[survey_exhibit3.unsure_play_3y_rate]
+dist = "truncated_normal"
+mean = 0.420
+std = 0.022
+min = 0.350
+max = 0.490
+source = "Case Exhibit 3 (42% of N=500 are unsure)"
+
+[survey_exhibit3.no_play_3y_rate]
+dist = "truncated_normal"
+mean = 0.200
+std = 0.018
+min = 0.140
+max = 0.260
+source = "Case Exhibit 3 (20% of N=500 say no)"
+
+[survey_exhibit3.membership_stated_intent_rate]
+# 31% of current customers state they would consider paying VND 399,000/month
+dist = "truncated_normal"
+mean = 0.310
+std = 0.021
+min = 0.250
+max = 0.370
+source = "Case Exhibit 3 ('31% would consider paying VND 399,000 a month')"
+
+[survey_exhibit3.intent_to_actual_follow_through_multiplier]
+# Marketing science (Morrison 1979 / Jamieson & Bass 1989) shows stated subscription
+# intent converts to immediate/medium-term actual purchase at 25%–45% in Month 1 of launch,
+# building gradually toward the Path C 24-month target via network effects & open-play leagues.
+dist = "truncated_normal"
+mean = 0.300
+std = 0.035
+min = 0.200
+max = 0.420
+source = "Case Exhibit 3 ('in real markets, fewer people usually follow through than say they will')"
+
+# ------------------------------------------------------------------------------
+# 5. PATH C MEMBERSHIP SUBSCRIPTION STATE-TRANSITION MODEL (Starts Month 5: May-27)
+# Derivation:
+#   - Case Page 3 (Path C: Build a membership and community network):
+#     * "Members pay VND 399,000 a month; court hire is extra unless your team
+#        includes it and budgets for it."
+#     * "Revenue assumption: 1,500 paying members by the end of year two. At
+#        VND 399,000 each, that equals about VND 598.5 million in monthly
+#        membership revenue before partner-court, event and service costs."
+#   - Timeline Integration:
+#     * Months 1–4 (Jan-27 to Apr-27): Core platform is under development (Stages 1–4).
+#       Active paying members = 0 (Membership revenue = 0.0 M VND).
+#     * Month 5 (May-27, index 4): Platform completes UAT at end of Month 4 (Apr 25, 2027)
+#       and launches in Month 5 (Stage 5 soft-launch & cutover).
+#       Initial launch subscribers in Month 5 are drawn from the 1,150 registered
+#       accounts & 3,600 monthly unique players via:
+#         S_5 = U_5 * membership_stated_intent_rate * launch_month_conversion_fraction
+#             ~ 3,600 * 0.31 * 0.28 ~ 312 paying members in Month 5 (May-27).
+#     * Smooth Month-to-Month State Evolution (for t >= 6, Jun-27 to Dec-31):
+#       Rather than sampling subscribers independently (which would jump erratically),
+#       subscribers evolve smoothly via the Markov stock-flow identity:
+#         Churned_t = S_{t-1} * churn_rate_t
+#         NewSubs_t = NonSubscribedUniquePool_t * new_sub_rate_t * (1 - S_{t-1} / addressable_cap)
+#         S_t       = S_{t-1} - Churned_t + NewSubs_t
+# ------------------------------------------------------------------------------
+
+[membership_program]
+launch_month_index = 5                  # 1-based month index: Month 5 = May-27 (after 4-month core build)
+launch_month_label = "May-27"
+monthly_fee_kvnd = 399.0                # Case Page 3 & Exhibit 3: VND 399,000 / month
+monthly_fee_mvnd = 0.399                # 0.399 Million VND / paying member / month
+case_year2_target_members = 1500.0      # Case Page 3 working assumption: 1,500 paying members by end of Y2
+case_year2_target_rev_mvnd = 598.50     # 1,500 * 0.399M = 598.50 M VND/month
+
+[membership_program.launch_conversion_of_stated_intent]
+# In Month 5 (May-27), fraction of the 31% stated-intent unique customers who convert immediately
+# 3,600 * 0.31 * 0.28 = ~312.5 initial paying members at launch
+dist = "truncated_normal"
+mean = 0.280
+std = 0.025
+min = 0.200
+max = 0.360
+source = "Derived from Exhibit 3 (31% intent) & Stage 5 VIP cohort onboarding"
+
+[membership_program.monthly_churn_rate]
+# Monthly subscriber cancellation rate (4.2%/mo mean; lower than generic fitness apps
+# because Exhibit 3 notes: 'Players who join social games also seem to return more often')
+dist = "truncated_normal"
+mean = 0.042
+std = 0.0055
+min = 0.026
+max = 0.062
+unit = "fraction/month"
+source = "Case Exhibit 3 social-game loyalty clue & consumer subscription SaaS benchmarks"
+
+[membership_program.monthly_new_subscriber_rate]
+# Monthly gross new subscription rate as a fraction of non-subscribed unique monthly customers
+# Calibrated so S_t smoothly reaches ~1,500 paying members (~598.5M VND/mo) at Month 24 (Dec-28, End of Year 2)
+dist = "truncated_normal"
+mean = 0.0880
+std = 0.0075
+min = 0.0620
+max = 0.1140
+unit = "fraction of non-subscribed unique customers/month"
+source = "Calibrated to Case Page 3 (1,500 paying members by End of Year 2) & Exhibit 3"
+
+[membership_program.addressable_member_ceiling]
+# Asymptotic saturation ceiling across PICK!'s venue players + university/partner-court leagues
+dist = "truncated_normal"
+mean = 2480.0
+std = 140.0
+min = 2050.0
+max = 2900.0
+unit = "paying members"
+source = "Derived from 3,600 unique customers * (38% sure + 0.65*42% unsure) regular player pool"

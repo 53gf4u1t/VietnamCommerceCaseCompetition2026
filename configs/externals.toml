@@ -1,0 +1,183 @@
+# ==============================================================================
+# CENTRAL CONFIGURATION: EXTERNAL MACRO, REGULATORY & ENVIRONMENTAL FACTORS
+# File: CaseComp/configs/externals.toml
+# Philosophy: Models macro-environmental and regulatory shocks outside PICK!'s
+#             direct operational control, derived from Case Question Page 2 & 4:
+#             1) Overall pickleball interest trend multiplier (`trend_multiplier`)
+#             2) Legal & ward noise-complaint handling worst-case cost (`legal_handling`)
+#             3) Local competitor peak-price undercutting pressure (`competitor_pressure`)
+#             4) HCMC seasonal monsoon / weather disruption (`weather_disruption`)
+#             5) Commercial electricity & F&B input cost inflation (`input_inflation`)
+#             6) Under-18 player safeguarding & coaching safety compliance (`under18_safety`)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. PICKLEBALL OVERALL INTEREST TREND MULTIPLIER DISTRIBUTION
+# Derivation & Mathematical Formulation:
+#   - Case Page 2 ("External pressures"): "Four of the six board members worry
+#     that pickleball's rapid growth in Vietnam could slow if today's excitement
+#     starts to fade."
+#   - Formulation requested by user:
+#     * Each month t, we sample `monthly_interest_change_rate` g_t from a
+#       probability distribution:
+#         +0.01 means this month has +1.0% more overall pickleball interest
+#         than last month (leading to +1.0% more visits than last month's trend level);
+#         -0.05 means -5.0% less interest and thus -5.0% fewer visits compared
+#         to last month's trend level.
+#     * Cumulative Trend Multiplier Index:
+#         I_0 = 1.000
+#         I_t = I_{t-1} * (1.0 + g_t)   for t = 1, 2, ..., 60
+#     * Combined with the BASE number of visits / unique customers distribution
+#       in `customers.toml`:
+#         AdjustedVisits_t = BaseVisits_t * I_t
+#       Changing `customers.toml` changes baseline visits given constant macro
+#       interest, whereas changing `monthly_interest_change_rate` models how the
+#       business performs when the macro pickleball trend evolves over time.
+#   - Parameter Calibration:
+#     * Following the September 2026 Da Nang Pickleball World Cup viral peak,
+#       overall casual fad interest in Vietnam experiences a mild organic
+#       normalization/cooling drift (`mean = -0.0020`, i.e., -0.20%/month or
+#       ~-2.4%/year macro cooling, with monthly volatility `std = 0.0085`,
+#       bounded between `-0.035` [-3.5%/mo] and `+0.025` [+2.5%/mo]).
+#     * Crucially, Case Exhibit 3 notes: "Players who join social games also
+#       seem to return more often." While casual walk-in visits feel the full
+#       macro trend multiplier I_t, active PICK! Social community & league
+#       members are partially insulated (`community_retention_insulation = 0.65`,
+#       meaning 65% of any negative macro fad decay is offset by organised
+#       league habits and ELO/DUPR matchmaking retention).
+# ------------------------------------------------------------------------------
+
+[pickleball_trend]
+initial_trend_index = 1.000
+min_cumulative_trend_floor = 0.650      # Structural floor from core competitive + social regulars (38% + 0.65*42% = 65.3% per Exhibit 3)
+max_cumulative_trend_ceiling = 1.350    # Upper bound on organic macro interest expansion
+community_retention_insulation = 0.65   # Organized social games & leagues buffer 65% of casual fad cooling (Exhibit 3)
+
+[pickleball_trend.monthly_interest_change_rate]
+dist = "truncated_normal"
+mean = -0.0020
+std = 0.0085
+min = -0.0350
+max = 0.0250
+unit = "relative monthly change (+0.01 = +1% interest vs last month; -0.05 = -5% interest vs last month)"
+source = "Case Page 2 ('if today's excitement starts to fade') & Exhibit 3 (38% sure + 42% unsure 3-year retention)"
+
+# ------------------------------------------------------------------------------
+# 2. LEGAL, WARD MEDIATION & NOISE-COMPLAINT HANDLING COST DISTRIBUTION (Worst-Case)
+# Derivation:
+#   - Case Page 2 ("External pressures"): "Last month, neighbours complained to
+#     the ward office about noise from games after 21:00. Linh has been asked to
+#     improve noise management; if complaints continue, PICK! may need to reduce
+#     late-night play."
+#   - Case Page 4 ("Board expectations"): "Whatever strategy PICK! chooses, the
+#     board expects the plan to cover: noise management after 21:00".
+#   - We model a conservative worst-case monthly expenditure distribution covering:
+#     * Ongoing ward office liaison, legal counsel retainers, and environmental
+#       decibel compliance filings (QCVN 26:2010/BTNMT residential night limit 55 dBA);
+#     * Acoustic perimeter curtain maintenance, quiet-core/foam practice ball
+#       subsidies after 21:00, and directional speaker/umpire mic dampening;
+#     * Occasional neighbor mediation settlements & acoustic inspection fees
+#       across Venue 1 (6 courts) and Venue 2 (14 courts).
+# ------------------------------------------------------------------------------
+
+[legal_and_noise_handling]
+[legal_and_noise_handling.monthly_cost_mvnd]
+dist = "truncated_normal"
+mean = 6.50
+std = 2.80
+min = 2.00
+max = 16.00
+unit = "M VND/month"
+source = "Case Page 2 ('neighbours complained to the ward office about noise from games after 21:00') & QCVN 26:2010/BTNMT compliance"
+
+[legal_and_noise_handling.venue2_scaling_multiplier]
+# When the 14-court Venue 2 opens in Month 11 (Nov-27), acoustic curtains are built into the
+# 7.0B fit-out CapEx, so ongoing legal/noise compliance scales modestly by +45% (mean ~9.43M/mo total)
+dist = "truncated_normal"
+mean = 1.45
+std = 0.10
+min = 1.25
+max = 1.75
+unit = "multiplier on legal/noise handling cost once 20 courts operate"
+source = "Preventive acoustic baffling in Venue 2 fit-out mitigates post-21:00 ward complaint frequency"
+
+# ------------------------------------------------------------------------------
+# 3. LOCAL COMPETITOR PEAK-PRICE UNDERCUTTING PRESSURE
+# Derivation:
+#   - Case Page 2 ("External pressures"): "Within 3 km of PICK!, four new venues
+#     have opened in the past year, two of them cheaper at peak times."
+#   - While `AdaptivePricing` optimizes PICK!'s off-peak (121k) and peak (279k–290k)
+#     tariffs and `PICK! Social` locks in players via ELO matchmaking, nearby
+#     discount courts create a small stochastic monthly pressure on non-member
+#     court utilization (`mean = -0.008`, i.e., -0.8% baseline utilization drag
+#     on non-member walk-ins, mitigated once players join PICK! Social).
+# ------------------------------------------------------------------------------
+
+[competitor_pressure]
+[competitor_pressure.non_member_utilization_drag_rate]
+dist = "truncated_normal"
+mean = -0.0080
+std = 0.0040
+min = -0.0220
+max = 0.0000
+unit = "fraction of non-member court utilization"
+source = "Case Page 2 ('Within 3 km of PICK!, four new venues have opened... two of them cheaper at peak times')"
+
+# ------------------------------------------------------------------------------
+# 4. HCMC TROPICAL MONSOON & WEATHER DISRUPTION FACTOR
+# Derivation:
+#   - Ho Chi Minh City experiences heavy tropical afternoon/evening downpours
+#     from May to November. Even with covered/semi-covered canopies, severe storm
+#     events cause traffic delays, wind-driven rain on outer courts, and humidity
+#     condensation requiring squeegee downtime (`mean = 0.990`, `std = 0.008`,
+#     `min = 0.955`, `max = 1.000`).
+# ------------------------------------------------------------------------------
+
+[weather_disruption]
+[weather_disruption.monthly_utilization_multiplier]
+dist = "truncated_normal"
+mean = 0.990
+std = 0.008
+min = 0.955
+max = 1.000
+unit = "utilization multiplier"
+source = "Ho Chi Minh City seasonal monsoon & storm traffic disruption on court attendance"
+
+# ------------------------------------------------------------------------------
+# 5. COMMERCIAL UTILITY & F&B INPUT COST INFLATION
+# Derivation:
+#   - Vietnam EVN commercial electricity tariffs and F&B beverage/consumable
+#     supplier prices in HCMC exhibit a mild monthly upward drift (`mean = 0.0020`,
+#     i.e., ~2.4%/year cost inflation on utilities and maintenance).
+# ------------------------------------------------------------------------------
+
+[input_cost_inflation]
+[input_cost_inflation.monthly_cost_drift_rate]
+dist = "truncated_normal"
+mean = 0.0020
+std = 0.0008
+min = 0.0000
+max = 0.0045
+unit = "monthly inflation rate on utilities & upkeep"
+source = "Vietnam GSO / EVN commercial utility & services CPI benchmark (~2.4% annual drift)"
+
+# ------------------------------------------------------------------------------
+# 6. UNDER-18 PLAYER SAFEGUARDING & COACHING COMPLIANCE COST
+# Derivation:
+#   - Case Page 4 ("Board expectations"): "Whatever strategy PICK! chooses, the
+#     board expects the plan to cover: ... safe coaching and support for players
+#     under 18".
+#   - Monthly expenditure for certified junior coach background checks, pediatric
+#     first-aid kits/AED maintenance, guardian consent digital verification, and
+#     dedicated junior court-marshaling (`mean = 3.20M VND/month`).
+# ------------------------------------------------------------------------------
+
+[under18_safety_compliance]
+[under18_safety_compliance.monthly_cost_mvnd]
+dist = "truncated_normal"
+mean = 3.20
+std = 0.65
+min = 1.80
+max = 5.00
+unit = "M VND/month"
+source = "Case Page 4 ('safe coaching and support for players under 18')"

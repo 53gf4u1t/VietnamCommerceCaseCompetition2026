@@ -1,0 +1,160 @@
+# ==============================================================================
+# CENTRAL CONFIGURATION: COST OF GOODS SOLD (COGS / DIRECT VARIABLE COSTS)
+# File: CaseComp/configs/cogs.toml
+# Philosophy: Every direct variable cost driver is parameterized as a probability
+#             distribution anchored on Case Exhibit 1, Exhibit 2, and Page 3.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. COACH FEES (PAID PER LESSON) — DIRECT SERVICE COGS
+# Derivation:
+#   - Case Exhibit 1: Coaching revenue = VND 115.0 million/month (18% of 640M revenue).
+#   - Case Exhibit 2: Coach fees (paid per lesson) = VND 60.0 million/month (Variable).
+#   - Implied direct payout ratio: 60.0 / 115.0 = 52.1739% of coaching revenue
+#     (PICK! retains 47.8261% gross margin on coaching clinics).
+#   - Modeled both as a direct revenue-share ratio distribution (tight around 52.17%)
+#     and a monthly base volume distribution (centered at 60.0M VND/month).
+# ------------------------------------------------------------------------------
+
+[coach_fees_share_of_coaching_rev]
+dist = "truncated_normal"
+mean = 0.521739
+std = 0.0120
+min = 0.4850
+max = 0.5600
+unit = "fraction of coaching revenue"
+source = "Case Exhibit 1 (115M coaching rev) & Exhibit 2 (60M variable coach fees = 52.17%)"
+
+[coach_fees_monthly_mvnd]
+dist = "truncated_normal"
+mean = 60.00
+std = 2.10
+min = 53.50
+max = 66.50
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Coach fees (paid per lesson): Variable, VND 60 million')"
+
+# ------------------------------------------------------------------------------
+# 2. FOOD AND DRINK SUPPLIES — DIRECT INVENTORY COGS
+# Derivation:
+#   - Case Exhibit 1: Revenue: food and drinks = VND 75.0 million/month (12% of rev).
+#   - Case Exhibit 2: Food and drink supplies = VND 30.0 million/month (Variable).
+#   - Implied F&B COGS ratio: 30.0 / 75.0 = 40.00% of F&B revenue (60.0% gross margin).
+#   - Small stochastic variance reflects beverage/ice wastage and supplier price fluctuations.
+# ------------------------------------------------------------------------------
+
+[fnb_supplies_share_of_fnb_rev]
+dist = "truncated_normal"
+mean = 0.4000
+std = 0.0150
+min = 0.3550
+max = 0.4450
+unit = "fraction of F&B revenue"
+source = "Case Exhibit 1 (75M F&B rev) & Exhibit 2 (30M F&B supplies = 40.00%)"
+
+[fnb_supplies_monthly_mvnd]
+dist = "truncated_normal"
+mean = 30.00
+std = 1.35
+min = 26.00
+max = 34.00
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Food and drink supplies: Variable, VND 30 million')"
+
+# ------------------------------------------------------------------------------
+# 3. PAYMENT PROCESSING FEES & COURT CONSUMABLES (BALLS / PADDLES UPKEEP)
+# Derivation:
+#   - Case Exhibit 2 combines "Payment fees and consumables: Variable, VND 15 million"
+#     on a baseline total revenue of VND 640 million (2.34375% combined).
+#   - User Specification:
+#     * Payment processing fee as a % of total revenue is a VERY TIGHT distribution
+#       (varying slightly with VietQR/PayOS vs. VNPay/MoMo card/wallet mix vs. cash).
+#     * Once the PICK! Social & Booking Platform launches in Month 5 (May-27),
+#       100% of online court bookings and VND 399,000/month membership subscriptions
+#       flow through digital payment gateways (VietQR/PayOS/VNPay/MoMo), so payment
+#       processing COGS scales directly with total revenue (including new Membership
+#       Subscription revenue!).
+#   - Decomposition of the 15.00M VND Baseline (at 640.00M VND Baseline Revenue):
+#     1) Payment Processing Fee % of Total Revenue:
+#        Mean = 1.50% (0.0150) of Total Revenue -> 0.0150 * 640.0M = 9.60M VND/month
+#        Tight Std = 0.08% (0.0008), clipped to [1.25%, 1.75%].
+#     2) Physical Consumables (Replacement Pickleballs, Grip Tape & Rental Paddles):
+#        Mean = 5.40M VND/month -> 9.60M + 5.40M = 15.00M VND/month on Case Baseline!
+#     * For the existing venue's baseline/pre-platform comparison, the static Case
+#       Exhibit 2 reference is 15.00M VND/month; for the active model, any incremental
+#       revenue above 640.00M VND (from AdaptivePricing +25.75M/mo and Path C
+#       Membership Subscriptions from Month 5+) incurs the sampled payment processing
+#       percentage fee as direct COGS!
+# ------------------------------------------------------------------------------
+
+[payment_fee_pct_of_revenue]
+# Very tight distribution around 1.50% of gross revenue (blended VietQR 0.8%,
+# e-wallet/domestic ATM 1.5%, credit card 2.2%, and on-site cash payments).
+dist = "truncated_normal"
+mean = 0.0150
+std = 0.0008
+min = 0.0125
+max = 0.0175
+unit = "fraction of revenue"
+source = "Case Exhibit 2 & Vietnam Payment Gateway Schedule (PayOS/VNPay/MoMo blended MDR)"
+
+[consumables_replacement_monthly_mvnd]
+# Monthly replacement of cracked outdoor pickleballs, rental paddle grips & court consumables
+dist = "truncated_normal"
+mean = 5.40
+std = 0.30
+min = 4.50
+max = 6.30
+unit = "M VND/month"
+source = "Case Exhibit 2 (15.0M total less 9.6M @ 1.50% payment fees = 5.4M consumables)"
+
+[baseline_payment_and_consumables_monthly_mvnd]
+# Exact Case Exhibit 2 combined baseline anchor (9.60M payment fees + 5.40M consumables = 15.00M)
+dist = "truncated_normal"
+mean = 15.00
+std = 0.55
+min = 13.40
+max = 16.60
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Payment fees and consumables: Variable, VND 15 million')"
+
+# ------------------------------------------------------------------------------
+# 4. PATH C MEMBERSHIP DIRECT SERVICE & PARTNER-COURT EVENT COGS (Starts Month 5)
+# Derivation:
+#   - Case Page 3 ("Path C: Build a membership and community network"):
+#     "Launch PICK! Social: organised games, beginner leagues, school and university
+#     partnerships, and events at PICK! and partner courts (which charge about
+#     VND 200,000 per court hour). Members pay VND 399,000 a month; court hire is
+#     extra unless your team includes it and budgets for it. Revenue assumption:
+#     1,500 paying members by the end of year two. At VND 399,000 each, that equals
+#     about VND 598.5 million in monthly membership revenue before partner-court,
+#     event and service costs."
+#   - Direct Variable Cost per Active Paying Member:
+#     * Each paying member (399k VND/mo) participates in hosted social open-play
+#       sessions / league nights & receives tournament balls/refreshments.
+#     * When overflow leagues/events are hosted at partner courts (@ 200k VND/court-hr
+#       shared across 8–12 league players per court-hour = ~20k–25k VND/member/event)
+#       plus event hosts/referees & balls (~20k VND/member/mo), each active paying
+#       member incurs ~42.0k VND/month (~10.5% of the 399k membership fee) in direct
+#       partner-court & event delivery COGS, in addition to the 1.50% payment gateway fee!
+# ------------------------------------------------------------------------------
+
+[partner_court_hourly_rate_kvnd]
+dist = "truncated_normal"
+mean = 200.0
+std = 10.0
+min = 175.0
+max = 230.0
+unit = "k VND/court-hour"
+source = "Case Page 3 ('partner courts (which charge about VND 200,000 per court hour)')"
+
+[membership_event_and_partner_court_cogs_per_member_kvnd]
+# Direct variable partner-court hire & organised-game/league delivery cost per paying member/month
+# At 1,500 members (598.5M rev), 42.0k/member = 63.0M VND/month direct event/partner-court COGS
+dist = "truncated_normal"
+mean = 42.00
+std = 3.20
+min = 33.00
+max = 52.00
+unit = "k VND/paying member/month"
+source = "Case Page 3 ('before partner-court, event and service costs' @ 200k VND/partner court hr)"

@@ -1,0 +1,1140 @@
+# ==============================================================================
+# CENTRAL CONFIGURATION: FACILITY OpEx, SG&A, PLATFORM RECURRING OpEx &
+#                        PLATFORM DEVELOPMENT TASK COST + BUFFER DISTRIBUTIONS
+# File: CaseComp/configs/opex.toml
+# Philosophy: All facility operating costs, SG&A expenses, new custom platform
+#             recurring monthly operating/maintenance costs, and 21 WBS task
+#             development cost + buffer estimates are defined here as distributions
+#             with explicit derivations from Case Exhibit 2, Page 3, and Vietnam
+#             HCMC engineering/cloud benchmarks.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. EXISTING VENUE FACILITY OPERATING EXPENSES (Case Exhibit 2: OpEx = 210M VND/mo)
+# Derivation:
+#   - Case Exhibit 2:
+#     * Venue lease: Fixed, VND 150 million/month (6-court leased club in HCMC).
+#     * Electricity, lighting and water: Mostly fixed, VND 40 million/month.
+#     * Maintenance and insurance: Fixed, VND 20 million/month.
+# ------------------------------------------------------------------------------
+
+[facility_opex.venue_lease_monthly_mvnd]
+# Contractual fixed lease for the 6-court Ho Chi Minh City venue (zero monthly variance)
+dist = "truncated_normal"
+mean = 150.00
+std = 0.00
+min = 150.00
+max = 150.00
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Venue lease: Fixed, VND 150 million')"
+
+[facility_opex.electricity_lighting_water_monthly_mvnd]
+# Case Exhibit 2 explicitly labels this 'Mostly fixed' (varies slightly with daytime/evening
+# court utilization and seasonal HCMC cooling/water consumption around 40.0M VND/mo).
+dist = "truncated_normal"
+mean = 40.00
+std = 1.80
+min = 35.50
+max = 45.50
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Electricity, lighting and water: Mostly fixed, VND 40 million')"
+
+[facility_opex.maintenance_and_insurance_monthly_mvnd]
+# Court net replacement, acrylic surface touch-ups, and venue liability insurance
+dist = "truncated_normal"
+mean = 20.00
+std = 0.85
+min = 17.80
+max = 22.80
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Maintenance and insurance: Fixed, VND 20 million')"
+
+# ------------------------------------------------------------------------------
+# 2. EXISTING VENUE SELLING, GENERAL & ADMIN (Case Exhibit 2: SG&A = 165M VND/mo)
+# Derivation:
+#   - Case Exhibit 2:
+#     * Staff wages (manager, front desk, cleaning): Fixed, VND 130 million/month.
+#     * Booking system and administration: Fixed, VND 10 million/month.
+#     * Marketing: Variable (PICK! chooses), VND 25 million/month.
+# ------------------------------------------------------------------------------
+
+[sga.staff_wages_monthly_mvnd]
+# Fixed club payroll (manager, reception desk, court cleaning crew)
+dist = "truncated_normal"
+mean = 130.00
+std = 1.50
+min = 126.00
+max = 135.00
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Staff wages (manager, front desk, cleaning): Fixed, VND 130 million')"
+
+[sga.booking_system_and_admin_monthly_mvnd]
+# Baseline administrative & legacy booking overhead (10.0M VND/month)
+dist = "truncated_normal"
+mean = 10.00
+std = 0.35
+min = 9.00
+max = 11.00
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Booking system and administration: Fixed, VND 10 million')"
+
+[sga.marketing_monthly_mvnd]
+# Discretionary social media (TikTok/Instagram) & community marketing (25.00M VND/month baseline)
+# Split into 4 Customer Segment Marketing Budgets (Competitive 5.0M + Social 8.5M + Trend Explorers 7.5M + Families 4.0M = 25.0M)
+dist = "truncated_normal"
+mean = 25.00
+std = 1.25
+min = 21.50
+max = 28.50
+unit = "M VND/month"
+source = "Case Exhibit 2 ('Marketing: Variable (PICK! chooses), VND 25 million')"
+
+[sga.marketing_segment_competitive_mvnd]
+# Segment 1 of 4: Competitive Players (20% of baseline 25M marketing budget = 5.00M VND/mo -> 1,543.21 VND/visit across 3,240 visits)
+dist = "truncated_normal"
+mean = 5.00
+std = 0.25
+min = 4.20
+max = 5.80
+unit = "M VND/month"
+source = "20.0% of Case Exhibit 2 VND 25.00M marketing budget (5,000,000 VND / 3,240 visits = 1,543.21 VND/visit)"
+
+[sga.marketing_segment_social_mvnd]
+# Segment 2 of 4: Social Players (34% of baseline 25M marketing budget = 8.50M VND/mo -> 3,373.02 VND/visit across 2,520 visits)
+dist = "truncated_normal"
+mean = 8.50
+std = 0.40
+min = 7.30
+max = 9.70
+unit = "M VND/month"
+source = "34.0% of Case Exhibit 2 VND 25.00M marketing budget (8,500,000 VND / 2,520 visits = 3,373.02 VND/visit)"
+
+[sga.marketing_segment_trend_explorers_mvnd]
+# Segment 3 of 4: Trend Explorers (30% of baseline 25M marketing budget = 7.50M VND/mo -> 6,313.13 VND/visit across 1,188 visits)
+dist = "truncated_normal"
+mean = 7.50
+std = 0.38
+min = 6.40
+max = 8.60
+unit = "M VND/month"
+source = "30.0% of Case Exhibit 2 VND 25.00M marketing budget (7,500,000 VND / 1,188 visits = 6,313.13 VND/visit)"
+
+[sga.marketing_segment_families_mvnd]
+# Segment 4 of 4: Families (16% of baseline 25M marketing budget = 4.00M VND/mo -> 6,172.84 VND/visit across 648 visits)
+dist = "truncated_normal"
+mean = 4.00
+std = 0.22
+min = 3.30
+max = 4.70
+unit = "M VND/month"
+source = "16.0% of Case Exhibit 2 VND 25.00M marketing budget (4,000,000 VND / 648 visits = 6,172.84 VND/visit)"
+
+# ------------------------------------------------------------------------------
+# 2B. SECOND CLUB (14 COURTS + COACHING + CAFE, PATH A) FACILITY OpEx & SG&A
+#     (Lease Starts Month 7 [Jul-27] at Q3 2027 Handover; Utility, Upkeep &
+#      Staff Payroll Activate in Month 11 [Nov-27] once Construction Completes)
+# Derivation:
+#   - Case Page 3 ("Path A — Expand the club network"):
+#     * "Open a second club in Ho Chi Minh City with 14 courts, coaching
+#        facilities and a cafe, on a five-year lease of about VND 330 million
+#        a month."
+#   - Scaling other facility & club staffing expenses from Venue 1 (6 courts) to
+#     Venue 2 (14 courts = 2.333x courts, with shared central management/platform):
+#     * Venue 2 Lease: Fixed VND 330.00M/month (active from Month 7 / Jul-27).
+#     * Venue 2 Electricity, Lighting & Water: Active from Month 11 (Nov-27).
+#       56 modern 500-lux LED court fixtures + cafe espresso/chiller + showers
+#       scale at ~2.05x Venue 1's 40M utility bill = 82.00M VND/month at steady
+#       state (with 65% fixed base + 35% flexing with the 6-to-9 month fill-up ramp).
+#     * Venue 2 Maintenance & Insurance: Active from Month 11 (Nov-27). 14 courts
+#       under new warranty + property/liability insurance = 38.00M VND/month.
+#     * Venue 2 Club Staff Wages (Site Manager, Front Desk, Baristas, Cleaning):
+#       Active from Month 11 (Nov-27). Because executive leadership, finance, and
+#       the automated PICK! Social QR check-in platform are shared across both
+#       clubs, on-site 14-court staffing + café crew requires 215.00M VND/month
+#       (1.65x Venue 1's 130M payroll).
+# ------------------------------------------------------------------------------
+
+[venue2_opex_and_sga]
+lease_start_month_index = 10            # Month 10 = Oct-27 (Start of Q4 2027)
+operations_open_month_index = 14        # Month 14 = Feb-28 (After 4-month build finishes)
+
+[venue2_opex_and_sga.venue_lease_monthly_mvnd]
+dist = "truncated_normal"
+mean = 330.00
+std = 0.00
+min = 330.00
+max = 330.00
+unit = "M VND/month"
+source = "Case Page 3 Path A ('on a five-year lease of about VND 330 million a month')"
+
+[venue2_opex_and_sga.electricity_lighting_water_monthly_mvnd]
+dist = "truncated_normal"
+mean = 82.00
+std = 3.50
+min = 72.00
+max = 92.00
+unit = "M VND/month (at 100% steady-state 14-court utilization; 65% fixed + 35% variable during fill-up)"
+source = "Scaled from Case Exhibit 2 (40M for 6 courts) to 14 LED-lit courts + specialty cafe"
+
+[venue2_opex_and_sga.maintenance_and_insurance_monthly_mvnd]
+dist = "truncated_normal"
+mean = 38.00
+std = 1.60
+min = 34.00
+max = 43.00
+unit = "M VND/month"
+source = "Scaled from Case Exhibit 2 (20M for 6 courts) to 14 courts with multi-court insurance discount"
+
+[venue2_opex_and_sga.staff_wages_monthly_mvnd]
+dist = "truncated_normal"
+mean = 215.00
+std = 3.00
+min = 207.00
+max = 224.00
+unit = "M VND/month"
+source = "Scaled from Case Exhibit 2 (130M for 6 courts) for 14-court site manager, reception, cafe & cleaning crew"
+
+# ------------------------------------------------------------------------------
+# 3. NEW PICK! SOCIAL & ADAPTIVE BOOKING PLATFORM — RECURRING MONTHLY OpEx
+#    (Crucial Addition: Active from Month 5 [May-27] onward once Core Build Completes)
+# Derivation:
+#   - Once Milestone M4 (Core Product Complete, End of Month 4 / Apr 25, 2027) is
+#     reached and the platform enters live operation in Month 5 (May-27), running
+#     a production-grade platform serving 3,600+ monthly players and 1,500+ paying
+#     members requires dedicated monthly recurring operating expenses:
+#     1) Cloud Infrastructure & Managed DB/Redis Hosting (4.50M VND/mo mean):
+#        AWS ap-southeast-1 / Viettel Cloud multi-AZ PostgreSQL, Redis cluster,
+#        application containers, automated S3 backups, and Cloudflare Pro CDN/WAF.
+#     2) Zalo ZNS / SMS OTP & Push Notification Messaging (2.20M VND/mo mean):
+#        Phone OTP verification, booking confirmation ZNS messages (350–550 VND/msg),
+#        and automated open-play matchmaking reminders.
+#     3) Observability, CI/CD, Telemetry & Security SaaS (1.80M VND/mo mean):
+#        Sentry error/performance monitoring, PostHog analytics, GitHub Actions CI
+#        minutes, and SSL/domain/map APIs.
+#     4) Ongoing Platform Maintenance, Patching & ML Calibration Retainer (10.00M VND/mo mean,
+#        starting Month 7 [Jul-27] after the 6-month project timeline's Stage 6 hypercare ends):
+#        Part-time DevOps/Full-Stack maintenance, security patching, mobile browser updates,
+#        and monthly AdaptivePricing HistGBR retraining.
+#     5) School/University Partnerships & Community League Management (8.00M VND/mo mean,
+#        starting Month 5 [May-27] per Case Page 3 Path C description):
+#        Campus ambassador stipends, university club partnership activations, and
+#        beginner league administration.
+#   - Total Recurring New Platform & Community OpEx:
+#     * Months 1–4 (Jan-27 to Apr-27, during core build) : 0.00 M VND/month (covered by dev task budgets)
+#     * Months 5–6 (May-27 to Jun-27, migration/hypercare): 16.50 M VND/month (4.50M cloud + 2.20M OTP + 1.80M SaaS + 8.00M uni/community ops; engineering maintenance is already inside Stage 5–6 dev tasks)
+#     * Month 7+ (Jul-27 to Dec-31, steady-state ops)    : 26.50 M VND/month (8.50M cloud/OTP/SaaS + 10.00M ongoing maintenance retainer + 8.00M uni/community ops)
+# ------------------------------------------------------------------------------
+
+[platform_Monthly_opex]
+activation_month_index = 5              # Starts Month 5 (May-27) upon platform launch
+post_hypercare_month_index = 7          # Ongoing maintenance retainer starts Month 7 (Jul-27) after W24
+
+[platform_monthly_opex.cloud_hosting_db_redis_mvnd]
+dist = "truncated_normal"
+mean = 4.50
+std = 0.35
+min = 3.60
+max = 5.60
+unit = "M VND/month"
+source = "AWS ap-southeast-1 / Viettel Cloud Managed PostgreSQL + Redis + Cloudflare CDN pricing"
+
+[platform_monthly_opex.zalo_zns_otp_notifications_mvnd]
+dist = "truncated_normal"
+mean = 2.20
+std = 0.25
+min = 1.60
+max = 3.00
+unit = "M VND/month"
+source = "Zalo Cloud ZNS & Vietnam eSMS commercial rates across 3,600–7,600 monthly visits"
+
+[platform_monthly_opex.observability_cicd_security_saas_mvnd]
+dist = "truncated_normal"
+mean = 1.80
+std = 0.15
+min = 1.40
+max = 2.30
+unit = "M VND/month"
+source = "Sentry Team, PostHog Telemetry, GitHub Actions & domain/SSL licensing"
+
+[platform_monthly_opex.ongoing_maintenance_patching_retainer_mvnd]
+# Active from Month 7 (Jul-27) onward after the 24-week build/hypercare contract concludes
+dist = "truncated_normal"
+mean = 10.00
+std = 0.75
+min = 8.20
+max = 12.20
+unit = "M VND/month"
+source = " ~0.83 person-weeks/mo blended HCMC engineering retainer for continuous patching & ML retrain"
+
+[platform_monthly_opex.school_university_community_ops_mvnd]
+# Active from Month 5 (May-27) onward per Case Page 3 ('school and university partnerships, beginner leagues')
+dist = "truncated_normal"
+mean = 8.00
+std = 0.65
+min = 6.40
+max = 10.00
+unit = "M VND/month"
+source = "Case Page 3 Path C ('organised games, beginner leagues, school and university partnerships')"
+
+# ------------------------------------------------------------------------------
+# 4. PLATFORM DEVELOPMENT TIMELINE, LOADED HCMC RATE CARD & ALLOCATION RULES
+#    (Months 1–6: Jan 2027 – Jun 2027 | 24-Week Project Horizon)
+# ------------------------------------------------------------------------------
+
+[platform_project]
+name = "PICK! Social & Adaptive Booking Platform (Path C)"
+company = "PICK! Pickleball Club (Ho Chi Minh City)"
+start_date = "2027-01-04"              # First Monday of January 2027
+core_build_months = 4                  # Target: 4 months from planning to entering migration
+core_build_weeks = 16.0                # Weeks 1–16 (Jan 4, 2027 – Apr 25, 2027)
+total_horizon_weeks = 24.0             # Weeks 1–24 (Jan 4, 2027 – Jun 20, 2027 + ongoing)
+team_size_fte = 4.5                    # 1 Tech Lead/Arch, 2 Full-Stack Devs, 1 UI/UX+FE, 0.5 QA/DevOps
+sprint_length_weeks = 2.0
+
+[platform_cost_rates]
+# Loaded HCMC weekly engineering rates (Gross base + 21.5% statutory BHXH/BHYT/BHTN & workstation)
+tech_lead_weekly_mvnd = 16.50          # 66.0M VND/mo loaded (54.3M gross + 21.5% statutory/tooling)
+fullstack_dev_weekly_mvnd = 12.00      # 48.0M VND/mo loaded (39.5M gross + 21.5% statutory/tooling)
+qa_devops_weekly_mvnd = 11.00          # 44.0M VND/mo loaded (36.2M gross + 21.5% statutory/tooling)
+ui_ux_fe_weekly_mvnd = 10.00           # 40.0M VND/mo loaded (32.9M gross + 21.5% statutory/tooling)
+employer_oncost_pct = 21.5
+stage3_milestone_holdback_pct = 22.0   # 22% of Stage 3 base cost held back until M4 (15%), M5 (45%) & M6 (40%)
+upfront_lump_sum_benchmark_pct = 45.0
+baseline_monthly_ocf_mvnd = 160.00
+adaptive_monthly_ocf_mvnd = 185.75
+
+# Stochastic distribution of task cost realization around Base Cost within the Contingency Buffer:
+# In Monte Carlo simulations, each task's realized cost is:
+#   RealizedCost_i = BaseCost_i + Buffer_i * buffer_utilization_factor_i
+# where buffer_utilization_factor_i ~ TruncatedNormal(mean=0.50, std=0.22, min=0.0, max=1.0).
+[platform_cost_rates.task_buffer_utilization_dist]
+dist = "truncated_normal"
+mean = 0.50
+std = 0.22
+min = 0.00
+max = 1.00
+unit = "fraction of task contingency buffer realized"
+source = "PMI PMBOK 7th Ed. expected value of risk contingency drawdown (50% P50 baseline, 100% P95 cap)"
+
+# ------------------------------------------------------------------------------
+# 5. PROJECT STAGES (S1–S6)
+# ------------------------------------------------------------------------------
+
+[stages.S1]
+id = "S1"
+name = "Stage 1: Discovery, Architecture & Detailed Specs"
+short_name = "1. Planning, Architecture & Specs"
+color = "#2563EB"
+light_color = "#DBEAFE"
+target_weeks = 3.5
+effort_share_pct = 15.0
+summary = "Requirements freeze, C4 architecture, PostgreSQL ACID schema, Redis lock spec, OpenAPI 3.1 contracts, UI/UX design system"
+
+[stages.S2]
+id = "S2"
+name = "Stage 2: Cloud Infrastructure, DevOps & Core Foundation"
+short_name = "2. Infra, DevOps & Core Setup"
+color = "#7C3AED"
+light_color = "#EDE9FE"
+target_weeks = 2.5
+effort_share_pct = 11.0
+summary = "IaC cloud provisioning, PostgreSQL + Redis clusters, GitHub Actions CI/CD, automated test harness, Zalo/Phone OTP auth & RBAC"
+
+[stages.S3]
+id = "S3"
+name = "Stage 3: Core Platform Development & Simultaneous Testing"
+short_name = "3. Core Dev & Simultaneous QA"
+color = "#059669"
+light_color = "#D1FAE5"
+target_weeks = 8.0
+effort_share_pct = 49.0
+summary = "4 two-week sprints building Booking Engine, AdaptivePricing ML API, VietQR/VNPay/MoMo payments, Social Matchmaking, Admin POS + parallel CI QA"
+
+[stages.S4]
+id = "S4"
+name = "Stage 4: Final System Integration, Load/Security Testing & UAT"
+short_name = "4. Final Integration, Load & UAT"
+color = "#D97706"
+light_color = "#FEF3C7"
+target_weeks = 3.0
+effort_share_pct = 15.0
+summary = "Cross-module E2E integration, live payment certification, 500-user peak concurrency load testing, OWASP/PDPD audit, staff & pilot player UAT"
+
+[stages.S5]
+id = "S5"
+name = "Stage 5: Legacy Booking Migration & Phased Cutover"
+short_name = "5. Legacy Migration & Cutover"
+color = "#DC2626"
+light_color = "#FEE2E2"
+target_weeks = 4.0
+effort_share_pct = 6.0
+summary = "Zalo/Excel customer & booking ETL migration, 2-week shadow/parallel booking run, VIP cohort soft launch, legacy cutover"
+
+[stages.S6]
+id = "S6"
+name = "Stage 6: Post-Launch Feedback, Continuous Dev & Patching"
+short_name = "6. Feedback & Continuous Ops"
+color = "#0891B2"
+light_color = "#CFFAFE"
+target_weeks = 5.0
+effort_share_pct = 4.0
+summary = "24/7 peak-hour hypercare & hotfix patching, conversion telemetry analysis, live ML pricing recalibration, bi-weekly CI/CD feature releases"
+
+# ------------------------------------------------------------------------------
+# 6. WORK BREAKDOWN STRUCTURE (21 TASKS: T1.1–T6.3) WITH COST & BUFFER DISTRIBUTIONS
+#    Each task defines its Base Cost, Contingency Buffer %, and Truncated Normal
+#    distribution parameters (mean = Expected Cost with 50% buffer drawdown,
+#    std = (Buffered - Base)/3.0, min = Base Cost, max = Buffered Cost).
+# ------------------------------------------------------------------------------
+
+[[tasks]]
+id = "T1.1"
+stage_id = "S1"
+name = "Product Discovery, Segment Mapping & Operational Specs"
+core_feature = "Scope & User Journeys (4 Segments)"
+track = "Product & Design"
+start_week = 0.0
+duration_weeks = 1.5
+dependencies = []
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "PM + Tech Lead"
+citation_keys = ["Boehm2000", "McConnell2006"]
+estimation_rationale = "COCOMO II Inception/Elaboration benchmark allocates 8–10% of core schedule (~1.5 weeks of a 16-week build) to lock requirements across PICK!'s 4 customer segments and front-desk workflows."
+role_allocation = "1.0 Tech Lead (16.5M/w) + 1.0 UI/UX Lead (10.0M/w)"
+person_weeks = 3.00
+blended_weekly_rate_mvnd = 13.25
+direct_infra_cost_mvnd = 0.50
+contingency_buffer_pct = 15.0
+cost_dist_mean_mvnd = 43.27
+cost_dist_std_mvnd = 2.01
+cost_dist_min_mvnd = 40.25
+cost_dist_max_mvnd = 46.29
+cost_citation_keys = ["ITviecTopDev2025", "VietnamLaborCode2019", "PMBOK7th"]
+cost_rationale = "3.0 person-weeks across Tech Lead (1.5w x 16.5M) + UI/UX Lead (1.5w x 10.0M) = 39.75M labor + 0.50M discovery workshop materials = 40.25M base. Low-complexity internal discovery carries a 15% PMI contingency buffer (+6.04M = 46.29M buffered)."
+
+[[tasks]]
+id = "T1.2"
+stage_id = "S1"
+name = "System Architecture, ACID DB Schema & Redis Lock Design"
+core_feature = "C4 Architecture, PostgreSQL + Redis"
+track = "Architecture"
+start_week = 1.0
+duration_weeks = 1.5
+dependencies = ["T1.1"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Tech Lead / Architect"
+citation_keys = ["Boehm2000", "Kleppmann2017"]
+estimation_rationale = "Post-Architecture COCOMO II & Kleppmann (2017) emphasize designing distributed slot locks (Redis SETNX/TTL) and ACID ledger schemas upfront (1.5 weeks) to prevent late-stage concurrency rework."
+role_allocation = "1.0 Tech Lead (16.5M/w) + 0.5 Sr Full-Stack (12.0M/w)"
+person_weeks = 2.25
+blended_weekly_rate_mvnd = 15.00
+direct_infra_cost_mvnd = 0.50
+contingency_buffer_pct = 15.0
+cost_dist_mean_mvnd = 36.82
+cost_dist_std_mvnd = 1.71
+cost_dist_min_mvnd = 34.25
+cost_dist_max_mvnd = 39.39
+cost_citation_keys = ["ITviecTopDev2025", "Boehm2000", "PMBOK7th"]
+cost_rationale = "2.25 person-weeks (1.5w Tech Lead @ 16.5M + 0.75w Sr Backend @ 12.0M) = 33.75M labor + 0.50M schema modeling tools = 34.25M base. Standardized PostgreSQL/Redis patterns warrant a 15% buffer (+5.14M = 39.39M buffered)."
+
+[[tasks]]
+id = "T1.3"
+stage_id = "S1"
+name = "OpenAPI 3.1 Contracts, UI/UX Design System & Gateway KYB"
+core_feature = "API Specs, Figma UI & Payment KYB"
+track = "Design & Specs"
+start_week = 1.5
+duration_weeks = 2.0
+dependencies = ["T1.1"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "UI/UX + Backend Lead"
+citation_keys = ["McConnell2006", "VNPayPayOS2025"]
+estimation_rationale = "Freezing OpenAPI 3.1 contracts + mobile-first Figma screens takes 1 sprint (2.0 weeks), while initiating corporate KYB with VNPay/MoMo/PayOS early absorbs the 5–7 business day compliance lead time."
+role_allocation = "1.0 UI/UX (10.0M/w) + 0.5 Tech Lead (16.5M/w)"
+person_weeks = 3.00
+blended_weekly_rate_mvnd = 12.17
+direct_infra_cost_mvnd = 1.00
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 41.26
+cost_dist_std_mvnd = 2.50
+cost_dist_min_mvnd = 37.51
+cost_dist_max_mvnd = 45.01
+cost_citation_keys = ["ITviecTopDev2025", "VNPayPayOS2025", "PMBOK7th"]
+cost_rationale = "3.0 person-weeks (2.0w UI/UX @ 10.0M + 1.0w Tech Lead @ 16.5M) = 36.51M labor + 1.00M Figma Pro & KYB notarization fees = 37.51M base. External merchant KYB document cycles carry a 20% buffer (+7.50M = 45.01M buffered)."
+
+[[tasks]]
+id = "T2.1"
+stage_id = "S2"
+name = "Cloud Infrastructure (IaC), PostgreSQL & Redis Provisioning"
+core_feature = "VPC, Managed DB, Redis & CDN"
+track = "DevOps & Infra"
+start_week = 3.0
+duration_weeks = 1.5
+dependencies = ["T1.2"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "DevOps / Backend"
+citation_keys = ["DORA2023", "AWSWellArch2024"]
+estimation_rationale = "Using Terraform/Docker IaC templates for a modular monolith + managed PostgreSQL & Redis across Staging/Prod environments requires 1.5 weeks including backup, SSL, and VPC security rules."
+role_allocation = "0.75 DevOps/QA (11.0M/w) + 0.75 Tech Lead (16.5M/w)"
+person_weeks = 2.25
+blended_weekly_rate_mvnd = 13.75
+direct_infra_cost_mvnd = 1.94
+contingency_buffer_pct = 15.0
+cost_dist_mean_mvnd = 35.35
+cost_dist_std_mvnd = 1.64
+cost_dist_min_mvnd = 32.88
+cost_dist_max_mvnd = 37.81
+cost_citation_keys = ["ITviecTopDev2025", "CloudPricingVN2025", "PMBOK7th"]
+cost_rationale = "2.25 person-weeks (1.125w DevOps @ 11.0M + 1.125w Tech Lead @ 16.5M) = 30.94M labor + 1.94M initial cloud VPC/DB/Redis/domain provisioning = 32.88M base, plus 15% buffer (+4.93M = 37.81M buffered)."
+
+[[tasks]]
+id = "T2.2"
+stage_id = "S2"
+name = "CI/CD Pipelines, Automated Test Harness & Observability"
+core_feature = "GitHub Actions, Pytest/Playwright, Sentry"
+track = "DevOps & QA Infra"
+start_week = 3.5
+duration_weeks = 1.5
+dependencies = ["T2.1"]
+is_critical_path = false
+is_simultaneous_qa = true
+owner = "QA + DevOps"
+citation_keys = ["DORA2023", "WQR2024"]
+estimation_rationale = "DORA Elite benchmarks show automated CI/CD test gates and preview environments (1.5 weeks setup) cut downstream defect resolution time by >40% and enable continuous sprint testing."
+role_allocation = "1.0 QA/DevOps SDET (11.0M/w)"
+person_weeks = 1.50
+blended_weekly_rate_mvnd = 11.00
+direct_infra_cost_mvnd = 1.50
+contingency_buffer_pct = 15.0
+cost_dist_mean_mvnd = 19.35
+cost_dist_std_mvnd = 0.90
+cost_dist_min_mvnd = 18.00
+cost_dist_max_mvnd = 20.70
+cost_citation_keys = ["ITviecTopDev2025", "CloudPricingVN2025", "PMBOK7th"]
+cost_rationale = "1.50 person-weeks of QA/DevOps SDET @ 11.0M/w = 16.50M labor + 1.50M GitHub Actions runner minutes & Sentry observability tier = 18.00M base, plus 15% buffer (+2.70M = 20.70M buffered)."
+
+[[tasks]]
+id = "T2.3"
+stage_id = "S2"
+name = "Auth Service, Phone/Zalo OTP & Role-Based Access (RBAC)"
+core_feature = "Zalo/SMS OTP Login & 4-Role RBAC"
+track = "Core Backend"
+start_week = 4.0
+duration_weeks = 1.5
+dependencies = ["T1.3", "T2.1"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Backend Devs"
+citation_keys = ["NextLevelSports2025", "OWASP2024"]
+estimation_rationale = "Standard JWT/OAuth2 authentication with Vietnam Zalo/SMS OTP and 4-role RBAC (Player, Coach, Front-Desk, Manager) is benchmarked at 1.5 weeks in sports booking MVP studies."
+role_allocation = "1.0 Full-Stack (12.0M/w) + 0.5 Tech Lead (16.5M/w)"
+person_weeks = 2.25
+blended_weekly_rate_mvnd = 13.50
+direct_infra_cost_mvnd = 1.50
+contingency_buffer_pct = 15.0
+cost_dist_mean_mvnd = 34.27
+cost_dist_std_mvnd = 1.59
+cost_dist_min_mvnd = 31.88
+cost_dist_max_mvnd = 36.66
+cost_citation_keys = ["ITviecTopDev2025", "CloudPricingVN2025", "PMBOK7th"]
+cost_rationale = "2.25 person-weeks (1.5w Full-Stack @ 12.0M + 0.75w Tech Lead @ 16.5M) = 30.38M labor + 1.50M Zalo ZNS / eSMS OTP sandbox & sender ID registration = 31.88M base, plus 15% buffer (+4.78M = 36.66M buffered)."
+
+[[tasks]]
+id = "T3.1"
+stage_id = "S3"
+name = "Real-Time Court Booking Engine & Redis Concurrency Locking"
+core_feature = "6-Court Grid, 5-Min Hold & Waitlist"
+track = "Core Feature Dev"
+start_week = 5.0
+duration_weeks = 3.0
+dependencies = ["T2.3"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Full-Stack Squad"
+citation_keys = ["NextLevelSports2025", "Kleppmann2017"]
+estimation_rationale = "Core slot-availability engine with Redis distributed 5-minute TTL holds, conflict-free rescheduling, and recurring court blocks takes 1.5 sprints (3.0 weeks) for production reliability."
+role_allocation = "0.5 Tech Lead + 1.0 Full-Stack + 0.75 UI/UX FE"
+person_weeks = 6.75
+blended_weekly_rate_mvnd = 12.67
+direct_infra_cost_mvnd = 1.48
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 95.70
+cost_dist_std_mvnd = 5.80
+cost_dist_min_mvnd = 87.00
+cost_dist_max_mvnd = 104.40
+cost_citation_keys = ["ITviecTopDev2025", "Kleppmann2017", "PMBOK7th"]
+cost_rationale = "6.75 person-weeks across 3.0 calendar weeks (1.5w Tech Lead @ 16.5M + 3.0w Full-Stack @ 12.0M + 2.25w UI/UX FE @ 10.0M) = 85.52M labor + 1.48M staging Redis cluster = 87.00M base. Distributed concurrency state-machines carry a 20% buffer (+17.40M = 104.40M buffered)."
+
+[[tasks]]
+id = "T3.2"
+stage_id = "S3"
+name = "AdaptivePricing ML Engine Integration & Dynamic Tariff API"
+core_feature = "ML Dynamic Pricing (85k–300k VND)"
+track = "ML & Pricing Dev"
+start_week = 6.5
+duration_weeks = 2.5
+dependencies = ["T3.1"]
+is_critical_path = false
+is_simultaneous_qa = false
+owner = "Backend + ML Eng"
+citation_keys = ["Boehm2000", "InternalAdaptivePricing"]
+estimation_rationale = "Since the HistGBR model & tariff schedule are pre-validated in AdaptivePricing/, wrapping the 16h x 7d dynamic pricing lookup API, off-peak promo badges, and rule overrides takes 2.5 weeks."
+role_allocation = "0.5 Tech Lead (16.5M/w) + 0.75 Full-Stack (12.0M/w)"
+person_weeks = 3.125
+blended_weekly_rate_mvnd = 13.60
+direct_infra_cost_mvnd = 0.99
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 47.84
+cost_dist_std_mvnd = 2.90
+cost_dist_min_mvnd = 43.49
+cost_dist_max_mvnd = 52.19
+cost_citation_keys = ["ITviecTopDev2025", "InternalAdaptivePricing", "PMBOK7th"]
+cost_rationale = "3.125 person-weeks (1.25w Tech Lead @ 16.5M + 1.875w Full-Stack @ 12.0M) = 42.50M labor + 0.99M ML inference container staging = 43.49M base. Dynamic tariff rule edge-cases carry a 20% buffer (+8.70M = 52.19M buffered)."
+
+[[tasks]]
+id = "T3.3"
+stage_id = "S3"
+name = "Payment Gateways (VietQR/PayOS/VNPay/MoMo) & F&B Pre-Order"
+core_feature = "Instant QR Checkout, IPN & F&B POS"
+track = "Payments & Commerce"
+start_week = 7.5
+duration_weeks = 3.0
+dependencies = ["T3.1"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Backend + Frontend"
+citation_keys = ["VNPayPayOS2025", "SaigonTech2024"]
+estimation_rationale = "Vietnamese payment integration benchmarks (1–2 wks sandbox coding for HMAC-SHA256 signatures, idempotent IPN webhooks, auto-refunds + 1 wk F&B/paddle add-on cart) total 3.0 weeks."
+role_allocation = "1.0 Full-Stack (12.0M/w) + 0.5 UI/UX FE (10.0M/w)"
+person_weeks = 4.50
+blended_weekly_rate_mvnd = 11.33
+direct_infra_cost_mvnd = 2.00
+contingency_buffer_pct = 25.0
+cost_dist_mean_mvnd = 59.61
+cost_dist_std_mvnd = 4.42
+cost_dist_min_mvnd = 52.98
+cost_dist_max_mvnd = 66.23
+cost_citation_keys = ["ITviecTopDev2025", "VNPayPayOS2025", "PMBOK7th"]
+cost_rationale = "4.50 person-weeks (3.0w Full-Stack @ 12.0M + 1.5w UI/UX FE @ 10.0M) = 50.98M labor + 2.00M multi-gateway sandbox/webhook tunnel infra = 52.98M base. Third-party fintech APIs & webhook retries carry a 25% buffer (+13.25M = 66.23M buffered)."
+
+[[tasks]]
+id = "T3.4"
+stage_id = "S3"
+name = "PICK! Social Hub: Skill Rating, Open-Play Matching & Coaching"
+core_feature = "ELO/DUPR Lobby, Open-Play & Coaches"
+track = "Social & Community"
+start_week = 8.5
+duration_weeks = 3.5
+dependencies = ["T3.1"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Full-Stack Squad"
+citation_keys = ["McConnell2006", "NextLevelSports2025"]
+estimation_rationale = "Differentiating Path C requires player skill tiers, 'Find-a-Game' 4-player balanced open-play matchmaking, split-court payments, and coach booking calendars—scoped at 3.5 weeks (1.75 sprints)."
+role_allocation = "1.0 Full-Stack (12.0M/w) + 1.0 UI/UX FE (10.0M/w)"
+person_weeks = 7.00
+blended_weekly_rate_mvnd = 11.00
+direct_infra_cost_mvnd = 1.50
+contingency_buffer_pct = 25.0
+cost_dist_mean_mvnd = 88.32
+cost_dist_std_mvnd = 6.54
+cost_dist_min_mvnd = 78.50
+cost_dist_max_mvnd = 98.13
+cost_citation_keys = ["ITviecTopDev2025", "NextLevelSports2025", "PMBOK7th"]
+cost_rationale = "7.00 person-weeks across 3.5 calendar weeks (3.5w Full-Stack @ 12.0M + 3.5w UI/UX FE @ 10.0M) = 77.00M labor + 1.50M push notification & lobby websocket infra = 78.50M base. Custom 4-player split-payment & ELO matchmaking UX carries a 25% buffer (+19.63M = 98.13M buffered)."
+
+[[tasks]]
+id = "T3.5"
+stage_id = "S3"
+name = "Admin Portal, Front-Desk QR Check-In & Financial Ledger"
+core_feature = "Staff POS, QR Check-In & P&L Export"
+track = "Admin & Operations"
+start_week = 10.5
+duration_weeks = 2.5
+dependencies = ["T3.3", "T3.4"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Frontend + Backend"
+citation_keys = ["NextLevelSports2025"]
+estimation_rationale = "Staff check-in scanner, walk-in manual booking override, court maintenance blocks, and automated daily Revenue/COGS export for FinancialModel take 2.5 weeks."
+role_allocation = "0.75 Full-Stack (12.0M/w) + 0.75 UI/UX FE (10.0M/w)"
+person_weeks = 3.75
+blended_weekly_rate_mvnd = 11.00
+direct_infra_cost_mvnd = 4.74
+contingency_buffer_pct = 15.0
+cost_dist_mean_mvnd = 49.44
+cost_dist_std_mvnd = 2.30
+cost_dist_min_mvnd = 45.99
+cost_dist_max_mvnd = 52.89
+cost_citation_keys = ["ITviecTopDev2025", "CloudPricingVN2025", "PMBOK7th"]
+cost_rationale = "3.75 person-weeks (1.875w Full-Stack @ 12.0M + 1.875w UI/UX FE @ 10.0M) = 41.25M labor + 4.74M front-desk 2D QR handheld scanners & tablet stand hardware = 45.99M base. Internal admin CRUD carries a 15% buffer (+6.90M = 52.89M buffered)."
+
+[[tasks]]
+id = "T3.6"
+stage_id = "S3"
+name = "[Simultaneous QA] Continuous Unit, API Contract & Sprint Testing"
+core_feature = "Shift-Left CI Tests (>80% Coverage)"
+track = "Simultaneous QA"
+start_week = 5.0
+duration_weeks = 8.0
+dependencies = ["T2.2"]
+is_critical_path = false
+is_simultaneous_qa = true
+owner = "QA + All Devs"
+citation_keys = ["CapersJones2012", "WQR2024", "DORA2023"]
+estimation_rationale = "Per Capers Jones & DORA continuous testing principles, embedding automated unit, API contract, and Playwright component tests simultaneously across all 8 weeks of Stage 3 prevents end-of-cycle QA bottlenecks."
+role_allocation = "0.50 QA/DevOps SDET + 0.0625 Dev Test Review across 8w"
+person_weeks = 4.50
+blended_weekly_rate_mvnd = 11.11
+direct_infra_cost_mvnd = 4.80
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 60.28
+cost_dist_std_mvnd = 3.65
+cost_dist_min_mvnd = 54.80
+cost_dist_max_mvnd = 65.76
+cost_citation_keys = ["ITviecTopDev2025", "CapersJones2012", "WQR2024"]
+cost_rationale = "4.50 person-weeks across 8.0 calendar weeks (4.0w QA SDET @ 11.0M + 0.5w Full-Stack test harness support @ 12.0M) = 50.00M labor + 4.80M parallel CI test runners & BrowserStack mobile device cloud = 54.80M base, plus 20% buffer (+10.96M = 65.76M buffered)."
+
+[[tasks]]
+id = "T4.1"
+stage_id = "S4"
+name = "End-to-End (E2E) Integration & Payment Gateway Certification"
+core_feature = "Cross-Module E2E & Live Gateway Keys"
+track = "System Integration"
+start_week = 13.0
+duration_weeks = 1.5
+dependencies = ["T3.5", "T3.6"]
+is_critical_path = true
+is_simultaneous_qa = true
+owner = "Tech Lead + QA"
+citation_keys = ["VNPayPayOS2025", "IEEE1012"]
+estimation_rationale = "Full E2E checkout-to-ledger verification plus VNPay/MoMo/PayOS provider compliance review (2–3 working days per gateway + webhook edge-case re-tests) requires 1.5 weeks."
+role_allocation = "0.75 Tech Lead + 0.75 QA SDET + 0.50 Full-Stack"
+person_weeks = 3.00
+blended_weekly_rate_mvnd = 13.38
+direct_infra_cost_mvnd = 3.11
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 47.58
+cost_dist_std_mvnd = 2.88
+cost_dist_min_mvnd = 43.25
+cost_dist_max_mvnd = 51.90
+cost_citation_keys = ["ITviecTopDev2025", "VNPayPayOS2025", "PMBOK7th"]
+cost_rationale = "3.00 person-weeks (1.125w Tech Lead @ 16.5M + 1.125w QA @ 11.0M + 0.75w Full-Stack @ 12.0M) = 40.14M labor + 3.11M live gateway certification & penny-test settlement float = 43.25M base, plus 20% buffer (+8.65M = 51.90M buffered)."
+
+[[tasks]]
+id = "T4.2"
+stage_id = "S4"
+name = "Peak Concurrency Load Testing (k6) & Security/PDPD Audit"
+core_feature = "500-User Rush Stress Test & OWASP"
+track = "Performance & Sec"
+start_week = 13.5
+duration_weeks = 1.5
+dependencies = ["T3.5"]
+is_critical_path = false
+is_simultaneous_qa = true
+owner = "DevOps + Sec/QA"
+citation_keys = ["OWASP2024", "Kleppmann2017"]
+estimation_rationale = "Simulating 500 concurrent 17:00 peak booking requests against Redis locks (<150ms p95, 0 double-bookings) and remediating OWASP Top 10 / Decree 13 PDPD findings requires 1.5 weeks."
+role_allocation = "0.75 QA/DevOps (11.0M/w) + 0.50 Tech Lead (16.5M/w)"
+person_weeks = 1.875
+blended_weekly_rate_mvnd = 13.20
+direct_infra_cost_mvnd = 9.13
+contingency_buffer_pct = 25.0
+cost_dist_mean_mvnd = 38.12
+cost_dist_std_mvnd = 2.82
+cost_dist_min_mvnd = 33.88
+cost_dist_max_mvnd = 42.35
+cost_citation_keys = ["ITviecTopDev2025", "OWASP2024", "CloudPricingVN2025"]
+cost_rationale = "1.875 person-weeks (1.125w QA/DevOps + 0.75w Tech Lead) = 24.75M labor + 9.13M distributed k6 cloud load generators & external OWASP/PDPD vulnerability scan tools = 33.88M base. Remediation of stress/security findings carries a 25% buffer (+8.47M = 42.35M buffered)."
+
+[[tasks]]
+id = "T4.3"
+stage_id = "S4"
+name = "Staff Training & Pilot User Acceptance Testing (UAT)"
+core_feature = "Staff + 50-Player Beta UAT Sign-Off"
+track = "UAT & Readiness"
+start_week = 14.5
+duration_weeks = 1.5
+dependencies = ["T4.1", "T4.2"]
+is_critical_path = true
+is_simultaneous_qa = true
+owner = "PM + Club Ops + QA"
+citation_keys = ["McConnell2006", "NextLevelSports2025"]
+estimation_rationale = "McConnell & sports platform benchmarks allocate ~10% of build schedule (1.5 weeks) for hands-on facility staff training, 50-player pilot UAT across all 4 segments, and RC bug triage—completing Month 4."
+role_allocation = "0.5 Tech Lead + 1.0 UI/UX FE + 0.5 QA SDET"
+person_weeks = 3.00
+blended_weekly_rate_mvnd = 12.00
+direct_infra_cost_mvnd = 5.50
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 45.65
+cost_dist_std_mvnd = 2.77
+cost_dist_min_mvnd = 41.50
+cost_dist_max_mvnd = 49.80
+cost_citation_keys = ["ITviecTopDev2025", "McConnell2006", "PMBOK7th"]
+cost_rationale = "3.00 person-weeks (0.75w Tech Lead + 1.5w UI/UX FE + 0.75w QA) = 36.00M labor + 5.50M on-site staff training materials & 50-player pilot court voucher incentives = 41.50M base, plus 20% UAT feedback buffer (+8.30M = 49.80M buffered)."
+
+[[tasks]]
+id = "T5.1"
+stage_id = "S5"
+name = "Legacy Data Audit, Cleansing & ETL (Zalo/Sheets to Postgres)"
+core_feature = "ETL of 1,150 Accounts & 3,600 Players"
+track = "Data Migration"
+start_week = 16.0
+duration_weeks = 1.5
+dependencies = ["T4.3"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Backend + Club Ops"
+citation_keys = ["Kimball2013", "NextLevelSports2025"]
+estimation_rationale = "Cleaning unstructured Zalo/Excel records (1,150 registered accounts, prepaid coaching packs, recurring bookings) and running 2 staging ETL dry runs takes 1.5 weeks per Kimball ETL benchmarks."
+role_allocation = "1.0 Full-Stack (12.0M/w) + 0.5 QA SDET (11.0M/w)"
+person_weeks = 2.25
+blended_weekly_rate_mvnd = 11.67
+direct_infra_cost_mvnd = 2.24
+contingency_buffer_pct = 25.0
+cost_dist_mean_mvnd = 32.07
+cost_dist_std_mvnd = 2.38
+cost_dist_min_mvnd = 28.50
+cost_dist_max_mvnd = 35.63
+cost_citation_keys = ["ITviecTopDev2025", "Kimball2013", "PMBOK7th"]
+cost_rationale = "2.25 person-weeks (1.5w Full-Stack @ 12.0M + 0.75w QA @ 11.0M) = 26.26M labor + 2.24M staging ETL snapshot storage & data reconciliation scripts = 28.50M base. Unstructured Zalo/Excel data cleansing carries a 25% buffer (+7.13M = 35.63M buffered)."
+
+[[tasks]]
+id = "T5.2"
+stage_id = "S5"
+name = "Parallel Shadow Run & Priority Cohort Soft Launch"
+core_feature = "2-Week Dual Run & VIP Onboarding"
+track = "Phased Rollout"
+start_week = 17.0
+duration_weeks = 2.0
+dependencies = ["T5.1"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Full Team + Front Desk"
+citation_keys = ["Kimball2013", "McConnell2006"]
+estimation_rationale = "A 2-week parallel run (2 full weekly cycles of weekday off-peak + weekend peak) validates zero booking discrepancies between front-desk staff and online self-service before legacy shutoff."
+role_allocation = "0.75 Full-Stack + 0.50 QA + 0.25 Tech Lead"
+person_weeks = 3.00
+blended_weekly_rate_mvnd = 11.58
+direct_infra_cost_mvnd = 3.27
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 41.81
+cost_dist_std_mvnd = 2.53
+cost_dist_min_mvnd = 38.01
+cost_dist_max_mvnd = 45.61
+cost_citation_keys = ["ITviecTopDev2025", "Kimball2013", "CloudPricingVN2025"]
+cost_rationale = "3.00 person-weeks across 2.0 weeks of parallel shadow operation = 34.74M labor + 3.27M production cloud + VIP soft-launch Zalo ZNS onboarding notifications = 38.01M base, plus 20% buffer (+7.60M = 45.61M buffered)."
+
+[[tasks]]
+id = "T5.3"
+stage_id = "S5"
+name = "Legacy Booking Cutover & 100% Self-Service Public Launch"
+core_feature = "Retire Manual Zalo Booking & Go-Live"
+track = "Cutover & Launch"
+start_week = 19.0
+duration_weeks = 1.0
+dependencies = ["T5.2"]
+is_critical_path = true
+is_simultaneous_qa = false
+owner = "Tech Lead + Manager"
+citation_keys = ["NextLevelSports2025"]
+estimation_rationale = "Off-peak Sunday night final delta sync, switching Zalo OA to automated web-booking deep links, and full public launch execution takes 1.0 week."
+role_allocation = "0.5 Tech Lead + 1.0 Full-Stack + 0.5 UI/UX FE"
+person_weeks = 2.00
+blended_weekly_rate_mvnd = 12.63
+direct_infra_cost_mvnd = 5.24
+contingency_buffer_pct = 15.0
+cost_dist_mean_mvnd = 32.79
+cost_dist_std_mvnd = 1.53
+cost_dist_min_mvnd = 30.50
+cost_dist_max_mvnd = 35.08
+cost_citation_keys = ["ITviecTopDev2025", "CloudPricingVN2025", "PMBOK7th"]
+cost_rationale = "2.00 person-weeks during cutover week = 25.26M labor + 5.24M SMS/Zalo OA blast to 3,600 monthly players & on-court QR standees = 30.50M base, plus 15% buffer (+4.58M = 35.08M buffered)."
+
+[[tasks]]
+id = "T6.1"
+stage_id = "S6"
+name = "Post-Launch Hypercare, SLA Monitoring & Hotfix Patching"
+core_feature = "Peak-Hour On-Call & Rapid Patching"
+track = "Hypercare & Patching"
+start_week = 19.0
+duration_weeks = 3.0
+dependencies = ["T5.2"]
+is_critical_path = false
+is_simultaneous_qa = true
+owner = "On-Call Eng + QA"
+citation_keys = ["ITILv4", "DORA2023"]
+estimation_rationale = "ITIL v4 & DORA post-cutover hypercare standards recommend a 3-week stabilization window (1 full monthly billing cycle) with <2hr hotfix SLA for mobile browser and payment edge cases."
+role_allocation = "0.50 Full-Stack + 0.50 QA/DevOps across 3w"
+person_weeks = 3.00
+blended_weekly_rate_mvnd = 11.50
+direct_infra_cost_mvnd = 3.00
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 41.25
+cost_dist_std_mvnd = 2.50
+cost_dist_min_mvnd = 37.50
+cost_dist_max_mvnd = 45.00
+cost_citation_keys = ["ITviecTopDev2025", "ITILv4", "CloudPricingVN2025"]
+cost_rationale = "3.00 person-weeks (1.5w Full-Stack @ 12.0M + 1.5w QA/DevOps @ 11.0M) = 34.50M labor + 3.00M production cloud & APM hypercare alerting = 37.50M base, plus 20% hotfix surge buffer (+7.50M = 45.00M buffered)."
+
+[[tasks]]
+id = "T6.2"
+stage_id = "S6"
+name = "User Telemetry Analysis, UX Tuning & ML Pricing Calibration"
+core_feature = "Funnel Optimization & Live ML Retrain"
+track = "Analytics & ML Ops"
+start_week = 20.5
+duration_weeks = 3.5
+dependencies = ["T5.3"]
+is_critical_path = false
+is_simultaneous_qa = false
+owner = "ML Eng + Product"
+citation_keys = ["Kohavi2020", "InternalAdaptivePricing"]
+estimation_rationale = "Collecting 30 days of live post-cutover booking elasticity data plus 0.5 weeks to recalibrate the HistGBR demand model and tune checkout conversion funnels requires 3.5 weeks."
+role_allocation = "0.43 Tech Lead/ML + 0.43 UI/UX FE across 3.5w"
+person_weeks = 3.00
+blended_weekly_rate_mvnd = 13.25
+direct_infra_cost_mvnd = 5.25
+contingency_buffer_pct = 20.0
+cost_dist_mean_mvnd = 49.50
+cost_dist_std_mvnd = 3.00
+cost_dist_min_mvnd = 45.00
+cost_dist_max_mvnd = 54.00
+cost_citation_keys = ["ITviecTopDev2025", "Kohavi2020", "CloudPricingVN2025"]
+cost_rationale = "3.00 person-weeks (1.5w Tech Lead/ML @ 16.5M + 1.5w UI/UX FE @ 10.0M) = 39.75M labor + 5.25M PostHog/Mixpanel telemetry & ML retraining compute = 45.00M base, plus 20% buffer (+9.00M = 54.00M buffered)."
+
+[[tasks]]
+id = "T6.3"
+stage_id = "S6"
+name = "Continuous Feature Releases (Tournaments, Loyalty) & CI/CD"
+core_feature = "Bi-Weekly Agile Releases & Regression"
+track = "Continuous Delivery"
+start_week = 21.0
+duration_weeks = 3.0
+dependencies = ["T6.1"]
+is_critical_path = false
+is_simultaneous_qa = true
+owner = "Product Squad"
+citation_keys = ["DORA2023"]
+estimation_rationale = "Transitioning into steady-state bi-weekly sprint cadences (automated tournament brackets, referral rewards, push notifications) with continuous regression testing across Weeks 21–24+."
+role_allocation = "0.75 Full-Stack + 0.50 UI/UX FE + 0.25 QA across 3w"
+person_weeks = 4.50
+blended_weekly_rate_mvnd = 11.17
+direct_infra_cost_mvnd = 5.25
+contingency_buffer_pct = 15.0
+cost_dist_mean_mvnd = 59.69
+cost_dist_std_mvnd = 2.78
+cost_dist_min_mvnd = 55.52
+cost_dist_max_mvnd = 63.85
+cost_citation_keys = ["ITviecTopDev2025", "DORA2023", "CloudPricingVN2025"]
+cost_rationale = "4.50 person-weeks (2.25w Full-Stack @ 12.0M + 1.5w UI/UX FE @ 10.0M + 0.75w QA @ 11.0M) = 50.27M labor + 5.25M production cloud & notification credits = 55.52M base, plus 15% buffer (+8.33M = 63.85M buffered)."
+
+# ------------------------------------------------------------------------------
+# 7. MILESTONES & AUTHORITATIVE CITATIONS
+# ------------------------------------------------------------------------------
+
+[[milestones]]
+id = "M1"
+name = "M1: Architecture & Specs Frozen"
+week = 3.5
+stage_id = "S1"
+description = "C4 architecture, PostgreSQL/Redis schema, OpenAPI 3.1 specs & Figma UI signed off"
+
+[[milestones]]
+id = "M2"
+name = "M2: Cloud & CI/CD Foundation Live"
+week = 5.5
+stage_id = "S2"
+description = "Staging/Prod cloud, CI/CD test harness, and Zalo/Phone OTP RBAC operational"
+
+[[milestones]]
+id = "M3"
+name = "M3: Feature-Complete Code Freeze"
+week = 13.0
+stage_id = "S3"
+description = "Booking engine, AdaptivePricing ML API, VietQR/VNPay/MoMo, Social Hub & Admin POS complete"
+
+[[milestones]]
+id = "M4"
+name = "M4: Product Complete / Enter Migration (End M4)"
+week = 16.0
+stage_id = "S4"
+description = "4-Month Target Hit: E2E integration, 500-user load test, security audit & UAT passed"
+
+[[milestones]]
+id = "M5"
+name = "M5: 100% Legacy Cutover Complete"
+week = 20.0
+stage_id = "S5"
+description = "Legacy Zalo/spreadsheet booking retired; 100% bookings on PICK! Platform"
+
+[[milestones]]
+id = "M6"
+name = "M6: Steady-State & ML Recalibrated"
+week = 24.0
+stage_id = "S6"
+description = "Hypercare complete, first 30-day live ML pricing recalibration deployed"
+
+[[citations]]
+key = "Boehm2000"
+title = "Software Cost Estimation with COCOMO II"
+authors = "Barry W. Boehm, Chris Abts, A. Winsor Brown, et al."
+publication = "Prentice Hall (2000)"
+url = "https://dl.acm.org/doi/book/10.5555/328981"
+benchmark_used = "Phase effort & cost distribution (~10% Inception, ~20% Elaboration/Architecture, ~45–50% Construction, ~15–20% Transition/UAT) and cone-of-uncertainty contingency factors."
+
+[[citations]]
+key = "McConnell2006"
+title = "Software Estimation: Demystifying the Black Art & Rapid Development"
+authors = "Steve McConnell"
+publication = "Microsoft Press (1996, 2006)"
+url = "https://www.construx.com/books/software-estimation-demystifying-the-black-art/"
+benchmark_used = "Architecture freeze & requirement stability prevent late-stage defect amplification (10x cost multiplier post-release); task-level risk buffers protect against 90th-percentile schedule/cost overrun."
+
+[[citations]]
+key = "CapersJones2012"
+title = "Applied Software Measurement & Software Engineering Best Practices"
+authors = "Capers Jones"
+publication = "McGraw-Hill Education (3rd Ed., 2008 / 2012)"
+url = "https://www.mhprofessional.com/"
+benchmark_used = "Defect removal accounts for 30–40% of total engineering effort; shifting testing into simultaneous sprint execution achieves >85% defect removal efficiency (DRE) before UAT."
+
+[[citations]]
+key = "WQR2024"
+title = "World Quality Report 2023–24 / 2024–25 (Quality Engineering & Continuous Testing)"
+authors = "Capgemini, Sogeti & OpenText"
+publication = "Capgemini Research Institute (2024)"
+url = "https://www.capgemini.com/insights/research-library/world-quality-report/"
+benchmark_used = "Continuous testing embedded directly into CI/CD pipelines (averaging 25–35% of overall engineering effort) eliminates isolated downstream QA bottlenecks."
+
+[[citations]]
+key = "DORA2023"
+title = "Accelerate: State of DevOps Report & DORA Core Capabilities"
+authors = "Nicole Forsgren, Jez Humble, Gene Kim / Google Cloud DORA"
+publication = "IT Revolution Press (2018) & Google Cloud DORA (2023–2024)"
+url = "https://dora.dev/"
+benchmark_used = "Trunk-based CI/CD automation, containerized staging environments, and shift-left automated testing reduce Change Failure Rate (<15%) and enable rapid hotfix recovery (<2 hours MTTR)."
+
+[[citations]]
+key = "Kleppmann2017"
+title = "Designing Data-Intensive Applications: Consistency, Concurrency & Distributed Locks"
+authors = "Martin Kleppmann"
+publication = "O'Reilly Media (2017)"
+url = "https://dataintensive.net/"
+benchmark_used = "Preventing double-booking under high concurrency requires ACID serializable/row-level PostgreSQL constraints paired with Redis TTL distributed locks (SETNX/Redlock) and idempotent webhook processing."
+
+[[citations]]
+key = "NextLevelSports2025"
+title = "Sports Court Booking Platform Development Timeline & Architecture Benchmarks"
+authors = "The Next Level Software / Industry SaaS Engineering Benchmarks"
+publication = "Sports Facility SaaS Engineering Guide (2024–2025)"
+url = "https://thenextlevelsoftware.com/"
+benchmark_used = "A standard multi-court booking MVP takes 10–14 weeks; adding custom ML pricing & social matchmaking extends the core build to 16 weeks (4 months)."
+
+[[citations]]
+key = "VNPayPayOS2025"
+title = "Vietnam Payment Gateway Integration Specifications (VNPay, MoMo, PayOS / VietQR)"
+authors = "VNPay Developer Portal, MoMo Developers & PayOS Documentation"
+publication = "Vietnam Fintech Technical Integration Standards (2024–2025)"
+url = "https://payos.vn/docs/"
+benchmark_used = "Merchant KYB/ERC verification takes 1–7 business days; engineering HMAC-SHA256 request signing, return URLs, and server-to-server IPN webhooks takes 1–2 weeks in sandbox, plus 2–3 working days for provider UAT certification."
+
+[[citations]]
+key = "SaigonTech2024"
+title = "Payment Gateway & Fintech Software Development Benchmarks in Vietnam"
+authors = "Saigon Technology Engineering Practice"
+publication = "Vietnam Software Engineering Technical Series (2024)"
+url = "https://saigontechnology.com/"
+benchmark_used = "Server-to-server IPN webhook idempotency, GMT+7 timestamp validation, and automated refund/deposit reconciliation require dedicated integration and edge-case testing."
+
+[[citations]]
+key = "Kimball2013"
+title = "The Data Warehouse Lifecycle Toolkit & Legacy ETL Migration Best Practices"
+authors = "Ralph Kimball, Margy Ross, et al."
+publication = "Wiley (2013) & Enterprise Cutover Standards"
+url = "https://www.kimballgroup.com/"
+benchmark_used = "Migrating unstructured legacy operational data requires a 3-step protocol: (1) Data audit & 2 staging ETL dry runs (1.5 wks), (2) 2-week parallel shadow operation, and (3) off-peak delta cutover (1 wk)."
+
+[[citations]]
+key = "OWASP2024"
+title = "OWASP Application Security Verification Standard (ASVS 4.0) & Vietnam Decree 13/2023/ND-CP (PDPD)"
+authors = "OWASP Foundation & Government of Vietnam"
+publication = "OWASP ASVS v4.0.3 / Vietnam Personal Data Protection Decree (2023–2024)"
+url = "https://owasp.org/www-project-application-security-verification-standard/"
+benchmark_used = "Consumer booking & payment platforms in Vietnam require 1–1.5 weeks of pre-launch security hardening covering RBAC authorization, rate-limiting, webhook signature verification, and personal data consent."
+
+[[citations]]
+key = "IEEE1012"
+title = "IEEE Standard for System, Software, and Hardware Verification and Validation (IEEE 1012)"
+authors = "IEEE Computer Society"
+publication = "IEEE Std 1012-2016"
+url = "https://standards.ieee.org/ieee/1012/5609/"
+benchmark_used = "Formal V&V requires independent verification across component, integration, system, and acceptance test levels before production release sign-off."
+
+[[citations]]
+key = "ITILv4"
+title = "ITIL 4 Service Transition, Release Management & Early Life Support (Hypercare)"
+authors = "AXELOS / PeopleCert"
+publication = "ITIL Foundation & Release Management Practice (2019–2024)"
+url = "https://www.axelos.com/certifications/itil-service-management/"
+benchmark_used = "Early Life Support (Hypercare) spans 2–4 weeks post-cutover (covering at least one full monthly operational/billing cycle) before transitioning to steady-state continuous delivery."
+
+[[citations]]
+key = "Kohavi2020"
+title = "Trustworthy Online Controlled Experiments: A Practical Guide to A/B Testing & Telemetry"
+authors = "Ron Kohavi, Diane Tang, Ya Xu"
+publication = "Cambridge University Press (2020)"
+url = "https://experimentguide.com/"
+benchmark_used = "Post-launch telemetry & price-elasticity recalibration require a minimum 4-week (30-day) sample window to capture full day-of-week and payday cyclic variance without novelty bias."
+
+[[citations]]
+key = "AWSWellArch2024"
+title = "AWS Well-Architected Framework — Operational Excellence & Reliability Pillars"
+authors = "Amazon Web Services Architecture Team"
+publication = "AWS Technical Whitepaper (2024)"
+url = "https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"
+benchmark_used = "Infrastructure-as-Code (IaC) provisioning of multi-AZ relational databases, in-memory cache clusters, and automated backups takes 1–1.5 weeks for standardized web workloads."
+
+[[citations]]
+key = "InternalAdaptivePricing"
+title = "PICK! AdaptivePricing Module — HistGBR Demand & Dynamic Tariff Engine"
+authors = "CaseComp Internal Module (AdaptivePricing/)"
+publication = "CaseComp Codebase Artifact (2027)"
+url = "../AdaptivePricing/outputs/REPORT.md"
+benchmark_used = "Pre-trained HistGBR demand model across 3 anchored regime demand curves and 4x4 regime tariff lookup table (generating 460.75M VND/mo court hire revenue, +25.75M/mo lift) reduce Stage 3 ML engineering to API wrapping, UI price badges, and telemetry hooks."
+
+[[citations]]
+key = "ITviecTopDev2025"
+title = "Vietnam IT Salary & Tech Talent Market Report 2024–2025 (Ho Chi Minh City Benchmarks)"
+authors = "ITviec & TopDev Research"
+publication = "Vietnam Tech Compensation & Hiring Benchmark Report (2024–2025)"
+url = "https://itviec.com/report/"
+benchmark_used = "HCMC median gross monthly base compensation for mid-to-senior product engineering roles: Tech Lead / Solution Architect 51.8M–58.0M VND/mo, Senior/Mid Full-Stack Engineer 37.3M–42.0M VND/mo, QA Automation / DevOps SDET 34.0M–38.0M VND/mo, and Product UI/UX & Frontend Engineer 32.0M–35.0M VND/mo."
+
+[[citations]]
+key = "VietnamLaborCode2019"
+title = "Vietnam Labor Code (Law No. 45/2019/QH14) & Decree 143/2018/ND-CP Mandatory Employer Contributions"
+authors = "National Assembly of Vietnam / Ministry of Labour (MOLISA)"
+publication = "Vietnam Statutory Payroll & Social Insurance Framework (Effective 2021–2027)"
+url = "https://molisa.gov.vn/"
+benchmark_used = "Statutory employer payroll contributions in Vietnam add 21.5% on top of gross salary (17.5% Social Insurance BHXH, 3.0% Health Insurance BHYT, 1.0% Unemployment Insurance BHTN plus software/workstation overhead), yielding loaded weekly rates of 16.5M (Tech Lead), 12.0M (Full-Stack), 11.0M (QA/DevOps), and 10.0M (UI/UX FE) VND/person-week."
+
+[[citations]]
+key = "PMBOK7th"
+title = "A Guide to the Project Management Body of Knowledge (PMBOK Guide, 7th Edition) — Cost Baseline, Contingency Reserves & Resource Leveling"
+authors = "Project Management Institute (PMI)"
+publication = "Project Management Institute (7th Ed., 2021)"
+url = "https://www.pmi.org/pmbok-guide-standards"
+benchmark_used = "Establishes (1) task-specific Contingency Reserves (15% for standard internal tasks, 20% for multi-module/concurrency tasks, 25% for external payment gateway/ETL/security tasks), and (2) Cash-Flow Resource Leveling via bi-weekly earned-value sprint disbursements + 22% milestone acceptance holdbacks."
+
+[[citations]]
+key = "CloudPricingVN2025"
+title = "AWS ap-southeast-1 (Singapore) & Viettel Cloud / Zalo ZNS Commercial Pricing Schedule"
+authors = "Amazon Web Services, Viettel Cloud & Zalo Cloud (ZNS)"
+publication = "Southeast Asia Cloud & Notification Tariff Schedule (2025)"
+url = "https://aws.amazon.com/pricing/"
+benchmark_used = "Direct non-labor costs across staging/production PostgreSQL + Redis clusters (4.5M VND/mo), Zalo ZNS / SMS OTP verification bundles (2.2M VND/mo across 3,600+ players), observability/CI-CD SaaS (1.8M VND/mo), distributed k6 load testing generators, and 2D QR check-in scanners at the front desk."

@@ -1,0 +1,28 @@
+[project]
+name = "vietnam-commerce-case-competition-2026"
+version = "0.1.0"
+description = "2026 Vietnam Commerce Case Competition — PICK! Unified Pipeline (AdaptivePricing + PickSocialProjectTimeline + VenueScalingTimeline + Marketing + FinancialModel)"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pandas>=3.1.0",
+    "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
+    "seaborn>=0.13.2",
+]
+
+[project.scripts]
+main = "main:main"
+
+[tool.uv]
+package = true
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["main"]
+packages = ["AdaptivePricing", "AdaptivePricing.src", "PickSocialProjectTimeline", "PickSocialProjectTimeline.src", "VenueScalingTimeline", "VenueScalingTimeline.src", "Marketing", "Marketing.src", "FinancialModel", "FinancialModel.src"]

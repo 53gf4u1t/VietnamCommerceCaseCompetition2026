@@ -1,0 +1,14 @@
+# Python & Virtual Env
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# OS & Editor
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,164 @@
+# ==============================================================================
+# CENTRAL CONFIGURATION: COURT OPERATIONS, REGIME UTILIZATION DISTRIBUTIONS,
+#                        DEMAND CURVE ELASTICITY DISTRIBUTIONS & ML PRICING
+# File: CaseComp/configs/pricing.toml
+# Philosophy: Parameterizes PICK!'s 6-court operating schedule, Case Exhibit 1
+#             baseline pricing/revenue, regime booking density distributions,
+#             and linear demand curve slope distributions used by AdaptivePricing
+#             and FinancialModel.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. COMPANY, HORIZON & PHYSICAL COURT OPERATIONS (Case Page 2 & Exhibit 1)
+# Derivation:
+#   - Case Page 2: "6 leased courts, open 06:00-22:00 every day" (16 hours/day).
+#   - Case Exhibit 1: "A month has about 22 weekdays and 8 weekend days" (30 days/mo).
+#   - Total available court-hours/month:
+#     * Weekday Daytime (06:00–17:00, 11h x 22d x 6 courts) = 1,452 court-hours
+#     * Weekday Evening (17:00–22:00,  5h x 22d x 6 courts) =   660 court-hours
+#     * Weekend All Day (06:00–22:00, 16h x  8d x 6 courts) =   768 court-hours
+#     * Total Available Capacity                            = 2,880 court-hours/month
+# ------------------------------------------------------------------------------
+
+[company]
+name = "PICK! Pickleball Club (Ho Chi Minh City)"
+currency = "VND"
+display_unit = "M VND"
+vnd_per_million = 1_000_000
+model_start_month = "Jan-27"
+projection_months = 60                  # 60 months (5 years: Jan-27 to Dec-31)
+projection_years = 5                    # FY 2027 (Y1) to FY 2031 (Y5)
+has_actuals = false
+use_adaptive_pricing_output = true
+adaptive_pricing_output_dir = "../AdaptivePricing/outputs"
+timeline_output_dir = "../PickSocialProjectTimeline/outputs"
+
+[court_operations]
+days_per_month = 30
+weekdays_per_month = 22
+weekend_days_per_month = 8
+courts_count = 6
+open_hour = 6                           # 06:00
+close_hour = 22                         # 22:00 (16 hours/day)
+weekday_daytime_hours_per_day = 11      # 06:00–17:00
+weekday_evening_hours_per_day = 5       # 17:00–22:00
+weekend_hours_per_day = 16              # 06:00–22:00
+
+# ------------------------------------------------------------------------------
+# 2. CASE EXHIBIT 1 BASELINE PRICING & REVENUE LINES
+# Derivation:
+#   - Case Exhibit 1:
+#     * Off-peak price (weekdays 06:00–17:00)             : VND 160,000 / court-hour
+#     * Peak price (weekdays 17:00–22:00 and weekends)    : VND 260,000 / court-hour
+#     * Court hours booked                                : About 1,900 hours/month
+#     * Revenue: court hire                               : VND 435.0 million (68%)
+#     * Revenue: paddle rental and balls                  : VND  15.0 million (2%)
+#     * Revenue: coaching                                 : VND 115.0 million (18%)
+#     * Revenue: food and drinks                          : VND  75.0 million (12%)
+#     * Total baseline monthly revenue                    : VND 640.0 million (100%)
+# ------------------------------------------------------------------------------
+
+[baseline_pricing]
+off_peak_price_kvnd = 160.0
+peak_price_kvnd = 260.0
+target_monthly_booked_hours_mean = 1900.0
+target_monthly_booked_hours_std = 75.0
+target_monthly_court_revenue_kvnd = 435000.0
+
+[baseline_revenue_lines]
+case_baseline_court_hire_mvnd = 435.00
+paddle_rental_and_balls_mvnd = 15.00
+coaching_mvnd = 115.00
+food_and_drinks_mvnd = 75.00
+
+# ------------------------------------------------------------------------------
+# 3. COURT REGIME UTILIZATION DISTRIBUTIONS (Case Page 2 Anchor Points)
+# Derivation:
+#   - Case Page 2 ("Court bookings"):
+#     "Weekday daytime 40% full; weekday evenings 95%; weekends 90%"
+#   - Exact reconciliation to Case Exhibit 1:
+#     * Weekday Daytime : 1,452 hrs * 0.40 = 580.8 hrs @ 160k =  92.928 M VND
+#     * Weekday Evening :   660 hrs * 0.95 = 627.0 hrs @ 260k = 163.020 M VND
+#     * Weekend All Day :   768 hrs * 0.90 = 691.2 hrs @ 260k = 179.712 M VND
+#     * Total Booked    : 1,899.0 hrs (~1,900 hrs) | Total Rev = 435.66 M (~435M VND)
+# ------------------------------------------------------------------------------
+
+[utilization_distributions.weekday_daytime]
+dist = "truncated_normal"
+mean = 0.40
+std = 0.032
+min = 0.28
+max = 0.52
+hourly_noise_std = 0.025
+source = "Case Page 2 ('Weekday daytime 40% full' at 160k VND/hr)"
+
+[utilization_distributions.weekday_evening]
+dist = "truncated_normal"
+mean = 0.95
+std = 0.016
+min = 0.88
+max = 0.99
+hourly_noise_std = 0.012
+source = "Case Page 2 ('weekday evenings 95%' at 260k VND/hr)"
+
+[utilization_distributions.weekend]
+dist = "truncated_normal"
+mean = 0.90
+std = 0.022
+min = 0.82
+max = 0.97
+hourly_noise_std = 0.016
+source = "Case Page 2 ('weekends 90%' at 260k VND/hr)"
+
+# ------------------------------------------------------------------------------
+# 4. REGIME LINEAR DEMAND CURVE SLOPE DISTRIBUTIONS: Q_r(x) = clip(a_r * x + b_r, 0, 6)
+# Derivation:
+#   - Each regime r in {Weekday Daytime, Weekday Evening, Weekend} has its own
+#     price sensitivity slope `a_r` (in courts per kVND) sampled from a Truncated
+#     Normal distribution, anchored at its empirical Case Exhibit 1 point (x_{0,r}, Q_{0,r}):
+#     1) Weekday Daytime (student/off-peak elastic demand):
+#        a_1 ~ TruncatedNormal(mean = -0.035, std = 0.0032), anchored at (160k, 2.40 courts).
+#        Lowering off-peak tariffs to 110k–130k VND lifts utilization from 40% to ~66.6%.
+#     2) Weekday Evening (after-work inelastic prime demand, 95% full):
+#        a_2 ~ TruncatedNormal(mean = -0.014, std = 0.0018), anchored at (260k, 5.70 courts).
+#     3) Weekend All Day (social/family prime demand, 90% full):
+#        a_3 ~ TruncatedNormal(mean = -0.017, std = 0.0022), anchored at (260k, 5.40 courts).
+# ------------------------------------------------------------------------------
+
+[demand_curve]
+weekday_daytime_a_mean = -0.035
+weekday_daytime_a_std = 0.0032
+weekday_evening_a_mean = -0.014
+weekday_evening_a_std = 0.0018
+weekend_a_mean = -0.017
+weekend_a_std = 0.0022
+a_min_clip = -0.050
+a_max_clip = -0.009
+
+# ------------------------------------------------------------------------------
+# 5. PRICING GUARDRAILS & ANCILLARY PER-HOUR COEFFICIENTS
+# Derivation:
+#   - Case Page 2 ("ward office about noise from games after 21:00"):
+#     Capping 21:00–22:00 price at <= 250k VND incentives shifting bookings earlier.
+#   - Student / off-peak affordability floor set at 85k VND/hr; prime ceiling at 300k VND/hr.
+# ------------------------------------------------------------------------------
+
+[pricing_bounds]
+min_price_kvnd = 85.0
+max_price_kvnd = 300.0
+price_step_kvnd = 5.0
+late_night_hour = 21
+late_night_max_price_kvnd = 250.0
+
+[ancillary_economics]
+paddle_balls_rev_per_court_hour_kvnd = 7.89     # 15M VND / 1,900 hrs
+fnb_rev_per_court_hour_kvnd = 39.47             # 75M VND / 1,900 hrs
+fnb_var_cost_ratio = 0.40                       # 30M cost / 75M rev
+payment_consumables_var_ratio = 0.034           # 15M cost / 435M court rev
+
+[ml_model]
+max_iter = 250
+max_depth = 6
+learning_rate = 0.07
+min_samples_leaf = 25
+l2_regularization = 1.0
