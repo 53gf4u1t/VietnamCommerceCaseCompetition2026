@@ -327,7 +327,19 @@ class FinancialModelResults:
     monthly_total_costs_arr: np.ndarray
     monthly_ebitda_arr: np.ndarray
     monthly_ebitda_margin_pct_arr: np.ndarray
+    monthly_da_arr: np.ndarray
+    monthly_ebt_arr: np.ndarray
+    monthly_taxes_arr: np.ndarray
     monthly_net_income_arr: np.ndarray
+    monthly_net_margin_pct_arr: np.ndarray
+    monthly_tax_payable_curr_fy_arr: np.ndarray
+    monthly_tax_payable_past_fy_arr: np.ndarray
+    monthly_cit_cash_paid_arr: np.ndarray
+    monthly_nwc_change_arr: np.ndarray
+    monthly_vat_output_arr: np.ndarray
+    monthly_vat_input_arr: np.ndarray
+    monthly_vat_receivable_arr: np.ndarray
+    monthly_vat_payable_arr: np.ndarray
 
     # 5-Year Cumulative Totals (M VND)
     five_year_revenue_mvnd: float
@@ -337,12 +349,21 @@ class FinancialModelResults:
     five_year_sga_mvnd: float
     five_year_total_costs_mvnd: float
     five_year_ebitda_mvnd: float
+    five_year_da_mvnd: float
+    five_year_ebt_mvnd: float
+    five_year_taxes_mvnd: float
+    five_year_cit_cash_paid_mvnd: float
     five_year_net_income_mvnd: float
 
     # Annual Totals Arrays (5 Years: FY27..FY31)
     annual_revenue_arr: np.ndarray
+    annual_cogs_arr: np.ndarray
+    annual_opex_arr: np.ndarray
+    annual_sga_arr: np.ndarray
     annual_total_costs_arr: np.ndarray
     annual_ebitda_arr: np.ndarray
+    annual_da_arr: np.ndarray
+    annual_taxes_arr: np.ndarray
     annual_net_income_arr: np.ndarray
 
     # Balance Sheet & Cash Flow Trajectories (60 months)
@@ -364,11 +385,12 @@ class FinancialModelResults:
     # Structured tables
     line_items: tuple[LineItemRecord, ...]
     line_items_df: pd.DataFrame
-    fs_month_df: pd.DataFrame     # 60 months (Jan-27 to Dec-31) 3-Statement Table
-    fs_annual_df: pd.DataFrame    # 5 years (FY 2027 to FY 2031) 3-Statement Table
-    cash_flow_60m_df: pd.DataFrame # Dedicated 60-Month Cash Flow & Cash Balance Table
-    month_labels: tuple[str, ...] # 60 month labels
-    year_labels: tuple[str, ...]  # 5 year labels
+    fs_month_df: pd.DataFrame          # 60 months (Jan-27 to Dec-31) Financial Statements — Monthly
+    fs_annual_df: pd.DataFrame         # 5 years (FY 2027 to FY 2031) Financial Statements — Annual
+    cash_flow_60m_df: pd.DataFrame     # Dedicated 60-Month Cash Flow & Cash Reserves Table
+    tax_estimations_60m_df: pd.DataFrame # Dedicated 60-Month Vietnam CIT & VAT Tax Estimations Table
+    month_labels: tuple[str, ...]      # 60 month labels
+    year_labels: tuple[str, ...]       # 5 year labels
 
 
 def verify_and_load_adaptive_pricing(
@@ -815,6 +837,14 @@ def _run_monte_carlo_financial_simulations(
     curr_stress_cash_sims = np.full(n_sims, bs_cfg.starting_cash_mvnd, dtype=float)
     curr_base_cash_sims = np.full(n_sims, bs_cfg.starting_cash_mvnd, dtype=float)
 
+    curr_tax_curr_fy_sims = np.zeros(n_sims, dtype=float)
+    curr_tax_past_fy_sims = np.zeros(n_sims, dtype=float)
+    curr_st_tax_curr_fy_sims = np.zeros(n_sims, dtype=float)
+    curr_st_tax_past_fy_sims = np.zeros(n_sims, dtype=float)
+    curr_base_tax_curr_fy_sims = np.zeros(n_sims, dtype=float)
+    curr_base_tax_past_fy_sims = np.zeros(n_sims, dtype=float)
+    tax_cfg = cfg.taxes_and_other
+
     for m in range(n_months):
         # 1. Sample External Pickleball Interest Trend Rate g_t & Update Cumulative Trend Multiplier I_t
         g_t = _sample_month_conditioned(ext_cfg.monthly_interest_change_rate_dist, rng, n_sims, shared_weight=0.58)
@@ -1146,6 +1176,8 @@ def _run_monte_carlo_financial_simulations(
         #     Investor Minh Tran equity funding:
         #       - Tranche 1 at Month 1 (Jan-27 upon signing) = +500.0M VND (working capital reserve)
         #       - Tranche 2 at Month 10 (Oct-27 Q4 2027 kickoff) = +7,500.0M VND (7,000M fit-out + 500M reserve)
+        #     Vietnam Corporate Income Tax (20% statutory CIT) accrues during each FY and is settled in cash
+        #     in Month 4 (April) of the following fiscal year per the Taxes schedule.
         capex_out_m = vs_cfg.even_monthly_fitout_capex_mvnd if (v2_build_start_idx <= m <= v2_build_end_idx) else 0.0
         if m == inv_sign_idx:
             eq_in_m = vs_cfg.investor_signing_tranche_mvnd
@@ -1154,9 +1186,45 @@ def _run_monte_carlo_financial_simulations(
         else:
             eq_in_m = 0.0
 
-        curr_cash_sims = curr_cash_sims + ebitda_m - capex_out_m + eq_in_m
-        curr_stress_cash_sims = curr_stress_cash_sims + st_ebitda_m - capex_out_m + eq_in_m
-        curr_base_cash_sims = curr_base_cash_sims + base_ebitda_m
+        da_m_val = tax_cfg.depreciation_amortization_mvnd + (
+            vs_cfg.total_fitout_capex_mvnd / float(tax_cfg.venue2_depreciation_useful_life_months)
+            if m >= v2_open_idx
+            else 0.0
+        )
+        base_da_m_val = tax_cfg.depreciation_amortization_mvnd
+
+        tax_m_sims = np.maximum(0.0, (ebitda_m - da_m_val - tax_cfg.interest_expense_mvnd) * tax_cfg.corporate_tax_rate)
+        st_tax_m_sims = np.maximum(0.0, (st_ebitda_m - da_m_val - tax_cfg.interest_expense_mvnd) * tax_cfg.corporate_tax_rate)
+        base_tax_m_sims = np.maximum(0.0, (base_ebitda_m - base_da_m_val - tax_cfg.interest_expense_mvnd) * tax_cfg.corporate_tax_rate)
+
+        cal_m_num = (m % 12) + 1
+        if cal_m_num == tax_cfg.tax_consolidation_month:
+            cit_paid_sims = curr_tax_past_fy_sims.copy()
+            curr_tax_past_fy_sims[:] = 0.0
+            st_cit_paid_sims = curr_st_tax_past_fy_sims.copy()
+            curr_st_tax_past_fy_sims[:] = 0.0
+            base_cit_paid_sims = curr_base_tax_past_fy_sims.copy()
+            curr_base_tax_past_fy_sims[:] = 0.0
+        else:
+            cit_paid_sims = np.zeros(n_sims, dtype=float)
+            st_cit_paid_sims = np.zeros(n_sims, dtype=float)
+            base_cit_paid_sims = np.zeros(n_sims, dtype=float)
+
+        if cal_m_num == 12:
+            curr_tax_past_fy_sims = curr_tax_past_fy_sims + curr_tax_curr_fy_sims + tax_m_sims
+            curr_tax_curr_fy_sims[:] = 0.0
+            curr_st_tax_past_fy_sims = curr_st_tax_past_fy_sims + curr_st_tax_curr_fy_sims + st_tax_m_sims
+            curr_st_tax_curr_fy_sims[:] = 0.0
+            curr_base_tax_past_fy_sims = curr_base_tax_past_fy_sims + curr_base_tax_curr_fy_sims + base_tax_m_sims
+            curr_base_tax_curr_fy_sims[:] = 0.0
+        else:
+            curr_tax_curr_fy_sims = curr_tax_curr_fy_sims + tax_m_sims
+            curr_st_tax_curr_fy_sims = curr_st_tax_curr_fy_sims + st_tax_m_sims
+            curr_base_tax_curr_fy_sims = curr_base_tax_curr_fy_sims + base_tax_m_sims
+
+        curr_cash_sims = curr_cash_sims + ebitda_m - cit_paid_sims - capex_out_m + eq_in_m
+        curr_stress_cash_sims = curr_stress_cash_sims + st_ebitda_m - st_cit_paid_sims - capex_out_m + eq_in_m
+        curr_base_cash_sims = curr_base_cash_sims + base_ebitda_m - base_cit_paid_sims
         end_cash_mat[:, m] = curr_cash_sims
         stress_end_cash_mat[:, m] = curr_stress_cash_sims
         base_end_cash_mat[:, m] = curr_base_cash_sims
@@ -1485,11 +1553,17 @@ def build_financial_model(
     m_ebitda = m_tot_rev - m_tot_costs
     m_ebitda_pct = (m_ebitda / m_tot_rev) * 100.0
 
-    m_da = np.full(n_months, da)
+    v2_open_m_idx = cfg.venue_scaling.open_month_index - 1
+    v2_monthly_da = cfg.venue_scaling.total_fitout_capex_mvnd / float(cfg.taxes_and_other.venue2_depreciation_useful_life_months)
+    m_da = np.array([
+        da + (v2_monthly_da if m_i >= v2_open_m_idx else 0.0)
+        for m_i in range(n_months)
+    ])
     m_int = np.full(n_months, interest)
     m_ebt = m_ebitda - m_da - m_int
     m_taxes = np.maximum(0.0, m_ebt * cfg.taxes_and_other.corporate_tax_rate)
     m_net_inc = m_ebt - m_taxes
+    m_net_margin_pct = (m_net_inc / m_tot_rev) * 100.0
 
     tot_5y_rev = float(m_tot_rev.sum())
 
@@ -1695,26 +1769,57 @@ def build_financial_model(
             case_ebitda, m_ebitda,
             f"Y3 Annual EBITDA = {mc.y3_annual_ebitda_mean_mvnd:,.1f}M VND (vs Investor Minh Tran 3,500M target)",
         ),
+        _rec(
+            "SUMMARY", "FS-Month", "D&A EXPENSE",
+            "Depreciation & Amortization (D&A — Circular 45/2013/TT-BTC)", "Non-Cash Expense",
+            da, m_da,
+            "5.33M/mo Venue 1 equipment (M1–M60) + 116.67M/mo Venue 2 7,000M fit-out over 60-month lease (M14–M60)",
+        ),
+        _rec(
+            "SUMMARY", "FS-Month", "TAXABLE INCOME (EBT)",
+            "Net Income Before Taxes (EBT = EBITDA - D&A)", "Pre-Tax Profit",
+            case_ebt, m_ebt,
+            "Operating profit after straight-line depreciation and before Vietnam 20% Corporate Income Tax",
+        ),
+        _rec(
+            "SUMMARY", "Taxes", "VIETNAM CIT (20%)",
+            "Corporate Income Tax Expense (Vietnam Law 67/2025/QH15 @ 20.0%)", "Statutory Tax",
+            case_taxes, m_taxes,
+            "20.0% statutory Vietnam CIT accrued monthly into Current FY Tax Payable and settled in Month 4 (April) of next FY",
+        ),
+        _rec(
+            "SUMMARY", "FS-Month", "NET INCOME",
+            f"Net Income After Tax [5Y Net Margin = {(m_net_inc.sum()/tot_5y_rev)*100:.2f}%]", "Bottom-Line Profit",
+            case_net_income, m_net_inc,
+            "Bottom-line profit after D&A and 20% Vietnam statutory Corporate Income Tax",
+        ),
     )
     line_items_df = pd.DataFrame([vars(r) for r in line_items])
 
-    # 2. 60-MONTH (5-YEAR) BALANCE SHEET & CASH FLOW STATEMENT RECONCILIATION
+    # 2. 60-MONTH (5-YEAR) FINANCIAL STATEMENTS & VIETNAM TAX SCHEDULE RECONCILIATION
     #    Incorporates:
     #      - Months 10–13 (Oct-27 to Jan-28): Evenly split Fit-Out CapEx = -1,750.0M VND/month (-7,000.0M total)
     #      - Month 1 (Jan-27): Investor Minh Tran Signing Tranche = +500.0M VND
     #      - Month 10 (Oct-27, Q4 2027 Expansion Kickoff): Investor Minh Tran Expansion Tranche = +7,500.0M VND
-    #        (7,000.0M for Venue 2 fit-out + 1,000.0M total added to PICK! cash reserve)
+    #        (7,000.0M for Venue 2 fit-out + 1,000.0M total added to PICK! Cash Reserves)
+    #      - Vietnam Corporate Income Tax (CIT @ 20.0%, Law 67/2025/QH15): accrues into `Income Taxes Payable - Current FY`
+    #        during Months 1–11, consolidates into `Income Taxes Payable - Past FY` in Month 12 (Dec), and is settled in cash
+    #        in Month 4 (April) of the following fiscal year (`tax_consolidation_month = 4`).
+    #      - Vietnam Value-Added Tax (VAT, Law 48/2024/QH15): tracks 8.0% Output VAT collected vs. 10.0% Input VAT paid.
     bs = cfg.balance_sheet
     vs_cfg = cfg.venue_scaling
+    tax_cfg = cfg.taxes_and_other
     build_s_idx = vs_cfg.build_start_month_index - 1
     build_e_idx = vs_cfg.build_end_month_index - 1
     inv_sign_m_idx = vs_cfg.investor_signing_tranche_month_index - 1
     inv_m_idx = vs_cfg.investor_equity_injection_month_index - 1
 
     start_cash_arr = np.zeros(n_months)
+    nwc_change_arr = np.zeros(n_months)
     ocf_arr = np.zeros(n_months)
     icf_arr = np.zeros(n_months)
     fcf_arr = np.zeros(n_months)
+    eq_funding_arr = np.zeros(n_months)
     net_cf_arr = np.zeros(n_months)
     end_cash_arr = np.zeros(n_months)
     end_cash_case_arr = np.zeros(n_months)
@@ -1732,9 +1837,21 @@ def build_financial_model(
     ap_arr = np.full(n_months, bs.accounts_payable_mvnd)
     accrued_arr = np.full(n_months, bs.accrued_expenses_payable_mvnd)
     st_debt_arr = np.full(n_months, bs.short_term_debt_mvnd)
-    tot_curr_liab_arr = ap_arr + accrued_arr + st_debt_arr
+    tax_curr_fy_arr = np.zeros(n_months)
+    tax_past_fy_arr = np.zeros(n_months)
+    fy_consolidated_tax_due_arr = np.zeros(n_months)
+    cit_cash_paid_arr = np.zeros(n_months)
+
+    vat_output_arr = np.zeros(n_months)
+    vat_input_arr = np.zeros(n_months)
+    vat_net_position_arr = np.zeros(n_months)
+    vat_remitted_arr = np.zeros(n_months)
+    vat_receivable_arr = np.zeros(n_months)
+    vat_payable_arr = np.zeros(n_months)
+
+    tot_curr_liab_arr = np.zeros(n_months)
     lt_debt_arr = np.full(n_months, bs.long_term_debt_mvnd)
-    tot_liab_arr = tot_curr_liab_arr + lt_debt_arr
+    tot_liab_arr = np.zeros(n_months)
 
     contrib_cap_arr = np.zeros(n_months)
     ret_earn_arr = np.zeros(n_months)
@@ -1747,12 +1864,17 @@ def build_financial_model(
     curr_ppe = bs.equipment_ppe_gross_mvnd
     curr_contrib = bs.contributed_capital_mvnd
     curr_re = bs.starting_retained_earnings_mvnd
+    curr_tax_curr_fy = 0.0
+    curr_tax_past_fy = 0.0
+    curr_vat_credit_carryforward = 0.0
 
     cash_table_rows = []
+    tax_table_rows = []
 
     for m_idx in range(n_months):
         start_cash_arr[m_idx] = curr_cash
-        ocf = float(m_net_inc[m_idx] + m_da[m_idx])
+        cal_m_num = (m_idx % 12) + 1
+        fy_num = (m_idx // 12) + 1
 
         capex_m = (
             vs_cfg.even_monthly_fitout_capex_mvnd
@@ -1767,11 +1889,70 @@ def build_financial_model(
             eq_m = vs_cfg.investor_expansion_tranche_mvnd
         else:
             eq_m = bs.monthly_equity_funding_mvnd
+        eq_funding_arr[m_idx] = eq_m
         fcf = eq_m - bs.monthly_dividends_mvnd
+
+        # Vietnam Corporate Income Tax (CIT) accrual, FY consolidation & Month 4 (April) cash settlement
+        tax_m = float(m_taxes[m_idx])
+        if cal_m_num == tax_cfg.tax_consolidation_month:
+            cit_paid_m = curr_tax_past_fy
+            curr_tax_past_fy = 0.0
+        else:
+            cit_paid_m = 0.0
+
+        if cal_m_num == 12:
+            fy_tax_due = curr_tax_curr_fy + tax_m
+            fy_consolidated_tax_due_arr[m_idx] = fy_tax_due
+            curr_tax_past_fy = curr_tax_past_fy + fy_tax_due
+            curr_tax_curr_fy = 0.0
+        else:
+            fy_consolidated_tax_due_arr[m_idx] = 0.0
+            curr_tax_curr_fy = curr_tax_curr_fy + tax_m
+
+        tax_curr_fy_arr[m_idx] = curr_tax_curr_fy
+        tax_past_fy_arr[m_idx] = curr_tax_past_fy
+        cit_cash_paid_arr[m_idx] = cit_paid_m
+
+        # Vietnam Value-Added Tax (VAT) monthly schedule (Output VAT vs. Input VAT on taxable OpEx + CapEx)
+        vat_out_m = float(m_tot_rev[m_idx]) * tax_cfg.vat_output_rate
+        taxable_opex_cogs_m = float(
+            m_fnb_cogs[m_idx]
+            + m_pay_cons[m_idx]
+            + m_mem_event[m_idx]
+            + m_tot_opex[m_idx]
+            + m_admin[m_idx]
+            + m_mkt[m_idx]
+            + m_plat_dev[m_idx]
+            + m_plat_rec[m_idx]
+        )
+        vat_in_m = (taxable_opex_cogs_m + capex_m) * tax_cfg.vat_input_rate
+        net_vat_before_settle = vat_out_m - vat_in_m - curr_vat_credit_carryforward
+        if net_vat_before_settle >= 0.0:
+            vat_remit_m = net_vat_before_settle
+            curr_vat_credit_carryforward = 0.0
+            vat_rec_m = 0.0
+            vat_pay_m = 0.0
+        else:
+            vat_remit_m = 0.0
+            curr_vat_credit_carryforward = -net_vat_before_settle
+            vat_rec_m = curr_vat_credit_carryforward
+            vat_pay_m = 0.0
+
+        vat_output_arr[m_idx] = vat_out_m
+        vat_input_arr[m_idx] = vat_in_m
+        vat_net_position_arr[m_idx] = vat_out_m - vat_in_m
+        vat_remitted_arr[m_idx] = vat_remit_m
+        vat_receivable_arr[m_idx] = vat_rec_m
+        vat_payable_arr[m_idx] = vat_pay_m
+
+        # Working capital change driven by CIT accrual vs. April cash settlement
+        # (-) Change in Working Capital = ΔNonCashCA - ΔCL = -(tax_m - cit_paid_m) = cit_paid_m - tax_m
+        nwc_change_m = cit_paid_m - tax_m
+        nwc_change_arr[m_idx] = nwc_change_m
+        ocf = float(m_net_inc[m_idx] + m_da[m_idx] - nwc_change_m)
 
         net_cf = ocf + icf + fcf
         curr_cash = curr_cash + net_cf
-
         curr_cash_case = float(mc.base_ending_cash_mean[m_idx])
 
         ocf_arr[m_idx] = ocf
@@ -1781,7 +1962,7 @@ def build_financial_model(
         end_cash_arr[m_idx] = curr_cash
         end_cash_case_arr[m_idx] = curr_cash_case
 
-        curr_ppe = curr_ppe + capex_m - da
+        curr_ppe = curr_ppe + capex_m - float(m_da[m_idx])
         curr_contrib = curr_contrib + eq_m
         curr_re = curr_re + float(m_net_inc[m_idx]) - bs.monthly_dividends_mvnd
 
@@ -1789,6 +1970,15 @@ def build_financial_model(
         tot_curr_assets_arr[m_idx] = curr_cash + inv_arr[m_idx] + ar_arr[m_idx] + prepaid_arr[m_idx]
         tot_lt_assets_arr[m_idx] = curr_ppe + intang_arr[m_idx]
         tot_assets_arr[m_idx] = tot_curr_assets_arr[m_idx] + tot_lt_assets_arr[m_idx]
+
+        tot_curr_liab_arr[m_idx] = (
+            ap_arr[m_idx]
+            + accrued_arr[m_idx]
+            + st_debt_arr[m_idx]
+            + tax_curr_fy_arr[m_idx]
+            + tax_past_fy_arr[m_idx]
+        )
+        tot_liab_arr[m_idx] = tot_curr_liab_arr[m_idx] + lt_debt_arr[m_idx]
 
         contrib_cap_arr[m_idx] = curr_contrib
         ret_earn_arr[m_idx] = curr_re
@@ -1800,9 +1990,13 @@ def build_financial_model(
             {
                 "month_index": m_idx + 1,
                 "month_label": month_names[m_idx],
-                "year_num": (m_idx // 12) + 1,
+                "year_num": fy_num,
                 "active_courts": int(venue_scaling.active_courts_60m[m_idx]),
                 "starting_cash_mvnd": round(float(start_cash_arr[m_idx]), 2),
+                "net_income_mvnd": round(float(m_net_inc[m_idx]), 2),
+                "da_non_cash_mvnd": round(float(m_da[m_idx]), 2),
+                "change_in_working_capital_mvnd": round(float(nwc_change_m), 2),
+                "cit_cash_paid_mvnd": round(float(cit_paid_m), 2),
                 "operating_cash_flow_ocf_mvnd": round(float(ocf), 2),
                 "venue_fitout_capex_icf_mvnd": round(float(icf), 2),
                 "investor_equity_fcf_mvnd": round(float(fcf), 2),
@@ -1817,89 +2011,133 @@ def build_financial_model(
             }
         )
 
-    cash_flow_60m_df = pd.DataFrame(cash_table_rows)
+        tax_table_rows.append(
+            {
+                "month_index": m_idx + 1,
+                "month_label": month_names[m_idx],
+                "fiscal_year": f"FY {2026 + fy_num} (Y{fy_num})",
+                "ebitda_mvnd": round(float(m_ebitda[m_idx]), 2),
+                "depreciation_amortization_mvnd": round(float(m_da[m_idx]), 2),
+                "taxable_income_ebt_mvnd": round(float(m_ebt[m_idx]), 2),
+                "statutory_cit_rate_pct": round(tax_cfg.corporate_tax_rate * 100.0, 1),
+                "effective_monthly_cit_expense_mvnd": round(float(tax_m), 2),
+                "preliminary_cit_due_curr_fy_mvnd": round(float(tax_curr_fy_arr[m_idx]), 2),
+                "fy_end_consolidated_cit_due_mvnd": round(float(fy_consolidated_tax_due_arr[m_idx]), 2),
+                "year_end_cit_payment_april_mvnd": round(float(cit_paid_m), 2),
+                "taxes_due_prev_fy_payable_mvnd": round(float(tax_past_fy_arr[m_idx]), 2),
+                "output_vat_collected_8pct_mvnd": round(float(vat_out_m), 2),
+                "input_vat_paid_10pct_mvnd": round(float(vat_in_m), 2),
+                "net_vat_position_mvnd": round(float(vat_net_position_arr[m_idx]), 2),
+                "vat_remitted_to_treasury_mvnd": round(float(vat_remit_m), 2),
+                "vat_receivable_input_credit_mvnd": round(float(vat_rec_m), 2),
+            }
+        )
 
-    # Row specifications for 3-Statement Table:
+    cash_flow_60m_df = pd.DataFrame(cash_table_rows)
+    tax_estimations_60m_df = pd.DataFrame(tax_table_rows)
+
+    # Row specifications for Financial Statements — Monthly (FS-Month) & Annual (FS-Annual):
     three_stmt_rows: list[tuple[str, str, str, str, str, float | None, np.ndarray | None]] = [
-        # ==================== STATEMENT 1: INCOME STATEMENT ====================
-        ("IS_HDR", "INCOME STATEMENT", "STATEMENT 1 — INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
-        ("MEM_COURTS", "INCOME STATEMENT", "  Memo: Active Courts in Operation (6 -> 20 in M14)", "input_linked", "end_stock", 6.0, venue_scaling.active_courts_60m.astype(float)),
-        ("MEM_CNT", "INCOME STATEMENT", "  Memo: Active Paying Members (PICK! Social @ 399k/mo)", "input_linked", "end_stock", 0.0, mc.active_subscribers_mean),
-        ("REV_1A", "INCOME STATEMENT", "  Revenue: Court hire — Venue 1 (6 Courts, AdaptivePricing)", "input_linked", "flow", case_court_hire, m_v1_court),
-        ("REV_1B", "INCOME STATEMENT", "  Revenue: Court hire — Venue 2 (14 Courts, Opens M14 / Feb-28)", "input_linked", "flow", 0.0, m_v2_court),
-        ("REV_2", "INCOME STATEMENT", "  Revenue: Membership subscriptions (Month 5+)", "input_linked", "flow", 0.0, m_mem_rev),
-        ("REV_3", "INCOME STATEMENT", "  Revenue: Paddle rental and balls (Scales to 20 Courts)", "input", "flow", paddle_balls, m_paddle),
-        ("REV_4", "INCOME STATEMENT", "  Revenue: Coaching (Scales to 20 Courts + Studio)", "input", "flow", coaching, m_coach_rev),
-        ("REV_5", "INCOME STATEMENT", "  Revenue: Food and drinks (Scales to 20 Courts + Cafe)", "input", "flow", food_drinks, m_fnb_rev),
+        # ==================== KEY INDICATORS ====================
+        ("KI_HDR", "KEY INDICATORS", "KEY INDICATORS & MILESTONES", "header", "none", None, None),
+        ("MEM_COURTS", "KEY INDICATORS", "  Active Courts in Operation (6 -> 20 in M14)", "input_linked", "end_stock", 6.0, venue_scaling.active_courts_60m.astype(float)),
+        ("MEM_CNT", "KEY INDICATORS", "  Active Paying Members (PICK! Social @ 399k/mo)", "input_linked", "end_stock", 0.0, mc.active_subscribers_mean),
+        ("KI_EQ", "KEY INDICATORS", "  Equity Funding (500M Signing M1 + 7,500M Expansion M10)", "input_linked", "flow", 0.0, eq_funding_arr),
+        ("KI_CASH", "KEY INDICATORS", "  Cash Reserves at End of Period (Cash in Hand)", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
+
+        # ==================== INCOME STATEMENT ====================
+        ("IS_HDR", "INCOME STATEMENT", "INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
+        ("REV_1A", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 1 (6 Courts, AdaptivePricing)", "input_linked", "flow", case_court_hire, m_v1_court),
+        ("REV_1B", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 2 (14 Courts, Opens M14 / Feb-28)", "input_linked", "flow", 0.0, m_v2_court),
+        ("REV_2", "INCOME STATEMENT", "  Revenue: Membership Subscriptions (Month 5+)", "input_linked", "flow", 0.0, m_mem_rev),
+        ("REV_3", "INCOME STATEMENT", "  Revenue: Paddle Rental and Balls (Scales to 20 Courts)", "input", "flow", paddle_balls, m_paddle),
+        ("REV_4", "INCOME STATEMENT", "  Revenue: Coaching Services (Scales to 20 Courts + Studio)", "input", "flow", coaching, m_coach_rev),
+        ("REV_5", "INCOME STATEMENT", "  Revenue: Food and Drinks (Scales to 20 Courts + Cafe)", "input", "flow", food_drinks, m_fnb_rev),
         ("REV_TOT", "INCOME STATEMENT", "Total Revenue", "subtotal", "flow", case_total_rev, m_tot_rev),
 
-        ("COGS_1", "INCOME STATEMENT", "  COGS: Coach fees (paid per lesson)", "input", "flow", case_coach_fees, m_coach_cogs),
-        ("COGS_2", "INCOME STATEMENT", "  COGS: Food and drink supplies", "input", "flow", case_fb_supplies, m_fnb_cogs),
-        ("COGS_3", "INCOME STATEMENT", "  COGS: Payment gateway fees (~1.50% Rev) & consumables", "input_linked", "flow", case_pay_consumables, m_pay_cons),
-        ("COGS_4", "INCOME STATEMENT", "  COGS: Membership partner courts (@ 200k/hr) & events", "input_linked", "flow", 0.0, m_mem_event),
-        ("COGS_TOT", "INCOME STATEMENT", "Total Cost of Goods Sold (COGS)", "subtotal", "flow", case_total_cogs, m_tot_cogs),
+        ("COGS_1", "INCOME STATEMENT", "  Costs (COGS): Coach Fees (Paid per Lesson)", "input", "flow", case_coach_fees, m_coach_cogs),
+        ("COGS_2", "INCOME STATEMENT", "  Costs (COGS): Food and Drink Supplies", "input", "flow", case_fb_supplies, m_fnb_cogs),
+        ("COGS_3", "INCOME STATEMENT", "  Costs (COGS): Payment Processing (~1.50% Rev) & Consumables", "input_linked", "flow", case_pay_consumables, m_pay_cons),
+        ("COGS_4", "INCOME STATEMENT", "  Costs (COGS): Membership Partner Courts (@ 200k/hr) & Events", "input_linked", "flow", 0.0, m_mem_event),
+        ("COGS_TOT", "INCOME STATEMENT", "Total Costs (COGS)", "subtotal", "flow", case_total_cogs, m_tot_cogs),
 
         ("GP_TOT", "INCOME STATEMENT", "Gross Profit", "total", "flow", case_gross_profit, m_gp),
         ("GP_PCT", "INCOME STATEMENT", "  Gross Margin (%)", "pct", "pct", (case_gross_profit / case_total_rev) * 100.0, m_gp_pct),
 
-        ("OPEX_1A", "INCOME STATEMENT", "  OpEx: Venue 1 lease (6 Courts, 150M/mo)", "input", "flow", case_venue_lease, m_v1_lease),
-        ("OPEX_1B", "INCOME STATEMENT", "  OpEx: Venue 2 lease (14 Courts, 330M/mo from M10 / Oct-27)", "input_linked", "flow", 0.0, m_v2_lease),
-        ("OPEX_2", "INCOME STATEMENT", "  OpEx: Electricity, lighting and water (Venue 1 + Venue 2)", "input", "flow", case_utilities, m_util),
-        ("OPEX_3", "INCOME STATEMENT", "  OpEx: Maintenance and insurance (Venue 1 + Venue 2)", "input", "flow", case_maint_ins, m_maint),
+        ("OPEX_1A", "INCOME STATEMENT", "  Facility OpEx: Rent — Venue 1 Lease (6 Courts, 150M/mo)", "input", "flow", case_venue_lease, m_v1_lease),
+        ("OPEX_1B", "INCOME STATEMENT", "  Facility OpEx: Rent — Venue 2 Lease (14 Courts, 330M/mo M10+)", "input_linked", "flow", 0.0, m_v2_lease),
+        ("OPEX_2", "INCOME STATEMENT", "  Facility OpEx: Utilities — Electricity, Lighting & Water", "input", "flow", case_utilities, m_util),
+        ("OPEX_3", "INCOME STATEMENT", "  Facility OpEx: Insurance & Facility Maintenance", "input", "flow", case_maint_ins, m_maint),
         ("OPEX_TOT", "INCOME STATEMENT", "Subtotal Facility Operating Expenses (OpEx)", "subtotal", "flow", case_total_opex, m_tot_opex),
 
-        ("SGA_1", "INCOME STATEMENT", "  SG&A: Staff wages (Venue 1 130M + Venue 2 215M from M14)", "input", "flow", case_staff_wages, m_staff),
-        ("SGA_2", "INCOME STATEMENT", "  SG&A: Booking system and administration (Base)", "input", "flow", case_booking_admin, m_admin),
-        ("SGA_3", "INCOME STATEMENT", "  SG&A: Marketing (Growth & Social)", "input", "flow", case_marketing, m_mkt),
-        ("SGA_4", "INCOME STATEMENT", "  SG&A: Platform build & migration allocation (M1–M6)", "input_linked", "flow", 0.0, m_plat_dev),
-        ("SGA_5", "INCOME STATEMENT", "  SG&A: Platform cloud, OTP, maint & uni ops (M5+)", "input_linked", "flow", 0.0, m_plat_rec),
-        ("SGA_6", "INCOME STATEMENT", "  SG&A: Legal/ward noise handling & U-18 safety (externals.toml)", "input_linked", "flow", 0.0, m_ext_leg_saf),
-        ("SGA_TOT", "INCOME STATEMENT", "Subtotal Selling, General, Admin & Platform", "subtotal", "flow", case_total_sga, m_tot_sga),
+        ("SGA_1", "INCOME STATEMENT", "  Expenses (SG&A): Staff & Payroll (Venue 1 + Venue 2 M14+)", "input", "flow", case_staff_wages, m_staff),
+        ("SGA_2", "INCOME STATEMENT", "  Expenses (SG&A): Tech Support & Administration (Base)", "input", "flow", case_booking_admin, m_admin),
+        ("SGA_3", "INCOME STATEMENT", "  Expenses (SG&A): Marketing & Growth (Social & Segments)", "input", "flow", case_marketing, m_mkt),
+        ("SGA_4", "INCOME STATEMENT", "  Expenses (SG&A): Platform Build & Migration Allocation (M1–M6)", "input_linked", "flow", 0.0, m_plat_dev),
+        ("SGA_5", "INCOME STATEMENT", "  Expenses (SG&A): Platform Cloud, OTP & Community Ops (M5+)", "input_linked", "flow", 0.0, m_plat_rec),
+        ("SGA_6", "INCOME STATEMENT", "  Expenses (SG&A): Legal / Ward Noise & U-18 Safety Compliance", "input_linked", "flow", 0.0, m_ext_leg_saf),
+        ("SGA_TOT", "INCOME STATEMENT", "Subtotal Expenses (SG&A)", "subtotal", "flow", case_total_sga, m_tot_sga),
 
         ("OPEX_SGA_TOT", "INCOME STATEMENT", "Total Operating Expenses (OpEx + SG&A)", "subtotal", "flow", case_total_opex + case_total_sga, m_tot_opex_sga),
-        ("ALL_COST_TOT", "INCOME STATEMENT", "Total Costs (COGS + OpEx + SG&A)", "subtotal", "flow", case_total_costs, m_tot_costs),
+        ("ALL_COST_TOT", "INCOME STATEMENT", "Total Operating Costs (COGS + OpEx + SG&A)", "subtotal", "flow", case_total_costs, m_tot_costs),
 
         ("EBITDA_TOT", "INCOME STATEMENT", "Net Operating Income (EBITDA)", "grand_total", "flow", case_ebitda, m_ebitda),
         ("EBITDA_PCT", "INCOME STATEMENT", "  EBITDA Margin (%)", "pct", "pct", (case_ebitda / case_total_rev) * 100.0, m_ebitda_pct),
-        ("DA_EXP", "INCOME STATEMENT", "  Depreciation & Amortization (D&A)", "formula", "flow", da, m_da),
-        ("INT_EXP", "INCOME STATEMENT", "  Interest & Tax Expense", "formula", "flow", interest + case_taxes, m_int + m_taxes),
-        ("NET_INC", "INCOME STATEMENT", "Net Income (Profit)", "grand_total", "flow", case_net_income, m_net_inc),
+        ("DA_EXP", "INCOME STATEMENT", "  Other Expenses: Depreciation & Amortization (D&A)", "formula", "flow", da, m_da),
+        ("EBT_TOT", "INCOME STATEMENT", "Net Income Before Taxes (EBT)", "subtotal", "flow", case_ebt, m_ebt),
+        ("TAX_EXP", "INCOME STATEMENT", "  Taxes: Corporate Income Tax (Vietnam 20.0% Statutory CIT)", "formula", "flow", case_taxes, m_taxes),
+        ("NET_INC", "INCOME STATEMENT", "Net Income", "grand_total", "flow", case_net_income, m_net_inc),
+        ("NET_PCT", "INCOME STATEMENT", "  Net Margin (%)", "pct", "pct", (case_net_income / case_total_rev) * 100.0, m_net_margin_pct),
 
-        # ==================== STATEMENT 2: BALANCE SHEET ====================
-        ("BS_HDR", "BALANCE SHEET", "STATEMENT 2 — BALANCE SHEET (END OF PERIOD, M VND)", "header", "none", None, None),
-        ("BS_CASH", "BALANCE SHEET", "  Cash and Cash Equivalents (Includes 500M M1 + 500M M10 Reserve)", "formula", "end_stock", bs.starting_cash_mvnd + case_net_income, end_cash_arr),
-        ("BS_INV", "BALANCE SHEET", "  Inventory (F&B & Balls/Paddles)", "input", "end_stock", bs.inventory_mvnd, inv_arr),
-        ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Deposit", "input", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
-        ("BS_CA_TOT", "BALANCE SHEET", "Total Current Assets", "subtotal", "end_stock", bs.starting_cash_mvnd + case_net_income + bs.inventory_mvnd + bs.prepaid_expenses_mvnd, tot_curr_assets_arr),
-        ("BS_PPE", "BALANCE SHEET", "  Equipment & Venue Fit-Out PP&E (+7,000M in M10–M13)", "input_linked", "end_stock", bs.equipment_ppe_gross_mvnd, ppe_net_arr),
-        ("BS_INTANG", "BALANCE SHEET", "  Intangible Assets (Platform CapEx)", "input", "end_stock", bs.intangible_assets_mvnd, intang_arr),
-        ("BS_LTA_TOT", "BALANCE SHEET", "Total Long-Term (Fixed) Assets", "subtotal", "end_stock", bs.equipment_ppe_gross_mvnd + bs.intangible_assets_mvnd, tot_lt_assets_arr),
-        ("BS_ASSETS_TOT", "BALANCE SHEET", "TOTAL ASSETS", "total", "end_stock", bs.starting_cash_mvnd + case_net_income + bs.inventory_mvnd + bs.prepaid_expenses_mvnd + bs.equipment_ppe_gross_mvnd, tot_assets_arr),
+        # ==================== BALANCE SHEET ====================
+        ("BS_HDR", "BALANCE SHEET", "BALANCE SHEET (END OF PERIOD, M VND)", "header", "none", None, None),
+        ("BS_CASH", "BALANCE SHEET", "  Cash and Cash Equivalents (Cash Reserves)", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
+        ("BS_INV", "BALANCE SHEET", "  Inventory (F&B & Court Equipment)", "input", "end_stock", bs.inventory_mvnd, inv_arr),
+        ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Security Deposit", "input", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
+        ("BS_CA_TOT", "BALANCE SHEET", "Total Current Assets", "subtotal", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd, tot_curr_assets_arr),
+        ("BS_PPE", "BALANCE SHEET", "  Equipment / PP&E (+7,000M Fit-Out in M10–M13, Net of D&A)", "input_linked", "end_stock", bs.equipment_ppe_gross_mvnd - da, ppe_net_arr),
+        ("BS_INTANG", "BALANCE SHEET", "  Intangible Assets", "input", "end_stock", bs.intangible_assets_mvnd, intang_arr),
+        ("BS_LTA_TOT", "BALANCE SHEET", "Total Long-Term (Fixed) Assets", "subtotal", "end_stock", bs.equipment_ppe_gross_mvnd - da + bs.intangible_assets_mvnd, tot_lt_assets_arr),
+        ("BS_ASSETS_TOT", "BALANCE SHEET", "TOTAL ASSETS", "total", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd + bs.equipment_ppe_gross_mvnd - da, tot_assets_arr),
 
-        ("BS_AP", "BALANCE SHEET", "  Accounts Payable (Supplies & Gateway)", "input", "end_stock", bs.accounts_payable_mvnd, ap_arr),
+        ("BS_AP", "BALANCE SHEET", "  Accounts Payable (Supplies & Payment Gateway)", "input", "end_stock", bs.accounts_payable_mvnd, ap_arr),
         ("BS_ACC", "BALANCE SHEET", "  Accrued Coaching & Staff Payables", "input", "end_stock", bs.accrued_expenses_payable_mvnd, accrued_arr),
-        ("BS_LIAB_TOT", "BALANCE SHEET", "TOTAL LIABILITIES", "subtotal", "end_stock", bs.accounts_payable_mvnd + bs.accrued_expenses_payable_mvnd, tot_liab_arr),
+        ("BS_TAX_PAST", "BALANCE SHEET", "  Income Taxes Payable — Past FY (Settled in Month 4 / April)", "formula", "end_stock", 0.0, tax_past_fy_arr),
+        ("BS_TAX_CURR", "BALANCE SHEET", "  Income Taxes Payable — Current FY (Accrued 20% CIT)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
+        ("BS_LIAB_TOT", "BALANCE SHEET", "TOTAL LIABILITIES", "subtotal", "end_stock", bs.accounts_payable_mvnd + bs.accrued_expenses_payable_mvnd + case_taxes, tot_liab_arr),
 
-        ("BS_CAP", "BALANCE SHEET", "  Contributed Capital (+500M M1 & +7,500M M10 Investor Equity)", "input_linked", "end_stock", bs.contributed_capital_mvnd, contrib_cap_arr),
-        ("BS_RE", "BALANCE SHEET", "  Retained Earnings (Cumulative)", "formula", "end_stock", bs.starting_retained_earnings_mvnd + case_net_income, ret_earn_arr),
+        ("BS_CAP", "BALANCE SHEET", "  Contributed Capital (Funding Rounds: +500M M1 & +7,500M M10)", "input_linked", "end_stock", bs.contributed_capital_mvnd, contrib_cap_arr),
+        ("BS_RE", "BALANCE SHEET", "  Retained Earnings (Cumulative After-Tax Profit)", "formula", "end_stock", bs.starting_retained_earnings_mvnd + case_net_income, ret_earn_arr),
         ("BS_EQ_TOT", "BALANCE SHEET", "TOTAL OWNER'S EQUITY", "subtotal", "end_stock", bs.contributed_capital_mvnd + bs.starting_retained_earnings_mvnd + case_net_income, tot_equity_arr),
-        ("BS_LE_TOT", "BALANCE SHEET", "TOTAL LIABILITIES & OWNER'S EQUITY", "total", "end_stock", tot_liab_arr[0] + bs.contributed_capital_mvnd + bs.starting_retained_earnings_mvnd + case_net_income, tot_liab_and_eq_arr),
-        ("BS_CHK", "BALANCE SHEET", "  Balance Sheet Check (Assets - L&E)", "formula", "end_stock", 0.0, bs_check_arr),
+        ("BS_LE_TOT", "BALANCE SHEET", "TOTAL LIABILITIES & OWNER'S EQUITY", "total", "end_stock", bs.accounts_payable_mvnd + bs.accrued_expenses_payable_mvnd + case_taxes + bs.contributed_capital_mvnd + bs.starting_retained_earnings_mvnd + case_net_income, tot_liab_and_eq_arr),
+        ("BS_CHK", "BALANCE SHEET", "  Check (Total Assets - Total L&E)", "formula", "end_stock", 0.0, bs_check_arr),
 
-        # ==================== STATEMENT 3: CASH FLOW STATEMENT ====================
-        ("CF_HDR", "CASH FLOW", "STATEMENT 3 — CASH FLOW STATEMENT (M VND)", "header", "none", None, None),
+        # ==================== CASH FLOW STATEMENT ====================
+        ("CF_HDR", "CASH FLOW", "CASH FLOW STATEMENT (M VND)", "header", "none", None, None),
         ("CF_START", "CASH FLOW", "Starting Cash Balance", "formula", "start_stock", bs.starting_cash_mvnd, start_cash_arr),
-        ("CF_NI", "CASH FLOW", "  (+) Net Income (Profit)", "formula", "flow", case_net_income, m_net_inc),
-        ("CF_DA", "CASH FLOW", "  (+) Depreciation & Amortization (D&A)", "formula", "flow", da, m_da),
-        ("CF_NWC", "CASH FLOW", "  (-) Change in Working Capital", "formula", "flow", 0.0, np.zeros(n_months)),
-        ("CF_OCF", "CASH FLOW", "Total Operating Cash Flow (OCF)", "subtotal", "flow", case_net_income, ocf_arr),
-        ("CF_CAPEX", "CASH FLOW", "  (-) Venue 2 Fit-Out CapEx (-1,750M/mo in M10–M13 = -7,000M)", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
-        ("CF_ICF", "CASH FLOW", "Total Investing Cash Flow (ICF)", "subtotal", "flow", -bs.monthly_capex_mvnd, icf_arr),
-        ("CF_EQ", "CASH FLOW", "  (+) Investor Minh Tran Equity (+500M M1 & +7,500M M10 = +8,000M)", "input_linked", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
-        ("CF_FCF", "CASH FLOW", "Total Financing Cash Flow (FCF)", "subtotal", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
-        ("CF_NET", "CASH FLOW", "Net Cash Flow (Change in Cash)", "total", "flow", case_net_income, net_cf_arr),
-        ("CF_END", "CASH FLOW", "ENDING CASH BALANCE (Model)", "grand_total", "end_stock", bs.starting_cash_mvnd + case_net_income, end_cash_arr),
-        ("CF_END_CASE", "CASH FLOW", "  Memo: Case Baseline Ending Cash Balance", "formula", "end_stock", bs.starting_cash_mvnd + case_net_income, end_cash_case_arr),
+        ("CF_NI", "CASH FLOW", "  (+) Net Income", "formula", "flow", case_net_income, m_net_inc),
+        ("CF_DA", "CASH FLOW", "  (+) D&A (Non-Cash Expense)", "formula", "flow", da, m_da),
+        ("CF_NWC", "CASH FLOW", "  (-) Change in Working Capital (CIT Accrual vs. April Payment)", "formula", "flow", -case_taxes, nwc_change_arr),
+        ("CF_OCF", "CASH FLOW", "Total Operating Cash Flow", "subtotal", "flow", case_ebitda, ocf_arr),
+        ("CF_CAPEX", "CASH FLOW", "  (-) CAPEX > PP&E (Venue 2 Fit-Out: -1,750M/mo in M10–M13)", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
+        ("CF_ICF", "CASH FLOW", "Total Investing Cash Flow", "subtotal", "flow", -bs.monthly_capex_mvnd, icf_arr),
+        ("CF_EQ", "CASH FLOW", "  (+) Equity Funding (Investor Minh Tran: +500M M1 & +7,500M M10)", "input_linked", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
+        ("CF_FCF", "CASH FLOW", "Total Financing Cash Flow", "subtotal", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
+        ("CF_NET", "CASH FLOW", "Net Cash Flow (Total Cash Movements)", "total", "flow", case_ebitda, net_cf_arr),
+        ("CF_END", "CASH FLOW", "ENDING CASH BALANCE (Cash Reserves)", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
+        ("CF_END_CASE", "CASH FLOW", "  Memo: Status Quo Baseline Cash Reserves", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_case_arr),
+
+        # ==================== TAX ESTIMATIONS (VIETNAM CIT & VAT) ====================
+        ("TX_HDR", "TAX ESTIMATIONS", "TAX ESTIMATIONS — VIETNAM CIT (20%) & VAT SCHEDULE (M VND)", "header", "none", None, None),
+        ("TX_EBT", "TAX ESTIMATIONS", "  Taxable Income (EBT = EBITDA - D&A)", "formula", "flow", case_ebt, m_ebt),
+        ("TX_CIT_EXP", "TAX ESTIMATIONS", "  Effective Monthly CIT Expense (20.0% Statutory Rate)", "formula", "flow", case_taxes, m_taxes),
+        ("TX_CIT_CURR", "TAX ESTIMATIONS", "  Preliminary Income Tax Due (Current FY Accrued)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
+        ("TX_CIT_PAID", "TAX ESTIMATIONS", "  Year-End CIT Payment (Paid in Month 4 / April of Next FY)", "formula", "flow", 0.0, cit_cash_paid_arr),
+        ("TX_CIT_PAST", "TAX ESTIMATIONS", "  Taxes Due for Previous FY (Balance Sheet Payable)", "formula", "end_stock", 0.0, tax_past_fy_arr),
+        ("TX_VAT_OUT", "TAX ESTIMATIONS", "  VAT Collected on Revenue (8.0% Effective Output VAT)", "formula", "flow", case_total_rev * tax_cfg.vat_output_rate, vat_output_arr),
+        ("TX_VAT_IN", "TAX ESTIMATIONS", "  VAT Paid on Transactions & Fit-Out CapEx (10.0% Input VAT)", "formula", "flow", (case_fb_supplies + case_pay_consumables + case_total_opex + case_booking_admin + case_marketing) * tax_cfg.vat_input_rate, vat_input_arr),
+        ("TX_VAT_REC", "TAX ESTIMATIONS", "  VAT Receivable (Recoverable Input VAT Credit Carryforward)", "formula", "end_stock", 0.0, vat_receivable_arr),
+        ("TX_VAT_REM", "TAX ESTIMATIONS", "  Total VAT Remitted to State Treasury", "subtotal", "flow", max(0.0, case_total_rev * tax_cfg.vat_output_rate - (case_fb_supplies + case_pay_consumables + case_total_opex + case_booking_admin + case_marketing) * tax_cfg.vat_input_rate), vat_remitted_arr),
     ]
 
     # Build FS-Month DataFrame (60 Months + FY1..FY5 + 5Y_Total + Pct_of_Rev)
@@ -1944,6 +2182,8 @@ def build_financial_model(
                         row_dict[f"FY{y_idx}_Total"] = round(float(m_gp[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
                     elif code == "EBITDA_PCT":
                         row_dict[f"FY{y_idx}_Total"] = round(float(m_ebitda[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
+                    elif code == "NET_PCT":
+                        row_dict[f"FY{y_idx}_Total"] = round(float(m_net_inc[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
                     else:
                         row_dict[f"FY{y_idx}_Total"] = round(float(arr[s_i:e_i].mean()), 4)
                 elif agg_mode == "start_stock":
@@ -1954,12 +2194,14 @@ def build_financial_model(
             if agg_mode == "flow":
                 tot5 = float(arr.sum())
                 row_dict["5Y_Total"] = round(tot5, 4)
-                row_dict["Pct_of_Rev"] = round((tot5 / tot_5y_rev) * 100.0, 4) if stmt == "INCOME STATEMENT" else None
+                row_dict["Pct_of_Rev"] = round((tot5 / tot_5y_rev) * 100.0, 4) if stmt in ("INCOME STATEMENT", "TAX ESTIMATIONS") else None
             elif agg_mode == "pct":
                 if code == "GP_PCT":
                     val5 = float(m_gp.sum() / tot_5y_rev * 100.0)
                 elif code == "EBITDA_PCT":
                     val5 = float(m_ebitda.sum() / tot_5y_rev * 100.0)
+                elif code == "NET_PCT":
+                    val5 = float(m_net_inc.sum() / tot_5y_rev * 100.0)
                 else:
                     val5 = float(arr.mean())
                 row_dict["5Y_Total"] = round(val5, 4)
@@ -2006,8 +2248,13 @@ def build_financial_model(
     fs_annual_df = pd.DataFrame(annual_records)
 
     ann_rev = np.array([m_tot_rev[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
+    ann_cogs = np.array([m_tot_cogs[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
+    ann_opex = np.array([m_tot_opex[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
+    ann_sga = np.array([m_tot_sga[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
     ann_costs = np.array([m_tot_costs[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
     ann_ebitda = np.array([m_ebitda[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
+    ann_da = np.array([m_da[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
+    ann_taxes = np.array([m_taxes[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
     ann_ni = np.array([m_net_inc[(y * 12):((y + 1) * 12)].sum() for y in range(5)])
 
     min_cash_idx = int(np.argmin(end_cash_arr))
@@ -2080,7 +2327,19 @@ def build_financial_model(
         monthly_total_costs_arr=m_tot_costs,
         monthly_ebitda_arr=m_ebitda,
         monthly_ebitda_margin_pct_arr=m_ebitda_pct,
+        monthly_da_arr=m_da,
+        monthly_ebt_arr=m_ebt,
+        monthly_taxes_arr=m_taxes,
         monthly_net_income_arr=m_net_inc,
+        monthly_net_margin_pct_arr=m_net_margin_pct,
+        monthly_tax_payable_curr_fy_arr=tax_curr_fy_arr,
+        monthly_tax_payable_past_fy_arr=tax_past_fy_arr,
+        monthly_cit_cash_paid_arr=cit_cash_paid_arr,
+        monthly_nwc_change_arr=nwc_change_arr,
+        monthly_vat_output_arr=vat_output_arr,
+        monthly_vat_input_arr=vat_input_arr,
+        monthly_vat_receivable_arr=vat_receivable_arr,
+        monthly_vat_payable_arr=vat_payable_arr,
         five_year_revenue_mvnd=tot_5y_rev,
         five_year_cogs_mvnd=float(m_tot_cogs.sum()),
         five_year_gross_profit_mvnd=float(m_gp.sum()),
@@ -2088,10 +2347,19 @@ def build_financial_model(
         five_year_sga_mvnd=float(m_tot_sga.sum()),
         five_year_total_costs_mvnd=float(m_tot_costs.sum()),
         five_year_ebitda_mvnd=float(m_ebitda.sum()),
+        five_year_da_mvnd=float(m_da.sum()),
+        five_year_ebt_mvnd=float(m_ebt.sum()),
+        five_year_taxes_mvnd=float(m_taxes.sum()),
+        five_year_cit_cash_paid_mvnd=float(cit_cash_paid_arr.sum()),
         five_year_net_income_mvnd=float(m_net_inc.sum()),
         annual_revenue_arr=ann_rev,
+        annual_cogs_arr=ann_cogs,
+        annual_opex_arr=ann_opex,
+        annual_sga_arr=ann_sga,
         annual_total_costs_arr=ann_costs,
         annual_ebitda_arr=ann_ebitda,
+        annual_da_arr=ann_da,
+        annual_taxes_arr=ann_taxes,
         annual_net_income_arr=ann_ni,
         starting_cash_mvnd=bs.starting_cash_mvnd,
         min_cash_balance_model_mvnd=float(end_cash_arr[min_cash_idx]),
@@ -2112,6 +2380,7 @@ def build_financial_model(
         fs_month_df=fs_month_df,
         fs_annual_df=fs_annual_df,
         cash_flow_60m_df=cash_flow_60m_df,
+        tax_estimations_60m_df=tax_estimations_60m_df,
         month_labels=tuple(month_names),
         year_labels=year_labels,
     )

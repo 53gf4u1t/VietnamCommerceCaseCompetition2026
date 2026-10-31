@@ -337,7 +337,7 @@ def plot_fs_month_projection_sheet(
     y1_months = list(res.month_labels[:12])
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["3-STATEMENT MONTHLY MODEL (60M HORIZON)", "Unit"] + y1_months + ["Dec-28 (M24)", "Dec-31 (M60)", "FY1 Total", "5Y (60M)", "% Rev"]),
+        ("col_hdr", ["FINANCIAL STATEMENTS — MONTHLY (FS-MONTH, 60M HORIZON)", "Unit"] + y1_months + ["Dec-28 (M24)", "Dec-31 (M60)", "FY1 Total", "5Y (60M)", "% Rev"]),
     ]
 
     for _, df_row in res.fs_month_df.iterrows():
@@ -429,7 +429,7 @@ def plot_fs_annual_and_structure_dashboard(
 
     rows: list[tuple[str, list[str]]] = [
         ("col_hdr", [
-            "3-STATEMENT ANNUAL MODEL (FY 2027 TO FY 2031)",
+            "FINANCIAL STATEMENTS — ANNUAL (FS-ANNUAL, FY 2027 TO FY 2031)",
             "Unit",
             "Case M1",
             "M1 Build",
@@ -518,51 +518,68 @@ def plot_revenue_costs_profit_comparison_charts(
     output_dir: Path,
 ) -> Path:
     """
-    Generate Chart 4: Double-Bar & Profit-Line Comparison Charts (Baseline vs. Model)
+    Generate Chart 4: Stacked Revenue-by-Line, Costs-by-Category & Profit-Line Comparison Charts (Baseline vs. Model)
       - Baseline bars dimmed down to grey and low opacity to emphasize our solution
-      - Model Revenue plotted in vibrant GREEN above 0; Model Costs plotted in vibrant RED below 0
-      - Profit (EBITDA / Net Income) plotted as solid lines with 'o' markers (no profit number tooltips;
-        dimmed grey line + 'o' markers for Baseline vs. bold line + 'o' markers for Model)
+      - Model Revenue above 0 separated into stacked revenue lines (Venue 1 Court Hire, Venue 2 Court Hire,
+        Memberships, Coaching, Food & Drinks, Paddle & Balls)
+      - Model Costs below 0 separated into stacked cost & tax categories (Costs (COGS), Facility OpEx,
+        Expenses (SG&A), D&A & 20% CIT)
+      - Operating Profit (EBITDA) and Net Income (After D&A & 20% Vietnam CIT) plotted as lines with markers
       - Panel A: 5-Year Annual Comparison (FY 2027 to FY 2031)
-      - Panel B: Monthly Trajectory Across Year 1 & Year 2 (Months 1–24: Jan-27 to Dec-28, showing M1–M4 Build, M5 Launch, and smooth ramp to 1,500 members by Dec-28)
+      - Panel B: Monthly Trajectory Across Year 1 & Year 2 (Months 1–24: Jan-27 to Dec-28)
     """
-    fig, (ax_ann, ax_mon) = plt.subplots(2, 1, figsize=(19.0, 13.4), dpi=240)
+    fig, (ax_ann, ax_mon) = plt.subplots(2, 1, figsize=(19.4, 14.0), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(hspace=0.32)
+    plt.subplots_adjust(hspace=0.34)
 
     BASE_BAR_GREY = "#585b70"
     BASE_BAR_EDGE = "#7f849c"
-    BASE_BAR_ALPHA = 0.55
+    BASE_BAR_ALPHA = 0.50
     BASE_TEXT_GREY = "#a6adc8"
 
-    MOD_REV_GREEN = "#a6e3a1"
-    MOD_REV_EDGE = "#11111b"
+    # Catppuccin Mocha palette for the 6 Revenue Lines (positive stacked bars > 0)
+    REV_LINES_SPEC = [
+        ("Venue 1 Court Hire", res.monthly_venue1_court_hire_arr, "#89b4fa"),
+        ("Venue 2 Court Hire", res.monthly_venue2_court_hire_arr, "#74c7ec"),
+        ("Memberships (PICK! Social)", res.monthly_membership_rev_arr, "#a6e3a1"),
+        ("Coaching", res.monthly_coaching_arr, "#94e2d5"),
+        ("Food & Drinks", res.monthly_food_drinks_arr, "#f9e2af"),
+        ("Paddle & Balls", res.monthly_paddle_balls_arr, "#cba6f7"),
+    ]
 
-    MOD_COST_RED = "#f38ba8"
-    MOD_COST_EDGE = "#11111b"
+    # Catppuccin Mocha palette for the 4 Cost & Tax Categories (negative stacked bars < 0)
+    COST_CATS_SPEC = [
+        ("Costs (COGS)", res.monthly_total_cogs_arr, "#fab387"),
+        ("Facility OpEx (Lease & Utilities)", res.monthly_total_opex_arr, "#f38ba8"),
+        ("Expenses (SG&A & Platform)", res.monthly_total_sga_arr, "#eba0ac"),
+        ("D&A & 20% Vietnam CIT", res.monthly_da_arr + res.monthly_taxes_arr, "#b4befe"),
+    ]
 
     BASE_PROFIT_LINE = "#9399b2"
-    BASE_PROFIT_ALPHA = 0.70
-    MOD_PROFIT_LINE = "#f9e2af"
-    MOD_PROFIT_MARKER = "#a6e3a1"
+    BASE_PROFIT_ALPHA = 0.72
+    MOD_EBITDA_LINE = "#f9e2af"
+    MOD_EBITDA_MARKER = "#a6e3a1"
+    MOD_NETINC_LINE = "#cdd6f4"
+    MOD_NETINC_MARKER = "#89b4fa"
 
     # =========================================================================
-    # PANEL A: 5-Year Annual Double-Bar & Profit-Line Chart (FY 2027 – FY 2031)
+    # PANEL A: 5-Year Annual Stacked Revenue-by-Line & Cost-by-Category Chart
     # =========================================================================
     ax_ann.set_facecolor("#181825")
     mc = res.mc
     n_years = len(res.year_labels)
     x_yr = np.arange(n_years)
-    bar_w = 0.34
+    bar_w = 0.35
 
     base_ann_rev = mc.base_annual_rev_mean
     mod_ann_rev = res.annual_revenue_arr
 
     base_ann_cost = -mc.base_annual_costs_mean
-    mod_ann_cost = -res.annual_total_costs_arr
+    mod_ann_total_outflow = res.annual_total_costs_arr + res.annual_da_arr + res.annual_taxes_arr
 
     base_ann_profit = mc.base_annual_ebitda_mean
-    mod_ann_profit = res.annual_ebitda_arr
+    mod_ann_ebitda = res.annual_ebitda_arr
+    mod_ann_netinc = res.annual_net_income_arr
 
     base_rev_yerr = np.vstack([
         np.maximum(0.0, base_ann_rev - mc.base_annual_rev_p05),
@@ -576,112 +593,125 @@ def plot_revenue_costs_profit_comparison_charts(
         np.maximum(0.0, mc.base_annual_costs_p95 - mc.base_annual_costs_mean),
         np.maximum(0.0, mc.base_annual_costs_mean - mc.base_annual_costs_p05),
     ])
-    mod_cost_yerr = np.vstack([
-        np.maximum(0.0, mc.annual_costs_p95 - res.annual_total_costs_arr),
-        np.maximum(0.0, res.annual_total_costs_arr - mc.annual_costs_p05),
-    ])
 
+    # Baseline status-quo bars (left position x_yr - bar_w/2)
     ax_ann.bar(
         x_yr - bar_w / 2,
         base_ann_rev,
         width=bar_w,
         yerr=base_rev_yerr,
-        capsize=3.5,
-        error_kw=dict(ecolor="#a6adc8", lw=1.0, alpha=0.75),
+        capsize=3.2,
+        error_kw=dict(ecolor="#a6adc8", lw=0.95, alpha=0.70),
         color=BASE_BAR_GREY,
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
-        linewidth=0.9,
-        label=f"Baseline Stochastic Revenue (~{base_ann_rev.mean():,.0f}M / yr, P05-P95)",
+        linewidth=0.85,
+        label="Baseline Status-Quo Revenue & Costs (Dimmed Grey)",
         zorder=2,
     )
-    ax_ann.bar(
-        x_yr + bar_w / 2,
-        mod_ann_rev,
-        width=bar_w,
-        yerr=mod_rev_yerr,
-        capsize=3.5,
-        error_kw=dict(ecolor="#cdd6f4", lw=1.1, alpha=0.85),
-        color=MOD_REV_GREEN,
-        edgecolor=MOD_REV_EDGE,
-        linewidth=1.1,
-        label="Model Revenue: AdaptivePricing + PICK! Social + 20 Courts (Green > 0, P05-P95)",
-        zorder=3,
-    )
-
     ax_ann.bar(
         x_yr - bar_w / 2,
         base_ann_cost,
         width=bar_w,
         yerr=base_cost_yerr,
-        capsize=3.5,
-        error_kw=dict(ecolor="#a6adc8", lw=1.0, alpha=0.75),
+        capsize=3.2,
+        error_kw=dict(ecolor="#a6adc8", lw=0.95, alpha=0.70),
         color=BASE_BAR_GREY,
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
-        linewidth=0.9,
-        label=f"Baseline Stochastic Costs (~{base_ann_cost.mean():,.0f}M / yr, P05-P95)",
+        linewidth=0.85,
         zorder=2,
     )
-    ax_ann.bar(
-        x_yr + bar_w / 2,
-        mod_ann_cost,
-        width=bar_w,
-        yerr=mod_cost_yerr,
-        capsize=3.5,
-        error_kw=dict(ecolor="#cdd6f4", lw=1.1, alpha=0.85),
-        color=MOD_COST_RED,
-        edgecolor=MOD_COST_EDGE,
-        linewidth=1.1,
-        label="Model Costs: COGS + OpEx/SG&A + Platform Build/OpEx (Red < 0, P05-P95)",
-        zorder=3,
-    )
 
-    # Profit Statistical Range Bands (P05-P95) + Solid '-' lines with 'o' markers
-    ax_ann.fill_between(
-        x_yr - bar_w / 2,
-        mc.base_annual_ebitda_p05,
-        mc.base_annual_ebitda_p95,
-        color=BASE_PROFIT_LINE,
-        alpha=0.18,
-        zorder=4,
-    )
+    # Model Stacked Revenue Lines above 0 (right position x_yr + bar_w/2)
+    pos_bottom_ann = np.zeros(n_years, dtype=float)
+    for idx_r, (r_label, r_mon_arr, r_color) in enumerate(REV_LINES_SPEC):
+        r_ann_arr = np.array([float(np.sum(r_mon_arr[y * 12 : (y + 1) * 12])) for y in range(n_years)])
+        is_top_rev = idx_r == len(REV_LINES_SPEC) - 1
+        ax_ann.bar(
+            x_yr + bar_w / 2,
+            r_ann_arr,
+            bottom=pos_bottom_ann,
+            width=bar_w,
+            yerr=mod_rev_yerr if is_top_rev else None,
+            capsize=3.5 if is_top_rev else 0.0,
+            error_kw=dict(ecolor="#cdd6f4", lw=1.05, alpha=0.85) if is_top_rev else {},
+            color=r_color,
+            edgecolor="#11111b",
+            linewidth=0.75,
+            label=f"Rev: {r_label}",
+            zorder=3,
+        )
+        pos_bottom_ann += r_ann_arr
+
+    # Model Stacked Cost & Tax Categories below 0 (right position x_yr + bar_w/2)
+    neg_bottom_ann = np.zeros(n_years, dtype=float)
+    for c_label, c_mon_arr, c_color in COST_CATS_SPEC:
+        c_ann_arr = -np.array([float(np.sum(c_mon_arr[y * 12 : (y + 1) * 12])) for y in range(n_years)])
+        ax_ann.bar(
+            x_yr + bar_w / 2,
+            c_ann_arr,
+            bottom=neg_bottom_ann,
+            width=bar_w,
+            color=c_color,
+            edgecolor="#11111b",
+            linewidth=0.75,
+            label=f"Cost: {c_label}",
+            zorder=3,
+        )
+        neg_bottom_ann += c_ann_arr
+
+    # Profit Statistical Range Bands (P05-P95) + Operating Profit & Net Income lines
     ax_ann.fill_between(
         x_yr + bar_w / 2,
         mc.annual_ebitda_p05,
         mc.annual_ebitda_p95,
         color="#f9e2af",
-        alpha=0.22,
+        alpha=0.18,
         zorder=4,
     )
     ax_ann.plot(
         x_yr - bar_w / 2,
         base_ann_profit,
         linestyle="-",
-        linewidth=2.0,
+        linewidth=1.9,
         color=BASE_PROFIT_LINE,
         alpha=BASE_PROFIT_ALPHA,
         marker="o",
-        markersize=7.0,
+        markersize=6.5,
         markerfacecolor="#313244",
         markeredgecolor=BASE_PROFIT_LINE,
-        markeredgewidth=1.6,
-        label=f"Baseline Operating Profit Line (~+{base_ann_profit.mean():,.0f}M / yr, P05-P95 Band)",
+        markeredgewidth=1.5,
+        label="Baseline Operating Profit (EBITDA)",
         zorder=5,
     )
     ax_ann.plot(
         x_yr + bar_w / 2,
-        mod_ann_profit,
+        mod_ann_ebitda,
         linestyle="-",
-        linewidth=2.8,
-        color=MOD_PROFIT_LINE,
+        linewidth=2.7,
+        color=MOD_EBITDA_LINE,
         marker="o",
-        markersize=8.2,
-        markerfacecolor=MOD_PROFIT_MARKER,
+        markersize=8.0,
+        markerfacecolor=MOD_EBITDA_MARKER,
         markeredgecolor="#11111b",
-        markeredgewidth=1.8,
-        label=f"Model Operating Profit Line (Y3 = +{mod_ann_profit[2]:,.0f}M vs 3,500M Investor Target)",
+        markeredgewidth=1.7,
+        label="Model Operating Profit (EBITDA)",
         zorder=6,
+    )
+    ax_ann.plot(
+        x_yr + bar_w / 2,
+        mod_ann_netinc,
+        linestyle="--",
+        linewidth=2.3,
+        color=MOD_NETINC_LINE,
+        marker="s",
+        markersize=6.8,
+        markerfacecolor=MOD_NETINC_MARKER,
+        markeredgecolor="#11111b",
+        markeredgewidth=1.5,
+        label="Model Net Income (After D&A & 20% CIT)",
+        zorder=7,
     )
 
     ax_ann.axhline(0, color="#cdd6f4", linewidth=1.4, zorder=4)
@@ -689,18 +719,18 @@ def plot_revenue_costs_profit_comparison_charts(
     for i in range(n_years):
         ax_ann.text(
             i - bar_w / 2,
-            mc.base_annual_rev_p95[i] + 220,
+            mc.base_annual_rev_p95[i] + 240,
             f"+{base_ann_rev[i]:,.0f}M",
             ha="center",
             va="bottom",
-            fontsize=7.9,
+            fontsize=7.8,
             fontweight="normal",
             color=BASE_TEXT_GREY,
             alpha=0.90,
         )
         ax_ann.text(
             i + bar_w / 2,
-            mc.annual_rev_p95[i] + 220,
+            mc.annual_rev_p95[i] + 240,
             f"+{mod_ann_rev[i]:,.0f}M",
             ha="center",
             va="bottom",
@@ -710,19 +740,19 @@ def plot_revenue_costs_profit_comparison_charts(
         )
         ax_ann.text(
             i - bar_w / 2,
-            -mc.base_annual_costs_p95[i] - 280,
+            -mc.base_annual_costs_p95[i] - 260,
             f"{base_ann_cost[i]:,.0f}M",
             ha="center",
             va="top",
-            fontsize=7.9,
+            fontsize=7.8,
             fontweight="normal",
             color=BASE_TEXT_GREY,
             alpha=0.90,
         )
         ax_ann.text(
             i + bar_w / 2,
-            -mc.annual_costs_p95[i] - 280,
-            f"{mod_ann_cost[i]:,.0f}M",
+            -mod_ann_total_outflow[i] - 260,
+            f"-{mod_ann_total_outflow[i]:,.0f}M",
             ha="center",
             va="top",
             fontsize=8.3,
@@ -733,11 +763,11 @@ def plot_revenue_costs_profit_comparison_charts(
     ax_ann.set_xticks(x_yr)
     ax_ann.set_xticklabels(res.year_labels, fontsize=9.8, fontweight="bold", color="#cdd6f4")
     ax_ann.set_ylabel("Million VND / Year", fontsize=10.2, fontweight="bold", color="#bac2de")
-    ax_ann.set_ylim(-float(np.max(mc.annual_costs_p95)) * 1.25, float(np.max(mc.annual_rev_p95)) * 1.25)
+    ax_ann.set_ylim(-float(np.max(mod_ann_total_outflow)) * 1.25, float(np.max(mc.annual_rev_p95)) * 1.36)
     ax_ann.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
-    ax_ann.legend(loc="upper left", ncol=2, fontsize=8.1, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
+    ax_ann.legend(loc="upper left", ncol=4, fontsize=7.5, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
     ax_ann.set_title(
-        "Panel A: Annual Revenue, Cost & Operating Profit Comparison",
+        "Panel A: Annual Revenue by Line, Costs by Category & Profit Comparison",
         fontsize=11.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -757,48 +787,23 @@ def plot_revenue_costs_profit_comparison_charts(
     mod_mon_rev = res.monthly_total_rev_arr[:24]
 
     base_mon_cost = -mc.base_total_costs_mean[:24]
-    mod_mon_cost = -res.monthly_total_costs_arr[:24]
+    mod_mon_total_outflow = (res.monthly_total_costs_arr + res.monthly_da_arr + res.monthly_taxes_arr)[:24]
 
     base_mon_profit = mc.base_ebitda_mean[:24]
-    mod_mon_profit = res.monthly_ebitda_arr[:24]
-
-    base_m_rev_yerr = np.vstack([
-        np.maximum(0.0, base_mon_rev - mc.base_total_rev_p05[:24]),
-        np.maximum(0.0, mc.base_total_rev_p95[:24] - base_mon_rev),
-    ])
-    mod_m_rev_yerr = np.vstack([
-        np.maximum(0.0, mod_mon_rev - mc.total_rev_p05[:24]),
-        np.maximum(0.0, mc.total_rev_p95[:24] - mod_mon_rev),
-    ])
+    mod_mon_ebitda = res.monthly_ebitda_arr[:24]
+    mod_mon_netinc = res.monthly_net_income_arr[:24]
 
     ax_mon.bar(
         x_m - bar_wm / 2,
         base_mon_rev,
         width=bar_wm,
-        yerr=base_m_rev_yerr,
-        capsize=2.0,
-        error_kw=dict(ecolor="#a6adc8", lw=0.75, alpha=0.65),
         color=BASE_BAR_GREY,
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
-        linewidth=0.7,
-        label=f"Baseline Stochastic Monthly Revenue (~+{base_mon_rev.mean():.1f}M / mo, P05-P95)",
+        linewidth=0.65,
+        label="Baseline Status-Quo Monthly Revenue & Costs",
         zorder=2,
     )
-    ax_mon.bar(
-        x_m + bar_wm / 2,
-        mod_mon_rev,
-        width=bar_wm,
-        yerr=mod_m_rev_yerr,
-        capsize=2.0,
-        error_kw=dict(ecolor="#cdd6f4", lw=0.80, alpha=0.80),
-        color=MOD_REV_GREEN,
-        edgecolor=MOD_REV_EDGE,
-        linewidth=0.85,
-        label="Model Monthly Revenue (M1–M4 Build; M5 App Launch; M14 20-Court Open, P05-P95)",
-        zorder=3,
-    )
-
     ax_mon.bar(
         x_m - bar_wm / 2,
         base_mon_cost,
@@ -806,76 +811,102 @@ def plot_revenue_costs_profit_comparison_charts(
         color=BASE_BAR_GREY,
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
-        linewidth=0.7,
-        label=f"Baseline Stochastic Monthly Costs (~{base_mon_cost.mean():.1f}M / mo)",
+        linewidth=0.65,
         zorder=2,
     )
-    ax_mon.bar(
-        x_m + bar_wm / 2,
-        mod_mon_cost,
-        width=bar_wm,
-        color=MOD_COST_RED,
-        edgecolor=MOD_COST_EDGE,
-        linewidth=0.85,
-        label="Model Monthly Costs (M1–M6 Leveled Build + M5+ Platform + M10+ Venue 2)",
-        zorder=3,
-    )
 
-    # Profit Statistical Bands (P05-P95) + Solid '-' lines with 'o' markers
-    ax_mon.fill_between(
-        x_m - bar_wm / 2,
-        mc.base_ebitda_p05[:24],
-        mc.base_ebitda_p95[:24],
-        color=BASE_PROFIT_LINE,
-        alpha=0.18,
-        zorder=4,
-    )
+    pos_bottom_mon = np.zeros(n_m, dtype=float)
+    for r_label, r_mon_arr, r_color in REV_LINES_SPEC:
+        r_slice = r_mon_arr[:24]
+        ax_mon.bar(
+            x_m + bar_wm / 2,
+            r_slice,
+            bottom=pos_bottom_mon,
+            width=bar_wm,
+            color=r_color,
+            edgecolor="#11111b",
+            linewidth=0.60,
+            label=f"Rev: {r_label}",
+            zorder=3,
+        )
+        pos_bottom_mon += r_slice
+
+    neg_bottom_mon = np.zeros(n_m, dtype=float)
+    for c_label, c_mon_arr, c_color in COST_CATS_SPEC:
+        c_slice = -c_mon_arr[:24]
+        ax_mon.bar(
+            x_m + bar_wm / 2,
+            c_slice,
+            bottom=neg_bottom_mon,
+            width=bar_wm,
+            color=c_color,
+            edgecolor="#11111b",
+            linewidth=0.60,
+            label=f"Cost: {c_label}",
+            zorder=3,
+        )
+        neg_bottom_mon += c_slice
+
     ax_mon.fill_between(
         x_m + bar_wm / 2,
         mc.ebitda_p05[:24],
         mc.ebitda_p95[:24],
         color="#f9e2af",
-        alpha=0.22,
+        alpha=0.18,
         zorder=4,
     )
     ax_mon.plot(
         x_m - bar_wm / 2,
         base_mon_profit,
         linestyle="-",
-        linewidth=1.8,
+        linewidth=1.7,
         color=BASE_PROFIT_LINE,
         alpha=BASE_PROFIT_ALPHA,
         marker="o",
-        markersize=5.2,
+        markersize=4.8,
         markerfacecolor="#313244",
         markeredgecolor=BASE_PROFIT_LINE,
-        markeredgewidth=1.3,
-        label=f"Baseline Stochastic Monthly Profit (~+{base_mon_profit.mean():.1f}M / mo, P05-P95 Band)",
+        markeredgewidth=1.2,
+        label="Baseline Monthly Operating Profit",
         zorder=5,
     )
     ax_mon.plot(
         x_m + bar_wm / 2,
-        mod_mon_profit,
+        mod_mon_ebitda,
         linestyle="-",
-        linewidth=2.4,
-        color=MOD_PROFIT_LINE,
+        linewidth=2.3,
+        color=MOD_EBITDA_LINE,
         marker="o",
-        markersize=6.2,
-        markerfacecolor=MOD_PROFIT_MARKER,
+        markersize=5.8,
+        markerfacecolor=MOD_EBITDA_MARKER,
         markeredgecolor="#11111b",
-        markeredgewidth=1.5,
-        label=f"Model Monthly Operating Profit (Ramps to +{mod_mon_profit[-1]:,.0f}M/mo by M24, P05-P95 Band)",
+        markeredgewidth=1.4,
+        label="Model Monthly Operating Profit (EBITDA)",
         zorder=6,
+    )
+    ax_mon.plot(
+        x_m + bar_wm / 2,
+        mod_mon_netinc,
+        linestyle="--",
+        linewidth=2.0,
+        color=MOD_NETINC_LINE,
+        marker="s",
+        markersize=5.0,
+        markerfacecolor=MOD_NETINC_MARKER,
+        markeredgecolor="#11111b",
+        markeredgewidth=1.3,
+        label="Model Monthly Net Income (After D&A & 20% CIT)",
+        zorder=7,
     )
 
     ax_mon.axhline(0, color="#cdd6f4", linewidth=1.4, zorder=4)
-    ax_mon.axvline(3.5, color="#f38ba8", linewidth=1.6, linestyle="--", zorder=4)
-    ax_mon.axvline(5.5, color="#89b4fa", linewidth=1.4, linestyle=":", zorder=4)
+    ax_mon.axvline(3.5, color="#f38ba8", linewidth=1.5, linestyle="--", zorder=4)
+    ax_mon.axvline(12.5, color="#89b4fa", linewidth=1.5, linestyle=":", zorder=4)
 
     for i in range(0, n_m, 2):
         ax_mon.text(
             i + bar_wm / 2,
-            mod_mon_rev[i] + 22,
+            mod_mon_rev[i] + 24,
             f"{mod_mon_rev[i]:,.0f}M",
             ha="center",
             va="bottom",
@@ -885,8 +916,8 @@ def plot_revenue_costs_profit_comparison_charts(
         )
         ax_mon.text(
             i + bar_wm / 2,
-            mod_mon_cost[i] - 25,
-            f"{mod_mon_cost[i]:,.0f}M",
+            -mod_mon_total_outflow[i] - 26,
+            f"-{mod_mon_total_outflow[i]:,.0f}M",
             ha="center",
             va="top",
             fontsize=6.8,
@@ -897,11 +928,11 @@ def plot_revenue_costs_profit_comparison_charts(
     ax_mon.set_xticks(x_m)
     ax_mon.set_xticklabels(m24_labels, fontsize=7.8, fontweight="bold", color="#cdd6f4", rotation=25)
     ax_mon.set_ylabel("Million VND / Month", fontsize=10.2, fontweight="bold", color="#bac2de")
-    ax_mon.set_ylim(float(np.min(mod_mon_cost)) * 1.26, float(np.max(mod_mon_rev)) * 1.26)
+    ax_mon.set_ylim(-float(np.max(mod_mon_total_outflow)) * 1.28, float(np.max(mod_mon_rev)) * 1.36)
     ax_mon.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
-    ax_mon.legend(loc="upper left", ncol=2, fontsize=8.0, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
+    ax_mon.legend(loc="upper left", ncol=4, fontsize=7.3, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
     ax_mon.set_title(
-        "Panel B: Monthly Build, Launch & Expansion Revenue, Cost & Profit Trajectory",
+        "Panel B: Monthly Revenue by Line, Costs by Category & Profit Trajectory",
         fontsize=11.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -1378,11 +1409,12 @@ def plot_monthly_cash_balance_and_externals(
     ax1.grid(True, linestyle="--", alpha=0.8, color="#313244")
     ax1.legend(loc="upper left", ncol=2, fontsize=8.5, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
-    # Panel B: Monthly Cash Flow Components (OCF, CapEx ICF, Equity FCF, Net Cash Flow)
+    # Panel B: Monthly Cash Flow Components (OCF, CapEx ICF, Equity FCF, April CIT Settlement, Net Cash Flow)
     ax2 = axes[1]
     ax2.set_facecolor("#181825")
-    ax2.bar(x_m - 0.2, res.monthly_ocf_model, width=0.38, color="#a6e3a1", edgecolor="#11111b", alpha=0.88, label="Operating Cash Flow (OCF)")
+    ax2.bar(x_m - 0.2, res.monthly_ocf_model, width=0.38, color="#a6e3a1", edgecolor="#11111b", alpha=0.88, label="Operating Cash Flow (OCF, Net of April CIT Payment)")
     ax2.bar(x_m + 0.2, res.monthly_icf_capex_model, width=0.38, color="#f38ba8", edgecolor="#11111b", alpha=0.88, label="Venue 2 Fit-Out CapEx Outflow (-1,750M/mo in M10-M13)")
+    ax2.bar(x_m, -res.monthly_cit_cash_paid_arr, width=0.38, color="#fab387", edgecolor="#11111b", alpha=0.92, label="April Annual CIT Settlement (-20% Prior FY Tax)")
     ax2.bar(x_m, res.monthly_fcf_equity_model, width=0.35, color="#cba6f7", edgecolor="#11111b", alpha=0.80, label="Investor Minh Tran Equity (+500M in M1 & +7,500M in M10)")
     ax2.plot(x_m, res.monthly_net_cash_flow_model, color="#f9e2af", linewidth=2.0, marker="o", markersize=3.5, label="Net Monthly Cash Flow (OCF + ICF + FCF)")
     ax2.axhline(0, color="#cdd6f4", linewidth=1.1)

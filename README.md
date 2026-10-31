@@ -34,8 +34,11 @@ Instead, we execute a **4-stage operational and capital sequence** within the **
 | **Year 5 (`FY 2031`) EBITDA** | `1,664.5M VND` | **`24,205.08M VND`** | `[22,953M, 25,388M]` | `+12,817.00M VND` |
 | **5Y Cumulative Revenue** | `37,883.4M VND` | **`164,066.74M VND`** | `[161,012M, 167,118M]` | `120,035.40M VND` |
 | **5Y Cumulative EBITDA** | `8,894.2M VND` | **`83,100.41M VND` (`50.65%`)** | `[80,046M, 86,152M]` | `39,857.00M VND` |
-| **Minimum Monthly Cash (`M1–M60`)** | `+646.97M VND` | **`+1,000.73M VND` (`M3`)** | `P05 Min: +954.57M VND` | **`+217.59M VND` (`M6`)** |
-| **Month 60 Ending Cash** | `9,394.21M VND` | **`84,600.41M VND`** | `[81,546M, 87,652M]` | `41,357.00M VND` |
+| **5Y D&A (`Circular 45/2013/TT-BTC`)** | `320.0M VND` | **`5,803.33M VND`** | `Fixed Straight-Line` | `5,803.33M VND` |
+| **5Y Corporate Income Tax (`20% Vietnam CIT`)** | `1,714.8M VND` | **`15,466.00M VND`** | `20% on EBT > 0` | `6,881.40M VND` |
+| **5Y Net Income After Tax** | `6,859.4M VND` | **`61,831.07M VND` (`37.69%`)** | `[59,388M, 64,272M]` | `27,172.27M VND` |
+| **Minimum Monthly Cash Reserves (`M1–M60`)** | `+646.97M VND` | **`+1,000.73M VND` (`M3`)** | `P05 Min: +954.57M VND` | **`+217.59M VND` (`M6`)** |
+| **Month 60 Ending Cash Reserves** | `7,999.62M VND` | **`73,682.78M VND`** | `[71,126M, 76,204M]` | `36,591.91M VND` |
 
 ---
 
@@ -59,9 +62,10 @@ Every input is modeled as a **bounded probability distribution (`Truncated Norma
 
 ![Customer Acquisition Funnel & Segment Ancillary Spending](Marketing/outputs/01_marketing_funnel_and_segment_response_distributions.png)
 
-### 2.3 Platform Engineering, Cloud & Venue Construction Costs
+### 2.3 Platform Engineering, Cloud, Venue Construction & Vietnam Statutory Tax Schedule
 - **`PICK! Social` Platform Engineering & Cloud Operations**: Scoped across `17` engineering work packages (`911.20M` base + `177.80M` / `19.5%` risk contingency buffer across the 6-month build & migration lifecycle, plus `26.50M VND/mo` steady-state cloud/maintenance OpEx and `1.50%` payment gateway COGS) using *COCOMO II*, *PMI PMBOK 7th Ed.*, *ITviec/TopDev Vietnam Tech Salary Reports*, and *NAPAS/VietQR + Momo/VNPay fee schedules* ([`PickSocialProjectTimeline/`](PickSocialProjectTimeline)).
 - **Second Venue Construction & Operating Scale**: Scoped across `15` construction packages (`7,000.0M VND` turnkey fit-out CapEx + `330.0M VND/mo` lease) using *ASBA Courts Manual* and *Vietnam Ministry of Construction benchmarks* ([`VenueScalingTimeline/`](VenueScalingTimeline)); when the 14 new courts open in `Month 14`, electricity/water (`+82.0M/mo`), maintenance/insurance (`+38.0M/mo`), and staff wages (`+215.0M/mo`) scale up automatically alongside variable COGS.
+- **Vietnam Statutory Depreciation & Tax Schedule (`FS-Month`, `FS-Annual` & `Taxes`)**: Models straight-line equipment & leasehold fit-out depreciation (`5.33M VND/mo` in `Months 1–13`, scaling to `122.00M VND/mo` in `Months 14–60` under *Vietnam MOF Circular 45/2013/TT-BTC*), **`20.0%` statutory Corporate Income Tax (`CIT`)** on positive `EBT` (*Vietnam CIT Law No. 67/2025/QH15*) accrued monthly into `Income Taxes Payable — Current FY`, consolidated at year-end into `Income Taxes Payable — Past FY`, and settled in cash in **Month 4 (`April`) of the following fiscal year**, alongside **`8.0%` Output / `10.0%` Input Value-Added Tax (`VAT`)** credit carryforwards (*Vietnam VAT Law No. 48/2024/QH15*).
 
 ---
 
@@ -150,4 +154,4 @@ uv run main
 | [`PickSocialProjectTimeline/`](PickSocialProjectTimeline) | Stage 2: Software engineering WBS, Gantt schedule, buffered cost estimation, and leveled monthly allocation. |
 | [`VenueScalingTimeline/`](VenueScalingTimeline) | Stage 3: Second venue expansion WBS, Gantt schedule, leveled CapEx schedule, and 20-court ramp model. |
 | [`Marketing/`](Marketing) | Stage 4: Follower-to-customer funnel, 4-segment `MultiOutputRegressor` budget predictor, and segment ancillary spending distributions. |
-| [`FinancialModel/`](FinancialModel) | Stage 5: 60-month Monte Carlo 3-statement financial model, stochastic baseline comparison, and downside demand stress test. |
+| [`FinancialModel/`](FinancialModel) | Stage 5: 60-month Monte Carlo Financial Statements (`FS-Month`, `FS-Annual`, and Vietnam statutory `CIT`/`VAT` tax schedule), stochastic baseline comparison, and downside demand stress test. |

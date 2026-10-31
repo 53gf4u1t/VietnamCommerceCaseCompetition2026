@@ -310,6 +310,10 @@ class ExternalsConfig:
 @dataclass(frozen=True)
 class TaxesAndOtherConfig:
     corporate_tax_rate: float
+    tax_consolidation_month: int
+    vat_output_rate: float
+    vat_input_rate: float
+    venue2_depreciation_useful_life_months: int
     depreciation_amortization_mvnd: float
     interest_expense_mvnd: float
 
@@ -607,6 +611,10 @@ def load_config(config_path: Path | None = None) -> FinancialModelConfig:
     nc_raw = capex_raw["new_capex"]
     tax = TaxesAndOtherConfig(
         corporate_tax_rate=float(tf_raw["corporate_tax_rate"]),
+        tax_consolidation_month=int(tf_raw.get("tax_consolidation_month", 4)),
+        vat_output_rate=float(tf_raw.get("vat_output_rate", 0.08)),
+        vat_input_rate=float(tf_raw.get("vat_input_rate", 0.10)),
+        venue2_depreciation_useful_life_months=int(tf_raw.get("venue2_depreciation_useful_life_months", 60)),
         depreciation_amortization_mvnd=float(nc_raw["depreciation_amortization_monthly_mvnd"]["mean"]),
         interest_expense_mvnd=float(tf_raw["interest_expense_monthly_mvnd"]),
     )

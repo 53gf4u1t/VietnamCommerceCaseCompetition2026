@@ -579,24 +579,28 @@ mean = 0.00
 std = 0.00
 min = 0.00
 max = 0.00
-unit = "M VND/month (Base recurring CapEx outside the Q3 2027 7,000M expansion)"
-source = "Expansion CapEx (1,750M/mo in Months 7–10) is scheduled explicitly via [venue_scaling]"
+unit = "M VND/month (Base recurring CapEx outside the Q4 2027 7,000M expansion)"
+source = "Expansion CapEx (1,750M/mo in Months 10–13) is scheduled explicitly via [venue_scaling]"
 
 [new_capex.depreciation_amortization_monthly_mvnd]
 dist = "truncated_normal"
-mean = 0.00
+mean = 5.333333333333333
 std = 0.00
-min = 0.00
-max = 0.00
-unit = "M VND/month"
-source = "Pre-tax, pre-D&A operating profit convention per Case Exhibit 6 ('Operating profit: Revenue minus operating costs, before tax and financing costs')"
+min = 5.333333333333333
+max = 5.333333333333333
+unit = "M VND/month (Base Venue 1 equipment D&A: 320M / 60 months = 5.33M/mo; Venue 2 7,000M fit-out adds 116.67M/mo from M14)"
+source = "Vietnam Circular 45/2013/TT-BTC straight-line depreciation over 5-year (60-month) useful life"
 
 # ------------------------------------------------------------------------------
-# 7. TAXES & FINANCING CONDITIONS (Case Page 4 & Exhibit 6)
+# 7. TAXES & FINANCING CONDITIONS (Vietnam Statutory CIT Law 67/2025/QH15 & VAT Law 48/2024/QH15)
 # ------------------------------------------------------------------------------
 
 [taxes_and_financing]
-corporate_tax_rate = 0.00               # Pre-tax operating profit basis per Case Exhibit 6
+corporate_tax_rate = 0.20               # 20.0% statutory Vietnam Corporate Income Tax (CIT) rate (Law No. 67/2025/QH15)
+tax_consolidation_month = 4             # Month 4 (April) annual CIT finalization & settlement payment for prior FY
+vat_output_rate = 0.08                  # 8.0% effective Output VAT rate on sports, membership, coaching & F&B services
+vat_input_rate = 0.10                   # 10.0% standard Input VAT rate on commercial lease, utilities, supplies & fit-out CapEx
+venue2_depreciation_useful_life_months = 60 # 60-month (5-year lease) straight-line depreciation for 7,000M Venue 2 fit-out (116.67M/mo from M14)
 interest_expense_monthly_mvnd = 0.00    # Zero debt allowed per Case Page 4
 
 # ------------------------------------------------------------------------------
