@@ -30,9 +30,9 @@ def main() -> None:
                                      monthly platform OpEx schedule starting Jan 2027 in
                                      PickSocialProjectTimeline/outputs/.
       3. VenueScalingTimeline      — Loads `configs/capex.toml` & `configs/opex.toml`, schedules the
-                                     Path A 14-court second club expansion (`6` -> `20` courts) from
-                                     start of Q3 2027 (`Month 7 / Jul-27`), with a 4-month build
-                                     (`Jul-27` to `Oct-27`), evenly split `1,750M VND/month` fit-out CapEx,
+                                     14-court second club expansion (`6` -> `20` courts) from
+                                     start of Q4 2027 (`Month 10 / Oct-27`), with a 4-month build
+                                     (`Oct-27` to `Jan-28`), evenly split `1,750M VND/month` fit-out CapEx,
                                      `330M VND/month` 5-year lease, and 6-to-9 month fill-up ramp in
                                      VenueScalingTimeline/outputs/.
       4. Marketing                 — Loads `configs/customers.toml`, `configs/opex.toml` & `configs/externals.toml`,

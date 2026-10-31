@@ -53,7 +53,7 @@ def plot_funnel_and_12_distributions(
     fig.patch.set_facecolor("#FFFFFF")
 
     fig.suptitle(
-        "PICK! MARKETING FUNNEL (~8.57% CONVERSION), SEGMENT VND/VISIT & 12 ANCILLARY SPENDING DISTRIBUTIONS",
+        "Marketing Acquisition Funnel, Segment Cost Efficiency & Ancillary Spend Profiles",
         fontsize=15,
         fontweight="bold",
         color="#0F172A",
@@ -62,19 +62,19 @@ def plot_funnel_and_12_distributions(
     fig.text(
         0.5,
         0.935,
-        "Explicit Assumption: Active Customers (3,600) are a Subset of TikTok/IG Followers (42,000) | 25.00M VND Baseline Split Across 4 Segments | 12 Grounded Ancillary Distributions",
+        "Stochastic Follower Conversion Funnel, Segment Acquisition Costs & Per-Visit Ancillary Spending Distributions",
         ha="center",
         fontsize=10.5,
         color="#475569",
     )
 
-    # Panel A: Follower-to-Customer Conversion Rate Distribution (~8.57%)
+    # Panel A: Follower-to-Customer Conversion Rate Distribution
     ax_a = axes[0, 0]
     conv_samples = sim.sampled_conv_rate.ravel() * 100.0
     ax_a.hist(conv_samples, bins=42, color="#0284C7", alpha=0.78, edgecolor="#0369A1", density=True)
     mean_conv = float(np.mean(conv_samples))
     ax_a.axvline(mean_conv, color="#DC2626", linestyle="-", linewidth=2.2, label=f"Mean Conversion: {mean_conv:.2f}% (3,600 / 42,000)")
-    ax_a.set_title("Panel A: Follower-to-Customer Conversion Distribution (~8.57%)", fontsize=12, fontweight="bold", color="#0F172A", pad=10)
+    ax_a.set_title("Panel A: Follower-to-Customer Conversion Distribution", fontsize=12, fontweight="bold", color="#0F172A", pad=10)
     ax_a.set_xlabel("Monthly Active Unique Customers as % of TikTok & IG Followers (%)", fontsize=10, color="#334155")
     ax_a.set_ylabel("Probability Density", fontsize=10, color="#334155")
     ax_a.legend(loc="upper right", frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1", fontsize=9.5)
@@ -101,28 +101,29 @@ def plot_funnel_and_12_distributions(
     base_budgets = [s.baseline_marketing_budget_mvnd_dist.mean for s in cfg.segments]
     mean_vnds = [s.marketing_vnd_per_visit_dist.mean for s in cfg.segments]
     for i, (m_val, b_val, v_arr) in enumerate(zip(mean_vnds, base_budgets, vnd_data)):
-        p95_val = float(np.percentile(v_arr, 95))
+        q25, q75 = np.percentile(v_arr, [25, 75])
+        whisker_hi = float(np.max(v_arr[v_arr <= q75 + 1.5 * (q75 - q25)]))
         ax_b.text(
-            p95_val + 260,
+            whisker_hi + 220,
             i + 1.0,
             f"{m_val:,.0f} VND/visit (Base: {b_val:.2f}M/mo)",
-            fontsize=9.0,
+            fontsize=8.8,
             fontweight="bold",
             color="#0F172A",
             va="center",
         )
-    ax_b.set_xlim(900, 9600)
-    ax_b.set_title("Panel B: Marketing Cost per Player Visit by Segment (VND/Visit)", fontsize=12, fontweight="bold", color="#0F172A", pad=10)
+    ax_b.set_xlim(900, 10800)
+    ax_b.set_title("Panel B: Marketing Acquisition Cost per Visit by Segment", fontsize=12, fontweight="bold", color="#0F172A", pad=10)
     ax_b.set_xlabel("Marketing Spend Required per Player Visit (VND / Visit)", fontsize=10, color="#334155")
 
-    # Panel C: Merged Monthly Visits Distributions by Segment (3,240 | 2,520 | 1,188 | 648 = 7,596 ~ 7,600)
+    # Panel C: Merged Monthly Visits Distributions by Segment
     ax_c = axes[1, 0]
     for i, (label, color) in enumerate(zip(SEG_SHORT_LABELS, SEG_COLORS)):
         vis_s = sim.sampled_base_visits_seg[:, :, i].ravel()
         ax_c.hist(vis_s, bins=35, alpha=0.65, color=color, edgecolor=color, label=f"{label}: Mean {np.mean(vis_s):,.0f} visits/mo")
-    ax_c.set_title("Panel C: Merged Monthly Visits Distributions by Segment (Sum = 7,596/mo)", fontsize=12, fontweight="bold", color="#0F172A", pad=10)
+    ax_c.set_title("Panel C: Monthly Player Visit Distributions by Segment", fontsize=12, fontweight="bold", color="#0F172A", pad=10)
     ax_c.set_xlabel("Monthly Player Visits per Segment (Visits / Month)", fontsize=10, color="#334155")
-    ax_c.set_ylabel("Frequency across N=300 x 60m Draws", fontsize=10, color="#334155")
+    ax_c.set_ylabel("Simulation Frequency", fontsize=10, color="#334155")
     ax_c.legend(loc="upper right", frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1", fontsize=9.2)
 
     # Panel D: The 12 Segment-by-Ancillary Per-Visit Spending Distributions (Mean +/- 1 SD Error Bars)
@@ -158,7 +159,7 @@ def plot_funnel_and_12_distributions(
     ax_d.set_xticks(x)
     ax_d.set_xticklabels(SEG_SHORT_LABELS, fontsize=10, fontweight="bold")
     ax_d.set_ylim(0, 32.5)
-    ax_d.set_title("Panel D: 12 Segment-by-Ancillary Spending Distributions (kVND / Visit)", fontsize=12, fontweight="bold", color="#0F172A", pad=10)
+    ax_d.set_title("Panel D: Per-Visit Ancillary Spending by Segment & Service Line", fontsize=12, fontweight="bold", color="#0F172A", pad=10)
     ax_d.set_ylabel("Ancillary Spend per Player Visit (kVND / Visit)", fontsize=10, color="#334155")
     ax_d.legend(loc="upper left", frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1", fontsize=9.0)
 
@@ -184,7 +185,7 @@ def plot_ml_segment_budgets_and_visits(
     fig.patch.set_facecolor("#FFFFFF")
 
     fig.suptitle(
-        "ML SEGMENT MARKETING BUDGET ALLOCATION & RESULTING PLAYER VISITS BY SEGMENT (JAN 2027 - DEC 2031)",
+        "Dynamic Segment Marketing Allocation & Player Visit Growth Trajectory",
         fontsize=15,
         fontweight="bold",
         color="#0F172A",
@@ -193,7 +194,7 @@ def plot_ml_segment_budgets_and_visits(
     fig.text(
         0.5,
         0.935,
-        "HistGradientBoostingRegressor Predicts Monthly Segment Marketing Budgets from Last Month's Segment Customers, Followers, Trend & 20-Court Capacity",
+        "State-Dependent Marketing Budget Reallocation Across Customer Segments & Resulting Monthly Player Attendance",
         ha="center",
         fontsize=10.5,
         color="#475569",
@@ -261,7 +262,7 @@ def plot_ml_segment_budgets_and_visits(
     )
     ax1.set_ylim(0, float(np.max(bottom)) * 1.18)
 
-    ax1.set_title("Panel A: ML-Predicted Monthly Marketing Spend by Customer Segment (M VND / Month)", fontsize=12, fontweight="bold", color="#0F172A", pad=8)
+    ax1.set_title("Panel A: Monthly Marketing Spend Allocation by Customer Segment", fontsize=12, fontweight="bold", color="#0F172A", pad=8)
     ax1.set_ylabel("Marketing Spend (Million VND / Month)", fontsize=10, color="#334155")
     ax1.legend(loc="upper left", ncol=3, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1", fontsize=8.8)
 
@@ -315,7 +316,7 @@ def plot_ml_segment_budgets_and_visits(
     tick_idx = np.arange(0, sim.n_months, 3)
     ax2.set_xticks(tick_idx)
     ax2.set_xticklabels([sim.month_labels[i] for i in tick_idx], rotation=30, ha="right", fontsize=9)
-    ax2.set_title("Panel B: Resulting Monthly Player Visits Breakdown Across the 4 Customer Segments (Visits / Month)", fontsize=12, fontweight="bold", color="#0F172A", pad=8)
+    ax2.set_title("Panel B: Monthly Player Visits by Customer Segment", fontsize=12, fontweight="bold", color="#0F172A", pad=8)
     ax2.set_ylabel("Monthly Player Visits (Visits / Month)", fontsize=10, color="#334155")
     ax2.set_xlabel("Projection Timeline (60 Months: Jan 2027 - Dec 2031)", fontsize=10, color="#334155")
     ax2.legend(loc="upper left", ncol=3, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1", fontsize=9.0)
@@ -343,7 +344,7 @@ def plot_segment_ancillary_revenue_breakdown(
     fig.patch.set_facecolor("#FFFFFF")
 
     fig.suptitle(
-        "ANCILLARY REVENUE LINES DRIVEN BY THE 12 SEGMENT SPENDING DISTRIBUTIONS (JAN 2027 - DEC 2031)",
+        "Ancillary Revenue Composition by Customer Segment Across Projection Horizon",
         fontsize=15,
         fontweight="bold",
         color="#0F172A",
@@ -352,7 +353,7 @@ def plot_segment_ancillary_revenue_breakdown(
     fig.text(
         0.5,
         0.94,
-        "Monthly Paddle Rental & Balls, Coaching, and Food & Drinks Revenue Decomposed by Customer Segment vs. Case Exhibit 1 Baselines (15M, 115M, 75M)",
+        "Monthly Equipment Rental, Coaching & Hospitality Revenue Decomposed by Customer Segment",
         ha="center",
         fontsize=10.5,
         color="#475569",
@@ -372,9 +373,9 @@ def plot_segment_ancillary_revenue_breakdown(
     base_fnb = np.mean(base_fnb_sims, axis=0)
 
     panels = [
-        (axes[0], pad_seg, base_pad, base_pad_sims, "Panel A: Revenue Line 2 — Paddle Rental & Balls by Segment (Base M1 = 15.00M VND/mo)", 15.0),
-        (axes[1], coa_seg, base_coa, base_coa_sims, "Panel B: Revenue Line 3 — Coaching Services by Segment (Base M1 = 115.00M VND/mo)", 115.0),
-        (axes[2], fnb_seg, base_fnb, base_fnb_sims, "Panel C: Revenue Line 4 — Food & Drinks (Cafe/F&B) by Segment (Base M1 = 75.00M VND/mo)", 75.0),
+        (axes[0], pad_seg, base_pad, base_pad_sims, "Panel A: Equipment Rental & Balls Revenue by Customer Segment", 15.0),
+        (axes[1], coa_seg, base_coa, base_coa_sims, "Panel B: Coaching Services Revenue by Customer Segment", 115.0),
+        (axes[2], fnb_seg, base_fnb, base_fnb_sims, "Panel C: Food & Beverage Revenue by Customer Segment", 75.0),
     ]
 
     for ax, seg_arr, base_arr, base_sims, title, case_m1 in panels:
@@ -449,7 +450,7 @@ def plot_marketing_ml_diagnostics(
 
     m = ml_res.ml_metrics
     fig.suptitle(
-        "SEGMENT MARKETING BUDGET ML PREDICTOR — OUT-OF-SAMPLE DIAGNOSTICS & FEATURE IMPORTANCE",
+        "Marketing Budget Policy Model Validation & Feature Importance",
         fontsize=14.5,
         fontweight="bold",
         color="#0F172A",
@@ -458,7 +459,7 @@ def plot_marketing_ml_diagnostics(
     fig.text(
         0.5,
         0.92,
-        f"Held-Out Test Split (N={m.n_test_obs:,} Monthly States): R2 = {m.test_r2:.4f} | RMSE = {m.test_rmse_mvnd:.3f} M VND | MAPE = {m.test_mape_pct:.2f}% | Oracle Net Contribution Capture = {m.oracle_net_contrib_capture_pct:.2f}%",
+        "Out-of-Sample Predicted vs. Optimal Segment Budgets & Permutation Feature Attribution on Held-Out Test Split",
         ha="center",
         fontsize=10.2,
         color="#475569",
@@ -483,7 +484,7 @@ def plot_marketing_ml_diagnostics(
     ax1.plot(lims, lims, color="#0F172A", linestyle="--", linewidth=1.8, label="Ideal 1:1 Parity Line")
     ax1.set_xlim(lims)
     ax1.set_ylim(lims)
-    ax1.set_title("Panel A: Out-of-Sample Predicted vs. Oracle Segment Budgets (M VND/mo)", fontsize=12, fontweight="bold", color="#0F172A", pad=8)
+    ax1.set_title("Panel A: Out-of-Sample Predicted vs. Optimal Segment Budgets", fontsize=12, fontweight="bold", color="#0F172A", pad=8)
     ax1.set_xlabel("Oracle Optimal Segment Marketing Budget (M VND / Month)", fontsize=10, color="#334155")
     ax1.set_ylabel("HistGBR Predicted Segment Marketing Budget (M VND / Month)", fontsize=10, color="#334155")
     ax1.legend(loc="upper left", frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1", fontsize=9.2)
@@ -508,7 +509,7 @@ def plot_marketing_ml_diagnostics(
     ax2.set_yticks(y_pos)
     ax2.set_yticklabels(sorted_names, fontsize=9.2, fontweight="bold", color="#1E293B")
     ax2.set_xlim(0, max(float(np.max(sorted_imp)) * 1.18, 15.0))
-    ax2.set_title("Panel B: Permutation Feature Importance on Held-Out Test Split (%)", fontsize=12, fontweight="bold", color="#0F172A", pad=8)
+    ax2.set_title("Panel B: Permutation Feature Importance on Held-Out Test Split", fontsize=12, fontweight="bold", color="#0F172A", pad=8)
     ax2.set_xlabel("Relative Permutation Importance (%)", fontsize=10, color="#334155")
 
     fig.tight_layout(rect=(0.0, 0.0, 1.0, 0.90))

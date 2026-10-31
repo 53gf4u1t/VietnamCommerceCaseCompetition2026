@@ -1700,9 +1700,10 @@ def build_financial_model(
 
     # 2. 60-MONTH (5-YEAR) BALANCE SHEET & CASH FLOW STATEMENT RECONCILIATION
     #    Incorporates:
-    #      - Months 7–10 (Jul-27 to Oct-27): Evenly split Fit-Out CapEx = -1,750.0M VND/month (-7,000.0M total)
-    #      - Month 7 (Jul-27, Q3 2027 Expansion Kickoff): Investor Minh Tran Equity Injection = +8,000.0M VND
-    #        (7,000.0M for Venue 2 fit-out + 1,000.0M added to PICK! cash reserve per Case Page 3 & 4)
+    #      - Months 10–13 (Oct-27 to Jan-28): Evenly split Fit-Out CapEx = -1,750.0M VND/month (-7,000.0M total)
+    #      - Month 1 (Jan-27): Investor Minh Tran Signing Tranche = +500.0M VND
+    #      - Month 10 (Oct-27, Q4 2027 Expansion Kickoff): Investor Minh Tran Expansion Tranche = +7,500.0M VND
+    #        (7,000.0M for Venue 2 fit-out + 1,000.0M total added to PICK! cash reserve)
     bs = cfg.balance_sheet
     vs_cfg = cfg.venue_scaling
     build_s_idx = vs_cfg.build_start_month_index - 1
@@ -1994,7 +1995,7 @@ def build_financial_model(
             "Case_M1_Baseline": m_rec["Case_M1_Baseline"],
             "Model_M1_Build": m_rec["Jan-27"],
             "Model_M5_Launch": m_rec["May-27"],
-            "Model_M11_Open20": m_rec["Nov-27"],
+            "Model_M11_Open20": m_rec["Feb-28"],
         }
         for y_idx, y_lbl in enumerate(year_labels, 1):
             row_dict[y_lbl] = m_rec[f"FY{y_idx}_Total"]

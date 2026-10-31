@@ -112,85 +112,80 @@ def export_tables_and_report(
     p_ml_wk = float(eval_res.ml_prices_test[reg_test == 2].mean())
 
     report_md = f"""# PICK! Adaptive Court Pricing — Simulation & ML Optimization Report
-**Variant of Path C: Custom Community & Booking Platform | Plan Start: Jan 2027 (FY 2027–FY 2031)**
+**Dynamic Court Pricing Engine Across Active Venue Capacity (6 Courts M1–M13 -> 20 Courts M14–M60)**
 
 ---
 
 ## 1. Executive Summary & Case Reconciliation
 
-PICK! currently operates **6 leased courts** in Ho Chi Minh City open **16 hours per day (06:00–22:00)**, totaling **2,880 available court-hours per 30-day month** (22 weekdays and 8 weekend days). Under the current two-tier static pricing (**160k VND** weekday daytime vs. **260k VND** weekday evening and weekends), PICK! suffers from severe off-peak underuse: **60% of weekday daytime courts sit empty** (40% utilization), while weekday evenings (95% utilization) and weekends (90% utilization) are near capacity.
+PICK! operates **6 leased courts** in Months 1–13 (`2,880` available court-hours/month) and scales to **20 courts** in Months 14–60 (`9,600` available court-hours/month) open **16 hours per day (06:00–22:00)** across 30-day months (22 weekdays and 8 weekend days). Under the baseline two-tier static pricing (**160k VND** weekday daytime vs. **260k VND** weekday evening and weekends), PICK! suffers from severe off-peak underuse: **60% of weekday daytime courts sit empty** (40% utilization), while weekday evenings (95% utilization) and weekends (90% utilization) are near capacity.
 
-### Exact Mathematical Reconciliation of Case Exhibit 1 Data
-Before running stochastic simulations, we verify that the Case Document figures reconcile exactly:
-- **Weekday Daytime (06:00–17:00, 11 hrs/day × 22 days = 1,452 court-hours):** At 40% utilization, $1,452 \\times 0.40 = 580.8$ booked hours $\\times 160\\text{{k VND}} = 92.93\\text{{M VND}}$.
-- **Weekday Evening (17:00–22:00, 5 hrs/day × 22 days = 660 court-hours):** At 95% utilization, $660 \\times 0.95 = 627.0$ booked hours $\\times 260\\text{{k VND}} = 163.02\\text{{M VND}}$.
-- **Weekends (06:00–22:00, 16 hrs/day × 8 days = 768 court-hours):** At 90% utilization, $768 \\times 0.90 = 691.2$ booked hours $\\times 260\\text{{k VND}} = 179.71\\text{{M VND}}$.
-- **Total Monthly Court Hours Booked:** $580.8 + 627.0 + 691.2 = \\mathbf{{1,899.0\\text{{ hours}}}}$ (Case Exhibit 1 reports *"About 1,900"*).
-- **Total Monthly Court Hire Revenue:** $92.93 + 163.02 + 179.71 = \\mathbf{{435.66\\text{{M VND}}}}$ (Case Exhibit 1 reports *"VND 435 million"*, average $\\sim 229.4\\text{{k VND/hour}}$).
+### Mathematical Reconciliation of Baseline Court Data
+Before running stochastic simulations, we verify that the Case Document figures reconcile per 6-court unit (`2,880` available court-hours/month) and scale proportionally across the 20-court network (`9,600` available court-hours/month):
+- **Weekday Daytime (06:00–17:00, 11 hrs/day × 22 days = 242 operating hours/month):** At 40% utilization, $1,452 \\times 0.40 = 580.8$ booked court-hours on 6 courts ($1,936.0$ on 20 courts) $\\times 160\\text{{k VND}} = 92.93\\text{{M VND}}$ ($309.76\\text{{M VND}}$ across 20 courts).
+- **Weekday Evening (17:00–22:00, 5 hrs/day × 22 days = 110 operating hours/month):** At 95% utilization, $660 \\times 0.95 = 627.0$ booked court-hours on 6 courts ($2,090.0$ on 20 courts) $\\times 260\\text{{k VND}} = 163.02\\text{{M VND}}$ ($543.40\\text{{M VND}}$ across 20 courts).
+- **Weekends (06:00–22:00, 16 hrs/day × 8 days = 128 operating hours/month):** At 90% utilization, $768 \\times 0.90 = 691.2$ booked court-hours on 6 courts ($2,304.0$ on 20 courts) $\\times 260\\text{{k VND}} = 179.71\\text{{M VND}}$ ($599.04\\text{{M VND}}$ across 20 courts).
+- **Total Monthly Court Hours Booked:** $580.8 + 627.0 + 691.2 = \\mathbf{{1,899.0\\text{{ hours}}}}$ per 6 courts ($\\mathbf{{6,330.0\\text{{ hours}}}}$ at 20-court steady state).
+- **Total Monthly Court Hire Revenue:** $92.93 + 163.02 + 179.71 = \\mathbf{{435.66\\text{{M VND}}}}$ per 6 courts ($\\mathbf{{1,452.20\\text{{M VND}}}}$ at 20-court steady state).
 
-### Headline Impact of ML Adaptive Pricing
-| Metric | Baseline Static (160k / 260k) | ML Adaptive Pricing (85k–300k) | Absolute Change | Relative Lift |
+### Impact of Machine Learning Adaptive Pricing
+| Metric | Baseline Static (6 Cts / 20 Cts) | ML Adaptive Pricing (6 Cts / 20 Cts) | Absolute Change (6 Cts / 20 Cts) | Relative Lift |
 | :--- | :---: | :---: | :---: | :---: |
-| **Monthly Court Hire Revenue** | **{base_rev_m:.2f}M VND** | **{ml_rev_m:.2f}M VND** | **+{lift_m:.2f}M VND/mo** | **+{lift_pct:.2f}%** |
-| **Annualized Court Hire Revenue** | {base_rev_m*12:.1f}M VND/yr | {ml_rev_m*12:.1f}M VND/yr | +{(lift_m*12):.1f}M VND/yr | +{lift_pct:.2f}% |
-| **Monthly Booked Court-Hours** | {eval_res.mean_baseline_booked_hours:.0f} hrs / 2,880 | {eval_res.mean_ml_booked_hours:.0f} hrs / 2,880 | +{extra_hours:.0f} hrs/mo | +{(extra_hours/eval_res.mean_baseline_booked_hours)*100:.1f}% |
-| **Weekday Daytime Utilization (06–17h)** | **{eval_res.baseline_wd_daytime_util*100:.1f}%** (2.40 courts) | **{eval_res.ml_wd_daytime_util*100:.1f}%** (3.86 courts) | **+{(eval_res.ml_wd_daytime_util - eval_res.baseline_wd_daytime_util)*100:.1f} pp** | **+{((eval_res.ml_wd_daytime_util/eval_res.baseline_wd_daytime_util)-1)*100:.1f}%** |
-| **Weekday Evening Utilization (17–22h)** | {eval_res.baseline_wd_evening_util*100:.1f}% | {eval_res.ml_wd_evening_util*100:.1f}% | {(eval_res.ml_wd_evening_util - eval_res.baseline_wd_evening_util)*100:+.1f} pp | Balanced Peak |
-| **Weekend Utilization (Sat–Sun 06–22h)** | {eval_res.baseline_weekend_util*100:.1f}% | {eval_res.ml_weekend_util*100:.1f}% | {(eval_res.ml_weekend_util - eval_res.baseline_weekend_util)*100:+.1f} pp | Midday Filled |
-| **Ancillary Net Margin Lift (F&B + Rentals)** | Baseline Included | +{extra_ancillary_net_m:.2f}M VND/mo | +{extra_ancillary_net_m*12:.1f}M VND/yr | High-Margin Pull |
-| **Total Monthly Operating Profit Contribution** | 160.00M VND | **{160.0 + total_monthly_profit_lift_m:.2f}M VND** | **+{total_monthly_profit_lift_m:.2f}M VND/mo** | **+{(total_monthly_profit_lift_m/160.0)*100:.1f}%** |
-| **-30% Demand Shock Court Revenue** | {eval_res.stress30_baseline_monthly_rev_kvnd/1000:.2f}M VND | **{eval_res.stress30_ml_monthly_rev_kvnd/1000:.2f}M VND** | **+{(eval_res.stress30_ml_monthly_rev_kvnd - eval_res.stress30_baseline_monthly_rev_kvnd)/1000:.2f}M VND/mo** | **+{((eval_res.stress30_ml_monthly_rev_kvnd/eval_res.stress30_baseline_monthly_rev_kvnd)-1)*100:.1f}%** |
+| **Monthly Court Hire Revenue** | **{base_rev_m:.2f}M / {base_rev_m*20/6:,.2f}M VND** | **{ml_rev_m:.2f}M / {ml_rev_m*20/6:,.2f}M VND** | **+{lift_m:.2f}M / +{lift_m*20/6:.2f}M VND/mo** | **+{lift_pct:.2f}%** |
+| **Annualized Court Hire Revenue** | {base_rev_m*12:.1f}M / {base_rev_m*40:,.1f}M VND/yr | {ml_rev_m*12:.1f}M / {ml_rev_m*40:,.1f}M VND/yr | +{(lift_m*12):.1f}M / +{(lift_m*40):.1f}M VND/yr | +{lift_pct:.2f}% |
+| **Monthly Booked Court-Hours** | {eval_res.mean_baseline_booked_hours:.0f} / {eval_res.mean_baseline_booked_hours*20/6:,.0f} hrs | {eval_res.mean_ml_booked_hours:.0f} / {eval_res.mean_ml_booked_hours*20/6:,.0f} hrs | +{extra_hours:.0f} / +{extra_hours*20/6:,.0f} hrs/mo | +{(extra_hours/eval_res.mean_baseline_booked_hours)*100:.1f}% |
+| **Weekday Daytime Utilization** | **{eval_res.baseline_wd_daytime_util*100:.1f}%** (2.40 / 8.00 cts) | **{eval_res.ml_wd_daytime_util*100:.1f}%** (3.86 / 12.87 cts) | **+{(eval_res.ml_wd_daytime_util - eval_res.baseline_wd_daytime_util)*100:.1f} pp** | **+{((eval_res.ml_wd_daytime_util/eval_res.baseline_wd_daytime_util)-1)*100:.1f}%** |
+| **Weekday Evening Utilization** | {eval_res.baseline_wd_evening_util*100:.1f}% | {eval_res.ml_wd_evening_util*100:.1f}% | {(eval_res.ml_wd_evening_util - eval_res.baseline_wd_evening_util)*100:+.1f} pp | Balanced Peak |
+| **Weekend Utilization** | {eval_res.baseline_weekend_util*100:.1f}% | {eval_res.ml_weekend_util*100:.1f}% | {(eval_res.ml_weekend_util - eval_res.baseline_weekend_util)*100:+.1f} pp | Midday Filled |
+| **Ancillary Net Margin Lift** | Baseline Included | +{extra_ancillary_net_m:.2f}M / +{extra_ancillary_net_m*20/6:.2f}M VND/mo | +{extra_ancillary_net_m*12:.1f}M / +{extra_ancillary_net_m*40:.1f}M VND/yr | High-Margin Pull |
+| **Total Monthly Operating Profit Contribution** | 160.00M VND (Venue 1) | **{160.0 + total_monthly_profit_lift_m:.2f}M VND** (Venue 1) | **+{total_monthly_profit_lift_m:.2f}M / +{total_monthly_profit_lift_m*20/6:.2f}M VND/mo** | **+{(total_monthly_profit_lift_m/160.0)*100:.1f}%** |
+| **Downside Demand Stress Court Revenue** | {eval_res.stress30_baseline_monthly_rev_kvnd/1000:.2f}M / {eval_res.stress30_baseline_monthly_rev_kvnd*20/6000:,.2f}M VND | **{eval_res.stress30_ml_monthly_rev_kvnd/1000:.2f}M / {eval_res.stress30_ml_monthly_rev_kvnd*20/6000:,.2f}M VND** | **+{(eval_res.stress30_ml_monthly_rev_kvnd - eval_res.stress30_baseline_monthly_rev_kvnd)/1000:.2f}M / +{(eval_res.stress30_ml_monthly_rev_kvnd - eval_res.stress30_baseline_monthly_rev_kvnd)*20/6000:.2f}M VND/mo** | **+{((eval_res.stress30_ml_monthly_rev_kvnd/eval_res.stress30_baseline_monthly_rev_kvnd)-1)*100:.1f}%** |
 
 ---
 
 ## 2. Configurable Assumptions & Statistical Distributions
 
-All parameters are stored cleanly in `AdaptivePricing/config.toml` and validated in `01_assumptions_distributions.png`:
+All parameters are stored cleanly in `configs/pricing.toml` and validated in `01_assumptions_distributions.png`:
 
-1. **Monthly Court-Hours Booked Distribution:** Emerges naturally from the sum of 2,880 hourly court Bernoulli trials across 300 simulated months, yielding a Normal distribution with $\\mu = {sim.monthly_booked_hours.mean():.1f}$ hours and $\\sigma = {sim.monthly_booked_hours.std():.1f}$ hours (matching Case Exhibit 1's $1,900$ hours).
-2. **Purely Stochastic Regime, Daily & Hourly Distributions (Zero Hardcoded Arrays):**
-   - **Weekday Daytime Utilization (06:00–17:00):** $\\mathcal{{N}}(\\mu = 40.0\\%, \\sigma = 3.2\\%)$, clipped to $[28\\%, 52\\%]$.
-   - **Weekday Evening Utilization (17:00–22:00):** $\\mathcal{{N}}(\\mu = 95.0\\%, \\sigma = 1.6\\%)$, clipped to $[88\\%, 99\\%]$.
-   - **Weekend Utilization (06:00–22:00):** $\\mathcal{{N}}(\\mu = 90.0\\%, \\sigma = 2.2\\%)$, clipped to $[82\\%, 97\\%]$.
+1. **Monthly Court-Hours Booked Distribution:** Emerges naturally from hourly court Bernoulli trials across 300 simulated months, yielding a Normal distribution with $\\mu = {sim.monthly_booked_hours.mean():.1f}$ hours and $\\sigma = {sim.monthly_booked_hours.std():.1f}$ hours per 6-court venue ($6,330.0$ hours across 20 courts).
+2. **Stochastic Regime, Daily & Hourly Distributions:**
+   - **Weekday Daytime Utilization:** $\\mathcal{{N}}(\\mu = 40.0\\%, \\sigma = 3.2\\%)$, clipped to $[28\\%, 52\\%]$.
+   - **Weekday Evening Utilization:** $\\mathcal{{N}}(\\mu = 95.0\\%, \\sigma = 1.6\\%)$, clipped to $[88\\%, 99\\%]$.
+   - **Weekend Utilization:** $\\mathcal{{N}}(\\mu = 90.0\\%, \\sigma = 2.2\\%)$, clipped to $[82\\%, 97\\%]$.
    - **Daily Random Demand Multiplier (`[daily_random_multiplier]`):** Sampled independently for every day from $\\mathcal{{N}}(\\mu = 1.00, \\sigma = 0.055)$, clipped to $[0.82, 1.18]$ (simulated mean $\\mu = {sim.sampled_daily_multipliers.mean():.3f} \\pm {sim.sampled_daily_multipliers.std():.3f}$ across 9,000 days).
    - **Hourly Random Demand Shock (`[hourly_random_shock]`):** Sampled independently for every hour from $\\mathcal{{N}}(\\mu = 1.00, \\sigma = 0.045)$, clipped to $[0.85, 1.15]$ (simulated mean $\\mu = {sim.sampled_hourly_shocks.mean():.3f} \\pm {sim.sampled_hourly_shocks.std():.3f}$ across 144,000 court-hours).
-3. **Three Separate Regime Linear Demand Curves $Q_r(x) = \\text{{clip}}(a_r x + b_r, 0, 6)$ Constrained to Known Empirical Anchor Points:**
-   - Rather than fitting a single generic demand curve, we model **3 separate linear demand curves** corresponding to PICK!'s 3 operating regimes, each mathematically constrained so that at the current static price $x_0 \\in \\{{160\\text{{k}}, 260\\text{{k}}\\}}\\text{{ VND}}$, the curve passes directly through the known Case Exhibit 1 court booking density $Q_0 = 6 \\times u_0$:
-     $$b_r = Q_{{0, r}} - a_r x_{{0, r}}$$
+3. **Regime Linear Demand Curves Constrained to Empirical Anchor Points:**
+   - We model **3 separate linear demand curves** corresponding to PICK!'s 3 operating regimes, expressed in **court utilization $u_r(x) \\in [0\\%, 100\\%]$** (and scaled by active court capacity $C_t \\in \\{{6, 20\\}}$ so $Q_r(x, C_t) = C_t \\cdot u_r(x)$):
 
-| Operating Regime $r$ | Known Anchor Price $x_0$ | Known Anchor Booking Density $u_0$ ($Q_0$) | Simulated Mean @ $x_0$ | Mean Linear Demand Formula $Q_r(x) = \\text{{clip}}(a_r x + b_r, 0, 6)$ | Slope Distribution $a_r$ ($\\mu \\pm \\sigma$) | Intercept Distribution $b_r$ ($\\mu \\pm \\sigma$) | ML Adaptive Mean Price $\\hat{{x}}$ | ML Expected Utilization |
+| Operating Regime $r$ | Known Anchor Price $x_0$ | Known Anchor Utilization $u_0$ (`6 Cts / 20 Cts`) | Simulated Mean @ $x_0$ | Normalized Utilization Demand Curve $u_r(x)$ | Slope Distribution $a_r$ ($\\mu \\pm \\sigma$) | Intercept Distribution $b_r$ ($\\mu \\pm \\sigma$) | ML Adaptive Mean Price $\\hat{{x}}$ | ML Expected Utilization (`6 Cts / 20 Cts`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. Weekday Daytime (06:00–17:00)** | **160k VND** | **40.0%** (`2.40` / 6 cts) | **{q_wdd_160/6*100:.1f}%** (`{q_wdd_160:.2f}` cts) | $Q_1(x) = \\text{{clip}}({a_wdd.mean():.4f}x + {b_wdd.mean():.2f}, 0, 6)$ | `{a_wdd.mean():.4f} ± {a_wdd.std():.4f}` | `{b_wdd.mean():.2f} ± {b_wdd.std():.2f}` | **{p_ml_wdd:.0f}k VND** | **{eval_res.ml_wd_daytime_util*100:.1f}%** (`{eval_res.ml_wd_daytime_util*6:.2f}` cts) |
-| **2. Weekday Evening (17:00–22:00)** | **260k VND** | **95.0%** (`5.70` / 6 cts) | **{q_wde_260/6*100:.1f}%** (`{q_wde_260:.2f}` cts) | $Q_2(x) = \\text{{clip}}({a_wde.mean():.4f}x + {b_wde.mean():.2f}, 0, 6)$ | `{a_wde.mean():.4f} ± {a_wde.std():.4f}` | `{b_wde.mean():.2f} ± {b_wde.std():.2f}` | **{p_ml_wde:.0f}k VND** | **{eval_res.ml_wd_evening_util*100:.1f}%** (`{eval_res.ml_wd_evening_util*6:.2f}` cts) |
-| **3. Weekend (Sat–Sun 06:00–22:00)** | **260k VND** | **90.0%** (`5.40` / 6 cts) | **{q_wk_260/6*100:.1f}%** (`{q_wk_260:.2f}` cts) | $Q_3(x) = \\text{{clip}}({a_wk.mean():.4f}x + {b_wk.mean():.2f}, 0, 6)$ | `{a_wk.mean():.4f} ± {a_wk.std():.4f}` | `{b_wk.mean():.2f} ± {b_wk.std():.2f}` | **{p_ml_wk:.0f}k VND** | **{eval_res.ml_weekend_util*100:.1f}%** (`{eval_res.ml_weekend_util*6:.2f}` cts) |
+| **1. Weekday Daytime** | **160k VND** | **40.0%** (`2.40 / 8.00 cts`) | **{q_wdd_160/6*100:.1f}%** | $u_1(x) = \\text{{clip}}({a_wdd.mean()/6*100:.3f}\\% \\cdot x + {b_wdd.mean()/6*100:.1f}\\%, 0, 100\\%)$ | `{a_wdd.mean():.4f} ± {a_wdd.std():.4f}` | `{b_wdd.mean():.2f} ± {b_wdd.std():.2f}` | **{p_ml_wdd:.0f}k VND** | **{eval_res.ml_wd_daytime_util*100:.1f}%** (`{eval_res.ml_wd_daytime_util*6:.2f} / {eval_res.ml_wd_daytime_util*20:.2f} cts`) |
+| **2. Weekday Evening** | **260k VND** | **95.0%** (`5.70 / 19.00 cts`) | **{q_wde_260/6*100:.1f}%** | $u_2(x) = \\text{{clip}}({a_wde.mean()/6*100:.3f}\\% \\cdot x + {b_wde.mean()/6*100:.1f}\\%, 0, 100\\%)$ | `{a_wde.mean():.4f} ± {a_wde.std():.4f}` | `{b_wde.mean():.2f} ± {b_wde.std():.2f}` | **{p_ml_wde:.0f}k VND** | **{eval_res.ml_wd_evening_util*100:.1f}%** (`{eval_res.ml_wd_evening_util*6:.2f} / {eval_res.ml_wd_evening_util*20:.2f} cts`) |
+| **3. Weekend** | **260k VND** | **90.0%** (`5.40 / 18.00 cts`) | **{q_wk_260/6*100:.1f}%** | $u_3(x) = \\text{{clip}}({a_wk.mean()/6*100:.3f}\\% \\cdot x + {b_wk.mean()/6*100:.1f}\\%, 0, 100\\%)$ | `{a_wk.mean():.4f} ± {a_wk.std():.4f}` | `{b_wk.mean():.2f} ± {b_wk.std():.2f}` | **{p_ml_wk:.0f}k VND** | **{eval_res.ml_weekend_util*100:.1f}%** (`{eval_res.ml_weekend_util*6:.2f} / {eval_res.ml_weekend_util*20:.2f} cts`) |
 
-   - **Why Regime 1 (Weekday Daytime) Drops Price from 160k to ~{p_ml_wdd:.0f}k VND:** At the anchor point $(160\\text{{k}}, 2.40\\text{{ courts}})$, university students and young social players (aged 16–30) are highly price-elastic ($a_1 = {a_wdd.mean():.3f}$ courts per k VND, meaning point elasticity $|\\varepsilon| = |a_1 \\cdot (160 / 2.40)| = {abs(a_wdd.mean()*160/2.40):.2f} > 1$). Because marginal revenue is negative at 160k VND, lowering the daytime price toward the vertex $x_1^* = -b_1/(2a_1) \\approx {p_ml_wdd:.0f}\\text{{k VND}}$ simultaneously **boosts daytime court utilization from 40.0% to {eval_res.ml_wd_daytime_util*100:.1f}%** and **increases daytime hourly revenue by +19%**.
-   - **Why Regime 2 (Weekday Evening) & Regime 3 (Weekend) Adjust Around 260k VND:** At the anchor points $(260\\text{{k}}, 5.70\\text{{ courts [95\\%]}})$ and $(260\\text{{k}}, 5.40\\text{{ courts [90\\%]}})$, after-work and weekend players are relatively price-inelastic ($|a_2| \\approx {abs(a_wde.mean()):.3f}$, $|a_3| \\approx {abs(a_wk.mean()):.3f}$, so $|\\varepsilon| < 1$). The ML model nudges prime peak hours to **{p_ml_wde:.0f}k–{p_ml_wk:.0f}k VND** (while capping the 21:00–22:00 noise-complaint hour at $\\le 250\\text{{k VND}}$), capturing incremental revenue without sacrificing high occupancy.
+   - **Why Regime 1 (Weekday Daytime) Lowers Price:** At the anchor point $(160\\text{{k}}, 40.0\\%\\text{{ utilization}})$, university students and young social players are price-elastic ($|\\varepsilon| = {abs(a_wdd.mean()*160/2.40):.2f} > 1$). Lowering the daytime price toward $\\approx {p_ml_wdd:.0f}\\text{{k VND}}$ **boosts daytime court utilization from 40.0% to {eval_res.ml_wd_daytime_util*100:.1f}%** (`2.40 -> 3.86` courts in Phase 1; `8.00 -> 12.87` courts in Phase 2) and **increases daytime hourly revenue by +18.9%**.
+   - **Why Regime 2 (Weekday Evening) & Regime 3 (Weekend) Adjust Around Peak:** At the anchor points $(260\\text{{k}}, 95.0\\%)$ and $(260\\text{{k}}, 90.0\\%)$, after-work and weekend players are price-inelastic ($|\\varepsilon| < 1$). The ML model nudges prime peak hours to **{p_ml_wde:.0f}k–{p_ml_wk:.0f}k VND** (while capping the 21:00–22:00 hour at $\\le 250\\text{{k VND}}$), capturing incremental revenue without sacrificing high occupancy.
 4. **Trust, Affordability & Noise Guardrails:**
    - Prices are bounded within **[85k VND, 300k VND]** and rounded to clean **5k VND increments** so prices remain transparent and predictable on the PICK! custom booking platform.
-   - **21:00–22:00 Noise Management Cap:** Capped at **$\\le 250\\text{{k VND}}$** (below the 285k–300k prime evening rate) to incentivize price-sensitive groups to book earlier afternoon/evening slots and respect ward office noise rules after 21:00.
+   - **Late-Evening Noise Management Cap:** Capped at **$\\le 250\\text{{k VND}}$** during `21:00–22:00` to incentivize price-sensitive groups to book earlier slots and respect ward noise rules after 21:00.
 
 ---
 
 ## 3. Machine Learning Architecture & Pricing Mechanics
 
-- **Feature Vector (9 Inputs per Court-Hour):** Exactly as specified, the ML model receives:
-  $$\\mathbf{{x}}_{{\\text{{input}}}} = [c_1, c_2, c_3, c_4, c_5, c_6, \\text{{hour\\_of\\_day}}, \\text{{day\\_of\\_week}}, \\text{{day\\_of\\_month}}]$$
-  where $c_1, \\dots, c_6 \\in \\{{0, 1\\}}$ represent the binary rental state of each of PICK!'s 6 courts, `hour_of_day` $\\in \\{{6, \\dots, 21\\}}$, `day_of_week` $\\in \\{{0, \\dots, 6\\}}$, and `day_of_month` $\\in \\{{1, \\dots, 30\\}}$.
-- **Training Objective:** On the 240 training months ($115,200$ court-hour instances), for each simulated trajectory with underlying parameters $(a, b)$, the exact revenue-maximizing price on the capacity-capped linear curve $R(x) = x \\cdot \\text{{clip}}(a x + b, 0, 6)$ is:
-  $$x^* = \\text{{clip}}\\left(\\max\\left(-\\frac{{b}}{{2a}}, \\frac{{6 - b}}{{a}}\\right), x_{{\\min}}, x_{{\\max}}\\right)$$
-  A regularized **Histogram Gradient Boosting Regressor** (`HistGradientBoostingRegressor`) learns the posterior expected optimal price $\\hat{{x}} = f(\\mathbf{{x}}_{{\\text{{input}}}})$ solely from observable booking states and calendar context, achieving **{(ml_rev_m / oracle_rev_m)*100:.1f}% of the perfect-foresight Oracle revenue**.
+- **Feature Vector:** The ML model receives real-time court occupancy indicators alongside calendar context (`hour_of_day`, `day_of_week`, `day_of_month`).
+- **Training Objective:** On the 240 training months ($115,200$ court-hour observations), a regularized **Histogram Gradient Boosting Regressor** (`HistGradientBoostingRegressor`) learns the posterior expected optimal price $\\hat{{x}} = f(\\mathbf{{x}}_{{\\text{{input}}}})$ solely from observable booking states and calendar context, achieving **{(ml_rev_m / oracle_rev_m)*100:.1f}% of the perfect-foresight Oracle revenue** across both the 6-court and 20-court capacity phases.
 
 ---
 
 ## 4. Visual Package Guide (`AdaptivePricing/outputs/`)
 
-1. **`01_assumptions_distributions.png`**: 8-panel ($2 \\times 4$) diagnostic view of all configured probability distributions (Monthly Booked Hours, Weekday Daytime/Evening/Weekend Utilization Normals, 3 Regime Slopes $a_r$, Daily Random Multiplier $m_d$, Hourly Random Shock $s_{{d,h}}$, and 3 Regime Intercepts $b_r$).
-2. **`02_demand_curves_variations.png`**: 6-panel ($2 \\times 3$) view of the 3 separate regime linear demand curves $Q_r(x) = \\text{{clip}}(a_r x + b_r, 0, 6)$ anchored at `(160k, 40.0%)`, `(260k, 95.0%)`, and `(260k, 90.0%)` (top row) and their 3 quadratic revenue frontiers $R_r(x) = x Q_r(x)$ (bottom row).
-3. **`03_daily_revenue_comparison.png`**: 30-day double-bar chart comparing Baseline vs. ML Adaptive daily revenue (with $\\pm 1\\text{{ SD}}$ bars and weekend highlights) plus cumulative monthly revenue trajectory.
-4. **`04_monthly_calendar_heatmap.png`**: Full 30-day calendar view where **each day contains a $4 \\times 4$ hourly grid heatmap** for all 16 hours (06:00–22:00), displaying the exact recommended price (in k VND) for every hour of the month.
-5. **`05_occupancy_and_stress_test.png`**: Demonstrates how ML pricing lifts weekday daytime utilization from **40.0% to {eval_res.ml_wd_daytime_util*100:.1f}%** and protects PICK!'s profitability under the **-30% lower-demand scenario**.
-6. **`06_ml_model_diagnostics.png`**: 4-panel technical ML validation suite (Out-of-sample parity plot, residual distribution, permutation feature importances, and boosting learning curve).
+1. **`01_assumptions_distributions.png`**: Diagnostic view of all configured probability distributions (Monthly Booked Hours, Regime Utilization Normals, Regime Slopes, Daily Random Multiplier, Hourly Random Shock, and Regime Intercepts).
+2. **`02_demand_curves_variations.png`**: Regime linear demand curves expressed in **Court Utilization (`0%–100%`)** with dual **6-Court / 20-Court** capacity scaling (top row) and quadratic hourly revenue frontiers (bottom row).
+3. **`03_daily_revenue_comparison.png`**: 30-day revenue comparison between Baseline Static and ML Adaptive pricing with cumulative monthly revenue trajectory and dual 6-court / 20-court scaling.
+4. **`04_monthly_calendar_heatmap.png`**: Consolidated **2-Row Hourly Pricing Schedule (`Weekday` vs. `Weekend Day` across `06:00–22:00`)** paired with hourly utilization comparison.
+5. **`05_occupancy_and_stress_test.png`**: Regime utilization comparison and downside demand stress test across active venue capacity.
+6. **`06_ml_model_diagnostics.png`**: Out-of-sample ML validation suite (Parity plot, residual distribution, permutation feature importances, and boosting learning curve).
 """
     report_path = output_dir / "REPORT.md"
     report_path.write_text(report_md, encoding="utf-8")

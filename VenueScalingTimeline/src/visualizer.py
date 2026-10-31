@@ -415,8 +415,8 @@ def plot_venue_scaling_gantt_chart(
     )
 
     ax.set_title(
-        "PICK! Sub-Solution Path A: 14-Court Second Club Expansion (6 to 20 Courts) — Construction, Curing & Fit-Out Gantt Chart (Q4 2027 Kickoff)\n"
-        "4-Month Turnkey Build (Months 10–13: Oct 2027 – Jan 2028 @ 1,750.0M VND/Mo Even CapEx = 7,000.0M VND) + 6-to-9 Month Fill-Up Ramp Starting Month 14 (Feb 2028)",
+        "Second Club Facility Construction, Surface Curing & Operational Ramp Schedule\n"
+        "Turnkey Engineering Milestones, Parallel Fit-Out Workflows & Capacity Fill-Up Trajectory",
         fontsize=12.0,
         fontweight="bold",
         color="#0F172A",
@@ -507,7 +507,7 @@ def plot_court_capacity_and_fill_up_ramp(
     ax_left.set_ylim(0, 23.5)
     ax_left.set_ylabel("Number of Courts (Physical vs. Effective Filled)", fontsize=9.5, fontweight="bold")
     ax_left.set_title(
-        "Panel A: Total Court Scaling (6 to 20 Courts) & Stochastic 6-to-9 Month Fill-Up Trajectory",
+        "Panel A: Physical Court Capacity Expansion & Effective Utilization Ramp",
         fontsize=10.6,
         fontweight="bold",
         color="#0F172A",
@@ -572,7 +572,7 @@ def plot_court_capacity_and_fill_up_ramp(
     ax_right.set_ylim(-50, 1850)
     ax_right.set_ylabel("Venue 2 Monthly Revenue (M VND / Month)", fontsize=9.5, fontweight="bold")
     ax_right.set_title(
-        "Panel B: New 14-Court Club Revenue Ramp Derived from OUR Model (AdaptivePricing + Ancillary)",
+        "Panel B: Second Club Monthly Revenue Ramp by Stream",
         fontsize=10.6,
         fontweight="bold",
         color="#0F172A",
@@ -651,7 +651,7 @@ def plot_capex_allocation_and_unit_economics(
     ax_left.set_xlim(0, 3450)
     ax_left.set_xlabel("Capital Allocation in Millions of VND (M VND)", fontsize=9.5, fontweight="bold")
     ax_left.set_title(
-        "Panel A: VND 7,000M Fit-Out & Launch CapEx Breakdown by Stage (+1,000M Reserve)",
+        "Panel A: Expansion Capital Allocation by Construction Stage & Cash Reserve",
         fontsize=10.6,
         fontweight="bold",
         color="#0F172A",
@@ -729,7 +729,7 @@ def plot_capex_allocation_and_unit_economics(
     ax_right.set_ylim(0, 2500)
     ax_right.set_ylabel("Monthly Venue 2 Outflow (M VND / Month)", fontsize=9.5, fontweight="bold")
     ax_right.set_title(
-        "Panel B: Even Monthly Fit-Out CapEx Allocation (1,750M/mo across Oct 2027 – Jan 2028) & Venue 2 Operating Costs",
+        "Panel B: Monthly Construction Capital Deployment & Facility Operating Outflows",
         fontsize=10.6,
         fontweight="bold",
         color="#0F172A",

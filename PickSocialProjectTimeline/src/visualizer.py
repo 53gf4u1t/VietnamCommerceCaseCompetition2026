@@ -470,9 +470,8 @@ def plot_master_gantt_chart(
     )
 
     ax.set_title(
-        "PICK! Social & Adaptive Booking Platform (Path C) — Production Engineering Gantt Chart & WBS Cost Schedule (Jan 2027 – Jun 2027)\n"
-        f"4-Month Core Build (Weeks 1–16: {res.core_build_base_cost_mvnd:.2f}M Base / {res.core_build_buffered_cost_mvnd:.2f}M Buffered) + "
-        f"Phased Migration & Continuous Ops (Full 6-Month Total: {res.total_base_cost_mvnd:.2f}M Base / {res.total_buffered_cost_mvnd:,.2f}M Buffered)",
+        "PICK! Social & Adaptive Booking Platform — Production Engineering Schedule & Work Breakdown Structure\n"
+        "Phased Engineering Delivery Across Core Platform Build, Legacy Migration & Continuous Operations",
         fontsize=12.2,
         fontweight="bold",
         color="#0F172A",
@@ -555,9 +554,9 @@ def plot_stage_effort_and_concurrency(
     ax_left.set_yticklabels(labels, fontsize=9.0, fontweight="bold", color="#0F172A")
     ax_left.invert_yaxis()
     ax_left.set_xlim(0, 72)
-    ax_left.set_xlabel("Share of 4-Month (16-Week) Core Engineering Effort (%)", fontsize=9.5, fontweight="bold")
+    ax_left.set_xlabel("Share of Core Engineering Effort (%)", fontsize=9.5, fontweight="bold")
     ax_left.set_title(
-        "Panel A: 4-Month Core Build Effort Allocation vs. Industry Benchmark",
+        "Panel A: Core Build Effort Allocation vs. Industry Benchmark",
         fontsize=10.8,
         fontweight="bold",
         color="#0F172A",
@@ -594,9 +593,9 @@ def plot_stage_effort_and_concurrency(
     ax_right.set_xticklabels([f"W{w}" for w in x_w[::2]], fontsize=8.2, fontweight="bold")
     ax_right.set_ylim(0, 5.2)
     ax_right.set_ylabel("Simultaneous Active Workstreams", fontsize=9.5, fontweight="bold")
-    ax_right.set_xlabel("Project Timeline Weeks (Jan 2027 – Jun 2027)", fontsize=9.5, fontweight="bold")
+    ax_right.set_xlabel("Project Timeline Weeks", fontsize=9.5, fontweight="bold")
     ax_right.set_title(
-        "Panel B: Simultaneous Development, Continuous QA & Migration Concurrency (W1–W24)",
+        "Panel B: Simultaneous Development, Continuous QA & Migration Concurrency",
         fontsize=10.8,
         fontweight="bold",
         color="#0F172A",
@@ -685,9 +684,9 @@ def plot_cost_estimation_and_cashflow_allocation(
     ax_left.set_yticklabels(s_labels, fontsize=8.8, fontweight="bold", color="#0F172A")
     ax_left.set_ylim(6.75, -0.65)
     ax_left.set_xlim(0, 745)
-    ax_left.set_xlabel("Estimated Cost in Millions of VND (M VND)", fontsize=9.5, fontweight="bold")
+    ax_left.set_xlabel("Estimated Cost (M VND)", fontsize=9.5, fontweight="bold")
     ax_left.set_title(
-        "Panel A: Stage Cost Estimation Breakdown (Base Cost + Risk Contingency Buffer)",
+        "Panel A: Stage Cost Estimation Breakdown: Base Cost vs. Risk Contingency",
         fontsize=10.8,
         fontweight="bold",
         color="#0F172A",
@@ -867,9 +866,9 @@ def plot_cost_estimation_and_cashflow_allocation(
     ax_right.set_xticklabels(m_labels, fontsize=8.1, fontweight="bold", color="#0F172A")
     ax_right.set_ylim(-28, 265)
     ax_right.set_ylabel("Monthly Allocated Cost Outflow (M VND)", fontsize=9.5, fontweight="bold")
-    ax_right.set_xlabel("6-Month Build/Migration Schedule (Jan–Jun 2027) & Post-Build Steady State (Jul 2027+)", fontsize=9.3, fontweight="bold")
+    ax_right.set_xlabel("Build & Migration Schedule vs. Steady-State Operations", fontsize=9.3, fontweight="bold")
     ax_right.set_title(
-        "Panel B: Pay-As-Needed Monthly Cost Allocation & Recurring Platform Operating Expenses",
+        "Panel B: Leveled Monthly Cost Allocation & Recurring Platform Operating Expenses",
         fontsize=10.8,
         fontweight="bold",
         color="#0F172A",
@@ -879,7 +878,7 @@ def plot_cost_estimation_and_cashflow_allocation(
     ax_right.legend(loc="upper right", fontsize=7.6, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
 
     fig.suptitle(
-        "PICK! Social & Adaptive Booking Platform (Path C) — Cost Estimation, Risk Buffers, Leveled Allocation & Platform OpEx",
+        "PICK! Social & Adaptive Booking Platform — Cost Estimation, Risk Contingency & Leveled Cash Allocation",
         fontsize=12.5,
         fontweight="bold",
         color="#0F172A",

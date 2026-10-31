@@ -1,29 +1,29 @@
 # ==============================================================================
-# CENTRAL CONFIGURATION: CAPITAL EXPENDITURES (CapEx), PATH A VENUE SCALING
-#                        (6 -> 20 COURTS STARTING Q3 2027), BALANCE SHEET & TAX
-# File: CaseComp/configs/capex.toml
-# Philosophy: Configures Sub-Solution Path A (expanding PICK! from 6 courts to
+# CENTRAL CONFIGURATION: CAPITAL EXPENDITURES (CapEx), VENUE SCALING
+#                        (6 -> 20 COURTS STARTING Q4 2027), BALANCE SHEET & TAX
+# File: configs/capex.toml
+# Philosophy: Configures the 14-court venue expansion (expanding PICK! from 6 courts to
 #             20 courts total by opening a second 14-court club in Ho Chi Minh
-#             City starting Q3 2027 / Month 7: Jul 2027, after 4 months of
-#             platform development [M1–M4] and 2 months of live platform
-#             operation [M5–M6]).
+#             City starting Q4 2027 / Month 10: Oct 2027, after 4 months of
+#             platform development [M1–M4] and 5 months of live platform
+#             operation [M5–M9]).
 #             - Total fit-out & launch CapEx = VND 7,000.0M (7.0 billion VND,
 #               preset by Case Page 3), split EVENLY across the 4 researched
-#               construction months (Jul-27 to Oct-27): 7,000.0M / 4 = 1,750.0M/mo.
+#               construction months (Oct-27 to Jan-28): 7,000.0M / 4 = 1,750.0M/mo.
 #             - Second club lease = VND 330.0M/month on a 5-year lease (preset
 #               by Case Page 3).
 #             - DO NOT use the Case's static 1.5B/month revenue estimate;
-#               instead, once construction finishes at the end of Month 10
-#               (Oct-27), total capacity scales from 6 courts to 20 courts
-#               (Month 11 / Nov-27 onward), and the new 14 courts ramp up over
+#               instead, once construction finishes at the end of Month 13
+#               (Jan-28), total capacity scales from 6 courts to 20 courts
+#               (Month 14 / Feb-28 onward), and the new 14 courts ramp up over
 #               a stochastic 6-to-9 month fill-up distribution using OUR model
 #               (AdaptivePricing court hire + ancillary + PICK! Social network).
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 1. SUB-SOLUTION PATH A: VENUE SCALING (14-COURT SECOND CLUB IN HCMC, Q3 2027)
+# 1. VENUE SCALING (14-COURT SECOND CLUB IN HCMC, Q4 2027)
 # Derivation from Case Page 3 & Civil/Sports Construction Benchmarks:
-#   - Case Page 3 ("Path A — Expand the club network"):
+#   - Case Page 3 ("Expand the club network"):
 #     * "Open a second club in Ho Chi Minh City with 14 courts, coaching
 #        facilities and a cafe, on a five-year lease of about VND 330 million
 #        a month."
@@ -34,11 +34,11 @@
 #        it was 6, WHEN IT IS DONE, it's 20 courts)."
 #   - Strategic Sequencing:
 #     * Months 1–4 (Jan–Apr 2027): Build custom PICK! Social & AdaptivePricing
-#       platform (Path C core build).
-#     * Months 5–6 (May–Jun 2027): Launch platform & operate for 2 months,
-#       proving out higher court utilization (78.4%), membership cash flow, and
+#       platform.
+#     * Months 5–9 (May–Sep 2027): Launch platform & operate for 5 months,
+#       proving out higher court utilization, membership cash flow, and
 #       waitlist demand to justify physical expansion.
-#     * Months 7–10 (Jul–Oct 2027, Start of Q3 2027 = 4.0 Months / 16.0 Weeks):
+#     * Months 10–13 (Oct 2027 – Jan 2028, Start of Q4 2027 = 4.0 Months / 16.0 Weeks):
 #       Execute the 14-court commercial fit-out & construction in HCMC. Why
 #       4.0 months (16.0 weeks)? Commercial pickleball slab engineering
 #       (ASBA / PickleTile / Endurance Courts) requires 2–3 weeks of sub-base
@@ -47,11 +47,11 @@
 #       window before 100% acrylic silica-sand surfacing can be applied (Weeks
 #       9–14), while MEP rough-in, café/coaching studio carpentry, acoustic
 #       baffles, and Vietnam PCCC fire safety inspection run in parallel,
-#       concluding in Week 16 (end of Oct 2027 / Month 10).
-#     * Month 11+ (Nov 2027 onward): Venue 2 opens! Total network capacity jumps
+#       concluding in Week 16 (end of Jan 2028 / Month 13).
+#     * Month 14+ (Feb 2028 onward): Venue 2 opens! Total network capacity jumps
 #       from 6 courts to 20 courts (6 + 14 = 20 courts, +233.33% capacity).
 #       Utilization of the 14 new courts ramps smoothly over a sampled 6-to-9
-#       month fill-up window (Nov 2027 – Apr/Jul 2028), reaching 100% steady-state
+#       month fill-up window (Feb 2028 – Aug/Oct 2028), reaching 100% steady-state
 #       well ahead of Investor Minh Tran's Year 3 (FY 2029) deadline.
 # ------------------------------------------------------------------------------
 

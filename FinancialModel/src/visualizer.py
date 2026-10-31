@@ -149,7 +149,7 @@ def plot_drivers_and_cost_breakdown_sheet(
 
     rows: list[tuple[str, list[str]]] = [
         ("sec_hdr", [
-            "PART 1 — COURT HIRE REVENUE INTEGRATION FROM AdaptivePricing/outputs/ (6 Courts | 2,880 Available Hrs/Month)",
+            "PART 1 — COURT HIRE REVENUE INTEGRATION BY OPERATING REGIME",
             "", "", "", "", "", "", "", "", "",
         ]),
         ("col_hdr", [
@@ -200,12 +200,12 @@ def plot_drivers_and_cost_breakdown_sheet(
         ]),
         ("blank", ["", "", "", "", "", "", "", "", "", ""]),
         ("sec_hdr", [
-            "PART 2 — INTEGRATED INCOME STATEMENT STRUCTURE: REVENUE (INCL. PATH C SUBSCRIPTIONS M5+), COGS, FACILITY OpEx & SG&A",
+            "PART 2 — INTEGRATED INCOME STATEMENT STRUCTURE: REVENUE, COGS, FACILITY OPEX & SG&A",
             "", "", "", "", "", "", "", "", "",
         ]),
         ("col_hdr", [
             "Template Section",
-            "Line Item (AdaptivePricing + Path C Platform & Subscriptions)",
+            "Line Item",
             "Cost Behavior",
             "Case Base",
             "M1 Build (Jan-27)",
@@ -721,7 +721,7 @@ def plot_revenue_costs_profit_comparison_charts(
     ax_ann.grid(axis="y", linestyle="--", alpha=0.65, color="#CBD5E1", zorder=1)
     ax_ann.legend(loc="upper left", ncol=2, fontsize=8.1, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
     ax_ann.set_title(
-        "Panel A: 5-Year Annual Projections (FY 2027 – FY 2031) — Model Revenue (Green > 0) & Costs (Red < 0) vs. Stochastic Baseline & P05-P95 Ranges",
+        "Panel A: Annual Revenue, Cost & Operating Profit Comparison",
         fontsize=11.8,
         fontweight="bold",
         color="#0F172A",
@@ -885,7 +885,7 @@ def plot_revenue_costs_profit_comparison_charts(
     ax_mon.grid(axis="y", linestyle="--", alpha=0.65, color="#CBD5E1", zorder=1)
     ax_mon.legend(loc="upper left", ncol=2, fontsize=8.0, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
     ax_mon.set_title(
-        "Panel B: Monthly Build, Launch & Growth Trajectory (Months 1–24: Jan-27 to Dec-28) — Smooth Subscription Ramp Starting Month 5 (May-27)",
+        "Panel B: Monthly Build, Launch & Expansion Revenue, Cost & Profit Trajectory",
         fontsize=11.8,
         fontweight="bold",
         color="#0F172A",
@@ -994,7 +994,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_a.set_ylim(-50, float(np.max(mc.active_subscribers_p95)) * 1.16)
     ax_a.set_ylabel("Active Paying Members (Subscribers)", fontsize=9.5, fontweight="bold")
     ax_a.set_title(
-        "Panel A: Smooth Monthly Subscriber Cohort Evolution S_t (Starts Month 5 / May-27)",
+        "Panel A: Active Paying Subscriber Cohort Evolution",
         fontsize=10.8,
         fontweight="bold",
         color="#0F172A",
@@ -1079,7 +1079,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_b.set_ylim(0, float(np.max(mc.total_rev_p95)) * 1.15)
     ax_b.set_ylabel("Monthly Revenue (M VND)", fontsize=9.5, fontweight="bold")
     ax_b.set_title(
-        "Panel B: Monthly Total Revenue & Membership Subscription Revenue Trajectory (60 Months)",
+        "Panel B: Monthly Total Revenue & Membership Subscription Revenue Trajectory",
         fontsize=10.8,
         fontweight="bold",
         color="#0F172A",
@@ -1130,7 +1130,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_c.set_ylim(-115, 345)
     ax_c.set_ylabel("Subscribers / Month", fontsize=9.5, fontweight="bold")
     ax_c.set_title(
-        "Panel C: Monthly Subscriber Stock-Flow Dynamics (Gross New Sign-Ups vs. Monthly Churn)",
+        "Panel C: Monthly Subscriber Acquisition vs. Churn Flow Dynamics",
         fontsize=10.8,
         fontweight="bold",
         color="#0F172A",
@@ -1250,7 +1250,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_d.set_ylim(min(-2600.0, float(np.min(mc.stress_annual_ebitda_p05)) * 1.45), float(np.max(mc.annual_ebitda_p95)) * 1.18)
     ax_d.set_ylabel("Annual Operating Profit / EBITDA (M VND / Year)", fontsize=9.5, fontweight="bold")
     ax_d.set_title(
-        f"Panel D: Annual Operating Profit vs. Minh Tran 3,500M Y3 Target ({mc.prob_exceed_investor_3500m_y3_pct:.1f}% MC Pass Rate)",
+        "Panel D: Annual Operating Profit Across Scenarios vs. Investor Target",
         fontsize=10.8,
         fontweight="bold",
         color="#0F172A",
@@ -1260,7 +1260,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_d.legend(loc="upper left", fontsize=7.6, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
 
     fig.suptitle(
-        "PICK! Integrated Solution (Path C + Path A + ML Marketing) — Monte Carlo Subscription Cohort Dynamics & Profit Robustness (2027-2031)",
+        "Membership Cohort Dynamics, Revenue Trajectory & Operating Profit Robustness",
         fontsize=12.6,
         fontweight="bold",
         color="#0F172A",
@@ -1351,13 +1351,13 @@ def plot_monthly_cash_balance_and_externals(
     ax1.axvline(10, color="#0F172A", linestyle="--", linewidth=1.3, alpha=0.75)
     ax1.axvline(14, color="#059669", linestyle="--", linewidth=1.4, alpha=0.8)
     ax1.set_title(
-        "Panel A: 60-Month Ending Cash Balance Trajectory (Includes +500M M1 & +7,500M M10 Investor Equity + -7,000M Venue 2 CapEx in M10-M13)",
+        "Panel A: Cumulative Cash Reserves Trajectory Across Scenarios",
         fontsize=11.2,
         fontweight="bold",
         color="#0F172A",
         pad=8,
     )
-    ax1.set_ylabel("Ending Cash Balance (M VND)", fontsize=9.8, fontweight="bold")
+    ax1.set_ylabel("Cash Reserves (M VND)", fontsize=9.8, fontweight="bold")
     ax1.grid(True, linestyle="--", alpha=0.6, color="#CBD5E1")
     ax1.legend(loc="upper left", ncol=2, fontsize=8.5, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
 
@@ -1370,7 +1370,7 @@ def plot_monthly_cash_balance_and_externals(
     ax2.plot(x_m, res.monthly_net_cash_flow_model, color="#0F172A", linewidth=2.0, marker="o", markersize=3.5, label="Net Monthly Cash Flow (OCF + ICF + FCF)")
     ax2.axhline(0, color="#0F172A", linewidth=1.1)
     ax2.set_title(
-        "Panel B: Monthly Cash Flow Waterfall Components (OCF, Evenly Split Venue 2 Fit-Out CapEx & Investor Equity)",
+        "Panel B: Monthly Operating, Investing & Financing Cash Flow Components",
         fontsize=11.2,
         fontweight="bold",
         color="#0F172A",
@@ -1408,7 +1408,7 @@ def plot_monthly_cash_balance_and_externals(
     ax3_twin.set_ylabel("Legal/Noise & U-18 Safety (M VND/mo)", fontsize=9.5, fontweight="bold", color="#6D28D9")
     ax3.set_xlabel("60-Month Projection Horizon (Jan 2027 - Dec 2031)", fontsize=10.0, fontweight="bold")
     ax3.set_title(
-        "Panel C: External Macro Pickleball Interest Trend Multiplier I_t & Ward Noise/Safety Compliance Cost (externals.toml)",
+        "Panel C: Macro Market Demand Trend & Regulatory Compliance Provisions",
         fontsize=11.2,
         fontweight="bold",
         color="#0F172A",
@@ -1421,7 +1421,7 @@ def plot_monthly_cash_balance_and_externals(
     ax3.legend(lines1 + lines2, labels1 + labels2, loc="upper left", ncol=2, fontsize=8.5, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
 
     fig.suptitle(
-        "PICK! 60-Month Cash Balance Evolution, Expansion Financing & External Risk Factors (Jan 2027 - Dec 2031)",
+        "Cash Reserves Evolution, Capital Deployment & Macro Risk Provisions",
         fontsize=13.5,
         fontweight="bold",
         color="#0F172A",

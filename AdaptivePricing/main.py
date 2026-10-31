@@ -9,27 +9,13 @@ try:
     from AdaptivePricing.src.config import load_config
     from AdaptivePricing.src.simulator import run_simulations
     from AdaptivePricing.src.model import train_and_evaluate
-    from AdaptivePricing.src.visualizer import (
-        plot_assumptions_distributions,
-        plot_demand_curve_variations,
-        plot_daily_revenue_comparison,
-        plot_monthly_calendar_heatmap,
-        plot_occupancy_and_30pct_stress_test,
-        plot_ml_model_diagnostics,
-    )
+    from AdaptivePricing.src.visualizer import generate_all_charts
     from AdaptivePricing.src.reporter import export_tables_and_report
 except ImportError:
     from src.config import load_config
     from src.simulator import run_simulations
     from src.model import train_and_evaluate
-    from src.visualizer import (
-        plot_assumptions_distributions,
-        plot_demand_curve_variations,
-        plot_daily_revenue_comparison,
-        plot_monthly_calendar_heatmap,
-        plot_occupancy_and_30pct_stress_test,
-        plot_ml_model_diagnostics,
-    )
+    from src.visualizer import generate_all_charts
     from src.reporter import export_tables_and_report
 
 
@@ -57,12 +43,7 @@ def run_adaptive_pricing(
     _, eval_res = train_and_evaluate(cfg, sim)
 
     print(f"[AdaptivePricing 4/4] Generating visual package and data tables in {out_dir}...")
-    c1 = plot_assumptions_distributions(cfg, sim, out_dir)
-    c2 = plot_demand_curve_variations(cfg, sim, eval_res, out_dir)
-    c3 = plot_daily_revenue_comparison(cfg, eval_res, out_dir)
-    c4 = plot_monthly_calendar_heatmap(cfg, eval_res, out_dir)
-    c5 = plot_occupancy_and_30pct_stress_test(cfg, eval_res, out_dir)
-    c6 = plot_ml_model_diagnostics(cfg, eval_res, out_dir)
+    c1, c2, c3, c4, c5, c6 = generate_all_charts(cfg, sim, eval_res, out_dir)
 
     daily_csv, sched_csv, report_md, ml_metrics_md = export_tables_and_report(
         cfg, sim, eval_res, [c1, c2, c3, c4, c5, c6], out_dir
