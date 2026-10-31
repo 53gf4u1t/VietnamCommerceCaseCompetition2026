@@ -14,24 +14,38 @@ from .model import FinancialModelResults
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["DejaVu Sans", "Arial", "Helvetica"],
-    "figure.facecolor": "#FFFFFF",
-    "axes.facecolor": "#FFFFFF",
+    "axes.edgecolor": "#45475a",
+    "axes.linewidth": 0.9,
+    "axes.labelcolor": "#bac2de",
+    "xtick.color": "#bac2de",
+    "ytick.color": "#bac2de",
+    "text.color": "#cdd6f4",
+    "grid.color": "#313244",
+    "grid.linestyle": "--",
+    "grid.alpha": 0.85,
+    "figure.facecolor": "#1e1e2e",
+    "axes.facecolor": "#181825",
+    "savefig.facecolor": "#1e1e2e",
+    "savefig.edgecolor": "#1e1e2e",
+    "legend.facecolor": "#1e1e2e",
+    "legend.edgecolor": "#45475a",
+    "legend.labelcolor": "#cdd6f4",
 })
 
-EXCEL_GRID_BORDER = "#CBD5E1"
-SECTION_BANNER = "#1E3A8A"
-SUBHEADER_BG = "#E2E8F0"
-SUBTOTAL_BG = "#F8FAFC"
-TOTAL_HIGHLIGHT_BG = "#ECFDF5"
-PROFIT_HIGHLIGHT_BG = "#EFF6FF"
-LINKED_BG = "#F5F3FF"
+EXCEL_GRID_BORDER = "#313244"
+SECTION_BANNER = "#11111b"
+SUBHEADER_BG = "#313244"
+SUBTOTAL_BG = "#252638"
+TOTAL_HIGHLIGHT_BG = "#1f332c"
+PROFIT_HIGHLIGHT_BG = "#222c44"
+LINKED_BG = "#292338"
 
-INPUT_BLUE = "#0000FF"
-LINKED_PURPLE = "#6D28D9"
-FORMULA_BLACK = "#0F172A"
-FORMULA_DARKGRAY = "#334155"
-MUTED_SLATE = "#64748B"
-EMERALD_TEXT = "#047857"
+INPUT_BLUE = "#89b4fa"
+LINKED_PURPLE = "#cba6f7"
+FORMULA_BLACK = "#cdd6f4"
+FORMULA_DARKGRAY = "#bac2de"
+MUTED_SLATE = "#a6adc8"
+EMERALD_TEXT = "#a6e3a1"
 
 
 def _render_pure_table(
@@ -51,7 +65,9 @@ def _render_pure_table(
     n_rows = len(rows)
     fig_height = max(2.0, n_rows * row_height_in)
     fig = plt.figure(figsize=(fig_width, fig_height), dpi=240)
+    fig.patch.set_facecolor("#1e1e2e")
     ax = fig.add_axes([0.0, 0.0, 1.0, 1.0])
+    ax.set_facecolor("#181825")
 
     total_w = sum(col_widths)
     row_h = 1.0 / n_rows
@@ -70,7 +86,7 @@ def _render_pure_table(
                     total_w,
                     row_h,
                     facecolor=SECTION_BANNER,
-                    edgecolor=EXCEL_GRID_BORDER,
+                    edgecolor="#45475a",
                     linewidth=0.8,
                 )
             )
@@ -82,7 +98,7 @@ def _render_pure_table(
                 va="center",
                 fontsize=font_size + 0.5,
                 fontweight="bold",
-                color="#FFFFFF",
+                color="#89b4fa",
             )
             continue
 
@@ -102,12 +118,12 @@ def _render_pure_table(
             )
 
             if rstyle in ("subtotal", "total", "grand_total"):
-                ax.plot([cx, cx + cw], [ry + row_h, ry + row_h], color="#334155", linewidth=1.0)
+                ax.plot([cx, cx + cw], [ry + row_h, ry + row_h], color="#585b70", linewidth=1.0)
                 if rstyle in ("total", "grand_total"):
-                    ax.plot([cx, cx + cw], [ry + row_h * 0.08, ry + row_h * 0.08], color="#0F172A", linewidth=1.1)
-                    ax.plot([cx, cx + cw], [ry, ry], color="#0F172A", linewidth=1.1)
+                    ax.plot([cx, cx + cw], [ry + row_h * 0.08, ry + row_h * 0.08], color="#89b4fa", linewidth=1.1)
+                    ax.plot([cx, cx + cw], [ry, ry], color="#89b4fa", linewidth=1.1)
                 else:
-                    ax.plot([cx, cx + cw], [ry, ry], color="#334155", linewidth=1.0)
+                    ax.plot([cx, cx + cw], [ry, ry], color="#585b70", linewidth=1.0)
 
             ha = align_fn(c_idx, rstyle)
             if ha == "right":
@@ -270,7 +286,7 @@ def plot_drivers_and_cost_breakdown_sheet(
         if rstyle == "subtotal":
             return SUBTOTAL_BG, FORMULA_BLACK, "bold"
         if rstyle == "total":
-            return PROFIT_HIGHLIGHT_BG, "#1E40AF", "bold"
+            return PROFIT_HIGHLIGHT_BG, "#89b4fa", "bold"
         if rstyle == "grand_total":
             return TOTAL_HIGHLIGHT_BG, EMERALD_TEXT, "bold"
         if rstyle == "linked":
@@ -278,8 +294,8 @@ def plot_drivers_and_cost_breakdown_sheet(
                 return LINKED_BG, LINKED_PURPLE, "bold"
             return LINKED_BG, FORMULA_BLACK, "normal"
         if rstyle == "blank":
-            return "#FFFFFF", FORMULA_BLACK, "normal"
-        bg = "#FFFFFF" if r_idx % 2 == 0 else "#F8FAFC"
+            return "#181825", FORMULA_BLACK, "normal"
+        bg = "#1e1e2e" if r_idx % 2 == 0 else "#181825"
         if c_idx in (3, 4, 5, 6):
             return bg, INPUT_BLUE, ("bold" if c_idx == 6 else "normal")
         if c_idx in (7, 8):
@@ -367,14 +383,14 @@ def plot_fs_month_projection_sheet(
         if rstyle == "subtotal":
             return SUBTOTAL_BG, FORMULA_BLACK, "bold"
         if rstyle == "total":
-            return PROFIT_HIGHLIGHT_BG, "#1E40AF", "bold"
+            return PROFIT_HIGHLIGHT_BG, "#89b4fa", "bold"
         if rstyle == "grand_total":
             return TOTAL_HIGHLIGHT_BG, EMERALD_TEXT, "bold"
         if rstyle == "pct":
-            return "#F8FAFC", "#475569", "bold"
+            return "#232436", "#a6adc8", "bold"
         if rstyle == "input_linked":
             return LINKED_BG, (LINKED_PURPLE if 2 <= c_idx <= 15 else FORMULA_DARKGRAY), "bold"
-        bg = "#FFFFFF" if r_idx % 2 == 0 else "#F8FAFC"
+        bg = "#1e1e2e" if r_idx % 2 == 0 else "#181825"
         if rstyle == "input" and 2 <= c_idx <= 15:
             return bg, INPUT_BLUE, "normal"
         if c_idx >= 16 or rstyle in ("formula", "unit"):
@@ -463,14 +479,14 @@ def plot_fs_annual_and_structure_dashboard(
         if rstyle == "subtotal":
             return SUBTOTAL_BG, FORMULA_BLACK, "bold"
         if rstyle == "total":
-            return PROFIT_HIGHLIGHT_BG, "#1E40AF", "bold"
+            return PROFIT_HIGHLIGHT_BG, "#89b4fa", "bold"
         if rstyle == "grand_total":
             return TOTAL_HIGHLIGHT_BG, EMERALD_TEXT, "bold"
         if rstyle == "pct":
-            return "#F8FAFC", "#475569", "bold"
+            return "#232436", "#a6adc8", "bold"
         if rstyle == "input_linked":
             return LINKED_BG, (LINKED_PURPLE if c_idx >= 3 else INPUT_BLUE), "bold"
-        bg = "#FFFFFF" if r_idx % 2 == 0 else "#F8FAFC"
+        bg = "#1e1e2e" if r_idx % 2 == 0 else "#181825"
         if rstyle == "input" and c_idx in (2, 3, 4):
             return bg, INPUT_BLUE, ("bold" if c_idx == 4 else "normal")
         if c_idx >= 5:
@@ -511,29 +527,29 @@ def plot_revenue_costs_profit_comparison_charts(
       - Panel B: Monthly Trajectory Across Year 1 & Year 2 (Months 1–24: Jan-27 to Dec-28, showing M1–M4 Build, M5 Launch, and smooth ramp to 1,500 members by Dec-28)
     """
     fig, (ax_ann, ax_mon) = plt.subplots(2, 1, figsize=(19.0, 13.4), dpi=240)
-    fig.patch.set_facecolor("#FFFFFF")
+    fig.patch.set_facecolor("#1e1e2e")
     plt.subplots_adjust(hspace=0.32)
 
-    BASE_BAR_GREY = "#CBD5E1"
-    BASE_BAR_EDGE = "#94A3B8"
-    BASE_BAR_ALPHA = 0.42
-    BASE_TEXT_GREY = "#94A3B8"
+    BASE_BAR_GREY = "#585b70"
+    BASE_BAR_EDGE = "#7f849c"
+    BASE_BAR_ALPHA = 0.55
+    BASE_TEXT_GREY = "#a6adc8"
 
-    MOD_REV_GREEN = "#10B981"
-    MOD_REV_EDGE = "#064E3B"
+    MOD_REV_GREEN = "#a6e3a1"
+    MOD_REV_EDGE = "#11111b"
 
-    MOD_COST_RED = "#EF4444"
-    MOD_COST_EDGE = "#7F1D1D"
+    MOD_COST_RED = "#f38ba8"
+    MOD_COST_EDGE = "#11111b"
 
-    BASE_PROFIT_LINE = "#94A3B8"
-    BASE_PROFIT_ALPHA = 0.50
-    MOD_PROFIT_LINE = "#0F172A"
-    MOD_PROFIT_MARKER = "#10B981"
+    BASE_PROFIT_LINE = "#9399b2"
+    BASE_PROFIT_ALPHA = 0.70
+    MOD_PROFIT_LINE = "#f9e2af"
+    MOD_PROFIT_MARKER = "#a6e3a1"
 
     # =========================================================================
     # PANEL A: 5-Year Annual Double-Bar & Profit-Line Chart (FY 2027 – FY 2031)
     # =========================================================================
-    ax_ann.set_facecolor("#F8FAFC")
+    ax_ann.set_facecolor("#181825")
     mc = res.mc
     n_years = len(res.year_labels)
     x_yr = np.arange(n_years)
@@ -571,7 +587,7 @@ def plot_revenue_costs_profit_comparison_charts(
         width=bar_w,
         yerr=base_rev_yerr,
         capsize=3.5,
-        error_kw=dict(ecolor="#64748B", lw=1.0, alpha=0.65),
+        error_kw=dict(ecolor="#a6adc8", lw=1.0, alpha=0.75),
         color=BASE_BAR_GREY,
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
@@ -585,7 +601,7 @@ def plot_revenue_costs_profit_comparison_charts(
         width=bar_w,
         yerr=mod_rev_yerr,
         capsize=3.5,
-        error_kw=dict(ecolor="#064E3B", lw=1.1, alpha=0.80),
+        error_kw=dict(ecolor="#cdd6f4", lw=1.1, alpha=0.85),
         color=MOD_REV_GREEN,
         edgecolor=MOD_REV_EDGE,
         linewidth=1.1,
@@ -599,7 +615,7 @@ def plot_revenue_costs_profit_comparison_charts(
         width=bar_w,
         yerr=base_cost_yerr,
         capsize=3.5,
-        error_kw=dict(ecolor="#64748B", lw=1.0, alpha=0.65),
+        error_kw=dict(ecolor="#a6adc8", lw=1.0, alpha=0.75),
         color=BASE_BAR_GREY,
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
@@ -613,7 +629,7 @@ def plot_revenue_costs_profit_comparison_charts(
         width=bar_w,
         yerr=mod_cost_yerr,
         capsize=3.5,
-        error_kw=dict(ecolor="#7F1D1D", lw=1.1, alpha=0.80),
+        error_kw=dict(ecolor="#cdd6f4", lw=1.1, alpha=0.85),
         color=MOD_COST_RED,
         edgecolor=MOD_COST_EDGE,
         linewidth=1.1,
@@ -634,7 +650,7 @@ def plot_revenue_costs_profit_comparison_charts(
         x_yr + bar_w / 2,
         mc.annual_ebitda_p05,
         mc.annual_ebitda_p95,
-        color="#F59E0B",
+        color="#f9e2af",
         alpha=0.22,
         zorder=4,
     )
@@ -647,7 +663,7 @@ def plot_revenue_costs_profit_comparison_charts(
         alpha=BASE_PROFIT_ALPHA,
         marker="o",
         markersize=7.0,
-        markerfacecolor="#E2E8F0",
+        markerfacecolor="#313244",
         markeredgecolor=BASE_PROFIT_LINE,
         markeredgewidth=1.6,
         label=f"Baseline Operating Profit Line (~+{base_ann_profit.mean():,.0f}M / yr, P05-P95 Band)",
@@ -662,13 +678,13 @@ def plot_revenue_costs_profit_comparison_charts(
         marker="o",
         markersize=8.2,
         markerfacecolor=MOD_PROFIT_MARKER,
-        markeredgecolor=MOD_PROFIT_LINE,
+        markeredgecolor="#11111b",
         markeredgewidth=1.8,
         label=f"Model Operating Profit Line (Y3 = +{mod_ann_profit[2]:,.0f}M vs 3,500M Investor Target)",
         zorder=6,
     )
 
-    ax_ann.axhline(0, color="#0F172A", linewidth=1.4, zorder=4)
+    ax_ann.axhline(0, color="#cdd6f4", linewidth=1.4, zorder=4)
 
     for i in range(n_years):
         ax_ann.text(
@@ -680,7 +696,7 @@ def plot_revenue_costs_profit_comparison_charts(
             fontsize=7.9,
             fontweight="normal",
             color=BASE_TEXT_GREY,
-            alpha=0.80,
+            alpha=0.90,
         )
         ax_ann.text(
             i + bar_w / 2,
@@ -690,7 +706,7 @@ def plot_revenue_costs_profit_comparison_charts(
             va="bottom",
             fontsize=8.3,
             fontweight="bold",
-            color="#065F46",
+            color="#a6e3a1",
         )
         ax_ann.text(
             i - bar_w / 2,
@@ -701,7 +717,7 @@ def plot_revenue_costs_profit_comparison_charts(
             fontsize=7.9,
             fontweight="normal",
             color=BASE_TEXT_GREY,
-            alpha=0.80,
+            alpha=0.90,
         )
         ax_ann.text(
             i + bar_w / 2,
@@ -711,27 +727,27 @@ def plot_revenue_costs_profit_comparison_charts(
             va="top",
             fontsize=8.3,
             fontweight="bold",
-            color="#7F1D1D",
+            color="#f38ba8",
         )
 
     ax_ann.set_xticks(x_yr)
-    ax_ann.set_xticklabels(res.year_labels, fontsize=9.8, fontweight="bold", color="#0F172A")
-    ax_ann.set_ylabel("Million VND / Year", fontsize=10.2, fontweight="bold", color="#0F172A")
+    ax_ann.set_xticklabels(res.year_labels, fontsize=9.8, fontweight="bold", color="#cdd6f4")
+    ax_ann.set_ylabel("Million VND / Year", fontsize=10.2, fontweight="bold", color="#bac2de")
     ax_ann.set_ylim(-float(np.max(mc.annual_costs_p95)) * 1.25, float(np.max(mc.annual_rev_p95)) * 1.25)
-    ax_ann.grid(axis="y", linestyle="--", alpha=0.65, color="#CBD5E1", zorder=1)
-    ax_ann.legend(loc="upper left", ncol=2, fontsize=8.1, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax_ann.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
+    ax_ann.legend(loc="upper left", ncol=2, fontsize=8.1, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
     ax_ann.set_title(
         "Panel A: Annual Revenue, Cost & Operating Profit Comparison",
         fontsize=11.8,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=12,
     )
 
     # =========================================================================
     # PANEL B: Monthly Trajectory Across Years 1 & 2 (Months 1–24: Jan-27 to Dec-28)
     # =========================================================================
-    ax_mon.set_facecolor("#F8FAFC")
+    ax_mon.set_facecolor("#181825")
     m24_labels = list(res.month_labels[:24])
     n_m = len(m24_labels)
     x_m = np.arange(n_m)
@@ -761,7 +777,7 @@ def plot_revenue_costs_profit_comparison_charts(
         width=bar_wm,
         yerr=base_m_rev_yerr,
         capsize=2.0,
-        error_kw=dict(ecolor="#64748B", lw=0.75, alpha=0.55),
+        error_kw=dict(ecolor="#a6adc8", lw=0.75, alpha=0.65),
         color=BASE_BAR_GREY,
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
@@ -775,7 +791,7 @@ def plot_revenue_costs_profit_comparison_charts(
         width=bar_wm,
         yerr=mod_m_rev_yerr,
         capsize=2.0,
-        error_kw=dict(ecolor="#064E3B", lw=0.80, alpha=0.70),
+        error_kw=dict(ecolor="#cdd6f4", lw=0.80, alpha=0.80),
         color=MOD_REV_GREEN,
         edgecolor=MOD_REV_EDGE,
         linewidth=0.85,
@@ -818,7 +834,7 @@ def plot_revenue_costs_profit_comparison_charts(
         x_m + bar_wm / 2,
         mc.ebitda_p05[:24],
         mc.ebitda_p95[:24],
-        color="#F59E0B",
+        color="#f9e2af",
         alpha=0.22,
         zorder=4,
     )
@@ -831,7 +847,7 @@ def plot_revenue_costs_profit_comparison_charts(
         alpha=BASE_PROFIT_ALPHA,
         marker="o",
         markersize=5.2,
-        markerfacecolor="#E2E8F0",
+        markerfacecolor="#313244",
         markeredgecolor=BASE_PROFIT_LINE,
         markeredgewidth=1.3,
         label=f"Baseline Stochastic Monthly Profit (~+{base_mon_profit.mean():.1f}M / mo, P05-P95 Band)",
@@ -846,15 +862,15 @@ def plot_revenue_costs_profit_comparison_charts(
         marker="o",
         markersize=6.2,
         markerfacecolor=MOD_PROFIT_MARKER,
-        markeredgecolor=MOD_PROFIT_LINE,
+        markeredgecolor="#11111b",
         markeredgewidth=1.5,
         label=f"Model Monthly Operating Profit (Ramps to +{mod_mon_profit[-1]:,.0f}M/mo by M24, P05-P95 Band)",
         zorder=6,
     )
 
-    ax_mon.axhline(0, color="#0F172A", linewidth=1.4, zorder=4)
-    ax_mon.axvline(3.5, color="#DC2626", linewidth=1.6, linestyle="--", zorder=4)
-    ax_mon.axvline(5.5, color="#0284C7", linewidth=1.4, linestyle=":", zorder=4)
+    ax_mon.axhline(0, color="#cdd6f4", linewidth=1.4, zorder=4)
+    ax_mon.axvline(3.5, color="#f38ba8", linewidth=1.6, linestyle="--", zorder=4)
+    ax_mon.axvline(5.5, color="#89b4fa", linewidth=1.4, linestyle=":", zorder=4)
 
     for i in range(0, n_m, 2):
         ax_mon.text(
@@ -865,7 +881,7 @@ def plot_revenue_costs_profit_comparison_charts(
             va="bottom",
             fontsize=6.8,
             fontweight="bold",
-            color="#065F46",
+            color="#a6e3a1",
         )
         ax_mon.text(
             i + bar_wm / 2,
@@ -875,20 +891,20 @@ def plot_revenue_costs_profit_comparison_charts(
             va="top",
             fontsize=6.8,
             fontweight="bold",
-            color="#7F1D1D",
+            color="#f38ba8",
         )
 
     ax_mon.set_xticks(x_m)
-    ax_mon.set_xticklabels(m24_labels, fontsize=7.8, fontweight="bold", color="#0F172A", rotation=25)
-    ax_mon.set_ylabel("Million VND / Month", fontsize=10.2, fontweight="bold", color="#0F172A")
+    ax_mon.set_xticklabels(m24_labels, fontsize=7.8, fontweight="bold", color="#cdd6f4", rotation=25)
+    ax_mon.set_ylabel("Million VND / Month", fontsize=10.2, fontweight="bold", color="#bac2de")
     ax_mon.set_ylim(float(np.min(mod_mon_cost)) * 1.26, float(np.max(mod_mon_rev)) * 1.26)
-    ax_mon.grid(axis="y", linestyle="--", alpha=0.65, color="#CBD5E1", zorder=1)
-    ax_mon.legend(loc="upper left", ncol=2, fontsize=8.0, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax_mon.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
+    ax_mon.legend(loc="upper left", ncol=2, fontsize=8.0, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
     ax_mon.set_title(
         "Panel B: Monthly Build, Launch & Expansion Revenue, Cost & Profit Trajectory",
         fontsize=11.8,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=12,
     )
 
@@ -917,7 +933,7 @@ def plot_membership_and_monte_carlo_distributions(
     """
     mc = res.mc
     fig, ((ax_a, ax_b), (ax_c, ax_d)) = plt.subplots(2, 2, figsize=(20.0, 12.6), dpi=240)
-    fig.patch.set_facecolor("#FFFFFF")
+    fig.patch.set_facecolor("#1e1e2e")
     plt.subplots_adjust(wspace=0.20, hspace=0.30)
 
     x_m = np.arange(1, 61)
@@ -935,15 +951,15 @@ def plot_membership_and_monte_carlo_distributions(
     # -------------------------------------------------------------------------
     # PANEL A: Smooth Active Paying Subscribers S_t (N=300 Monte Carlo Trajectories)
     # -------------------------------------------------------------------------
-    ax_a.set_facecolor("#F8FAFC")
+    ax_a.set_facecolor("#181825")
     for path in mc.sample_subscribers_paths:
-        ax_a.plot(x_m, path, color="#3B82F6", alpha=0.14, linewidth=0.8, zorder=2)
+        ax_a.plot(x_m, path, color="#89b4fa", alpha=0.14, linewidth=0.8, zorder=2)
 
     ax_a.fill_between(
         x_m,
         mc.active_subscribers_p05,
         mc.active_subscribers_p95,
-        color="#2563EB",
+        color="#89b4fa",
         alpha=0.22,
         label="90% Monte Carlo Band (P05–P95)",
         zorder=3,
@@ -951,7 +967,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_a.plot(
         x_m,
         mc.Active_subscribers_train_mean,
-        color="#1D4ED8",
+        color="#89b4fa",
         linewidth=2.5,
         label=f"Train Split Mean (n={mc.n_train} sims)",
         zorder=5,
@@ -959,7 +975,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_a.plot(
         x_m,
         mc.active_subscribers_test_mean,
-        color="#0F172A",
+        color="#cdd6f4",
         linestyle="--",
         linewidth=2.0,
         label=f"Held-Out Test Split Mean (n={mc.n_test} sims)",
@@ -968,55 +984,55 @@ def plot_membership_and_monte_carlo_distributions(
     ax_a.plot(
         x_m,
         mc.stress_active_subscribers_mean,
-        color="#DC2626",
+        color="#f38ba8",
         linestyle="-.",
         linewidth=2.0,
         label="Stress Scenario (-30% Demand) Subscribers",
         zorder=4,
     )
 
-    ax_a.axvline(5, color="#059669", linewidth=1.6, linestyle="--", zorder=4)
-    ax_a.scatter([24], [mc.m24_end_y2_subscribers], color="#059669", edgecolor="#0F172A", s=75, zorder=7)
+    ax_a.axvline(5, color="#a6e3a1", linewidth=1.6, linestyle="--", zorder=4)
+    ax_a.scatter([24], [mc.m24_end_y2_subscribers], color="#a6e3a1", edgecolor="#11111b", s=75, zorder=7)
     ax_a.annotate(
         f"End of Year 2 (Dec-28):\n{mc.m24_end_y2_subscribers:,.0f} Paying Members\n({mc.m24_end_y2_membership_rev_mvnd:,.1f}M VND/mo)",
         xy=(24, mc.m24_end_y2_subscribers),
         xytext=(27.5, mc.m24_end_y2_subscribers - 360),
         fontsize=8.0,
         fontweight="bold",
-        color="#065F46",
-        bbox=dict(boxstyle="round,pad=0.28", facecolor="#ECFDF5", edgecolor="#059669", linewidth=1.0),
-        arrowprops=dict(arrowstyle="-", color="#059669", linewidth=1.2),
+        color="#a6e3a1",
+        bbox=dict(boxstyle="round,pad=0.28", facecolor="#1e1e2e", edgecolor="#a6e3a1", linewidth=1.0),
+        arrowprops=dict(arrowstyle="-", color="#a6e3a1", linewidth=1.2),
         zorder=8,
     )
 
     ax_a.set_xticks([t + 1 for t in tick_idx])
     ax_a.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold")
     ax_a.set_ylim(-50, float(np.max(mc.active_subscribers_p95)) * 1.16)
-    ax_a.set_ylabel("Active Paying Members (Subscribers)", fontsize=9.5, fontweight="bold")
+    ax_a.set_ylabel("Active Paying Members (Subscribers)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_a.set_title(
         "Panel A: Active Paying Subscriber Cohort Evolution",
         fontsize=10.8,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=10,
     )
-    ax_a.grid(True, linestyle="--", alpha=0.6, color="#CBD5E1", zorder=1)
-    ax_a.legend(loc="upper left", fontsize=7.8, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax_a.grid(True, linestyle="--", alpha=0.8, color="#313244", zorder=1)
+    ax_a.legend(loc="upper left", fontsize=7.8, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     # -------------------------------------------------------------------------
     # PANEL B: Total Monthly Revenue & Membership Revenue Trajectory (M VND/mo)
     # -------------------------------------------------------------------------
-    ax_b.set_facecolor("#F8FAFC")
+    ax_b.set_facecolor("#181825")
     for path in mc.sample_total_rev_paths:
-        ax_b.plot(x_m, path, color="#10B981", alpha=0.12, linewidth=0.8, zorder=2)
+        ax_b.plot(x_m, path, color="#a6e3a1", alpha=0.12, linewidth=0.8, zorder=2)
     for b_path in mc.sample_base_rev_paths:
-        ax_b.plot(x_m, b_path, color="#94A3B8", alpha=0.10, linewidth=0.7, zorder=1)
+        ax_b.plot(x_m, b_path, color="#7f849c", alpha=0.10, linewidth=0.7, zorder=1)
 
     ax_b.fill_between(
         x_m,
         mc.total_rev_p05,
         mc.total_rev_p95,
-        color="#10B981",
+        color="#a6e3a1",
         alpha=0.22,
         label="Total Monthly Revenue P05–P95 Band",
         zorder=3,
@@ -1024,7 +1040,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_b.plot(
         x_m,
         mc.total_rev_mean,
-        color="#047857",
+        color="#a6e3a1",
         linewidth=2.6,
         label="Total Monthly Revenue Mean (Court + Ancillary + Subscriptions)",
         zorder=5,
@@ -1033,14 +1049,14 @@ def plot_membership_and_monte_carlo_distributions(
         x_m,
         mc.membership_rev_p05,
         mc.membership_rev_p95,
-        color="#6D28D9",
-        alpha=0.18,
+        color="#cba6f7",
+        alpha=0.22,
         zorder=3,
     )
     ax_b.plot(
         x_m,
         mc.membership_rev_mean,
-        color="#6D28D9",
+        color="#cba6f7",
         linewidth=2.3,
         label="Membership Subscription Revenue (@ 399k VND/member/mo)",
         zorder=5,
@@ -1048,7 +1064,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_b.plot(
         x_m,
         mc.stress_total_rev_mean,
-        color="#DC2626",
+        color="#f38ba8",
         linestyle="-.",
         linewidth=1.9,
         label="Stress Scenario (-30% Demand) Total Revenue",
@@ -1058,7 +1074,7 @@ def plot_membership_and_monte_carlo_distributions(
         x_m,
         mc.base_total_rev_p05,
         mc.base_total_rev_p95,
-        color="#64748B",
+        color="#7f849c",
         alpha=0.20,
         label="Baseline Stochastic Revenue P05–P95 Band",
         zorder=2,
@@ -1066,10 +1082,10 @@ def plot_membership_and_monte_carlo_distributions(
     ax_b.plot(
         x_m,
         mc.base_total_rev_mean,
-        color="#64748B",
+        color="#9399b2",
         linestyle="-",
         linewidth=1.7,
-        alpha=0.80,
+        alpha=0.85,
         label=f"Baseline Stochastic Revenue (~{mc.base_total_rev_mean.mean():.1f}M/mo)",
         zorder=3,
     )
@@ -1077,72 +1093,72 @@ def plot_membership_and_monte_carlo_distributions(
     ax_b.set_xticks([t + 1 for t in tick_idx])
     ax_b.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold")
     ax_b.set_ylim(0, float(np.max(mc.total_rev_p95)) * 1.15)
-    ax_b.set_ylabel("Monthly Revenue (M VND)", fontsize=9.5, fontweight="bold")
+    ax_b.set_ylabel("Monthly Revenue (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_b.set_title(
         "Panel B: Monthly Total Revenue & Membership Subscription Revenue Trajectory",
         fontsize=10.8,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=10,
     )
-    ax_b.grid(True, linestyle="--", alpha=0.6, color="#CBD5E1", zorder=1)
-    ax_b.legend(loc="upper left", fontsize=7.4, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax_b.grid(True, linestyle="--", alpha=0.8, color="#313244", zorder=1)
+    ax_b.legend(loc="upper left", fontsize=7.4, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     # -------------------------------------------------------------------------
     # PANEL C: Monthly Subscriber Acquisition vs. Monthly Churn Flow Dynamics
     # -------------------------------------------------------------------------
-    ax_c.set_facecolor("#F8FAFC")
+    ax_c.set_facecolor("#181825")
     net_adds = mc.new_subscribers_mean - mc.churned_subscribers_mean
     ax_c.bar(
         x_m,
         mc.new_subscribers_mean,
-        color="#10B981",
-        edgecolor="#065F46",
+        color="#a6e3a1",
+        edgecolor="#11111b",
         width=0.68,
-        alpha=0.85,
+        alpha=0.88,
         label="Gross New Subscribers Acquired (+ / mo)",
         zorder=3,
     )
     ax_c.bar(
         x_m,
         -mc.churned_subscribers_mean,
-        color="#EF4444",
-        edgecolor="#7F1D1D",
+        color="#f38ba8",
+        edgecolor="#11111b",
         width=0.68,
-        alpha=0.85,
+        alpha=0.88,
         label="Churned Subscribers (- / mo, ~4.2% Monthly Churn)",
         zorder=3,
     )
     ax_c.plot(
         x_m,
         net_adds,
-        color="#0F172A",
+        color="#f9e2af",
         linewidth=2.2,
         marker="o",
         markersize=3.8,
         label="Net Monthly Subscriber Additions (New - Churned)",
         zorder=5,
     )
-    ax_c.axhline(0, color="#0F172A", linewidth=1.2, zorder=4)
+    ax_c.axhline(0, color="#cdd6f4", linewidth=1.2, zorder=4)
 
     ax_c.set_xticks([t + 1 for t in tick_idx])
     ax_c.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold")
     ax_c.set_ylim(-115, 345)
-    ax_c.set_ylabel("Subscribers / Month", fontsize=9.5, fontweight="bold")
+    ax_c.set_ylabel("Subscribers / Month", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_c.set_title(
         "Panel C: Monthly Subscriber Acquisition vs. Churn Flow Dynamics",
         fontsize=10.8,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=10,
     )
-    ax_c.grid(True, linestyle="--", alpha=0.6, color="#CBD5E1", zorder=1)
-    ax_c.legend(loc="upper right", fontsize=7.8, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax_c.grid(True, linestyle="--", alpha=0.8, color="#313244", zorder=1)
+    ax_c.legend(loc="upper right", fontsize=7.8, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     # -------------------------------------------------------------------------
     # PANEL D: Annual Operating Profit (FY27–FY31) vs. Investor Minh Tran 3,500M Target
     # -------------------------------------------------------------------------
-    ax_d.set_facecolor("#F8FAFC")
+    ax_d.set_facecolor("#181825")
     x_y = np.arange(5)
     w_y = 0.26
 
@@ -1169,10 +1185,10 @@ def plot_membership_and_monte_carlo_distributions(
         width=w_y,
         yerr=base_y_yerr,
         capsize=3.0,
-        error_kw=dict(ecolor="#475569", lw=1.0, alpha=0.75),
-        color="#CBD5E1",
-        edgecolor="#64748B",
-        alpha=0.62,
+        error_kw=dict(ecolor="#a6adc8", lw=1.0, alpha=0.75),
+        color="#585b70",
+        edgecolor="#7f849c",
+        alpha=0.68,
         label=f"Baseline Stochastic EBITDA (~+{base_y_ebitda.mean():,.0f}M / yr, P05-P95)",
         zorder=2,
     )
@@ -1182,11 +1198,11 @@ def plot_membership_and_monte_carlo_distributions(
         width=w_y,
         yerr=mod_y_yerr,
         capsize=3.0,
-        error_kw=dict(ecolor="#064E3B", lw=1.1, alpha=0.85),
-        color="#10B981",
-        edgecolor="#064E3B",
+        error_kw=dict(ecolor="#cdd6f4", lw=1.1, alpha=0.85),
+        color="#a6e3a1",
+        edgecolor="#11111b",
         linewidth=1.1,
-        label="Path C Integrated Model (Mean Annual EBITDA, P05-P95)",
+        label="Integrated Solution Model (Mean Annual EBITDA, P05-P95)",
         zorder=4,
     )
     ax_d.bar(
@@ -1195,9 +1211,9 @@ def plot_membership_and_monte_carlo_distributions(
         width=w_y,
         yerr=stress_y_yerr,
         capsize=3.0,
-        error_kw=dict(ecolor="#78350F", lw=1.0, alpha=0.80),
-        color="#F59E0B",
-        edgecolor="#78350F",
+        error_kw=dict(ecolor="#cdd6f4", lw=1.0, alpha=0.80),
+        color="#fab387",
+        edgecolor="#11111b",
         linewidth=1.0,
         hatch="///",
         label="-30% Lower Demand Stress Test (Case Page 4, P05-P95)",
@@ -1206,7 +1222,7 @@ def plot_membership_and_monte_carlo_distributions(
 
     ax_d.axhline(
         3500.0,
-        color="#DC2626",
+        color="#f38ba8",
         linewidth=2.2,
         linestyle="--",
         label="Investor Minh Tran Year 3 Target (3,500M VND / yr)",
@@ -1222,7 +1238,7 @@ def plot_membership_and_monte_carlo_distributions(
             va="bottom",
             fontsize=7.3,
             fontweight="normal",
-            color="#475569",
+            color="#a6adc8",
         )
         ax_d.text(
             x_y[i],
@@ -1232,7 +1248,7 @@ def plot_membership_and_monte_carlo_distributions(
             va="bottom",
             fontsize=8.0,
             fontweight="bold",
-            color="#065F46",
+            color="#a6e3a1",
         )
         ax_d.text(
             x_y[i] + w_y,
@@ -1242,28 +1258,28 @@ def plot_membership_and_monte_carlo_distributions(
             va="bottom",
             fontsize=7.5,
             fontweight="bold",
-            color="#92400E",
+            color="#fab387",
         )
 
     ax_d.set_xticks(x_y)
     ax_d.set_xticklabels(res.year_labels, fontsize=8.8, fontweight="bold")
     ax_d.set_ylim(min(-2600.0, float(np.min(mc.stress_annual_ebitda_p05)) * 1.45), float(np.max(mc.annual_ebitda_p95)) * 1.18)
-    ax_d.set_ylabel("Annual Operating Profit / EBITDA (M VND / Year)", fontsize=9.5, fontweight="bold")
+    ax_d.set_ylabel("Annual Operating Profit / EBITDA (M VND / Year)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_d.set_title(
         "Panel D: Annual Operating Profit Across Scenarios vs. Investor Target",
         fontsize=10.8,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=10,
     )
-    ax_d.grid(axis="y", linestyle="--", alpha=0.6, color="#CBD5E1", zorder=1)
-    ax_d.legend(loc="upper left", fontsize=7.6, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax_d.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
+    ax_d.legend(loc="upper left", fontsize=7.6, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     fig.suptitle(
         "Membership Cohort Dynamics, Revenue Trajectory & Operating Profit Robustness",
         fontsize=12.6,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         y=0.99,
     )
 
@@ -1290,109 +1306,110 @@ def plot_monthly_cash_balance_and_externals(
     tick_lbls = [res.month_labels[i] for i in tick_idx]
 
     fig, axes = plt.subplots(3, 1, figsize=(18.5, 13.5), dpi=220, sharex=True)
+    fig.patch.set_facecolor("#1e1e2e")
     fig.subplots_adjust(hspace=0.26, top=0.92, bottom=0.06)
 
     # Panel A: 60-Month Ending Cash Balance Trajectory
     ax1 = axes[0]
-    ax1.set_facecolor("#F8FAFC")
+    ax1.set_facecolor("#181825")
     for path in mc.sample_cash_paths:
-        ax1.plot(x_m, path, color="#0284C7", alpha=0.12, linewidth=0.8, zorder=2)
+        ax1.plot(x_m, path, color="#89b4fa", alpha=0.12, linewidth=0.8, zorder=2)
     for b_c_path in mc.sample_base_cash_paths:
-        ax1.plot(x_m, b_c_path, color="#94A3B8", alpha=0.10, linewidth=0.7, zorder=1)
+        ax1.plot(x_m, b_c_path, color="#7f849c", alpha=0.10, linewidth=0.7, zorder=1)
 
     ax1.fill_between(
         x_m,
         mc.ending_cash_p05,
         mc.ending_cash_p95,
-        color="#38BDF8",
+        color="#89b4fa",
         alpha=0.24,
-        label="Solution Ending Cash P05-P95 Confidence Band (300 Sims)",
+        label="Solution Cash Reserves P05-P95 Confidence Band (300 Sims)",
         zorder=3,
     )
     ax1.fill_between(
         x_m,
         mc.base_ending_cash_p05,
         mc.base_ending_cash_p95,
-        color="#94A3B8",
+        color="#7f849c",
         alpha=0.22,
-        label="Baseline Ending Cash P05-P95 Statistical Band (300 Sims)",
+        label="Baseline Cash Reserves P05-P95 Statistical Band (300 Sims)",
         zorder=2,
     )
     ax1.plot(
         x_m,
         res.monthly_ending_cash_model,
-        color="#0369A1",
+        color="#89b4fa",
         linewidth=2.6,
         marker="o",
         markersize=3.8,
-        label=f"Solution Ending Cash Balance (M60: {res.ending_cash_60m_model_mvnd:,.1f}M | Min Cash: {res.min_cash_balance_model_mvnd:,.1f}M in {res.min_cash_month_label})",
+        label=f"Solution Cash Reserves (M60: {res.ending_cash_60m_model_mvnd:,.1f}M | Min Cash: {res.min_cash_balance_model_mvnd:,.1f}M in {res.min_cash_month_label})",
         zorder=6,
     )
     ax1.plot(
         x_m,
         mc.stress_ending_cash_mean,
-        color="#DC2626",
+        color="#f38ba8",
         linestyle="-.",
         linewidth=2.0,
-        label=f"-30% Lower Demand Stress Cash Balance (M60: {mc.stress_ending_cash_mean[-1]:,.1f}M VND)",
+        label=f"-30% Lower Demand Stress Cash Reserves (M60: {mc.stress_ending_cash_mean[-1]:,.1f}M VND)",
         zorder=5,
     )
     ax1.plot(
         x_m,
         res.monthly_ending_cash_case,
-        color="#64748B",
+        color="#9399b2",
         linewidth=1.8,
         marker="o",
         markersize=3.2,
-        alpha=0.78,
-        label=f"Baseline Stochastic Ending Cash (M60: {res.ending_cash_60m_case_mvnd:,.1f}M VND)",
+        alpha=0.82,
+        label=f"Baseline Stochastic Cash Reserves (M60: {res.ending_cash_60m_case_mvnd:,.1f}M VND)",
         zorder=4,
     )
-    ax1.axvline(10, color="#0F172A", linestyle="--", linewidth=1.3, alpha=0.75)
-    ax1.axvline(14, color="#059669", linestyle="--", linewidth=1.4, alpha=0.8)
+    ax1.axvline(10, color="#f9e2af", linestyle="--", linewidth=1.3, alpha=0.85)
+    ax1.axvline(14, color="#a6e3a1", linestyle="--", linewidth=1.4, alpha=0.85)
     ax1.set_title(
         "Panel A: Cumulative Cash Reserves Trajectory Across Scenarios",
         fontsize=11.2,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=8,
     )
-    ax1.set_ylabel("Cash Reserves (M VND)", fontsize=9.8, fontweight="bold")
-    ax1.grid(True, linestyle="--", alpha=0.6, color="#CBD5E1")
-    ax1.legend(loc="upper left", ncol=2, fontsize=8.5, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax1.set_ylabel("Cash Reserves (M VND)", fontsize=9.8, fontweight="bold", color="#bac2de")
+    ax1.grid(True, linestyle="--", alpha=0.8, color="#313244")
+    ax1.legend(loc="upper left", ncol=2, fontsize=8.5, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     # Panel B: Monthly Cash Flow Components (OCF, CapEx ICF, Equity FCF, Net Cash Flow)
     ax2 = axes[1]
-    ax2.set_facecolor("#F8FAFC")
-    ax2.bar(x_m - 0.2, res.monthly_ocf_model, width=0.38, color="#10B981", alpha=0.85, label="Operating Cash Flow (OCF = Net Income + D&A)")
-    ax2.bar(x_m + 0.2, res.monthly_icf_capex_model, width=0.38, color="#EF4444", alpha=0.85, label="Venue 2 Fit-Out CapEx Outflow (-1,750M/mo in M10-M13)")
-    ax2.bar(x_m, res.monthly_fcf_equity_model, width=0.35, color="#6366F1", alpha=0.75, label="Investor Minh Tran Equity (+500M in M1 & +7,500M in M10)")
-    ax2.plot(x_m, res.monthly_net_cash_flow_model, color="#0F172A", linewidth=2.0, marker="o", markersize=3.5, label="Net Monthly Cash Flow (OCF + ICF + FCF)")
-    ax2.axhline(0, color="#0F172A", linewidth=1.1)
+    ax2.set_facecolor("#181825")
+    ax2.bar(x_m - 0.2, res.monthly_ocf_model, width=0.38, color="#a6e3a1", edgecolor="#11111b", alpha=0.88, label="Operating Cash Flow (OCF)")
+    ax2.bar(x_m + 0.2, res.monthly_icf_capex_model, width=0.38, color="#f38ba8", edgecolor="#11111b", alpha=0.88, label="Venue 2 Fit-Out CapEx Outflow (-1,750M/mo in M10-M13)")
+    ax2.bar(x_m, res.monthly_fcf_equity_model, width=0.35, color="#cba6f7", edgecolor="#11111b", alpha=0.80, label="Investor Minh Tran Equity (+500M in M1 & +7,500M in M10)")
+    ax2.plot(x_m, res.monthly_net_cash_flow_model, color="#f9e2af", linewidth=2.0, marker="o", markersize=3.5, label="Net Monthly Cash Flow (OCF + ICF + FCF)")
+    ax2.axhline(0, color="#cdd6f4", linewidth=1.1)
     ax2.set_title(
         "Panel B: Monthly Operating, Investing & Financing Cash Flow Components",
         fontsize=11.2,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=8,
     )
-    ax2.set_ylabel("Monthly Cash Flow (M VND / Mo)", fontsize=9.8, fontweight="bold")
-    ax2.grid(True, linestyle="--", alpha=0.6, color="#CBD5E1")
-    ax2.legend(loc="upper right", ncol=2, fontsize=8.5, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax2.set_ylabel("Monthly Cash Flow (M VND / Mo)", fontsize=9.8, fontweight="bold", color="#bac2de")
+    ax2.grid(True, linestyle="--", alpha=0.8, color="#313244")
+    ax2.legend(loc="upper right", ncol=2, fontsize=8.5, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     # Panel C: External Pickleball Interest Trend Multiplier I_t & Legal/Ward Noise Compliance Provision (externals.toml)
     ax3 = axes[2]
-    ax3.set_facecolor("#F8FAFC")
+    ax3.set_facecolor("#181825")
     ax3_twin = ax3.twinx()
 
-    ax3.fill_between(x_m, mc.trend_index_p05, mc.trend_index_p95, color="#F59E0B", alpha=0.22, label="Pickleball Interest Trend Index I_t (P05-P95 Band)")
-    ax3.plot(x_m, mc.trend_index_mean, color="#D97706", linewidth=2.4, marker="o", markersize=3.5, label="Cumulative Pickleball Interest Trend Multiplier I_t (externals.toml)")
-    ax3.axhline(1.0, color="#64748B", linestyle=":", linewidth=1.3)
+    ax3.fill_between(x_m, mc.trend_index_p05, mc.trend_index_p95, color="#f9e2af", alpha=0.22, label="Pickleball Interest Trend Index I_t (P05-P95 Band)")
+    ax3.plot(x_m, mc.trend_index_mean, color="#fab387", linewidth=2.4, marker="o", markersize=3.5, label="Cumulative Pickleball Interest Trend Multiplier I_t (externals.toml)")
+    ax3.axhline(1.0, color="#7f849c", linestyle=":", linewidth=1.3)
 
     ax3_twin.plot(
         x_m,
         res.monthly_external_legal_safety_sga_arr,
-        color="#7C3AED",
+        color="#cba6f7",
         linewidth=2.0,
         linestyle="--",
         marker="o",
@@ -1404,27 +1421,27 @@ def plot_monthly_cash_balance_and_externals(
     ax3.set_xticklabels(tick_lbls, fontsize=8.5, fontweight="bold")
     ax3.set_ylim(0.65, 1.35)
     ax3_twin.set_ylim(0, 22.0)
-    ax3.set_ylabel("Macro Pickleball Trend Index (I_t)", fontsize=9.8, fontweight="bold", color="#B45309")
-    ax3_twin.set_ylabel("Legal/Noise & U-18 Safety (M VND/mo)", fontsize=9.5, fontweight="bold", color="#6D28D9")
-    ax3.set_xlabel("60-Month Projection Horizon (Jan 2027 - Dec 2031)", fontsize=10.0, fontweight="bold")
+    ax3.set_ylabel("Macro Pickleball Trend Index (I_t)", fontsize=9.8, fontweight="bold", color="#fab387")
+    ax3_twin.set_ylabel("Legal/Noise & U-18 Safety (M VND/mo)", fontsize=9.5, fontweight="bold", color="#cba6f7")
+    ax3.set_xlabel("60-Month Projection Horizon (Jan 2027 - Dec 2031)", fontsize=10.0, fontweight="bold", color="#bac2de")
     ax3.set_title(
         "Panel C: Macro Market Demand Trend & Regulatory Compliance Provisions",
         fontsize=11.2,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         pad=8,
     )
-    ax3.grid(True, linestyle="--", alpha=0.6, color="#CBD5E1")
+    ax3.grid(True, linestyle="--", alpha=0.8, color="#313244")
 
     lines1, labels1 = ax3.get_legend_handles_labels()
     lines2, labels2 = ax3_twin.get_legend_handles_labels()
-    ax3.legend(lines1 + lines2, labels1 + labels2, loc="upper left", ncol=2, fontsize=8.5, frameon=True, facecolor="#FFFFFF", edgecolor="#CBD5E1")
+    ax3.legend(lines1 + lines2, labels1 + labels2, loc="upper left", ncol=2, fontsize=8.5, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     fig.suptitle(
         "Cash Reserves Evolution, Capital Deployment & Macro Risk Provisions",
         fontsize=13.5,
         fontweight="bold",
-        color="#0F172A",
+        color="#cdd6f4",
         y=0.97,
     )
 

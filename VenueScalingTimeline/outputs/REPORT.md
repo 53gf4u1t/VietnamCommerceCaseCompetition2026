@@ -1,29 +1,29 @@
-# PICK! Sub-Solution Path A: 14-Court Second Club Expansion (`6` to `20` Courts) — Engineering Timeline, Even CapEx Split & 6–9 Month Fill-Up Report
+# PICK! Second Club Expansion — Engineering Timeline, Capital Allocation & Capacity Ramp Report
 
 **Project**: PICK! Club #2 — 14-Court HCMC Flagship Venue Expansion (Path A)  
 **Company**: PICK! Pickleball Club (Ho Chi Minh City)  
 **Strategic Sequencing**: Start of **Q4 2027 (`Month 10: Oct 2027` / `2027-10-04`)** — launched after `4 months` of custom platform development (`Months 1–4: Jan–Apr 2027`, fortified by `500.0M VND` drawn from Investor Minh Tran's reserve upon signing in `Month 1`) and `5 full months` of live platform operation (`Months 5–9: May–Sep 2027`) prove out elevated court utilization, ML marketing funnel performance, and recurring membership cash flow.  
 **Turnkey Construction & Curing Duration**: **4.0 Months / 16.0 Weeks (`Months 10–13: Oct 2027 – Jan 2028`)**  
-**Grand Opening & 20-Court Network Activation**: **Start of Month 14 (`Feb 2028`)** — scaling PICK! from **`6` courts to `20` courts total (`+233.33%` capacity)**  
-**Preset Fit-Out & Launch CapEx (`Case Page 3`)**: **`VND 7,000.00M` (`7.0 billion VND`)**, split **evenly across the 4 construction months (`Oct 2027 – Jan 2028`) = `1,750.00M VND/month`** (`+1,000.00M VND` held in cash reserve = `8,000.00M VND` total investor capital: `500.00M VND` drawn upon signing in `Month 1` + `7,500.00M VND` drawn at Q4 2027 expansion kickoff in `Month 10`)  
-**Second Club 5-Year Lease (`Case Page 3`)**: **`VND 330.00M/month`** (commencing `Month 10 / Oct-27`)  
-**Capacity Fill-Up Distribution (`Case Page 3`)**: **6.0 to 9.0 Months** (`TruncatedNormal(mean=7.5, std=0.75, min=6.0, max=9.0)` months from `Feb 2028` opening)
+**Grand Opening & Network Activation**: **Start of Month 14 (`Feb 2028`)** — scaling PICK! from **`6` courts to `20` courts total (`+233.33%` capacity)**  
+**Preset Fit-Out & Launch CapEx**: **`VND 7,000.00M` (`7.0 billion VND`)**, split **evenly across the 4 construction months (`Oct 2027 – Jan 2028`) = `1,750.00M VND/month`** (`+1,000.00M VND` held in cash reserve = `8,000.00M VND` total investor capital: `500.00M VND` drawn upon signing in `Month 1` + `7,500.00M VND` drawn at Q4 2027 expansion kickoff in `Month 10`)  
+**Second Club Fixed Lease**: **`VND 330.00M/month`** (commencing `Month 10 / Oct-27`)  
+**Capacity Fill-Up Distribution**: **6.0 to 9.0 Months** (`TruncatedNormal(mean=7.5, std=0.75, min=6.0, max=9.0)` months from `Feb 2028` opening)
 
 ---
 
-## 1. Strategic Sequencing: Create Platform -> Collect 5 Months of Live Profit -> Expand Venues (`6` to `20` Courts)
+## 1. Strategic Sequencing: Digital Platform Launch, Cash Accumulation & Physical Expansion
 
 Rather than taking the high-risk approach of signing a `VND 330M/month` lease and spending `VND 7.0B` on day one before fixing PICK!'s weekday off-peak under-utilization (`40%`) and casual player churn, our integrated roadmap executes a disciplined three-step sequence well ahead of Investor Minh Tran's **Year 3 (`FY 2029`)** deadline:
 
-1. **Phase 1 — Build & Launch the Digital Core (`Months 1–4: Jan–Apr 2027`, with `500M VND` Signing Reserve Tranche in `M1`)**: Complete the `PICK! Social & Adaptive Booking Platform` (`Milestone M4: Apr 25, 2027`). Drawing `500.00M VND` of Minh Tran's `1,000.00M VND` reserve upon signing in `Month 1 (Jan-27)` ensures PICK! maintains a rock-solid positive cash buffer even under an immediate Day-1 `-30%` demand stress test.
-2. **Phase 2 — Validate Demand & Accumulate Cash Across 5 Full Months (`Months 5–9: May–Sep 2027`)**: Operate the new platform and 4-segment ML marketing engine for 5 full months on the existing 6-court venue, lifting blended court utilization from `66.0%` to `78.4%` (`460.75M VND/mo` court hire), onboarding paying `PICK! Social` members (`@ 399k VND/mo`), and building a large organic cash reserve prior to construction.
-3. **Phase 3 — Q4 2027 14-Court Flagship Venue Expansion (`Months 10–13 Build: Oct 2027 – Jan 2028` -> `Month 14 Open: Feb 2028`)**:
+1. **Phase 1 — Build & Launch the Digital Core (`Months 1–4: Jan–Apr 2027`)**: Complete the `PICK! Social & Adaptive Booking Platform` (`Milestone M4: Apr 25, 2027`). Drawing `500.00M VND` of Minh Tran's `1,000.00M VND` reserve upon signing in `Month 1 (Jan-27)` ensures PICK! maintains a rock-solid positive cash buffer even under an immediate Day-1 `-30%` demand stress test.
+2. **Phase 2 — Validate Demand & Accumulate Cash (`Months 5–9: May–Sep 2027`)**: Operate the new platform and 4-segment ML marketing engine for 5 full months on the existing 6-court venue, lifting blended court utilization from `66.0%` to `78.4%` (`460.75M VND/mo` court hire), onboarding paying `PICK! Social` members (`@ 399k VND/mo`), and building a large organic cash reserve prior to construction.
+3. **Phase 3 — Flagship Venue Expansion (`Months 10–13 Build: Oct 2027 – Jan 2028` -> `Month 14 Open: Feb 2028`)**:
    - Draw the remaining `VND 7,500.00M` investor tranche in `Month 10 (Oct-27)` (`7,000.0M VND` fit-out split evenly at **`1,750.0M VND/month` across `Oct 2027 – Jan 2028`**, plus the remaining `500.0M VND` reserve buffer).
    - Open the 14 new courts (plus coaching video studio & specialty café) at the start of **Month 14 (`Feb 2028`)**, expanding PICK! to **20 courts total** and completing the **6-to-9 month fill-up ramp by `Aug–Oct 2028` (`Months 20–22`)**—giving PICK! full steady-state 20-court operations before **Year 3 (`FY 2029`)** begins!
 
 ---
 
-## 2. Why Construction & Fit-Out Takes Exactly 4.0 Months (`16.0 Weeks`: `Oct 2027 – Jan 2028`)
+## 2. Construction Critical Path & Concrete Curing Schedule
 
 Based on commercial pickleball court engineering standards from the **American Sports Builders Association (`[ASBA2024]`)**, **PickleTile / Pro Track & Tennis (`[PickleTile2025]`)**, and **HCMC commercial hospitality fit-out benchmarks (`[HCMCFitOut2025]`, `[VietnamPCCC2024]`)**, the critical path of a 14-court covered sports club is governed by concrete hydration physics:
 
@@ -33,7 +33,7 @@ Based on commercial pickleball court engineering standards from the **American S
 - **Weeks 8.5–14.0 (`Stage V4`)**: Once the 28-day slab cure finishes at `W8.5`, certified surfacers perform calcium-chloride moisture testing & diamond grinding (`1.5w`), apply 5 coats of cushioned silica-sand acrylic surfacing across all 14 courts (`3.0w`), and hang perimeter STC-32 acoustic curtains & divider fencing (`2.5w`).
 - **Weeks 13.0–16.0 (`Stage V5`)**: Final on-site Police `PCCC` fire safety acceptance (`1.5w`), QR gate/POS & `AdaptivePricing` software integration (`1.5w`), and staff/coach training + launch tournament (`1.5w`), completing at the end of **Month 13 (`Jan 30, 2028`)**.
 
-### 2.1 Stage-Level Schedule & VND 7,000.0M CapEx Summary
+### 2.1 Stage-Level Schedule & Capital Expenditure Summary
 
 | Stage ID | Stage Name | Calendar Window | Span | Tasks | Stage CapEx (`M VND`) | Share of `7,000M` | Core Engineering Scope |
 | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
@@ -42,11 +42,11 @@ Based on commercial pickleball court engineering standards from the **American S
 | **V3** | **3. Roof, MEP, LED, Cafe & Coaching** | `W4.5–W11.5` (Oct 28, 2027 – Dec 22, 2027) | **8.0w** | 3 | **`2,310.00M`** | `33.0%` | High-clearance insulated steel roof canopy, 3-phase power & glare-free LED court lights, locker showers, specialty cafe & coaching video studio |
 | **V4** | **4. Acrylic Surfacing & Acoustic Baffles** | `W9.5–W14.0` (Dec 03, 2027 – Jan 09, 2028) | **5.5w** | 3 | **`1,505.00M`** | `21.5%` | Vapor test & acid-etch prep, 5-coat cushioned silica-sand acrylic surfacing (14 courts), perimeter acoustic baffles, divider fencing & pro net posts |
 | **V5** | **5. PCCC Audit, POS & Grand Opening** | `W14.0–W16.0` (Jan 03, 2028 – Jan 23, 2028) | **3.0w** | 3 | **`560.00M`** | `8.0%` | HCMC PCCC fire safety acceptance, QR turnstile & AdaptivePricing POS integration, 14-court staff/coach hiring, and 20-court launch tournament |
-| **V6** | **6. 6–9 Month Fill-Up Ramp (20 Courts)** | `W17.0–W48.0` (Jan 24, 2028 – Sep 03, 2028) | **32.0w** | 2 | **`0.00M`** | `0.0%` | Smooth 6-to-9 month capacity ramp (Nov 2027 – Jun 2028) driven by AdaptivePricing off-peak discounts, PICK! Social leagues & school/uni partnerships |
-| **BUILD** | **Total 4-Month Turnkey Fit-Out (`V1–V5`)** | **`Oct 04, 2027 – Jan 23, 2028` (`Months 10–13`)** | **16.0w** | **15** | **`7,000.00M`** | **`100.0%`** | **Evenly allocated at `1,750.00M VND/month` (`Oct 2027 – Jan 2028`)** |
-| **RESERVE** | **Investor Cash Reserve (`Case Page 3`)** | **`500M` Drawn `M1 (Jan-27)` + `500M` Drawn `M10 (Oct-27)`** | — | — | **`1,000.00M`** | — | **Total Investor Capital = `8,000.00M VND` (`8.0B VND`)** |
+| **V6** | **6. 6–9 Month Fill-Up Ramp (20 Courts)** | `W17.0–W48.0` (Jan 24, 2028 – Sep 03, 2028) | **32.0w** | 2 | **`0.00M`** | `0.0%` | Smooth 6-to-9 month capacity ramp (Feb 2028 – Sep 2028) driven by AdaptivePricing off-peak discounts, PICK! Social leagues & school/uni partnerships |
+| **BUILD** | **Total Turnkey Fit-Out (`V1–V5`)** | **`Oct 04, 2027 – Jan 23, 2028` (`Months 10–13`)** | **16.0w** | **15** | **`7,000.00M`** | **`100.0%`** | **Evenly allocated at `1,750.00M VND/month` (`Oct 2027 – Jan 2028`)** |
+| **RESERVE** | **Investor Cash Reserve** | **`500M` Drawn `M1 (Jan-27)` + `500M` Drawn `M10 (Oct-27)`** | — | — | **`1,000.00M`** | — | **Total Investor Capital = `8,000.00M VND` (`8.0B VND`)** |
 
-### 2.2 Task-by-Task Work Breakdown Structure, CapEx & Citations (`V1.1`–`V6.2`)
+### 2.2 Work Breakdown Structure, Capital Allocation & Citations
 
 | Task ID | Task Name | Window & Duration | Core Deliverable | CapEx (`M VND`) | Engineering Derivation & Cited Sources |
 | :--- | :--- | :---: | :--- | :---: | :--- |
@@ -70,9 +70,9 @@ Based on commercial pickleball court engineering standards from the **American S
 
 ---
 
-## 3. Modeling 20-Court Revenue Using OUR Model (Instead of Case's Static 1.5B Estimate)
+## 3. Modeling Expanded Network Revenue From First Principles
 
-Per your explicit instruction, we **do not** use the Case Question's unverified `VND 1,500.0M/month` static revenue figure for the new club. Instead, we derive the second club's revenue directly from **OUR validated model**:
+Rather than relying on an unverified static revenue figure for the new club, we derive the second club's revenue directly from **our validated unit-economics model**:
 
 1. **Capacity Scaling from `6` Courts to `20` Courts (`+233.33%` Capacity)**:
    - Existing Venue 1 has **`6` courts** (`2,880` available court-hours/month), generating **`460.75M VND/month`** in `AdaptivePricing` court hire revenue and **`205.00M VND/month`** in ancillary revenue (`15.0M` Paddle/Balls + `115.0M` Coaching + `75.0M` Food & Drinks).

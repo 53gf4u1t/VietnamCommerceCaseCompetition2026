@@ -17,27 +17,40 @@ from .model import EvaluationResults
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["DejaVu Sans", "Arial", "Helvetica"],
-    "axes.edgecolor": "#CBD5E1",
+    "axes.edgecolor": "#45475a",
     "axes.linewidth": 0.9,
-    "grid.color": "#E2E8F0",
+    "axes.labelcolor": "#bac2de",
+    "xtick.color": "#bac2de",
+    "ytick.color": "#bac2de",
+    "text.color": "#cdd6f4",
+    "grid.color": "#313244",
     "grid.linestyle": "--",
-    "grid.alpha": 0.7,
-    "figure.facecolor": "#FFFFFF",
-    "axes.facecolor": "#F8FAFC",
+    "grid.alpha": 0.85,
+    "figure.facecolor": "#1e1e2e",
+    "axes.facecolor": "#181825",
+    "savefig.facecolor": "#1e1e2e",
+    "savefig.edgecolor": "#1e1e2e",
+    "legend.facecolor": "#1e1e2e",
+    "legend.edgecolor": "#45475a",
+    "legend.labelcolor": "#cdd6f4",
 })
 
 PALETTE = {
-    "navy": "#0F172A",
-    "slate": "#475569",
-    "baseline": "#64748B",
-    "ml_blue": "#2563EB",
-    "ml_teal": "#0D9488",
-    "emerald": "#10B981",
-    "amber": "#F59E0B",
-    "coral": "#E11D48",
-    "purple": "#7C3AED",
-    "orange": "#EA580C",
-    "weekend_bg": "#FEF3C7",
+    "navy": "#cdd6f4",
+    "slate": "#a6adc8",
+    "baseline": "#7f849c",
+    "ml_blue": "#89b4fa",
+    "ml_teal": "#94e2d5",
+    "emerald": "#a6e3a1",
+    "amber": "#f9e2af",
+    "coral": "#f38ba8",
+    "purple": "#cba6f7",
+    "orange": "#fab387",
+    "weekend_bg": "#313244",
+    "surface": "#313244",
+    "base": "#1e1e2e",
+    "mantle": "#181825",
+    "crust": "#11111b",
 }
 
 
@@ -130,8 +143,8 @@ def plot_assumptions_distributions(
     _plot_normal_panel(
         axes[0, 0],
         sim.monthly_booked_hours,
-        cfg.monthly_court_hours_distribution.expected_mean,
-        cfg.monthly_court_hours_distribution.expected_std,
+        cfg.baseline_pricing.target_monthly_booked_hours_mean,
+        cfg.baseline_pricing.target_monthly_booked_hours_std,
         "A. Monthly Booked Court-Hours",
         "Booked Court-Hours per 6-Court Unit (Scale x3.33 for 20 Cts)",
         PALETTE["ml_blue"],
@@ -142,9 +155,9 @@ def plot_assumptions_distributions(
     # 2. Weekday Daytime Util
     _plot_normal_panel(
         axes[0, 1],
-        sim.sampled_wd_daytime_util * 100.0,
-        cfg.regime_utilization_distributions.weekday_daytime_mean * 100.0,
-        cfg.regime_utilization_distributions.weekday_daytime_std * 100.0,
+        sim.monthly_wd_daytime_util * 100.0,
+        cfg.weekday_daytime.mean * 100.0,
+        cfg.weekday_daytime.std * 100.0,
         "B. Weekday Daytime Utilization",
         "Court Utilization (% of Active Capacity)",
         PALETTE["ml_teal"],
@@ -155,9 +168,9 @@ def plot_assumptions_distributions(
     # 3. Weekday Evening Util
     _plot_normal_panel(
         axes[0, 2],
-        sim.sampled_wd_evening_util * 100.0,
-        cfg.regime_utilization_distributions.weekday_evening_mean * 100.0,
-        cfg.regime_utilization_distributions.weekday_evening_std * 100.0,
+        sim.monthly_wd_evening_util * 100.0,
+        cfg.weekday_evening.mean * 100.0,
+        cfg.weekday_evening.std * 100.0,
         "C. Weekday Evening Utilization",
         "Court Utilization (% of Active Capacity)",
         PALETTE["orange"],
@@ -168,9 +181,9 @@ def plot_assumptions_distributions(
     # 4. Weekend Util
     _plot_normal_panel(
         axes[0, 3],
-        sim.sampled_weekend_util * 100.0,
-        cfg.regime_utilization_distributions.weekend_mean * 100.0,
-        cfg.regime_utilization_distributions.weekend_std * 100.0,
+        sim.monthly_weekend_util * 100.0,
+        cfg.weekend.mean * 100.0,
+        cfg.weekend.std * 100.0,
         "D. Weekend Utilization",
         "Court Utilization (% of Active Capacity)",
         PALETTE["purple"],
@@ -185,9 +198,9 @@ def plot_assumptions_distributions(
     b_flat = sim.intercept_b.reshape(-1)
 
     regime_specs = [
-        (0, "Weekday Daytime", PALETTE["ml_teal"], cfg.demand_curve.wd_daytime_slope_a_mean, cfg.demand_curve.wd_daytime_slope_a_std),
-        (1, "Weekday Evening", PALETTE["orange"], cfg.demand_curve.wd_evening_slope_a_mean, cfg.demand_curve.wd_evening_slope_a_std),
-        (2, "Weekend", PALETTE["purple"], cfg.demand_curve.weekend_slope_a_mean, cfg.demand_curve.weekend_slope_a_std),
+        (0, "Weekday Daytime", PALETTE["ml_teal"], cfg.demand_curve.weekday_daytime_a_mean, cfg.demand_curve.weekday_daytime_a_std),
+        (1, "Weekday Evening", PALETTE["orange"], cfg.demand_curve.weekday_evening_a_mean, cfg.demand_curve.weekday_evening_a_std),
+        (2, "Weekend", PALETTE["purple"], cfg.demand_curve.weekend_a_mean, cfg.demand_curve.weekend_a_std),
     ]
     for r_id, r_lbl, r_col, m_a, s_a in regime_specs:
         sub_a = a_flat[reg_flat == r_id]
@@ -204,7 +217,7 @@ def plot_assumptions_distributions(
     # 6. Daily Random Demand Multiplier
     _plot_normal_panel(
         axes[1, 1],
-        sim.sampled_daily_multipliers,
+        sim.sampled_daily_multipliers.reshape(-1),
         cfg.daily_random_multiplier.mean,
         cfg.daily_random_multiplier.std,
         "F. Daily Demand Multiplier",
@@ -217,7 +230,7 @@ def plot_assumptions_distributions(
     # 7. Hourly Random Demand Shock
     _plot_normal_panel(
         axes[1, 2],
-        sim.sampled_hourly_shocks,
+        sim.sampled_hourly_shocks.reshape(-1),
         cfg.hourly_random_shock.mean,
         cfg.hourly_random_shock.std,
         "G. Hourly Demand Shock",
@@ -297,8 +310,8 @@ def plot_demand_curves_variations(
             "id": 0,
             "title_top": "A. Weekday Daytime Demand Elasticity",
             "title_bot": "D. Weekday Daytime Revenue Frontier",
-            "x0": cfg.baseline_pricing.weekday_daytime_price_kvnd,
-            "u0": cfg.regime_utilization_distributions.weekday_daytime_mean,
+            "x0": cfg.baseline_pricing.off_peak_price_kvnd,
+            "u0": cfg.weekday_daytime.mean,
             "color": PALETTE["ml_teal"],
             "ml_price": float(ml_p_test[reg_test == 0].mean()),
         },
@@ -306,8 +319,8 @@ def plot_demand_curves_variations(
             "id": 1,
             "title_top": "B. Weekday Evening Demand Elasticity",
             "title_bot": "E. Weekday Evening Revenue Frontier",
-            "x0": cfg.baseline_pricing.weekday_evening_price_kvnd,
-            "u0": cfg.regime_utilization_distributions.weekday_evening_mean,
+            "x0": cfg.baseline_pricing.peak_price_kvnd,
+            "u0": cfg.weekday_evening.mean,
             "color": PALETTE["orange"],
             "ml_price": float(ml_p_test[reg_test == 1].mean()),
         },
@@ -315,8 +328,8 @@ def plot_demand_curves_variations(
             "id": 2,
             "title_top": "C. Weekend Demand Elasticity",
             "title_bot": "F. Weekend Revenue Frontier",
-            "x0": cfg.baseline_pricing.weekend_price_kvnd,
-            "u0": cfg.regime_utilization_distributions.weekend_mean,
+            "x0": cfg.baseline_pricing.peak_price_kvnd,
+            "u0": cfg.weekend.mean,
             "color": PALETTE["purple"],
             "ml_price": float(ml_p_test[reg_test == 2].mean()),
         },
@@ -376,7 +389,7 @@ def plot_demand_curves_variations(
             color=PALETTE["coral"],
             s=85,
             zorder=7,
-            edgecolor="white",
+            edgecolor="#11111b",
             linewidth=1.3,
             label=f"Baseline Anchor: {x0:.0f}k at {u0_pct:.0f}% ({q0_6:.1f} / {q0_20:.1f} cts)",
         )
@@ -387,7 +400,7 @@ def plot_demand_curves_variations(
             marker="D",
             s=80,
             zorder=8,
-            edgecolor="white",
+            edgecolor="#11111b",
             linewidth=1.3,
             label=f"ML Adaptive: {x_ml:.0f}k at {u_ml_pct:.1f}% ({q_ml_6:.2f} / {q_ml_20:.1f} cts)",
         )
@@ -400,7 +413,7 @@ def plot_demand_curves_variations(
                 fontsize=7.8,
                 fontweight="bold",
                 color=PALETTE["coral"],
-                bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=PALETTE["coral"], alpha=0.92),
+                bbox=dict(boxstyle="round,pad=0.25", fc="#1e1e2e", ec=PALETTE["coral"], alpha=0.95),
                 arrowprops=dict(arrowstyle="->", color=PALETTE["coral"], lw=1.1),
             )
             ax_top.annotate(
@@ -410,7 +423,7 @@ def plot_demand_curves_variations(
                 fontsize=7.8,
                 fontweight="bold",
                 color=PALETTE["ml_blue"],
-                bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=PALETTE["ml_blue"], alpha=0.92),
+                bbox=dict(boxstyle="round,pad=0.25", fc="#1e1e2e", ec=PALETTE["ml_blue"], alpha=0.95),
                 arrowprops=dict(arrowstyle="->", color=PALETTE["ml_blue"], lw=1.1),
             )
         else:
@@ -421,7 +434,7 @@ def plot_demand_curves_variations(
                 fontsize=7.8,
                 fontweight="bold",
                 color=PALETTE["coral"],
-                bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=PALETTE["coral"], alpha=0.92),
+                bbox=dict(boxstyle="round,pad=0.25", fc="#1e1e2e", ec=PALETTE["coral"], alpha=0.95),
                 arrowprops=dict(arrowstyle="->", color=PALETTE["coral"], lw=1.1),
             )
             ax_top.annotate(
@@ -431,7 +444,7 @@ def plot_demand_curves_variations(
                 fontsize=7.8,
                 fontweight="bold",
                 color=PALETTE["ml_blue"],
-                bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=PALETTE["ml_blue"], alpha=0.92),
+                bbox=dict(boxstyle="round,pad=0.25", fc="#1e1e2e", ec=PALETTE["ml_blue"], alpha=0.95),
                 arrowprops=dict(arrowstyle="->", color=PALETTE["ml_blue"], lw=1.1),
             )
 
@@ -461,7 +474,7 @@ def plot_demand_curves_variations(
             color=PALETTE["coral"],
             s=85,
             zorder=7,
-            edgecolor="white",
+            edgecolor="#11111b",
             linewidth=1.3,
             label=f"Baseline @ {x0:.0f}k: {r0_val:.0f}k (6 Cts) | {r0_val*20/6:,.0f}k (20 Cts)",
         )
@@ -472,7 +485,7 @@ def plot_demand_curves_variations(
             marker="D",
             s=80,
             zorder=8,
-            edgecolor="white",
+            edgecolor="#11111b",
             linewidth=1.3,
             label=f"ML Optimal @ {x_ml:.0f}k: {r_ml_val:.0f}k (6 Cts) | {r_ml_val*20/6:,.0f}k (20 Cts)",
         )
@@ -485,7 +498,7 @@ def plot_demand_curves_variations(
             fontsize=7.6,
             fontweight="bold",
             color=PALETTE["navy"],
-            bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=rm["color"], alpha=0.92),
+            bbox=dict(boxstyle="round,pad=0.25", fc="#1e1e2e", ec=rm["color"], alpha=0.95),
             arrowprops=dict(arrowstyle="->", color=PALETTE["navy"], lw=1.1),
         )
 
@@ -634,7 +647,7 @@ def plot_daily_revenue_comparison(
         fontsize=9.0,
         fontweight="bold",
         color=PALETTE["navy"],
-        bbox=dict(boxstyle="round,pad=0.4", facecolor="white", edgecolor=PALETTE["ml_blue"], lw=1.3),
+        bbox=dict(boxstyle="round,pad=0.4", facecolor="#1e1e2e", edgecolor=PALETTE["ml_blue"], lw=1.3),
         arrowprops=dict(arrowstyle="->", color=PALETTE["ml_blue"], lw=1.5),
     )
 
@@ -712,7 +725,7 @@ def plot_monthly_calendar_heatmap(
 
     cmap = mcolors.LinearSegmentedColormap.from_list(
         "pick_price_cmap",
-        ["#0D9488", "#2DD4BF", "#E0F2FE", "#FDE68A", "#F59E0B", "#E11D48"],
+        ["#94e2d5", "#89dceb", "#89b4fa", "#f9e2af", "#fab387", "#f38ba8"],
     )
     norm_p = mcolors.Normalize(vmin=85.0, vmax=300.0)
 
@@ -725,8 +738,8 @@ def plot_monthly_calendar_heatmap(
             u_val = util_matrix[r_idx, c_idx]
             diff = p_val - b_val
             diff_str = f"{diff:+.0f}k" if abs(diff) >= 1.0 else "0k"
-            txt_color = "#FFFFFF" if (p_val <= 135 or p_val >= 255) else PALETTE["navy"]
-            sub_color = "#F1F5F9" if (p_val <= 135 or p_val >= 255) else PALETTE["slate"]
+            txt_color = "#11111b"
+            sub_color = "#181825"
 
             ax_top.text(
                 c_idx,
@@ -755,6 +768,7 @@ def plot_monthly_calendar_heatmap(
                 ha="center",
                 va="center",
                 fontsize=6.8,
+                fontweight="bold",
                 color=sub_color,
             )
 
@@ -764,7 +778,7 @@ def plot_monthly_calendar_heatmap(
     ax_top.set_yticklabels(["Weekday\n(Mon - Fri)", "Weekend Day\n(Sat - Sun)"], fontsize=10.0, fontweight="bold", color=PALETTE["navy"])
     ax_top.set_xticks(np.arange(-0.5, n_hours, 1), minor=True)
     ax_top.set_yticks([-0.5, 0.5, 1.5], minor=True)
-    ax_top.grid(which="minor", color="#FFFFFF", linestyle="-", linewidth=1.8)
+    ax_top.grid(which="minor", color="#181825", linestyle="-", linewidth=2.0)
     ax_top.grid(which="major", visible=False)
     ax_top.tick_params(which="minor", bottom=False, left=False)
     ax_top.set_title(
@@ -834,7 +848,7 @@ def plot_monthly_calendar_heatmap(
         fontsize=8.2,
         fontweight="bold",
         color=PALETTE["ml_teal"],
-        bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=PALETTE["ml_teal"], lw=1.0),
+        bbox=dict(boxstyle="round,pad=0.25", facecolor="#1e1e2e", edgecolor=PALETTE["ml_teal"], lw=1.0),
     )
     ax_bot.text(
         13.0,
@@ -845,7 +859,7 @@ def plot_monthly_calendar_heatmap(
         fontsize=8.2,
         fontweight="bold",
         color=PALETTE["coral"],
-        bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=PALETTE["coral"], lw=1.0),
+        bbox=dict(boxstyle="round,pad=0.25", facecolor="#1e1e2e", edgecolor=PALETTE["coral"], lw=1.0),
     )
 
     ax_bot.set_title(
@@ -940,7 +954,7 @@ def plot_occupancy_and_stress_test(
         fontsize=8.3,
         fontweight="bold",
         color=PALETTE["navy"],
-        bbox=dict(boxstyle="round,pad=0.35", facecolor="white", edgecolor=PALETTE["ml_teal"], lw=1.2),
+        bbox=dict(boxstyle="round,pad=0.35", facecolor="#1e1e2e", edgecolor=PALETTE["ml_teal"], lw=1.2),
         arrowprops=dict(arrowstyle="->", color=PALETTE["ml_teal"], lw=1.3),
     )
 
@@ -1026,8 +1040,8 @@ def plot_ml_model_diagnostics(
 
     # Panel A: Out-of-Sample Parity Plot
     ax_a = axes[0, 0]
-    y_true = eval_res.oracle_prices_test.reshape(-1)
-    y_pred = eval_res.ml_prices_test.reshape(-1)
+    y_true = m.y_test_true
+    y_pred = m.y_test_pred_raw
     rng = np.random.default_rng(cfg.simulation.random_seed + 2027)
     sample_idx = rng.choice(len(y_true), size=min(4000, len(y_true)), replace=False)
 
@@ -1063,7 +1077,7 @@ def plot_ml_model_diagnostics(
         fontsize=8.2,
         fontweight="bold",
         color=PALETTE["navy"],
-        bbox=dict(boxstyle="round,pad=0.4", facecolor="white", edgecolor=PALETTE["ml_blue"], lw=1.2, alpha=0.94),
+        bbox=dict(boxstyle="round,pad=0.4", facecolor="#1e1e2e", edgecolor=PALETTE["ml_blue"], lw=1.2, alpha=0.95),
     )
 
     ax_a.set_title("A. Out-of-Sample Parity: Predicted vs. Optimal Price", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
@@ -1103,7 +1117,7 @@ def plot_ml_model_diagnostics(
         fontsize=8.2,
         fontweight="bold",
         color=PALETTE["navy"],
-        bbox=dict(boxstyle="round,pad=0.4", facecolor="white", edgecolor=PALETTE["ml_teal"], lw=1.2, alpha=0.94),
+        bbox=dict(boxstyle="round,pad=0.4", facecolor="#1e1e2e", edgecolor=PALETTE["ml_teal"], lw=1.2, alpha=0.95),
     )
 
     ax_b.set_title("B. Out-of-Sample Prediction Residual Distribution", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
@@ -1148,12 +1162,12 @@ def plot_ml_model_diagnostics(
 
     # Panel D: Boosting Convergence Learning Curve
     ax_d = axes[1, 1]
-    ax_d.plot(m.learning_curve_iters, m.learning_curve_train_rmse, color=PALETTE["baseline"], linestyle="--", lw=2.2, label=f"Training Set RMSE (Final: {m.train_rmse_kvnd:.2f} k VND)")
-    ax_d.plot(m.learning_curve_iters, m.learning_curve_test_rmse, color=PALETTE["ml_blue"], lw=2.8, label=f"Held-Out Test Set RMSE (Final: {m.test_rmse_kvnd:.2f} k VND)")
+    ax_d.plot(m.iter_steps, m.iter_train_rmse, color=PALETTE["baseline"], linestyle="--", lw=2.2, label=f"Training Set RMSE (Final: {m.train_rmse_kvnd:.2f} k VND)")
+    ax_d.plot(m.iter_steps, m.iter_test_rmse, color=PALETTE["ml_blue"], lw=2.8, label=f"Held-Out Test Set RMSE (Final: {m.test_rmse_kvnd:.2f} k VND)")
 
-    best_iter_idx = int(np.argmin(m.learning_curve_test_rmse))
-    best_iter = int(m.learning_curve_iters[best_iter_idx])
-    best_rmse = float(m.learning_curve_test_rmse[best_iter_idx])
+    best_iter_idx = int(np.argmin(m.iter_test_rmse))
+    best_iter = int(m.iter_steps[best_iter_idx])
+    best_rmse = float(m.iter_test_rmse[best_iter_idx])
     ax_d.scatter([best_iter], [best_rmse], color=PALETTE["coral"], s=80, zorder=6, label=f"Test Convergence @ Iter {best_iter} ({best_rmse:.2f} k VND)")
 
     regime_table_txt = "Regime-Specific Test Performance:\n"
@@ -1173,7 +1187,7 @@ def plot_ml_model_diagnostics(
         fontsize=7.8,
         fontweight="bold",
         color=PALETTE["navy"],
-        bbox=dict(boxstyle="round,pad=0.4", facecolor="white", edgecolor=PALETTE["slate"], lw=1.0, alpha=0.93),
+        bbox=dict(boxstyle="round,pad=0.4", facecolor="#1e1e2e", edgecolor=PALETTE["slate"], lw=1.0, alpha=0.95),
     )
 
     ax_d.set_title("D. Boosting Learning Curve & Generalization Gap", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)

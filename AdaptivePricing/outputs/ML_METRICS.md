@@ -71,15 +71,15 @@ Evaluated via `sklearn.inspection.permutation_importance` with 5 random shuffles
 
 | Rank | Input Feature | Mean $\Delta R^2$ Drop ± SD | Relative Share | Pricing Mechanism Role |
 | :---: | :--- | :---: | :---: | :--- |
-| 1 | `Hour of Day (6–21)` | **1.29517** ± 0.01011 | 56.08% | Primary Diurnal Demand & Price-Elasticity Driver |
-| 2 | `Day of Week (0–6)` | **1.01396** ± 0.00322 | 43.90% | Weekend vs. Weekday Regime Separation |
-| 3 | `Court 3 State (0/1)` | **0.00007** ± 0.00001 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
+| 1 | `Hour of Day (6–21)` | **1.18473** ± 0.00724 | 52.43% | Primary Diurnal Demand & Price-Elasticity Driver |
+| 2 | `Day of Week (0–6)` | **1.07474** ± 0.01020 | 47.56% | Weekend vs. Weekday Regime Separation |
+| 3 | `Court 3 State (0/1)` | **0.00007** ± 0.00002 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
 | 4 | `Court 6 State (0/1)` | **0.00006** ± 0.00001 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
-| 5 | `Court 5 State (0/1)` | **0.00005** ± 0.00001 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
-| 6 | `Court 2 State (0/1)` | **0.00005** ± 0.00001 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
-| 7 | `Court 1 State (0/1)` | **0.00005** ± 0.00001 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
-| 8 | `Court 4 State (0/1)` | **0.00004** ± 0.00001 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
-| 9 | `Day of Month (1–30)` | **0.00001** ± 0.00001 | 0.00% | Monthly Calendar & Noise-Check Feature |
+| 5 | `Court 5 State (0/1)` | **0.00004** ± 0.00001 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
+| 6 | `Court 4 State (0/1)` | **0.00003** ± 0.00002 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
+| 7 | `Court 2 State (0/1)` | **0.00003** ± 0.00001 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
+| 8 | `Court 1 State (0/1)` | **0.00002** ± 0.00000 | 0.00% | Real-Time Court Occupancy Signal (0/1 Binary State) |
+| 9 | `Day of Month (1–30)` | **-0.00001** ± 0.00001 | -0.00% | Monthly Calendar & Noise-Check Feature |
 
 
 ### Key Technical Takeaways from Feature Importance

@@ -158,19 +158,17 @@ def _build_feature_matrix(
     """
     n_sims, n_days, n_hours, n_courts = court_states.shape
     total_rows = n_sims * n_days * n_hours
-    X = np.zeros((total_rows, n_courts + 3), dtype=np.float64)
+    X = np.empty((total_rows, n_courts + 3), dtype=np.float64)
+    X[:, :n_courts] = court_states.reshape(total_rows, n_courts)
 
-    idx = 0
-    for s in range(n_sims):
-        for d in range(n_days):
-            dow = d % 7
-            dom = d + 1
-            for h_idx, h in enumerate(hours):
-                X[idx, :n_courts] = court_states[s, d, h_idx]
-                X[idx, n_courts] = h
-                X[idx, n_courts + 1] = dow
-                X[idx, n_courts + 2] = dom
-                idx += 1
+    d_idx = np.arange(n_days, dtype=np.float64)
+    dow_grid = np.broadcast_to((d_idx % 7)[None, :, None], (n_sims, n_days, n_hours))
+    dom_grid = np.broadcast_to((d_idx + 1.0)[None, :, None], (n_sims, n_days, n_hours))
+    h_grid = np.broadcast_to(hours.astype(np.float64)[None, None, :], (n_sims, n_days, n_hours))
+
+    X[:, n_courts] = h_grid.reshape(-1)
+    X[:, n_courts + 1] = dow_grid.reshape(-1)
+    X[:, n_courts + 2] = dom_grid.reshape(-1)
     return X
 
 
@@ -236,23 +234,25 @@ def train_and_evaluate(
 
     # Compute Staged Learning Curve across boosting iterations
     n_iters = model.n_iter_
-    step_indices = np.unique(np.linspace(1, n_iters, min(25, n_iters), dtype=int))
+    step_indices = np.unique(np.linspace(1, n_iters, min(20, n_iters), dtype=int))
+    step_set = set(int(x) for x in step_indices)
     iter_train_rmse = []
     iter_test_rmse = []
 
-    train_staged_gen = model.staged_predict(X_train)
+    X_tr_sub, y_tr_sub = X_train[::4], y_train[::4]
+    train_staged_gen = model.staged_predict(X_tr_sub)
     test_staged_gen = model.staged_predict(X_test)
     for i, (tr_p, te_p) in enumerate(zip(train_staged_gen, test_staged_gen), start=1):
-        if i in step_indices:
-            iter_train_rmse.append(float(root_mean_squared_error(y_train, tr_p)))
+        if i in step_set:
+            iter_train_rmse.append(float(root_mean_squared_error(y_tr_sub, tr_p)))
             iter_test_rmse.append(float(root_mean_squared_error(y_test, te_p)))
 
     # Permutation Importance on Out-of-Sample Test Set
     perm_res = permutation_importance(
         model,
-        X_test,
-        y_test,
-        n_repeats=5,
+        X_test[::2],
+        y_test[::2],
+        n_repeats=3,
         random_state=cfg.simulation.random_seed,
         scoring="r2",
     )
