@@ -1,7 +1,8 @@
 # 2026 Vietnam Commerce Case Competition — PICK! Strategic & Financial Plan (2027–2031)
 
 > **AI Usage Acknowledgement**  
-> All core strategic decisions, financial modeling architecture, and quantitative assumptions in this repository were conceived and directed by our team—including the 4-stage execution sequence, the two-tranche equity structure (`500M VND` upon signing + `7,500M VND` at Q4 2027 expansion), the fully stochastic distribution-based simulation design (`configs/*.toml`), the `8.57%` follower-to-customer funnel, and the 12 customer-segment ancillary spending distributions. We used **OpenAI Codex** and **Google Antigravity** to accelerate Python implementation (`NumPy`, `SciPy`, `scikit-learn`), generate `Matplotlib` visualizations, cross-check software/construction cost benchmarks, and format documentation. Every assumption, distribution parameter, and financial output was independently audited and verified by the team.
+> - **Human Direction & Original Ideas**: Our team defined the overall business strategy, the sequenced growth roadmap, the distribution-based stochastic modeling methodology, the customer-segment funnel logic, and all financial and operational assumptions.  
+> - **AI Agent Execution**: We used **OpenAI Codex** and **Google Antigravity** to implement the simulation and machine learning code, benchmark software and construction task estimates, generate charts, and format reports under our direction and verification.
 
 ---
 
@@ -45,9 +46,11 @@ Every input is modeled as a **bounded probability distribution (`Truncated Norma
 ### 2.1 Hourly Court Utilization & Price Elasticity ([`AdaptivePricing/`](AdaptivePricing))
 - Grounded in the `6`-court `06:00–22:00` schedule (`435.2M VND/mo` baseline court revenue, `40%` weekday daytime vs. `95%` evening / `90%` weekend occupancy).
 
-![Hourly Court Utilization & Dynamic Pricing Regimes](AdaptivePricing/outputs/01_hourly_utilization_and_pricing_regimes.png)
+![Hourly Court Utilization & Dynamic Pricing Assumptions](AdaptivePricing/outputs/01_assumptions_distributions.png)
 
-![Price-Demand Elasticity Curves by Time Regime](AdaptivePricing/outputs/02_elasticity_and_demand_response_curves.png)
+![Price-Demand Elasticity Curves by Time Regime](AdaptivePricing/outputs/02_demand_curves_variations.png)
+
+![Monthly Calendar Dynamic Pricing & Utilization Heatmap](AdaptivePricing/outputs/04_monthly_calendar_heatmap.png)
 
 ### 2.2 Customer Funnel & 12 Segment-by-Ancillary Spending Distributions ([`Marketing/`](Marketing))
 - **Explicit Funnel Assumption**: Our `3,600` monthly unique customers come from our `42,000` TikTok/Instagram followers (`3,600 / 42,000 = 8.571%` conversion, modeled as `N(8.571%, 0.85%)`), generating `7,596` baseline player visits across 4 customer segments.
@@ -73,7 +76,9 @@ Static spreadsheets fail because they ignore variance, capacity ceilings, and ex
 - **`AdaptivePricing` ML (`HistGradientBoostingRegressor`)**: Held-out **Test `R^2 = 0.9922`** (`MAE = 2.15%`), capturing **`98.8%`** of Oracle revenue lift (`+24.92M VND/mo` per `6` courts).
 - **`Marketing` Segment Allocator (`MultiOutputRegressor`)**: Predicts Month `t`'s 4-segment marketing budget from **Month `t-1`'s realized segment metrics** (zero look-ahead bias). Held-out **Test `R^2 = 0.9555`**, capturing **`99.29%`** of Oracle profit and lifting ancillary revenue from **`204.8M -> 500.05M VND/mo`** (`5Y avg`).
 
-![Adaptive Pricing Out-of-Sample ML Validation & Revenue Lift](AdaptivePricing/outputs/03_ml_validation_and_revenue_lift.png)
+![Adaptive Pricing Daily Revenue Lift Comparison](AdaptivePricing/outputs/03_daily_revenue_comparison.png)
+
+![Adaptive Pricing Out-of-Sample ML Validation Diagnostics](AdaptivePricing/outputs/06_ml_model_diagnostics.png)
 
 ![ML Segment Marketing Budget & Visits Trajectory vs. Stochastic Baseline](Marketing/outputs/02_ml_segment_marketing_budget_and_visits_trajectory.png)
 
@@ -104,14 +109,14 @@ Static spreadsheets fail because they ignore variance, capacity ceilings, and ex
 
 ![PICK! Social 24-Week Production Gantt Schedule](PickSocialProjectTimeline/outputs/01_pick_social_platform_gantt_chart.png)
 
-![PICK! Social Buffered Cost Estimation & Leveled Monthly Allocation](PickSocialProjectTimeline/outputs/03_cost_estimation_and_leveled_allocation.png)
+![PICK! Social Buffered Cost Estimation & Leveled Monthly Allocation](PickSocialProjectTimeline/outputs/03_cost_estimation_and_cashflow_allocation.png)
 
 ### 4.2 Venue 2 Construction Timeline & 20-Court Capacity Scaling (`Months 10–13`)
 - **16-Week Critical Path (`Oct 2027–Jan 2028`)**: Sequences site handover, `28-day` concrete slab moisture curing (`Weeks 5–8`), 5-layer ITF acrylic surfacing (`Weeks 9–11`), acoustic barriers, and PCCC fire acceptance (`Weeks 13–14`) prior to the `Month 14 (Feb 2028)` opening.
 
 ![Venue 2 14-Court Q4 2027 Construction Gantt Schedule](VenueScalingTimeline/outputs/01_venue_scaling_gantt_chart.png)
 
-![20-Court Capacity Scaling & Fill-Up Ramp](VenueScalingTimeline/outputs/02_20court_capacity_and_fill_up_ramp.png)
+![20-Court Capacity Scaling & Fill-Up Ramp](VenueScalingTimeline/outputs/02_court_capacity_and_fill_up_ramp.png)
 
 ![Venue 2 Leveled CapEx Allocation & 20-Court Unit Economics](VenueScalingTimeline/outputs/03_capex_allocation_and_unit_economics.png)
 
@@ -126,7 +131,7 @@ Static spreadsheets fail because they ignore variance, capacity ceilings, and ex
 
 ![Granular Monthly Revenue, COGS, OpEx & SG&A Breakdown (M1 - M60)](FinancialModel/outputs/01_revenue_cogs_opex_sga_sheet.png)
 
-![Monthly Operating Profit & Cash Reserve Schedule (M1 - M60)](FinancialModel/outputs/02_ebitda_and_cash_flow_sheet.png)
+![60-Month Financial Statement Projection Schedule (M1 - M60)](FinancialModel/outputs/02_fs_month_60m_projection_sheet.png)
 
 ---
 
