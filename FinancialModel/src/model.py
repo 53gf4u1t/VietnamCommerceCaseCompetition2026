@@ -1010,9 +1010,9 @@ def _run_monte_carlo_financial_simulations(
         c_pay_cons = tot_r * pay_pct + consumables_c
 
         per_mem_event_kvnd = _sample_month_conditioned(cogs_cfg.membership_event_partner_court_per_member_kvnd_dist, rng, n_sims, shared_weight=0.62)
-        # Once Venue 2 (14 courts) opens in Month 14, PICK! hosts most member leagues on its own 20 courts
-        # rather than renting external partner courts @ 200k/hr, reducing external partner-court COGS per member by 45%
-        own_venue_event_efficiency = 1.0 - 0.45 * f_v2
+        # Once Venue 2 (14 courts) opens in Month 14, PICK! hosts more member leagues on its own 20 courts
+        # rather than renting external partner courts @ 200k/hr, reducing external partner-court COGS per member by 18%
+        own_venue_event_efficiency = 1.0 - 0.18 * f_v2
         c_mem_event = subs_mat[:, m] * (per_mem_event_kvnd / 1000.0) * own_venue_event_efficiency
 
         c_tot_cogs = c_coach + c_fnb + c_pay_cons + c_mem_event
@@ -1061,7 +1061,7 @@ def _run_monte_carlo_financial_simulations(
         # 8. Sample SG&A + Platform Build (M1..M6) + Platform OpEx (M5+) + External Legal/Noise & U-18 Safety Costs
         s_v1_staff = _sample_month_conditioned(sga_cfg.staff_wages_dist, rng, n_sims, shared_weight=0.65)
         s_v2_staff = (
-            _sample_month_conditioned(v2_opex_cfg.staff_wages_dist, rng, n_sims, shared_weight=0.65)
+            _sample_month_conditioned(v2_opex_cfg.staff_wages_dist, rng, n_sims, shared_weight=0.65) * (0.70 + 0.30 * f_v2)
             if m >= v2_open_idx
             else np.zeros(n_sims)
         )
@@ -1164,7 +1164,11 @@ def _run_monte_carlo_financial_simulations(
         st_c_pay_cons = st_tot_r * pay_pct + consumables_c * 0.85
         st_c_mem_event = stress_subs_mat[:, m] * (per_mem_event_kvnd / 1000.0) * own_venue_event_efficiency
         st_tot_cogs = st_c_coach + st_c_fnb + st_c_pay_cons + st_c_mem_event
-        st_tot_c = st_tot_cogs + o_tot + s_tot_sga
+        # Under permanent -30% lower demand, fixed leases (o_lease) and platform build (s_plat_dev) remain 100%,
+        # while shift-based staffing, variable court lighting/utilities, and discretionary marketing flex down by 20%
+        st_o_tot = o_lease + 0.80 * (o_util + o_maint)
+        st_s_tot_sga = s_plat_dev + 0.80 * (s_staff + s_admin + s_mkt + s_plat_rec + s_ext_legal_safety)
+        st_tot_c = st_tot_cogs + st_o_tot + st_s_tot_sga
         st_ebitda_m = st_tot_r - st_tot_c
 
         stress_tot_rev_mat[:, m] = st_tot_r

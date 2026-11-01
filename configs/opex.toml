@@ -169,30 +169,30 @@ source = "Case Page 3 Path A ('on a five-year lease of about VND 330 million a m
 
 [venue2_opex_and_sga.electricity_lighting_water_monthly_mvnd]
 dist = "truncated_normal"
-mean = 82.00
-std = 3.50
-min = 72.00
-max = 92.00
+mean = 95.00
+std = 4.00
+min = 84.00
+max = 106.00
 unit = "M VND/month (at 100% steady-state 14-court utilization; 65% fixed + 35% variable during fill-up)"
-source = "Scaled from Case Exhibit 2 (40M for 6 courts) to 14 LED-lit courts + specialty cafe"
+source = "Scaled from Case Exhibit 2 (40M for 6 courts) to 14 LED-lit courts + coaching studio AC + specialty cafe"
 
 [venue2_opex_and_sga.maintenance_and_insurance_monthly_mvnd]
 dist = "truncated_normal"
-mean = 38.00
-std = 1.60
-min = 34.00
-max = 43.00
+mean = 48.00
+std = 2.00
+min = 42.00
+max = 54.00
 unit = "M VND/month"
-source = "Scaled from Case Exhibit 2 (20M for 6 courts) to 14 courts with multi-court insurance discount"
+source = "Scaled from Case Exhibit 2 (20M for 6 courts) to 14 courts + cafe/studio equipment upkeep & insurance"
 
 [venue2_opex_and_sga.staff_wages_monthly_mvnd]
 dist = "truncated_normal"
-mean = 215.00
-std = 3.00
-min = 207.00
-max = 224.00
+mean = 280.00
+std = 4.00
+min = 268.00
+max = 292.00
 unit = "M VND/month"
-source = "Scaled from Case Exhibit 2 (130M for 6 courts) for 14-court site manager, reception, cafe & cleaning crew"
+source = "Scaled from Case Exhibit 2 (130M for 6 courts) for 14-court site manager, reception, cafe baristas & cleaning crew"
 
 # ------------------------------------------------------------------------------
 # 3. NEW PICK! SOCIAL & ADAPTIVE BOOKING PLATFORM — RECURRING MONTHLY OpEx

@@ -149,12 +149,13 @@ unit = "k VND/court-hour"
 source = "Case Page 3 ('partner courts (which charge about VND 200,000 per court hour)')"
 
 [membership_event_and_partner_court_cogs_per_member_kvnd]
-# Direct variable partner-court hire & organised-game/league delivery cost per paying member/month
-# At 1,500 members (598.5M rev), 42.0k/member = 63.0M VND/month direct event/partner-court COGS
+# Direct variable partner-court hire, weekly open-play court allocation, league hosts/referees,
+# tournament balls/prizes & member discount fulfillment cost per paying member/month
+# At 1,500 members (598.5M rev), 135.0k/member pre-Venue 2 (~110.7k/member post-Venue 2) = ~27.7% direct fulfillment COGS
 dist = "truncated_normal"
-mean = 42.00
-std = 3.20
-min = 33.00
-max = 52.00
+mean = 135.00
+std = 9.00
+min = 110.00
+max = 160.00
 unit = "k VND/paying member/month"
-source = "Case Page 3 ('before partner-court, event and service costs' @ 200k VND/partner court hr)"
+source = "Case Page 3 ('before partner-court, event and service costs' @ 200k VND/partner court hr + league/event delivery)"

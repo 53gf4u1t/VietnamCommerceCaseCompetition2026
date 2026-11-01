@@ -739,13 +739,13 @@ max = 0.360
 source = "Derived from Exhibit 3 (31% intent) & Stage 5 VIP cohort onboarding"
 
 [membership_program.monthly_churn_rate]
-# Monthly subscriber cancellation rate (4.2%/mo mean; lower than generic fitness apps
+# Monthly subscriber cancellation rate (4.6%/mo mean; lower than generic fitness apps
 # because Exhibit 3 notes: 'Players who join social games also seem to return more often')
 dist = "truncated_normal"
-mean = 0.042
+mean = 0.046
 std = 0.0055
-min = 0.026
-max = 0.062
+min = 0.030
+max = 0.065
 unit = "fraction/month"
 source = "Case Exhibit 3 social-game loyalty clue & consumer subscription SaaS benchmarks"
 
@@ -753,19 +753,19 @@ source = "Case Exhibit 3 social-game loyalty clue & consumer subscription SaaS b
 # Monthly gross new subscription rate as a fraction of non-subscribed unique monthly customers
 # Calibrated so S_t smoothly reaches ~1,500 paying members (~598.5M VND/mo) at Month 24 (Dec-28, End of Year 2)
 dist = "truncated_normal"
-mean = 0.0880
-std = 0.0075
-min = 0.0620
-max = 0.1140
+mean = 0.0485
+std = 0.0050
+min = 0.0350
+max = 0.0620
 unit = "fraction of non-subscribed unique customers/month"
 source = "Calibrated to Case Page 3 (1,500 paying members by End of Year 2) & Exhibit 3"
 
 [membership_program.addressable_member_ceiling]
-# Asymptotic saturation ceiling across PICK!'s venue players + university/partner-court leagues
+# Base 6-court + partner-court addressable saturation ceiling (scales by network_scale_t ~1.85x to ~2,490 across 20 courts)
 dist = "truncated_normal"
-mean = 2480.0
-std = 140.0
-min = 2050.0
-max = 2900.0
+mean = 1350.0
+std = 80.0
+min = 1150.0
+max = 1550.0
 unit = "paying members"
-source = "Derived from 3,600 unique customers * (38% sure + 0.65*42% unsure) regular player pool"
+source = "Derived from 3,600 unique customers * (38% sure + 42% unsure follow-through) regular player pool"
