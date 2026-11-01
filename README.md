@@ -1,8 +1,8 @@
 # Vietnam Commerce Case Competition — PICK! Strategic & Financial Plan
 
 > **AI Usage Acknowledgement**  
-> - **Human Direction & Original Ideas**: Our team defined the overall business strategy, the sequenced growth roadmap, the distribution-based stochastic modeling methodology, the customer-segment funnel logic, and all financial and operational assumptions.  
-> - **AI Agent Execution**: We used **OpenAI Codex** and **Google Antigravity** to implement the simulation and machine learning code, benchmark software and construction task estimates, generate charts, and format reports under our direction and verification.
+> - **Human Problem Framing, Architecture & Analytical Direction**: Our team performed the core strategic diagnosis, evaluated the case's strategic options, and architected the 5-module solution (`AdaptivePricing`, `PickSocialProjectTimeline`, `VenueScalingTimeline`, `Marketing`, and `FinancialModel`)—including the decisions to use ML for dynamic court pricing and segment marketing budget allocation, sequence the platform launch before the second venue expansion, and model all assumptions as bounded probability distributions. Throughout development, we analyzed intermediate outputs, directed how data was decomposed, split (`Train`/`Test` without look-ahead), and constrained to case exhibits, and calibrated every financial and operational assumption.  
+> - **AI-Accelerated Implementation & Prototyping**: We used **OpenAI Codex** and **Google Antigravity** to accelerate code implementation, rapidly prototype and stress-test alternative strategic paths, execute the data-driven simulation and machine learning pipelines, and iterate on adjustments and visualizations under our review.
 
 ---
 
@@ -47,7 +47,12 @@ Instead, we execute a **4-stage operational and capital sequence** within the **
 Every input is modeled as a **bounded probability distribution (`Truncated Normal`)** in [`configs/`](configs) and reconciles directly to the Case Data Pack:
 
 ### 2.1 Court Utilization & Price Elasticity ([`AdaptivePricing/`](AdaptivePricing))
-- Grounded in the `06:00–22:00` operating schedule (`40%` weekday daytime vs. `95%` evening / `90%` weekend baseline occupancy) and scaled across active court capacity (`6` courts in `Months 1–13` -> `20` courts in `Months 14–60`).
+- **Exact Empirical Anchors (`Case Page 2 & Exhibit 1`)**: Each regime's linear demand curve $Q_r(x) = \text{clip}(a_r x + b_r, 0, C_t)$ is forced to pass through its observed baseline operating point ($b_r = Q_{0,r} - a_r x_{0,r}$): **Weekday Daytime** at `(160k VND, 40% occupancy = 2.4/6 courts)`, **Weekday Evening** at `(260k VND, 95% occupancy = 5.7/6 courts)`, and **Weekend** at `(260k VND, 90% occupancy = 5.4/6 courts)`—which sum to `1,899.0 hrs/mo` (`~1,900 hrs`) and `435.66M VND/mo` (`~435M VND`), matching Exhibit 1.
+- **Economically Grounded Implied Point Elasticities ($\varepsilon_r = a_r \cdot \frac{x_{0,r}}{Q_{0,r}}$)**: Rather than arbitrary slopes, the regime slopes in [`configs/pricing.toml`](configs/pricing.toml) correspond to standard recreational sports-facility price elasticities across customer segments:
+  - **Weekday Daytime (`a_1 = -0.035 cts/kVND`, implied $\varepsilon_1 = -2.33$, elastic)**: Off-peak daytime players (students, retirees, flexible workers, and schools cited on Case Page 2) are price-sensitive (`160k -> 115k VND/hr` is a `-28%` student/off-peak discount that lifts occupancy from `40.0%` to `66.4%`, still leaving `1/3` of daytime courts unbooked rather than assuming `100%` fill).
+  - **Weekday Evening (`a_2 = -0.014 cts/kVND`, implied $\varepsilon_2 = -0.64$, inelastic)**: After-work office players (`17:00–22:00`) have fixed schedules and already book `95%` of courts with spill-over waitlists; a modest `+11.5%` peak premium (`260k -> 290k VND/hr`, capped at `250k` after `21:00` for ward noise mitigation) trims occupancy slightly from `95%` to `88%`.
+  - **Weekend (`a_3 = -0.017 cts/kVND`, implied $\varepsilon_3 = -0.82$, moderately inelastic)**: Social groups and families book `90%` of weekend slots at `260k VND/hr`; a `+8.8%` adjustment (`283k VND/hr`) shifts occupancy to `83.5%`.
+- **Conservative Contribution & Downside Insulation**: Even if price elasticity were zero (`0%` lift from dynamic pricing), our `AdaptivePricing` module contributes only **`+24.92M VND/mo` (`+5.7%` court-hire lift)** on `6` courts (`+83.07M VND/mo` on `20` courts)—meaning **over `94%` of our Year 3 EBITDA (`20,473.28M VND` vs. `3,500M VND` target) comes from physical capacity expansion (`6 -> 20` courts), `PICK! Social` memberships, and segment-driven ancillary spend**, and the plan still passes `100%` of the time under a permanent **`-30%` demand shock**.
 
 ![Court Utilization & Dynamic Pricing Assumptions](AdaptivePricing/outputs/01_assumptions_distributions.png)
 
