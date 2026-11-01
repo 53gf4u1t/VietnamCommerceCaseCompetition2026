@@ -14,10 +14,10 @@ Instead, we execute a **4-stage operational and capital sequence** within the **
 
 | Stage | Timeline | Action | Why It Works |
 | :--- | :--- | :--- | :--- |
-| **1. Dynamic Pricing & Cash Buffer** | `Months 1–4` (`Jan–Apr 2027`) | Deploy ML time-of-day court pricing on Venue 1 (`6` courts); build `PICK! Social` in-house; draw **`+500.0M VND` (Tranche 1)** into reserve upon signing. | Cuts weekday daytime prices (`160k -> 115k VND/hr`) to fill empty daytime slots (`40.0% -> 66.4%` occupancy), lifting revenue **`+24.92M VND/mo`** immediately while keeping cash `>= 1,000.73M VND`. |
-| **2. `PICK! Social` & Segment Marketing** | `Months 5–9` (`May–Sep 2027`) | Launch `PICK! Social` (`399,000 VND/mo` membership, skill matchmaking, leagues) and ML segment marketing across `5` full operating months. | Converts casual visitors into **`693` paying subscribers** (`829` by end of Year 1) and builds cash reserves to **`+2,158.41M VND`** before committing to a second venue lease. |
-| **3. Second Venue Expansion Build** | `Months 10–13` (`Oct 2027–Jan 2028`) | Draw **`+7,500.0M VND` (Tranche 2)** (`7,000M` fit-out + `500M` reserve); execute `16-week` turnkey build of Venue 2 (`+14` courts, `-1,750M VND/mo` leveled CapEx). | Funded when Venue 1 + `PICK! Social` is already generating `+244M–326M VND/mo` in operating profit. |
-| **4. Expanded Network Operations** | `Months 14–60` (`Feb 2028–Dec 2031`) | Open Venue 2 in `Feb 2028` (`20` courts total); pre-built `PICK! Social` community drives 6-to-9 month utilization ramp and reaches **`1,483` paying members** by end of Year 2 (aligned with Exhibit 3's `1,500` target). | Reaches **`12,553.13M VND` Year 3 operating profit** (**`3.59x`** the `3,500M VND` investor target; **`100%` simulation pass rate**). |
+| **1. Dynamic Pricing & Cash Buffer** | `Months 1–4` (`Jan–Apr 2027`) | Deploy ML time-of-day court pricing on Venue 1 (`6` courts); build `PICK! Social` in-house; draw **`+500.0M VND` (Tranche 1)** into reserve upon signing. | Cuts weekday daytime prices (`160k -> 115k VND/hr`) to fill empty daytime slots (`40.0% -> 66.4%` occupancy), lifting revenue **`+24.92M VND/mo`** immediately while keeping cash `>= 1,000.71M VND`. |
+| **2. `PICK! Social`, Quarterly Tournaments & Segment Marketing** | `Months 5–9` (`May–Sep 2027`) | Launch `PICK! Social` (`399,000 VND/mo` membership, skill matchmaking, leagues), **Quarterly Seasonal Tournaments** (`Summer [Jun]` & `Fall [Sep]`: free for members, `350k VND` for non-members), and ML segment marketing. | Converts casual visitors & tournament entrants into **`684` paying subscribers** (`807` by end of Year 1) and builds cash reserves to **`+2,151.11M VND`** before committing to a second venue lease. |
+| **3. Second Venue Expansion Build** | `Months 10–13` (`Oct 2027–Jan 2028`) | Draw **`+7,500.0M VND` (Tranche 2)** (`7,000M` fit-out + `500M` reserve); execute `16-week` turnkey build of Venue 2 (`+14` courts, `-1,750M VND/mo` leveled CapEx). | Funded when Venue 1 + `PICK! Social` is already generating `+240M–330M VND/mo` in operating profit. |
+| **4. Expanded Network Operations** | `Months 14–60` (`Feb 2028–Dec 2031`) | Open Venue 2 in `Feb 2028` (`20` courts total); pre-built `PICK! Social` community & `420`-player seasonal tournaments drive 6-to-9 month utilization ramp and reach **`1,489` paying members** by end of Year 2 (aligned with Exhibit 3's `1,500` target). | Reaches **`12,420.45M VND` Year 3 operating profit** (**`3.55x`** the `3,500M VND` investor target; **`100%` simulation pass rate**). |
 
 ![Revenue, Costs, and Operating Profit Comparison](FinancialModel/outputs/04_revenue_costs_profit_comparison_charts.png)
 
@@ -27,18 +27,18 @@ Instead, we execute a **4-stage operational and capital sequence** within the **
 
 | Metric | Stochastic Baseline (`6 Courts`) | Our Plan (`Expected Mean`) | Our Plan (`90% CI: P05–P95`) | Permanent `-30%` Demand Stress |
 | :--- | :---: | :---: | :---: | :---: |
-| **Year 1 (`FY 2027`) EBITDA** | `1,856.4M VND` | **`1,209.46M VND`** (`11.5%`) | `[1,065M, 1,376M]` | `-622.65M VND` |
-| **Year 2 (`FY 2028`) EBITDA** | `1,826.2M VND` | **`7,586.70M VND`** (`28.7%`) | `[6,878M, 8,349M]` | `+2,755.86M VND` |
-| **Year 3 (`FY 2029`) EBITDA (`Target: 3,500M`)** | `1,753.0M VND` | **`12,553.13M VND` (`3.59x`, `38.0%`)** | `[11,843M, 13,452M]` (`100% Pass`) | **`+6,156.59M VND` (`1.76x`)** |
-| **Year 4 (`FY 2030`) EBITDA** | `1,794.1M VND` | **`13,427.88M VND`** (`39.2%`) | `[12,469M, 14,657M]` | `+6,755.22M VND` |
-| **Year 5 (`FY 2031`) EBITDA** | `1,664.5M VND` | **`13,695.80M VND`** (`39.1%`) | `[12,717M, 14,936M]` | `+6,926.58M VND` |
-| **5Y Cumulative Revenue** | `37,883.4M VND` | **`139,359.70M VND`** | `[134,992M, 144,288M]` | `97,551.79M VND` |
-| **5Y Cumulative EBITDA** | `8,894.2M VND` | **`48,472.98M VND` (`34.78%`)** | `[44,972M, 52,770M]` | `21,971.61M VND` |
+| **Year 1 (`FY 2027`) EBITDA** | `1,879.7M VND` | **`1,183.06M VND`** (`11.1%`) | `[1,032M, 1,344M]` | `-662.33M VND` |
+| **Year 2 (`FY 2028`) EBITDA** | `1,794.6M VND` | **`7,340.37M VND`** (`27.6%`) | `[6,629M, 8,106M]` | `+2,533.00M VND` |
+| **Year 3 (`FY 2029`) EBITDA (`Target: 3,500M`)** | `1,735.8M VND` | **`12,420.45M VND` (`3.55x`, `37.4%`)** | `[11,846M, 13,017M]` (`100% Pass`) | **`+6,008.76M VND` (`1.72x`)** |
+| **Year 4 (`FY 2030`) EBITDA** | `1,654.1M VND` | **`13,070.01M VND`** (`38.0%`) | `[12,328M, 13,819M]` | `+6,449.45M VND` |
+| **Year 5 (`FY 2031`) EBITDA** | `1,548.6M VND` | **`13,455.56M VND`** (`38.2%`) | `[12,555M, 14,294M]` | `+6,698.46M VND` |
+| **5Y Cumulative Revenue** | `37,362.3M VND` | **`140,044.65M VND`** | `[136,340M, 143,745M]` | `98,031.26M VND` |
+| **5Y Cumulative EBITDA** | `8,612.8M VND` | **`47,469.45M VND` (`33.90%`)** | `[44,390M, 50,580M]` | `21,027.34M VND` |
 | **5Y D&A (`Circular 45/2013/TT-BTC`)** | `320.0M VND` | **`5,803.33M VND`** | `Fixed Straight-Line` | `5,803.33M VND` |
-| **5Y Corporate Income Tax (`20% Vietnam CIT`)** | `1,714.8M VND` | **`8,540.52M VND`** | `20% on EBT > 0` | `3,358.19M VND` |
-| **5Y Net Income After Tax** | `6,859.4M VND` | **`34,129.13M VND` (`24.49%`)** | `[31,328M, 37,567M]` | `12,810.09M VND` |
-| **Minimum Monthly Cash Reserves (`M1–M60`)** | `+646.97M VND` | **`+1,000.73M VND` (`M3`)** | `P05 Min: +954.57M VND` | **`+436.75M VND` (`M6`)** |
-| **Month 60 Ending Cash Reserves** | `7,999.62M VND` | **`43,878.83M VND`** | `[41,011M, 47,090M]` | `20,979.97M VND` |
+| **5Y Corporate Income Tax (`20% Vietnam CIT`)** | `1,658.6M VND` | **`8,339.97M VND`** | `20% on EBT > 0` | `3,181.20M VND` |
+| **5Y Net Income After Tax** | `6,634.2M VND` | **`33,326.14M VND` (`23.80%`)** | `[30,782M, 35,814M]` | `12,042.81M VND` |
+| **Minimum Monthly Cash Reserves (`M1–M60`)** | `+646.97M VND` | **`+1,000.71M VND` (`M3`)** | `P05 Min: +954.58M VND` | **`+424.30M VND` (`M6`)** |
+| **Month 60 Ending Cash Reserves** | `7,751.17M VND` | **`43,027.79M VND`** | `[40,829M, 45,073M]` | `20,168.60M VND` |
 
 ---
 
@@ -67,9 +67,10 @@ Every input is modeled as a **bounded probability distribution (`Truncated Norma
 
 ![Customer Acquisition Funnel & Segment Ancillary Spending](Marketing/outputs/01_marketing_funnel_and_segment_response_distributions.png)
 
-### 2.3 Platform Engineering, Cloud, Venue Construction & Vietnam Statutory Tax Schedule
+### 2.3 Platform Engineering, Seasonal Tournaments, Venue Construction & Vietnam Statutory Tax Schedule
 - **`PICK! Social` Platform Engineering & Cloud Operations**: Scoped across `17` engineering work packages (`911.20M` base + `177.80M` / `19.5%` risk contingency buffer across the 6-month build & migration lifecycle, plus `26.50M VND/mo` steady-state cloud/maintenance OpEx and `1.50%` payment gateway COGS) using *COCOMO II*, *PMI PMBOK 7th Ed.*, *ITviec/TopDev Vietnam Tech Salary Reports*, and *NAPAS/VietQR + Momo/VNPay fee schedules* ([`PickSocialProjectTimeline/`](PickSocialProjectTimeline)).
-- **Second Venue Construction & Operating Scale**: Scoped across `15` construction packages (`7,000.0M VND` turnkey fit-out CapEx + `330.0M VND/mo` lease) using *ASBA Courts Manual* and *Vietnam Ministry of Construction benchmarks* ([`VenueScalingTimeline/`](VenueScalingTimeline)); when the 14 new courts open in `Month 14`, electricity/water (`+95.0M/mo`), maintenance/insurance (`+48.0M/mo`), and staff wages (`+280.0M/mo` at steady state) scale up automatically alongside variable COGS and `~27.7%` direct subscription event/partner-court fulfillment COGS.
+- **Quarterly Seasonal Tournaments (`Spring [Mar]`, `Summer [Jun]`, `Fall [Sep]`, `Winter [Dec]`, Starting `Month 6 / Jun-27`)**: Hosted once per quarter through `PICK! Social` (`192 +/- 16` players in the `6`-court phase; `420 +/- 32` players in the `20`-court phase). Active `PICK! Social` members enter for **free (`0 VND`)** as a core perk of their `399k VND/mo` membership, while non-members pay a **`350,000 VND / player`** entry fee (`~30.1M VND/qtr` in `6` courts; `~58.8M VND/qtr` in `20` courts). We budget **`45.00M VND / tournament`** (`6` courts) and **`85.00M VND / tournament`** (`20` courts) in direct tournament organization `COGS` (referees, balls, trophies, hydration, livestreaming). Tournaments convert **`22.0%`** of non-member entrants into paying subscribers, reduce tournament-month subscriber churn by **`20%` (`0.80x`)**, boost social follower acquisition by **`+15%` (`1.15x`)**, and generate **`+85.0k VND / participant`** in incremental ancillary spend (`55k` F&B, `10k` Paddle/Balls, `20k` pre-tournament Coaching clinics) across both members and non-members.
+- **Second Venue Construction & Operating Scale**: Scoped across `15` construction packages (`7,000.0M VND` turnkey fit-out CapEx + `330.0M VND/mo` lease) using *ASBA Courts Manual* and *Vietnam Ministry of Construction benchmarks* ([`VenueScalingTimeline/`](VenueScalingTimeline)); when the 14 new courts open in `Month 14`, electricity/water (`+95.0M/mo`), maintenance/insurance (`+48.0M/mo`), and staff wages (`+280.0M/mo` at steady state) scale up automatically alongside variable COGS, monthly member league fulfillment, and quarterly tournament organization COGS.
 - **Vietnam Statutory Depreciation & Tax Schedule (`FS-Month`, `FS-Annual` & `Taxes`)**: Models straight-line equipment & leasehold fit-out depreciation (`5.33M VND/mo` in `Months 1–13`, scaling to `122.00M VND/mo` in `Months 14–60` under *Vietnam MOF Circular 45/2013/TT-BTC*), **`20.0%` statutory Corporate Income Tax (`CIT`)** on positive `EBT` (*Vietnam CIT Law No. 67/2025/QH15*) accrued monthly into `Income Taxes Payable — Current FY`, consolidated at year-end into `Income Taxes Payable — Past FY`, and settled in cash in **Month 4 (`April`) of the following fiscal year**, alongside **`8.0%` Output / `10.0%` Input Value-Added Tax (`VAT`)** credit carryforwards (*Vietnam VAT Law No. 48/2024/QH15*).
 
 ---
@@ -79,11 +80,11 @@ Every input is modeled as a **bounded probability distribution (`Truncated Norma
 Static spreadsheets fail because they ignore variance, capacity ceilings, and external shocks. We verify our results through **four mechanisms**:
 
 ### 3.1 Baseline Comparison Under Identical Stochastic Shocks
-- The **Case Baseline (`6` courts, static pricing, `25M VND/mo` marketing)** runs through the **exact same `N = 300` simulation lines and monthly random draws** as our plan—fluctuating around `628.9M–633.7M VND/mo` revenue and `1,664.5M–1,856.4M VND/yr` profit (`0.0%` chance of hitting `3,500M VND`).
+- The **Case Baseline (`6` courts, static pricing, `25M VND/mo` marketing)** runs through the **exact same `N = 300` simulation lines and monthly random draws** as our plan—fluctuating around `628.9M–633.7M VND/mo` revenue and `1,548.6M–1,879.7M VND/yr` profit (`0.0%` chance of hitting `3,500M VND`).
 
 ### 3.2 Out-of-Sample Machine Learning Validation
 - **`AdaptivePricing` ML (`HistGradientBoostingRegressor`)**: Held-out **Test `R^2 = 0.9922`** (`MAE = 2.15%`), capturing **`98.8%`** of Oracle revenue lift (`+24.92M VND/mo` per `6` courts; `+83.07M VND/mo` across `20` courts).
-- **`Marketing` Segment Allocator (`MultiOutputRegressor`)**: Predicts Month `t`'s 4-segment marketing budget from **Month `t-1`'s realized segment metrics** (zero look-ahead bias). Held-out **Test `R^2 = 0.9555`**, capturing **`99.29%`** of Oracle profit and lifting ancillary revenue from **`204.8M -> 500.05M VND/mo`** (`5Y avg`).
+- **`Marketing` Segment Allocator (`MultiOutputRegressor`)**: Predicts Month `t`'s 4-segment marketing budget from **Month `t-1`'s realized segment metrics** (zero look-ahead bias). Held-out **Test `R^2 = 0.9606`**, capturing **`99.43%`** of Oracle profit and lifting ancillary revenue from **`204.8M -> 516.66M VND/mo`** (`5Y avg`, including quarterly tournament ancillary spend).
 
 ![Adaptive Pricing Daily Revenue Lift Comparison](AdaptivePricing/outputs/03_daily_revenue_comparison.png)
 
@@ -96,15 +97,15 @@ Static spreadsheets fail because they ignore variance, capacity ceilings, and ex
 ![Marketing ML Out-of-Sample Diagnostics](Marketing/outputs/04_marketing_ml_diagnostics.png)
 
 ### 3.3 Subscriber Cohort Dynamics & External Risk Modeling ([`configs/externals.toml`](configs/externals.toml))
-- **Paying Subscribers Only (`Calibrated to Case Exhibit 3`)**: Free registered accounts (`1,150`) are excluded from revenue. Paying members (`M_t`) evolve smoothly via monthly churn `N(4.6%, 0.55%)` and non-member conversion `N(4.85%, 0.50%)` (conservative vs. `31%` survey intent): **`351` (`M5`) -> `829` (`M12`) -> `1,483` (`M24`, matching Exhibit 3's `1,500` Year 2 target) -> `2,208` (`M60`)**.
+- **Paying Subscribers Only (`Calibrated to Case Exhibit 3`)**: Free registered accounts (`1,150`) are excluded from revenue. Paying members (`M_t`) evolve smoothly via monthly churn `N(4.6%, 0.55%)` (`0.80x` in quarterly tournament months), organic non-member conversion `N(4.20%, 0.45%)`, and **`22.0%` conversion of non-member seasonal tournament entrants** (conservative vs. `31%` survey intent): **`351` (`M5`) -> `807` (`M12`) -> `1,489` (`M24`, matching Exhibit 3's `1,500` Year 2 target) -> `2,218` (`M60`)**.
 - **External Factors (`externals.toml`)**: Every trajectory compounds monthly **overall pickleball trend shifts** (`N(+0.3%, 1.8%, [-6%, +5%])`), **competitor court drag**, **weather shocks**, **cost inflation**, and **noise complaint legal handling costs**.
 
 ![Membership Growth, Year 3 Profit Distribution & External Risk Shocks](FinancialModel/outputs/05_membership_and_monte_carlo_distributions.png)
 
 ### 3.4 Downside Demand Stress Testing
 - Even if total demand across all revenue lines is permanently **`30%` lower from Month 1 to Month 60** while fixed leases, platform engineering, and `7,000M VND` CapEx stay at `100%`:
-  1. **Zero Negative Cash Months**: Minimum cash across 60 months is **`+436.75M VND` (`Jun 2027`)**, and stays positive through the entire Q4 2027 Venue 2 construction and ramp window.
-  2. **Still Clears the Investor Hurdle by `1.76x`**: Stress Year 3 EBITDA reaches **`+6,156.59M VND`** vs. the `3,500M VND` target.
+  1. **Zero Negative Cash Months**: Minimum cash across 60 months is **`+424.30M VND` (`Jun 2027`)**, and stays positive through the entire Q4 2027 Venue 2 construction and ramp window.
+  2. **Still Clears the Investor Hurdle by `1.72x`**: Stress Year 3 EBITDA reaches **`+6,008.76M VND`** vs. the `3,500M VND` target.
 
 ![Monthly Cash Balance Trajectory & Stress Test](FinancialModel/outputs/06_monthly_cash_balance_and_externals.png)
 
@@ -114,7 +115,7 @@ Static spreadsheets fail because they ignore variance, capacity ceilings, and ex
 
 ### 4.1 Phased Equity Drawdowns & Leveled Capital Disbursement
 - **Tranche 1 (`+500.0M VND` in `Month 1 / Jan 2027`)**: Drawn upon signing (`500M` existing + `500M` draw = `1,000M VND` starting cash) while `PICK! Social` engineering costs are paid via leveled bi-weekly sprint drawdowns and milestone holdbacks across `Months 1–6` (`Jan–Jun 2027`).
-- **Tranche 2 (`+7,500.0M VND` in `Month 10 / Oct 2027`)**: Drawn at Q4 expansion kickoff (`7,000M` fit-out paid in **4 equal `-1,750.0M VND/mo` milestones** across `Oct 2027–Jan 2028` + `500M` reserve), after `PICK! Social` has already built cash reserves to **`+2,158.41M VND`**.
+- **Tranche 2 (`+7,500.0M VND` in `Month 10 / Oct 2027`)**: Drawn at Q4 expansion kickoff (`7,000M` fit-out paid in **4 equal `-1,750.0M VND/mo` milestones** across `Oct 2027–Jan 2028` + `500M` reserve), after `PICK! Social` has already built cash reserves to **`+2,151.11M VND`**.
 
 ![PICK! Social Production Gantt Schedule](PickSocialProjectTimeline/outputs/01_pick_social_platform_gantt_chart.png)
 
@@ -133,10 +134,10 @@ Static spreadsheets fail because they ignore variance, capacity ceilings, and ex
 
 | Gate | Target Date | Operational & Customer KPI | Financial & Cash KPI |
 | :--- | :--- | :--- | :--- |
-| **Gate 1: Platform Ready** | `Month 4` (`Apr 2027`) | `PICK! Social` passes `500`-user rush load test; Venue 1 utilization **`>= 68.0%`**. | Core platform build on budget; ending cash **`>= 1,000.0M VND`** (`1,000.73M` realized). |
-| **Gate 2: Pre-Expansion Gate** | `Month 9` (`Sep 2027`) | **`>= 650` paying subscribers** (`693` expected); monthly churn `<= 5.0%`. | Monthly EBITDA **`>= 300.0M VND/mo`** (`314.0M` expected); cash **`>= 2,000.0M VND`** (`2,158.41M` expected). |
-| **Gate 3: Network Ramp** | `Month 24` (`Dec 2028`) | `20`-court utilization reaches steady state; paying members reach Exhibit 3 benchmark (**`1,483` vs. `1,500` target**). | **Year 2 (`FY 2028`) EBITDA reaches `7,586.70M VND`** (`+2,755.9M` under `-30%` stress). |
-| **Gate 4: Investor Target** | `Month 36` (`Dec 2029`) | **`1,851` paying members** (`738.7M VND/mo` subscription rev) + **`19,800+` visits/mo**. | **Year 3 (`FY 2029`) EBITDA reaches `12,553.13M VND`** (**`3.59x` hurdle**; `+6,156.6M` under `-30%` stress). |
+| **Gate 1: Platform Ready** | `Month 4` (`Apr 2027`) | `PICK! Social` passes `500`-user rush load test; Venue 1 utilization **`>= 68.0%`**. | Core platform build on budget; ending cash **`>= 1,000.0M VND`** (`1,000.71M` realized). |
+| **Gate 2: Pre-Expansion Gate** | `Month 9` (`Sep 2027`) | **`>= 650` paying subscribers** (`684` expected after Summer & Fall tournaments); monthly churn `<= 5.0%`. | Monthly EBITDA **`>= 300.0M VND/mo`** (`330.3M` expected); cash **`>= 2,000.0M VND`** (`2,151.11M` expected). |
+| **Gate 3: Network Ramp** | `Month 24` (`Dec 2028`) | `20`-court utilization reaches steady state; paying members reach Exhibit 3 benchmark (**`1,489` vs. `1,500` target**). | **Year 2 (`FY 2028`) EBITDA reaches `7,340.37M VND`** (`+2,533.0M` under `-30%` stress). |
+| **Gate 4: Investor Target** | `Month 36` (`Dec 2029`) | **`1,827` paying members** (`787.6M VND/mo` subscription + tourney rev in M36) + **`21,600+` visits/mo**. | **Year 3 (`FY 2029`) EBITDA reaches `12,420.45M VND`** (**`3.55x` hurdle**; `+6,008.8M` under `-30%` stress). |
 
 ![Granular Monthly Revenue, COGS, OpEx & SG&A Breakdown](FinancialModel/outputs/01_revenue_cogs_opex_sga_sheet.png)
 

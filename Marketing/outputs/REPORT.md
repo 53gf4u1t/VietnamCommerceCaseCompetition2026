@@ -39,15 +39,21 @@ To model **Revenue Line 2 (Paddle Rental & Balls = 15.00M VND/mo)**, **Revenue L
 | **4. Families** | 648 | **3.40 +/- 0.35 k** (2.20M/mo) | **25.15 +/- 2.10 k** (16.30M/mo) | **10.03 +/- 0.95 k** (6.50M/mo) | 38.58 k | 46.42 k | **85.00 kVND** (Exh. 4 = 85k) |
 | **Baseline Monthly Sum** | **7,596** | **15.005M VND/mo** (Exh. 1 = **15.00M**) | **115.001M VND/mo** (Exh. 1 = **115.00M**) | **74.995M VND/mo** (Exh. 1 = **75.00M**) | **205.00M/mo** | **436.70M/mo** | **641.70M VND/mo** (Exh. 1 = **640M**) |
 
+### 3.1 Quarterly Seasonal Tournament Ancillary & Follower Boost (`Mar, Jun, Sep, Dec` from Month 6+)
+Starting in **Month 6 (`Jun-27`, Summer Tournament)** after `PICK! Social` launches in `Month 5 (May-27)`, PICK! hosts a flagship seasonal tournament every quarter (`Spring [Mar]`, `Summer [Jun]`, `Fall [Sep]`, `Winter [Dec]`):
+- **Tournament Participant Field**: `192 +/- 16` players in the `6`-court phase (`Months 6, 9, 12`), scaling to `420 +/- 32` players across the `20`-court network (`Months 15, 18, ..., 60`).
+- **Social Follower Boost**: Tournament highlight reels and brackets multiply monthly new follower acquisition by **`1.15x` (`+15%`)** in tournament months.
+- **Ancillary Spend Lift (`+85.0k VND / participant`)**: Both active members (who enter for **free**) and non-members (who pay **`350,000 VND`** entry fee) generate incremental full-day tournament ancillary spending of **`55.0k VND`** in `Food & Drinks`, **`10.0k VND`** in `Paddle & Balls`, and **`20.0k VND`** in pre-tournament `Coaching` clinics (`~16.3M VND/qtr` in 6-court phase; `~35.7M VND/qtr` in 20-court phase).
+
 ---
 
 ## 4. 60-Month ML Marketing Allocation & Ancillary Revenue Trajectory Summary
 
 | Horizon Milestone | Active Courts | ML Marketing Spend (Comp / Soc / Trend / Fam = **Total**) | Active Followers (`~8.57%` Conv) | Total Monthly Visits | Paddle & Balls Rev (`M VND`) | Coaching Rev (`M VND`) | Food & Drinks Rev (`M VND`) | Total Ancillary Rev (`M VND`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Month 1 (Jan-27, Build)** | 6 | 10.27M / 16.55M / 13.29M / 8.36M = **48.47M** | 42,871 | 9,196 | 18.54M | 137.59M | 91.66M | **247.79M** |
-| **Month 5 (May-27, App Live)** | 6 | 8.54M / 13.91M / 13.06M / 6.75M = **42.26M** | 46,307 | 9,717 | 17.20M | 148.69M | 97.07M | **262.95M** |
-| **Month 14 (Feb-28, 20 Courts)** | 20 | 18.48M / 23.93M / 23.88M / 15.97M = **82.26M** | 54,999 | 20,715 | 40.31M | 307.26M | 209.31M | **556.88M** |
-| **Month 24 (Dec-28, End Y2)** | 20 | 10.16M / 15.57M / 17.14M / 7.68M = **50.55M** | 68,733 | 20,827 | 41.58M | 324.91M | 201.80M | **568.28M** |
-| **Month 36 (Dec-29, End Y3)** | 20 | 10.39M / 16.40M / 17.34M / 7.98M = **52.12M** | 87,165 | 21,199 | 40.79M | 302.90M | 201.78M | **545.47M** |
-| **5-Year Monthly Average** | 17.7 | 10.86M / 16.87M / 17.46M / 8.24M = **53.43M** | 83,037 | 18,795 | 36.75M | 284.51M | 185.09M | **506.35M** |
+| **Month 1 (Jan-27, Build)** | 6 | 10.26M / 16.55M / 13.30M / 8.37M = **48.49M** | 42,871 | 9,196 | 18.54M | 137.59M | 91.67M | **247.80M** |
+| **Month 5 (May-27, App Live)** | 6 | 8.54M / 13.88M / 13.12M / 6.76M = **42.30M** | 46,308 | 9,718 | 17.21M | 148.69M | 97.07M | **262.97M** |
+| **Month 14 (Feb-28, 20 Courts)** | 20 | 18.45M / 23.93M / 23.88M / 15.97M = **82.24M** | 55,776 | 20,712 | 40.30M | 307.18M | 209.28M | **556.77M** |
+| **Month 24 (Dec-28, End Y2)** | 20 | 10.14M / 15.54M / 17.12M / 7.66M = **50.46M** | 71,233 | 21,242 | 45.82M | 333.17M | 224.98M | **603.97M** |
+| **Month 36 (Dec-29, End Y3)** | 20 | 10.38M / 16.39M / 17.33M / 7.99M = **52.09M** | 92,170 | 21,618 | 44.94M | 311.18M | 224.98M | **581.10M** |
+| **5-Year Monthly Average** | 17.7 | 10.86M / 16.88M / 17.46M / 8.24M = **53.44M** | 87,787 | 18,916 | 37.96M | 286.94M | 191.76M | **516.66M** |

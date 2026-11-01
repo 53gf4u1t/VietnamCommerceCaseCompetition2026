@@ -41,21 +41,24 @@ Every assumption in this model is parameterized as a **Truncated Normal probabil
   - **Months 14–60 (`20 Courts`)**: Straight-line amortization of the `7,000.00M VND` Venue 2 leasehold improvement & court construction over its `60-month` lease (`+116.67M VND/month`), bringing total monthly D&A to **`122.00M VND/month`** (`5Y Total D&A = 5,803.33M VND`).
 - **Corporate Income Tax (`CIT` — Vietnam CIT Law No. 67/2025/QH15)**:
   - Statutory rate of **`20.0%`** applied to positive taxable income (`EBT = EBITDA - D&A`).
-  - Monthly CIT accrues into **`Income Taxes Payable — Current FY`** during `Months 1–11`, consolidates into **`Income Taxes Payable — Past FY`** at fiscal year-end (`Month 12 / Dec`), and is settled in cash in **Month 4 (`April`) of the following fiscal year** (`tax_consolidation_month = 4`), creating exact working-capital cash movements (`(-) Change in Working Capital`) on the Cash Flow Statement (`5Y Accrued CIT = 8,540.52M VND`; `5Y Cash CIT Settled = 6,094.16M VND`).
+  - Monthly CIT accrues into **`Income Taxes Payable — Current FY`** during `Months 1–11`, consolidates into **`Income Taxes Payable — Past FY`** at fiscal year-end (`Month 12 / Dec`), and is settled in cash in **Month 4 (`April`) of the following fiscal year** (`tax_consolidation_month = 4`), creating exact working-capital cash movements (`(-) Change in Working Capital`) on the Cash Flow Statement (`5Y Accrued CIT = 8,339.97M VND`; `5Y Cash CIT Settled = 5,941.66M VND`).
 - **Value-Added Tax (`VAT` — Vietnam VAT Law No. 48/2024/QH15)**:
   - Tracks **`8.0%`** effective Output VAT on sports/hospitality revenue vs. **`10.0%`** Input VAT on taxable purchases and the `7,000.00M VND` Venue 2 fit-out CapEx, including **`VAT Receivable (Recoverable Input VAT Credit Carryforward)`** and **`Total VAT Remitted to State Treasury`** in `outputs/tax_estimations_60m.csv`.
 
-### 1.5 Smooth Path C Membership Subscription Cohort Model (Starts Month 5: `May-27`)
-Instead of sampling monthly subscriber counts independently, each Monte Carlo trajectory evolves active paying members ($S_t$, paying **VND 399,000/month** per Case Page 3 & Exhibit 3) smoothly via a Markov state-transition equation driven by sampled monthly unique customers (`mean = 3,600`, `std = 160`), monthly churn rate (`mean = 4.2%`, `std = 0.55%`), and monthly new-subscriber conversion rate (`mean = 4.65%`, `std = 0.50%`):
+### 1.5 Smooth Path C Membership Subscription Cohort & Quarterly Seasonal Tournaments (Starts Month 5: `May-27`)
+Instead of sampling monthly subscriber counts independently, each Monte Carlo trajectory evolves active paying members ($S_t$, paying **VND 399,000/month** per Case Page 3 & Exhibit 3) smoothly via a Markov state-transition equation driven by sampled monthly unique customers (`mean = 3,600`, `std = 160`), monthly churn rate (`mean = 4.2%`, `std = 0.55%`), base monthly organic conversion rate (`mean = 4.20%`, `std = 0.45%`), and **Quarterly Seasonal Tournaments (`Spring [Mar]`, `Summer [Jun]`, `Fall [Sep]`, `Winter [Dec]`, starting Month 6 / `Jun-27`)**:
+- **Tournament Entry Pricing**: **Free (`0 VND`)** for active `PICK! Social` members (included as a core perk of the `399k VND/mo` subscription); **`350,000 VND / player`** (`mean = 350k`, `std = 25k`) for non-members (`~86` non-members out of `192` players in the 6-court phase = `~30.1M VND/qtr`; `~168` non-members out of `420` players in the 20-court phase = `~58.8M VND/qtr`).
+- **Quarterly Tournament Organization Cost (`COGS`)**: **`45.00M VND / tournament`** (`std = 4.00M`) in the 6-court phase (`Months 6, 9, 12`) and **`85.00M VND / tournament`** (`std = 6.50M`) in the 20-court phase (`Months 15, 18, ..., 60`), covering referees, tournament balls, trophies/medals, courtside hydration, and event livestreaming.
+- **Acquisition, Retention & Ancillary Spend Effects**: **`22.0%`** (`std = 3.0%`) of non-member tournament entrants convert into paying `PICK! Social` subscribers (`~19` extra members/qtr in 6-court phase; `~37` extra members/qtr in 20-court phase), tournament months experience a **`20%` relative churn reduction (`0.80x` multiplier)**, and all tournament participants spend an incremental **`85.0k VND/player`** on `Food & Drinks` (`55k`), `Paddle/Balls` (`10k`), and pre-tournament `Coaching` clinics (`20k`).
 
 | Milestone Month | Calendar Month | Active Paying Subscribers (Mean `[P05, P95]`) | Monthly Membership Revenue (`M VND/mo`) | Direct Partner-Court & Event COGS (`M VND/mo`) | Total Monthly Revenue (`M VND/mo`) | Monthly Operating Profit / EBITDA (`M VND/mo`) | Monthly Net Income After Tax (`M VND/mo`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Months 1–4 (Core Build)** | `Jan-27 – Apr-27` | **`0`** (`[0, 0]`) | `0.00M` | `0.00M` | `711.00M` | `21.49M` | `12.92M` |
-| **Month 5 (Platform Launch)** | `May-27` | **`351`** (`[280, 423]`) | `140.17M` | `47.52M` | `875.33M` | `113.76M` | `86.74M` |
-| **Month 12 (End of Year 1)** | `Dec-27` | **`829`** (`[785, 880]`) | `330.66M` | `108.87M` | `1,037.73M` | `39.21M` | `27.10M` |
-| **Month 24 (End of Year 2 — Case Benchmark)** | `Dec-28` | **`1,483`** (`[1,377, 1,571]`) | **`591.53M`** | `158.08M` | `2,693.38M` | `1,029.77M` | `726.22M` |
-| **Month 36 (End of Year 3)** | `Dec-29` | **`1,851`** (`[1,708, 1,981]`) | `738.72M` | `209.02M` | `2,789.32M` | `1,078.38M` | `765.10M` |
-| **Month 60 (End of Year 5)** | `Dec-31` | **`2,208`** (`[1,968, 2,427]`) | `881.09M` | `220.75M` | `2,896.53M` | `1,125.47M` | `802.78M` |
+| **Months 1–4 (Core Build)** | `Jan-27 – Apr-27` | **`0`** (`[0, 0]`) | `0.00M` | `0.00M` | `711.01M` | `21.48M` | `12.91M` |
+| **Month 5 (Platform Launch)** | `May-27` | **`351`** (`[280, 423]`) | `140.17M` | `47.53M` | `875.35M` | `113.73M` | `86.71M` |
+| **Month 12 (End of Year 1)** | `Dec-27` | **`807`** (`[765, 851]`) | `351.16M` | `159.57M` | `1,071.20M` | `10.18M` | `3.87M` |
+| **Month 24 (End of Year 2 — Case Benchmark)** | `Dec-28` | **`1,489`** (`[1,399, 1,571]`) | **`644.93M`** | `263.83M` | `2,749.02M` | `966.59M` | `675.68M` |
+| **Month 36 (End of Year 3)** | `Dec-29` | **`1,827`** (`[1,692, 1,961]`) | `786.77M` | `284.32M` | `2,874.10M` | `1,075.85M` | `763.08M` |
+| **Month 60 (End of Year 5)** | `Dec-31` | **`2,218`** (`[2,006, 2,437]`) | `948.47M` | `343.58M` | `3,078.56M` | `1,166.37M` | `835.49M` |
 
 ---
 
@@ -63,38 +66,38 @@ Instead of sampling monthly subscriber counts independently, each Monte Carlo tr
 
 | Category | Line Item | Cost Behavior | Case Base `/mo` | M1 Build (`Jan-27`) | M5 Launch (`May-27`) | M24 End Y2 (`Dec-28`) | 5-Year (60M) Total | % of 5Y Rev |
 |---|---|---|---:|---:|---:|---:|---:|---:|
-| Revenue Line 1A (Venue 1) | Court hire: Venue 1 (6 Courts, AdaptivePricing ML) | Revenue (Dynamic) | `435.00` | `457.35` | `473.92` | `463.84` | `27,194.49` | `19.51%` |
-| Revenue Line 1B (Venue 2 New) | Court hire: Venue 2 (14 Courts, Opens M14 / Feb-28) | Revenue (Path A Ramp) | `0.00` | `0.00` | `0.00` | `1,082.30` | `46,687.30` | `33.50%` |
-| Revenue Line 2 (New Path C) | Membership subscriptions (PICK! Social @ 399k/mo) | Revenue (Recurring M5+) | `0.00` | `0.00` | `140.17` | `591.53` | `35,474.69` | `25.46%` |
-| Revenue Line 3 | Paddle rental and balls (Scales 6 -> 20 Courts) | Revenue (Ancillary) | `15.00` | `18.98` | `17.09` | `40.66` | `2,177.69` | `1.56%` |
-| Revenue Line 4 | Coaching (Scales 6 -> 20 Courts + Coaching Studio) | Revenue (Services) | `115.00` | `140.85` | `147.72` | `317.72` | `16,855.94` | `12.10%` |
-| Revenue Line 5 | Food and drinks (Scales 6 -> 20 Courts + Specialty Cafe) | Revenue (F&B) | `75.00` | `93.83` | `96.44` | `197.33` | `10,969.60` | `7.87%` |
-| **TOTAL REVENUE** | **Total Projected Revenue (20-Court Network + Memberships)** | Subtotal | `640.00` | `711.00` | `875.33` | `2,693.38` | **`139,359.70`** | `100.00%` |
-| Direct Service Costs | Coach fees (paid per lesson, ~52.17% of Coaching) | Variable (COGS) | `60.00` | `74.15` | `79.08` | `166.99` | `8,803.26` | `6.32%` |
-| Sold Inventory | Food and drink supplies (~40.0% of F&B Revenue) | Variable (COGS) | `30.00` | `37.10` | `37.32` | `76.80` | `4,398.90` | `3.16%` |
-| Payment & Consumables | Payment gateway fees (~1.50% of Rev) & court consumables | Variable (COGS) | `15.00` | `15.56` | `18.38` | `60.71` | `3,052.05` | `2.19%` |
-| Partner Courts & Events (New) | Membership partner courts (@ 200k/hr) & league events | Variable (COGS M5+) | `0.00` | `0.00` | `47.52` | `158.08` | `10,086.37` | `7.24%` |
-| **TOTAL COGS** | **Total Cost of Goods Sold (Direct Variable)** | Subtotal | `105.00` | `126.81` | `182.31` | `462.58` | **`26,340.57`** | `18.90%` |
-| **GROSS PROFIT** | **Gross Profit (5Y Gross Margin = 81.10%)** | Profit Line | `535.00` | `584.19` | `693.02` | `2,230.80` | **`113,019.13`** | `81.10%` |
-| Rent — Venue 1 (6 Courts) | Venue 1 lease (Existing 6-Court Club) | Fixed (OpEx) | `150.00` | `150.00` | `150.00` | `150.00` | `9,000.00` | `6.46%` |
-| Rent — Venue 2 (14 Courts New) | Venue 2 lease (New 14-Court Club, Starts M10 / Oct-27) | Fixed (OpEx M10+) | `0.00` | `0.00` | `0.00` | `330.00` | `16,830.00` | `12.08%` |
-| Utilities (6 -> 20 Courts) | Electricity, lighting and water (Venue 1 + Venue 2 M14+) | Mostly Fixed (OpEx) | `40.00` | `39.24` | `38.29` | `140.83` | `7,277.63` | `5.22%` |
-| Insurance & Upkeep (6 -> 20 Courts) | Maintenance and insurance (Venue 1 + Venue 2 M14+) | Fixed (OpEx) | `20.00` | `20.01` | `19.58` | `73.79` | `3,700.01` | `2.66%` |
-| **SUBTOTAL OpEx** | **Subtotal Facility Operating Expenses (OpEx)** | Subtotal | `210.00` | `209.25` | `207.86` | `694.62` | **`36,807.64`** | `26.41%` |
-| Staff & Payroll (6 -> 20 Courts) | Staff wages (Venue 1 130M + Venue 2 215M from M14) | Fixed (SG&A) | `130.00` | `129.60` | `129.73` | `409.75` | `20,709.27` | `14.86%` |
-| Tech Support & Admin | Booking system and administration (Base) | Fixed (SG&A) | `10.00` | `10.02` | `10.15` | `9.91` | `602.39` | `0.43%` |
-| Marketing & Growth | Marketing (Social & Community) | Variable (SG&A) | `25.00` | `48.82` | `43.97` | `50.74` | `3,215.90` | `2.31%` |
-| Platform Dev Allocation (New) | Platform build & migration allocation (Months 1–6) | Leveled Dev (M1–M6) | `0.00` | `153.99` | `161.17` | `0.00` | `985.86` | `0.71%` |
-| Platform & Community OpEx (New) | Platform cloud, OTP, maintenance & uni ops (Month 5+) | Recurring OpEx (M5+) | `0.00` | `0.00` | `16.70` | `25.74` | `1,461.87` | `1.05%` |
-| External Legal/Noise & U-18 Safety (New) | Ward noise-complaint legal handling & U-18 safety (externals.toml) | External Risk (SG&A) | `0.00` | `11.02` | `9.68` | `10.25` | `763.21` | `0.55%` |
-| **SUBTOTAL SG&A** | **Subtotal Selling, General, Admin, Platform & External Compliance** | Subtotal | `165.00` | `353.46` | `371.40` | `506.40` | **`27,738.50`** | `19.90%` |
-| **OPEX + SG&A** | **Total Operating Expenses (Facility OpEx + SG&A)** | Subtotal | `375.00` | `562.71` | `579.27` | `1,201.03` | **`64,546.15`** | `46.32%` |
-| **TOTAL ALL COSTS** | **Total Monthly Operating Costs (COGS + OpEx + SG&A)** | Subtotal | `480.00` | `689.51` | `761.57` | `1,663.60` | **`90,886.72`** | `65.22%` |
-| **OPERATING PROFIT** | **Net Operating Income (EBITDA) [5Y Margin = 34.78%]** | Operating Profit | `160.00` | `21.49` | `113.76` | `1,029.77` | **`48,472.98`** | `34.78%` |
-| **D&A EXPENSE** | **Depreciation & Amortization (D&A — Circular 45/2013/TT-BTC)** | Non-Cash Expense | `5.33` | `5.33` | `5.33` | `122.00` | **`5,803.33`** | `4.16%` |
-| **TAXABLE INCOME (EBT)** | **Net Income Before Taxes (EBT = EBITDA - D&A)** | Pre-Tax Profit | `154.67` | `16.15` | `108.42` | `907.77` | **`42,669.65`** | `30.62%` |
-| **VIETNAM CIT (20%)** | **Corporate Income Tax Expense (Vietnam Law 67/2025/QH15 @ 20.0%)** | Statutory Tax | `30.93` | `3.23` | `21.68` | `181.55` | **`8,540.52`** | `6.13%` |
-| **NET INCOME** | **Net Income After Tax [5Y Net Margin = 24.49%]** | Bottom-Line Profit | `123.73` | `12.92` | `86.74` | `726.22` | **`34,129.13`** | `24.49%` |
+| Revenue Line 1A (Venue 1) | Court hire: Venue 1 (6 Courts, AdaptivePricing ML) | Revenue (Dynamic) | `435.00` | `457.35` | `473.92` | `454.38` | `26,978.76` | `19.26%` |
+| Revenue Line 1B (Venue 2 New) | Court hire: Venue 2 (14 Courts, Opens M14 / Feb-28) | Revenue (Path A Ramp) | `0.00` | `0.00` | `0.00` | `1,060.23` | `46,181.69` | `32.98%` |
+| Revenue Line 2 (New Path C) | Membership subscriptions (399k/mo) & seasonal tournament fees | Revenue (Recurring M5+) | `0.00` | `0.00` | `140.17` | `644.93` | `36,220.08` | `25.86%` |
+| Revenue Line 3 | Paddle rental and balls (Scales 6 -> 20 Courts) | Revenue (Ancillary) | `15.00` | `18.98` | `17.10` | `44.72` | `2,253.39` | `1.61%` |
+| Revenue Line 4 | Coaching (Scales 6 -> 20 Courts + Coaching Studio) | Revenue (Services) | `115.00` | `140.85` | `147.72` | `325.18` | `17,028.86` | `12.16%` |
+| Revenue Line 5 | Food and drinks (Scales 6 -> 20 Courts + Specialty Cafe) | Revenue (F&B) | `75.00` | `93.83` | `96.44` | `219.58` | `11,381.87` | `8.13%` |
+| **TOTAL REVENUE** | **Total Projected Revenue (20-Court Network + Memberships)** | Subtotal | `640.00` | `711.01` | `875.35` | `2,749.02` | **`140,044.65`** | `100.00%` |
+| Direct Service Costs | Coach fees (paid per lesson, ~52.17% of Coaching) | Variable (COGS) | `60.00` | `74.15` | `79.08` | `172.25` | `8,904.62` | `6.36%` |
+| Sold Inventory | Food and drink supplies (~40.0% of F&B Revenue) | Variable (COGS) | `30.00` | `37.10` | `37.32` | `88.70` | `4,554.86` | `3.25%` |
+| Payment & Consumables | Payment gateway fees (~1.50% of Rev) & court consumables | Variable (COGS) | `15.00` | `15.56` | `18.38` | `61.75` | `3,040.08` | `2.17%` |
+| Partner Courts & Events (New) | Partner courts (@ 200k/hr), member leagues & quarterly tournaments | Variable (COGS M5+) | `0.00` | `0.00` | `47.53` | `263.83` | `11,512.56` | `8.22%` |
+| **TOTAL COGS** | **Total Cost of Goods Sold (Direct Variable)** | Subtotal | `105.00` | `126.81` | `182.31` | `586.53` | **`28,012.12`** | `20.00%` |
+| **GROSS PROFIT** | **Gross Profit (5Y Gross Margin = 80.00%)** | Profit Line | `535.00` | `584.20` | `693.04` | `2,162.50` | **`112,032.54`** | `80.00%` |
+| Rent — Venue 1 (6 Courts) | Venue 1 lease (Existing 6-Court Club) | Fixed (OpEx) | `150.00` | `150.00` | `150.00` | `150.00` | `9,000.00` | `6.43%` |
+| Rent — Venue 2 (14 Courts New) | Venue 2 lease (New 14-Court Club, Starts M10 / Oct-27) | Fixed (OpEx M10+) | `0.00` | `0.00` | `0.00` | `330.00` | `16,830.00` | `12.02%` |
+| Utilities (6 -> 20 Courts) | Electricity, lighting and water (Venue 1 + Venue 2 M14+) | Mostly Fixed (OpEx) | `40.00` | `39.24` | `38.29` | `141.88` | `7,296.38` | `5.21%` |
+| Insurance & Upkeep (6 -> 20 Courts) | Maintenance and insurance (Venue 1 + Venue 2 M14+) | Fixed (OpEx) | `20.00` | `20.01` | `19.58` | `69.65` | `3,697.98` | `2.64%` |
+| **SUBTOTAL OpEx** | **Subtotal Facility Operating Expenses (OpEx)** | Subtotal | `210.00` | `209.25` | `207.86` | `691.54` | **`36,824.36`** | `26.29%` |
+| Staff & Payroll (6 -> 20 Courts) | Staff wages (Venue 1 130M + Venue 2 215M from M14) | Fixed (SG&A) | `130.00` | `129.60` | `129.73` | `404.90` | `20,706.03` | `14.79%` |
+| Tech Support & Admin | Booking system and administration (Base) | Fixed (SG&A) | `10.00` | `10.02` | `10.15` | `10.12` | `598.88` | `0.43%` |
+| Marketing & Growth | Marketing (Social & Community) | Variable (SG&A) | `25.00` | `48.84` | `44.01` | `50.43` | `3,219.84` | `2.30%` |
+| Platform Dev Allocation (New) | Platform build & migration allocation (Months 1–6) | Leveled Dev (M1–M6) | `0.00` | `153.99` | `161.17` | `0.00` | `987.70` | `0.71%` |
+| Platform & Community OpEx (New) | Platform cloud, OTP, maintenance & uni ops (Month 5+) | Recurring OpEx (M5+) | `0.00` | `0.00` | `16.70` | `26.79` | `1,472.41` | `1.05%` |
+| External Legal/Noise & U-18 Safety (New) | Ward noise-complaint legal handling & U-18 safety (externals.toml) | External Risk (SG&A) | `0.00` | `11.02` | `9.68` | `12.12` | `753.87` | `0.54%` |
+| **SUBTOTAL SG&A** | **Subtotal Selling, General, Admin, Platform & External Compliance** | Subtotal | `165.00` | `353.47` | `371.45` | `504.37` | **`27,738.73`** | `19.81%` |
+| **OPEX + SG&A** | **Total Operating Expenses (Facility OpEx + SG&A)** | Subtotal | `375.00` | `562.72` | `579.31` | `1,195.90` | **`64,563.09`** | `46.10%` |
+| **TOTAL ALL COSTS** | **Total Monthly Operating Costs (COGS + OpEx + SG&A)** | Subtotal | `480.00` | `689.54` | `761.62` | `1,782.43` | **`92,575.21`** | `66.10%` |
+| **OPERATING PROFIT** | **Net Operating Income (EBITDA) [5Y Margin = 33.90%]** | Operating Profit | `160.00` | `21.48` | `113.73` | `966.59` | **`47,469.45`** | `33.90%` |
+| **D&A EXPENSE** | **Depreciation & Amortization (D&A — Circular 45/2013/TT-BTC)** | Non-Cash Expense | `5.33` | `5.33` | `5.33` | `122.00` | **`5,803.33`** | `4.14%` |
+| **TAXABLE INCOME (EBT)** | **Net Income Before Taxes (EBT = EBITDA - D&A)** | Pre-Tax Profit | `154.67` | `16.14` | `108.39` | `844.59` | **`41,666.11`** | `29.75%` |
+| **VIETNAM CIT (20%)** | **Corporate Income Tax Expense (Vietnam Law 67/2025/QH15 @ 20.0%)** | Statutory Tax | `30.93` | `3.23` | `21.68` | `168.92` | **`8,339.97`** | `5.96%` |
+| **NET INCOME** | **Net Income After Tax [5Y Net Margin = 23.80%]** | Bottom-Line Profit | `123.73` | `12.91` | `86.71` | `675.68` | **`33,326.14`** | `23.80%` |
 
 ---
 
@@ -102,24 +105,24 @@ Instead of sampling monthly subscriber counts independently, each Monte Carlo tr
 
 - **Investor Minh Tran's Year 3 Target (`Case Page 4`)**: Requires **at least VND 3,500.0M (`3.5 billion VND`) in annual operating profit by Year 3 (`FY 2029`)**.
 - **Our Integrated Path C Result in Year 3 (`FY 2029`)**:
-  - **Base Plan Expected Year 3 Operating Profit (EBITDA)**: **`12,553.13M VND/yr`** (`90% CI: [11,843.45M, 13,451.89M]`), exceeding Minh Tran's `3,500M` hurdle in **`100.0%`** of Monte Carlo trajectories!
-  - **`-30%` Lower Demand Stress Test Year 3 Operating Profit**: **`6,156.59M VND/yr`** — even if overall club demand and subscriber conversion sit `30%` below plan, PICK! still clears the `3,500M VND` Year 3 operating profit requirement!
+  - **Base Plan Expected Year 3 Operating Profit (EBITDA)**: **`12,420.45M VND/yr`** (`90% CI: [11,846.38M, 13,017.12M]`), exceeding Minh Tran's `3,500M` hurdle in **`100.0%`** of Monte Carlo trajectories!
+  - **`-30%` Lower Demand Stress Test Year 3 Operating Profit**: **`6,008.76M VND/yr`** — even if overall club demand and subscriber conversion sit `30%` below plan, PICK! still clears the `3,500M VND` Year 3 operating profit requirement!
 
 | Financial Statements Annual Metric (`M VND`) | Start (`t=0`) | FY 2027 (Y1) | FY 2028 (Y2) | FY 2029 (Y3) | FY 2030 (Y4) | FY 2031 (Y5) | 5Y Total / End |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| **End-of-Year Paying Members (Subscribers)** | `0` | `829` | **`1,483`** | `1,851` | `2,047` | `2,208` | `2,208` |
-| **Total Annual Revenue (`M VND`, Model)** | — | `10,493.88` | `26,470.16` | **`33,030.88`** | `34,297.11` | `35,067.67` | **`139,359.70`** |
-| **Total Annual Revenue (`M VND`, Stochastic Baseline)** | — | `7,637.08` | `7,571.21` | `7,517.94` | `7,550.61` | `7,457.62` | `37,734.46` |
-| **Total Annual Operating Costs (`COGS + OpEx + SG&A`, Model)** | — | `9,284.41` | `18,883.46` | **`20,477.75`** | `20,869.23` | `21,371.87` | **`90,886.72`** |
-| **Annual Operating Profit (`EBITDA`, Model Base Plan)** | — | `1,209.46` | `7,586.70` | **`12,553.13`** | `13,427.88` | `13,695.80` | **`48,472.98`** |
+| **End-of-Year Paying Members (Subscribers)** | `0` | `807` | **`1,489`** | `1,827` | `2,088` | `2,218` | `2,218` |
+| **Total Annual Revenue (`M VND`, Model)** | — | `10,612.43` | `26,551.92` | **`33,231.02`** | `34,429.56` | `35,219.73` | **`140,044.65`** |
+| **Total Annual Revenue (`M VND`, Stochastic Baseline)** | — | `7,639.92` | `7,551.95` | `7,486.45` | `7,401.84` | `7,282.10` | `37,362.27` |
+| **Total Annual Operating Costs (`COGS + OpEx + SG&A`, Model)** | — | `9,429.37` | `19,211.55` | **`20,810.57`** | `21,359.55` | `21,764.18` | **`92,575.21`** |
+| **Annual Operating Profit (`EBITDA`, Model Base Plan)** | — | `1,183.06` | `7,340.37` | **`12,420.45`** | `13,070.01` | `13,455.56` | **`47,469.45`** |
 | **Annual Depreciation & Amortization (`D&A`)** | — | `64.00` | `1,347.33` | `1,464.00` | `1,464.00` | `1,464.00` | `5,803.33` |
-| **Annual Corporate Income Tax (`20.0%` Vietnam CIT)** | — | `235.68` | `1,247.87` | `2,217.83` | `2,392.78` | `2,446.36` | `8,540.52` |
-| **Annual Net Income After Tax (`Model Base Plan`)** | — | `909.78` | `4,991.49` | **`8,871.31`** | `9,571.11` | `9,785.44` | **`34,129.13`** |
-| **Annual Operating Profit (`EBITDA`, Stochastic Baseline)** | — | `1,855.70` | `1,826.10` | `1,753.21` | `1,793.95` | `1,665.25` | `8,894.21` |
-| **Annual Operating Profit (`-30%` Demand Stress)** | — | `-622.65` | `2,755.86` | **`6,156.59`** | `6,755.22` | `6,926.58` | **`21,971.61`** |
-| **Cash Reserves (`Ending Cash`, Model Base Plan)** | `500.00` | `4,459.46` | `10,060.48` | `21,365.74` | `32,575.80` | **`43,878.83`** | **`43,878.83`** |
-| **Cash Reserves (`-30%` Demand Stress)** | `500.00` | `2,627.35` | `3,551.60` | `9,294.93` | `15,111.63` | **`20,979.97`** | **`20,979.97`** |
-| **Cash Reserves (Stochastic Case Baseline)** | `500.00` | `2,355.70` | `3,823.46` | `5,224.25` | `6,680.36` | `7,999.62` | `7,999.62` |
+| **Annual Corporate Income Tax (`20.0%` Vietnam CIT)** | — | `230.56` | `1,198.61` | `2,191.29` | `2,321.20` | `2,398.31` | `8,339.97` |
+| **Annual Net Income After Tax (`Model Base Plan`)** | — | `888.50` | `4,794.43` | **`8,765.16`** | `9,284.81` | `9,593.24` | **`33,326.14`** |
+| **Annual Operating Profit (`EBITDA`, Stochastic Baseline)** | — | `1,879.65` | `1,794.64` | `1,735.78` | `1,654.10` | `1,548.63` | `8,612.80` |
+| **Annual Operating Profit (`-30%` Demand Stress)** | — | `-662.33` | `2,533.00` | **`6,008.76`** | `6,449.45` | `6,698.46` | **`21,027.34`** |
+| **Cash Reserves (`Ending Cash`, Model Base Plan)** | `500.00` | `4,433.06` | `9,792.87` | `21,014.71` | `31,893.43` | **`43,027.79`** | **`43,027.79`** |
+| **Cash Reserves (`-30%` Demand Stress)** | `500.00` | `2,587.67` | `3,290.35` | `8,926.73` | `14,467.23` | **`20,168.60`** | **`20,168.60`** |
+| **Cash Reserves (Stochastic Case Baseline)** | `500.00` | `2,379.65` | `3,811.16` | `5,200.82` | `6,520.56` | `7,751.17` | `7,751.17` |
 | **Balance Sheet Check (`Assets - L&E`)** | **`0.00`** | **`0.00`** | **`0.00`** | **`0.00`** | **`0.00`** | **`0.00`** | **`0.00`** |
 
 ---

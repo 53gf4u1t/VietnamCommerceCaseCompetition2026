@@ -134,6 +134,25 @@ class MembershipProgramConfig:
 
 
 @dataclass(frozen=True)
+class QuarterlyTournamentConfig:
+    enabled: bool
+    start_month_index: int
+    quarter_end_calendar_months: tuple[int, ...]
+    member_entry_fee_kvnd: float
+    tournament_month_churn_multiplier: float
+    tournament_month_follower_boost_mult: float
+    participants_6_courts_dist: DistParam
+    participants_20_courts_dist: DistParam
+    non_member_share_6_courts_dist: DistParam
+    non_member_share_20_courts_dist: DistParam
+    non_member_entry_fee_kvnd_dist: DistParam
+    non_member_to_member_conversion_rate_dist: DistParam
+    fnb_spend_per_participant_kvnd_dist: DistParam
+    paddle_balls_spend_per_participant_kvnd_dist: DistParam
+    coaching_clinic_spend_per_participant_kvnd_dist: DistParam
+
+
+@dataclass(frozen=True)
 class CustomersConfig:
     unique_customers_dist: DistParam
     registered_accounts_dist: DistParam
@@ -142,6 +161,7 @@ class CustomersConfig:
     social_media: SocialMediaConfig
     survey_exhibit3: SurveyExhibit3Config
     membership: MembershipProgramConfig
+    quarterly_tournaments: QuarterlyTournamentConfig
 
     @property
     def unique_customers_per_month(self) -> int:
@@ -179,6 +199,8 @@ class COGSConfig:
     baseline_payment_and_consumables_dist: DistParam
     partner_court_hourly_rate_kvnd_dist: DistParam
     membership_event_partner_court_per_member_kvnd_dist: DistParam
+    quarterly_tournament_cost_6_courts_dist: DistParam
+    quarterly_tournament_cost_20_courts_dist: DistParam
 
     @property
     def coach_fees_mvnd(self) -> float:
@@ -498,6 +520,25 @@ def load_config(config_path: Path | None = None) -> FinancialModelConfig:
         addressable_member_ceiling_dist=_parse_dist(mp_raw["addressable_member_ceiling"]),
     )
 
+    qt_raw = cust_raw["quarterly_tournaments"]
+    quarterly_tournaments = QuarterlyTournamentConfig(
+        enabled=bool(qt_raw["enabled"]),
+        start_month_index=int(qt_raw["start_month_index"]),
+        quarter_end_calendar_months=tuple(int(x) for x in qt_raw["quarter_end_calendar_months"]),
+        member_entry_fee_kvnd=float(qt_raw["member_entry_fee_kvnd"]),
+        tournament_month_churn_multiplier=float(qt_raw["tournament_month_churn_multiplier"]),
+        tournament_month_follower_boost_mult=float(qt_raw["tournament_month_follower_boost_mult"]),
+        participants_6_courts_dist=_parse_dist(qt_raw["participants_6_courts"]),
+        participants_20_courts_dist=_parse_dist(qt_raw["participants_20_courts"]),
+        non_member_share_6_courts_dist=_parse_dist(qt_raw["non_member_share_6_courts"]),
+        non_member_share_20_courts_dist=_parse_dist(qt_raw["non_member_share_20_courts"]),
+        non_member_entry_fee_kvnd_dist=_parse_dist(qt_raw["non_member_entry_fee_kvnd"]),
+        non_member_to_member_conversion_rate_dist=_parse_dist(qt_raw["non_member_to_member_conversion_rate"]),
+        fnb_spend_per_participant_kvnd_dist=_parse_dist(qt_raw["ancillary_fnb_per_participant_kvnd"]),
+        paddle_balls_spend_per_participant_kvnd_dist=_parse_dist(qt_raw["ancillary_paddle_balls_per_participant_kvnd"]),
+        coaching_clinic_spend_per_participant_kvnd_dist=_parse_dist(qt_raw["ancillary_coaching_clinic_per_participant_kvnd"]),
+    )
+
     cust = CustomersConfig(
         unique_customers_dist=_parse_dist(cust_raw["unique_customers_monthly"]),
         registered_accounts_dist=_parse_dist(cust_raw["registered_accounts_initial"]),
@@ -506,6 +547,7 @@ def load_config(config_path: Path | None = None) -> FinancialModelConfig:
         social_media=social_media,
         survey_exhibit3=survey_ex3,
         membership=membership,
+        quarterly_tournaments=quarterly_tournaments,
     )
 
     rev = RevenueConfig(**pricing_raw["baseline_revenue_lines"])
@@ -521,6 +563,12 @@ def load_config(config_path: Path | None = None) -> FinancialModelConfig:
         partner_court_hourly_rate_kvnd_dist=_parse_dist(cogs_raw["partner_court_hourly_rate_kvnd"]),
         membership_event_partner_court_per_member_kvnd_dist=_parse_dist(
             cogs_raw["membership_event_and_partner_court_cogs_per_member_kvnd"]
+        ),
+        quarterly_tournament_cost_6_courts_dist=_parse_dist(
+            cogs_raw["quarterly_tournament_organization_cost_6_courts_mvnd"]
+        ),
+        quarterly_tournament_cost_20_courts_dist=_parse_dist(
+            cogs_raw["quarterly_tournament_organization_cost_20_courts_mvnd"]
         ),
     )
 

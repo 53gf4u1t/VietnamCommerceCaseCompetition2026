@@ -434,16 +434,34 @@ def run_marketing_simulation(cfg: MarketingAppConfig) -> MarketingSimulationResu
 
         # Social followers grow with total marketing spend relative to 25M baseline, and
         # active unique customers equal Followers * Conversion Rate (~8.57% distribution)
+        cal_m = (t % 12) + 1
+        is_tourney_m = cfg.tournament_enabled and (m_num >= cfg.tournament_start_month_index) and (cal_m in cfg.tournament_calendar_months)
+        fol_boost = cfg.tournament_follower_boost_mult if is_tourney_m else 1.0
+
         mkt_total_ratio = np.sum(oracle_mkt_budgets_seg[:, t, :], axis=1) / 25.0
         oracle_followers[:, t] = prev_oracle_followers * (
             1.0
             - unfollow_rates[:, t]
-            + new_follow_rates[:, t] * np.power(np.maximum(mkt_total_ratio, 0.5), 0.55) * sampled_trend_index[:, t]
+            + new_follow_rates[:, t] * fol_boost * np.power(np.maximum(mkt_total_ratio, 0.5), 0.55) * sampled_trend_index[:, t]
         )
         # Align segment customer count with our explicit assumption: Customers = Followers * ConvRate (~8.57%)
         funnel_total_customers = oracle_followers[:, t] * sampled_conv_rate[:, t]
         seg_cust_shares = o_cust / np.maximum(np.sum(o_cust, axis=1, keepdims=True), 1.0)
         o_cust_aligned = funnel_total_customers[:, None] * seg_cust_shares
+
+        if is_tourney_m:
+            # Tournament-weekend incremental ancillary spend across all participants (members + non-members)
+            t_players = (
+                cfg.tournament_participants_6_courts_dist.sample(rng, size=N)
+                if m_num < cfg.venue2_open_month_index
+                else cfg.tournament_participants_20_courts_dist.sample(rng, size=N) * (1.0 - 0.35 * sampled_venue2_fill_headroom[:, t])
+            )
+            t_seg_weights = np.array([0.45, 0.35, 0.12, 0.08], dtype=float)[None, :]
+            t_players_seg = t_players[:, None] * t_seg_weights
+            o_vis = o_vis + t_players_seg
+            o_pad = o_pad + (t_players_seg * cfg.tournament_paddle_per_participant_kvnd_dist.sample(rng, size=(N, 1))) / 1000.0
+            o_coach = o_coach + (t_players_seg * cfg.tournament_coaching_per_participant_kvnd_dist.sample(rng, size=(N, 1))) / 1000.0
+            o_fnb = o_fnb + (t_players_seg * cfg.tournament_fnb_per_participant_kvnd_dist.sample(rng, size=(N, 1))) / 1000.0
 
         oracle_visits_seg[:, t, :] = o_vis
         oracle_customers_seg[:, t, :] = o_cust_aligned

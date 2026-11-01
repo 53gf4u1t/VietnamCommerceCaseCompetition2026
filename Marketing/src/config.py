@@ -103,6 +103,17 @@ class MarketingAppConfig:
     membership_new_sub_dist: DistParam
     membership_ceiling_dist: DistParam
 
+    # Quarterly Seasonal Tournament parameters
+    tournament_enabled: bool
+    tournament_start_month_index: int
+    tournament_calendar_months: tuple[int, ...]
+    tournament_follower_boost_mult: float
+    tournament_participants_6_courts_dist: DistParam
+    tournament_participants_20_courts_dist: DistParam
+    tournament_fnb_per_participant_kvnd_dist: DistParam
+    tournament_paddle_per_participant_kvnd_dist: DistParam
+    tournament_coaching_per_participant_kvnd_dist: DistParam
+
 
 def load_marketing_config(config_path: str | Path) -> MarketingAppConfig:
     """Load central TOML configurations for the Marketing Funnel & Segment ML Optimizer."""
@@ -160,6 +171,7 @@ def load_marketing_config(config_path: str | Path) -> MarketingAppConfig:
     comp_raw = pricing_raw["company"]
     vs_raw = capex_raw["venue_scaling"]
     mem_raw = cust_raw["membership_program"]
+    qt_raw = cust_raw["quarterly_tournaments"]
     pt_raw = ext_raw["pickleball_trend"]
 
     return MarketingAppConfig(
@@ -187,4 +199,13 @@ def load_marketing_config(config_path: str | Path) -> MarketingAppConfig:
         membership_churn_dist=_parse_dist(mem_raw["monthly_churn_rate"]),
         membership_new_sub_dist=_parse_dist(mem_raw["monthly_new_subscriber_rate"]),
         membership_ceiling_dist=_parse_dist(mem_raw["addressable_member_ceiling"]),
+        tournament_enabled=bool(qt_raw["enabled"]),
+        tournament_start_month_index=int(qt_raw["start_month_index"]),
+        tournament_calendar_months=tuple(int(x) for x in qt_raw["quarter_end_calendar_months"]),
+        tournament_follower_boost_mult=float(qt_raw["tournament_month_follower_boost_mult"]),
+        tournament_participants_6_courts_dist=_parse_dist(qt_raw["participants_6_courts"]),
+        tournament_participants_20_courts_dist=_parse_dist(qt_raw["participants_20_courts"]),
+        tournament_fnb_per_participant_kvnd_dist=_parse_dist(qt_raw["ancillary_fnb_per_participant_kvnd"]),
+        tournament_paddle_per_participant_kvnd_dist=_parse_dist(qt_raw["ancillary_paddle_balls_per_participant_kvnd"]),
+        tournament_coaching_per_participant_kvnd_dist=_parse_dist(qt_raw["ancillary_coaching_clinic_per_participant_kvnd"]),
     )

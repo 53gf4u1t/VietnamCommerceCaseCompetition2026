@@ -215,11 +215,16 @@ def train_and_evaluate_marketing_ml(
             pay_fee_pct=sim.sampled_pay_fee_pct[:, t],
         )
 
+        cal_m = (t % 12) + 1
+        is_tourney_m = cfg.tournament_enabled and (m_num >= cfg.tournament_start_month_index) and (cal_m in cfg.tournament_calendar_months)
+        fol_boost = cfg.tournament_follower_boost_mult if is_tourney_m else 1.0
+
         mkt_total_ratio = np.sum(ml_mkt_budgets_seg[:, t, :], axis=1) / 25.0
         ml_followers[:, t] = prev_ml_followers * (
             1.0
             - unfollow_rates[:, t]
             + new_follow_rates[:, t]
+            * fol_boost
             * np.power(np.maximum(mkt_total_ratio, 0.5), 0.55)
             * sim.sampled_trend_index[:, t]
         )
@@ -227,6 +232,19 @@ def train_and_evaluate_marketing_ml(
         funnel_total_customers = ml_followers[:, t] * sim.sampled_conv_rate[:, t]
         seg_cust_shares = m_cust / np.maximum(np.sum(m_cust, axis=1, keepdims=True), 1.0)
         m_cust_aligned = funnel_total_customers[:, None] * seg_cust_shares
+
+        if is_tourney_m:
+            t_players = (
+                cfg.tournament_participants_6_courts_dist.sample(rng, size=N)
+                if m_num < cfg.venue2_open_month_index
+                else cfg.tournament_participants_20_courts_dist.sample(rng, size=N) * (1.0 - 0.35 * sim.sampled_venue2_fill_headroom[:, t])
+            )
+            t_seg_weights = np.array([0.45, 0.35, 0.12, 0.08], dtype=float)[None, :]
+            t_players_seg = t_players[:, None] * t_seg_weights
+            m_vis = m_vis + t_players_seg
+            m_pad = m_pad + (t_players_seg * cfg.tournament_paddle_per_participant_kvnd_dist.sample(rng, size=(N, 1))) / 1000.0
+            m_coach = m_coach + (t_players_seg * cfg.tournament_coaching_per_participant_kvnd_dist.sample(rng, size=(N, 1))) / 1000.0
+            m_fnb = m_fnb + (t_players_seg * cfg.tournament_fnb_per_participant_kvnd_dist.sample(rng, size=(N, 1))) / 1000.0
 
         ml_visits_seg[:, t, :] = m_vis
         ml_customers_seg[:, t, :] = m_cust_aligned

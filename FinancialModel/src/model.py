@@ -735,6 +735,7 @@ def _run_monte_carlo_financial_simulations(
 
     cust_cfg = cfg.customers
     mp_cfg = cust_cfg.membership
+    qt_cfg = cust_cfg.quarterly_tournaments
     sv_cfg = cust_cfg.survey_exhibit3
     sm_cfg = cust_cfg.social_media
     cogs_cfg = cfg.cogs
@@ -899,8 +900,58 @@ def _run_monte_carlo_financial_simulations(
         followers_mat[:, m] = marketing.followers_ml_60m[m] * fol_noise
 
         # 4. Smooth Month-to-Month Subscriber State Evolution (Starts at Launch Month 5: May-27)
+        #    & Quarterly Seasonal Tournaments (Spring [Mar], Summer [Jun], Fall [Sep], Winter [Dec] from Month 6: Jun-27)
         # Dynamic addressable member ceiling expands as Venue 2 (14 courts) opens and fills up
         dynamic_ceiling_t = base_ceiling_draws * network_scale_t * effective_demand_trend
+
+        m_num = m + 1
+        cal_m_num = (m % 12) + 1
+        is_tourney_m = (
+            qt_cfg.enabled
+            and (m_num >= qt_cfg.start_month_index)
+            and (cal_m_num in qt_cfg.quarter_end_calendar_months)
+        )
+        if is_tourney_m:
+            if m < v2_open_idx:
+                t_players = (
+                    _sample_month_conditioned(qt_cfg.participants_6_courts_dist, rng, n_sims, shared_weight=0.62)
+                    * weather_mult
+                )
+                t_non_mem_share = _sample_month_conditioned(
+                    qt_cfg.non_member_share_6_courts_dist, rng, n_sims, shared_weight=0.62
+                )
+                tourney_org_cost = (
+                    _sample_month_conditioned(cogs_cfg.quarterly_tournament_cost_6_courts_dist, rng, n_sims, shared_weight=0.62)
+                    * curr_cost_inflation_idx
+                )
+            else:
+                t_players = (
+                    _sample_month_conditioned(qt_cfg.participants_20_courts_dist, rng, n_sims, shared_weight=0.62)
+                    * (0.65 + 0.35 * f_v2)
+                    * weather_mult
+                )
+                t_non_mem_share = _sample_month_conditioned(
+                    qt_cfg.non_member_share_20_courts_dist, rng, n_sims, shared_weight=0.62
+                )
+                tourney_org_cost = (
+                    _sample_month_conditioned(cogs_cfg.quarterly_tournament_cost_20_courts_dist, rng, n_sims, shared_weight=0.62)
+                    * (0.65 + 0.35 * f_v2)
+                    * curr_cost_inflation_idx
+                )
+            t_non_members = t_players * t_non_mem_share
+            t_entry_fee_kvnd = _sample_month_conditioned(
+                qt_cfg.non_member_entry_fee_kvnd_dist, rng, n_sims, shared_weight=0.62
+            )
+            # Active PICK! Social members enter seasonal tournaments for FREE (0 VND); non-members pay entry fee
+            tourney_entry_rev = (t_non_members * t_entry_fee_kvnd) / 1000.0
+            t_conv_r = _sample_month_conditioned(
+                qt_cfg.non_member_to_member_conversion_rate_dist, rng, n_sims, shared_weight=0.62
+            )
+            tourney_converted_subs = t_non_members * t_conv_r
+        else:
+            tourney_entry_rev = np.zeros(n_sims, dtype=float)
+            tourney_converted_subs = np.zeros(n_sims, dtype=float)
+            tourney_org_cost = np.zeros(n_sims, dtype=float)
 
         if m < launch_m_idx:
             subs_mat[:, m] = 0.0
@@ -921,6 +972,8 @@ def _run_monte_carlo_financial_simulations(
                 * _sample_month_conditioned(rand_cfg.subscriber_churn_shock_dist, rng, n_sims, shared_weight=0.58)
             )
             churn_r = np.clip(churn_r, mp_cfg.monthly_churn_rate_dist.min, mp_cfg.monthly_churn_rate_dist.max)
+            if is_tourney_m:
+                churn_r = churn_r * qt_cfg.tournament_month_churn_multiplier
 
             new_sub_r = (
                 _sample_month_conditioned(mp_cfg.monthly_new_subscriber_rate_dist, rng, n_sims, shared_weight=0.58)
@@ -931,7 +984,7 @@ def _run_monte_carlo_financial_simulations(
             churned = prev_s * churn_r
             non_sub_pool = np.maximum(0.0, u_t - prev_s)
             headroom = np.clip(1.0 - (prev_s / dynamic_ceiling_t), 0.0, 1.0)
-            acquired = non_sub_pool * new_sub_r * headroom
+            acquired = (non_sub_pool * new_sub_r + tourney_converted_subs) * headroom
 
             curr_s = np.clip(prev_s - churned + acquired, 0.0, dynamic_ceiling_t)
             subs_mat[:, m] = curr_s
@@ -945,7 +998,7 @@ def _run_monte_carlo_financial_simulations(
             stress_churned = prev_stress_s * churn_r
             stress_pool = np.maximum(0.0, stress_u_t - prev_stress_s)
             stress_headroom = np.clip(1.0 - (prev_stress_s / stress_ceiling), 0.0, 1.0)
-            stress_acq = stress_pool * new_sub_r * stress_headroom
+            stress_acq = (stress_pool * new_sub_r + tourney_converted_subs * stress_mult) * stress_headroom
             stress_subs_mat[:, m] = np.clip(prev_stress_s - stress_churned + stress_acq, 0.0, stress_ceiling)
 
         # 5. Sample Monthly Revenue Lines (M VND) — Using OUR Model for 6 -> 20 Courts + External Multipliers
@@ -959,7 +1012,8 @@ def _run_monte_carlo_financial_simulations(
         v2_court_r = (court_hire_base_mvnd * cap_ratio_new) * f_v2 * macro_shock * ext_court_mult
         court_r = v1_court_r + v2_court_r
 
-        mem_r = subs_mat[:, m] * mp_cfg.monthly_fee_mvnd
+        # Membership subscriptions (399k/mo, free tournament entry for members) + Non-Member Seasonal Tournament Entry Fees
+        mem_r = subs_mat[:, m] * mp_cfg.monthly_fee_mvnd + tourney_entry_rev
 
         # Ancillary revenues (Paddle/Balls, Coaching, Food & Drinks) driven by the 12 Segment-by-Ancillary
         # Spending Distributions in `Marketing/outputs/segment_ancillary_revenue_60m.csv`
@@ -1013,7 +1067,8 @@ def _run_monte_carlo_financial_simulations(
         # Once Venue 2 (14 courts) opens in Month 14, PICK! hosts more member leagues on its own 20 courts
         # rather than renting external partner courts @ 200k/hr, reducing external partner-court COGS per member by 18%
         own_venue_event_efficiency = 1.0 - 0.18 * f_v2
-        c_mem_event = subs_mat[:, m] * (per_mem_event_kvnd / 1000.0) * own_venue_event_efficiency
+        # Includes monthly member league fulfillment + Quarterly Seasonal Tournament organization cost (45M in 6-ct / 85M in 20-ct)
+        c_mem_event = subs_mat[:, m] * (per_mem_event_kvnd / 1000.0) * own_venue_event_efficiency + tourney_org_cost
 
         c_tot_cogs = c_coach + c_fnb + c_pay_cons + c_mem_event
 
@@ -1153,7 +1208,7 @@ def _run_monte_carlo_financial_simulations(
 
         # 9. Stress Test (-30% Demand) Revenue, COGS & Profit Calculation
         st_court_r = court_r * stress_mult
-        st_mem_r = stress_subs_mat[:, m] * mp_cfg.monthly_fee_mvnd
+        st_mem_r = stress_subs_mat[:, m] * mp_cfg.monthly_fee_mvnd + tourney_entry_rev * stress_mult
         st_pad_r = pad_r * stress_mult
         st_coach_r = coach_r * stress_mult
         st_fnb_r = fnb_r * stress_mult
@@ -1162,7 +1217,7 @@ def _run_monte_carlo_financial_simulations(
         st_c_coach = st_coach_r * coach_share
         st_c_fnb = st_fnb_r * fnb_share
         st_c_pay_cons = st_tot_r * pay_pct + consumables_c * 0.85
-        st_c_mem_event = stress_subs_mat[:, m] * (per_mem_event_kvnd / 1000.0) * own_venue_event_efficiency
+        st_c_mem_event = stress_subs_mat[:, m] * (per_mem_event_kvnd / 1000.0) * own_venue_event_efficiency + tourney_org_cost * 0.85
         st_tot_cogs = st_c_coach + st_c_fnb + st_c_pay_cons + st_c_mem_event
         # Under permanent -30% lower demand, fixed leases (o_lease) and platform build (s_plat_dev) remain 100%,
         # while shift-based staffing, variable court lighting/utilities, and discretionary marketing flex down by 20%
@@ -1615,9 +1670,9 @@ def build_financial_model(
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 2 (New Path C)",
-            "Membership subscriptions (PICK! Social @ 399k/mo)", "Revenue (Recurring M5+)",
+            "Membership subscriptions (399k/mo) & seasonal tournament fees", "Revenue (Recurring M5+)",
             0.0, m_mem_rev,
-            f"Starts M5 (May-27); expands across 20-court network to {mc.m24_end_y2_subscribers:,.0f} members by End Y2",
+            f"Starts M5 (May-27); free member tournament entry + 350k non-member quarterly tournament fees; reaches {mc.m24_end_y2_subscribers:,.0f} members by End Y2",
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 3",
@@ -1664,9 +1719,9 @@ def build_financial_model(
         ),
         _rec(
             "COGS", "COGS", "Partner Courts & Events (New)",
-            "Membership partner courts (@ 200k/hr) & league events", "Variable (COGS M5+)",
+            "Partner courts (@ 200k/hr), member leagues & quarterly tournaments", "Variable (COGS M5+)",
             0.0, m_mem_event,
-            "Partner-court hire & league events (45% internalized once Venue 2's 14 courts open in M14)",
+            "Monthly member leagues/partner courts + quarterly seasonal tournament organization (45M in 6-ct / 85M in 20-ct)",
         ),
         _rec(
             "SUMMARY", "COGS", "TOTAL COGS",
@@ -2053,7 +2108,7 @@ def build_financial_model(
         ("IS_HDR", "INCOME STATEMENT", "INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
         ("REV_1A", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 1 (6 Courts, AdaptivePricing)", "input_linked", "flow", case_court_hire, m_v1_court),
         ("REV_1B", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 2 (14 Courts, Opens M14 / Feb-28)", "input_linked", "flow", 0.0, m_v2_court),
-        ("REV_2", "INCOME STATEMENT", "  Revenue: Membership Subscriptions (Month 5+)", "input_linked", "flow", 0.0, m_mem_rev),
+        ("REV_2", "INCOME STATEMENT", "  Revenue: Membership Subscriptions & Seasonal Tournaments (M5+)", "input_linked", "flow", 0.0, m_mem_rev),
         ("REV_3", "INCOME STATEMENT", "  Revenue: Paddle Rental and Balls (Scales to 20 Courts)", "input", "flow", paddle_balls, m_paddle),
         ("REV_4", "INCOME STATEMENT", "  Revenue: Coaching Services (Scales to 20 Courts + Studio)", "input", "flow", coaching, m_coach_rev),
         ("REV_5", "INCOME STATEMENT", "  Revenue: Food and Drinks (Scales to 20 Courts + Cafe)", "input", "flow", food_drinks, m_fnb_rev),
@@ -2062,7 +2117,7 @@ def build_financial_model(
         ("COGS_1", "INCOME STATEMENT", "  Costs (COGS): Coach Fees (Paid per Lesson)", "input", "flow", case_coach_fees, m_coach_cogs),
         ("COGS_2", "INCOME STATEMENT", "  Costs (COGS): Food and Drink Supplies", "input", "flow", case_fb_supplies, m_fnb_cogs),
         ("COGS_3", "INCOME STATEMENT", "  Costs (COGS): Payment Processing (~1.50% Rev) & Consumables", "input_linked", "flow", case_pay_consumables, m_pay_cons),
-        ("COGS_4", "INCOME STATEMENT", "  Costs (COGS): Membership Partner Courts (@ 200k/hr) & Events", "input_linked", "flow", 0.0, m_mem_event),
+        ("COGS_4", "INCOME STATEMENT", "  Costs (COGS): Partner Courts, Member Leagues & Seasonal Tournaments", "input_linked", "flow", 0.0, m_mem_event),
         ("COGS_TOT", "INCOME STATEMENT", "Total Costs (COGS)", "subtotal", "flow", case_total_cogs, m_tot_cogs),
 
         ("GP_TOT", "INCOME STATEMENT", "Gross Profit", "total", "flow", case_gross_profit, m_gp),

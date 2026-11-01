@@ -159,3 +159,25 @@ min = 110.00
 max = 160.00
 unit = "k VND/paying member/month"
 source = "Case Page 3 ('before partner-court, event and service costs' @ 200k VND/partner court hr + league/event delivery)"
+
+[quarterly_tournament_organization_cost_6_courts_mvnd]
+# Direct quarterly tournament organization cost in 6-court phase (Months 6, 9, 12: certified referees,
+# trophies/medals & prize pool, Franklin X-40 tournament balls, medical tent, livestream media & overflow partner courts)
+dist = "truncated_normal"
+mean = 45.00
+std = 4.00
+min = 36.00
+max = 55.00
+unit = "M VND/quarterly tournament (6-court phase)"
+source = "HCMC amateur pickleball tournament staging benchmark (~192 players across 3 divisions)"
+
+[quarterly_tournament_organization_cost_20_courts_mvnd]
+# Direct quarterly tournament organization cost in 20-court phase (Month 15+ in Mar/Jun/Sep/Dec:
+# referees across 20 courts, larger seasonal prize pool, tournament balls, medical/security & media production)
+dist = "truncated_normal"
+mean = 85.00
+std = 6.50
+min = 70.00
+max = 100.00
+unit = "M VND/quarterly tournament (20-court phase)"
+source = "HCMC flagship 20-court seasonal pickleball tournament staging benchmark (~420 players across 3 divisions)"

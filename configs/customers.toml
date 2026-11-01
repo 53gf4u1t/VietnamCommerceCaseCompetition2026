@@ -750,15 +750,16 @@ unit = "fraction/month"
 source = "Case Exhibit 3 social-game loyalty clue & consumer subscription SaaS benchmarks"
 
 [membership_program.monthly_new_subscriber_rate]
-# Monthly gross new subscription rate as a fraction of non-subscribed unique monthly customers
-# Calibrated so S_t smoothly reaches ~1,500 paying members (~598.5M VND/mo) at Month 24 (Dec-28, End of Year 2)
+# Monthly base organic new subscription rate as a fraction of non-subscribed unique monthly customers
+# Combined with Quarterly Seasonal Tournament non-member conversions (22% of non-member entrants in Mar/Jun/Sep/Dec)
+# and tournament-month retention (-20% churn), S_t smoothly reaches ~1,500 paying members at Month 24 (Dec-28, End of Year 2)
 dist = "truncated_normal"
-mean = 0.0485
-std = 0.0050
-min = 0.0350
-max = 0.0620
+mean = 0.0420
+std = 0.0045
+min = 0.0300
+max = 0.0550
 unit = "fraction of non-subscribed unique customers/month"
-source = "Calibrated to Case Page 3 (1,500 paying members by End of Year 2) & Exhibit 3"
+source = "Calibrated with quarterly tournament conversions to Case Page 3 (1,500 paying members by End of Year 2) & Exhibit 3"
 
 [membership_program.addressable_member_ceiling]
 # Base 6-court + partner-court addressable saturation ceiling (scales by network_scale_t ~1.85x to ~2,490 across 20 courts)
@@ -769,3 +770,109 @@ min = 1150.0
 max = 1550.0
 unit = "paying members"
 source = "Derived from 3,600 unique customers * (38% sure + 42% unsure follow-through) regular player pool"
+
+# ------------------------------------------------------------------------------
+# 6. QUARTERLY SEASONAL TOURNAMENTS (Spring [Mar], Summer [Jun], Fall [Sep], Winter [Dec])
+# Derivation:
+#   - Hosted once per quarter starting Month 6 (Jun-27, Summer Tournament) after
+#     PICK! Social launches in Month 5 (May-27).
+#   - Pricing & Perks Structure:
+#     * Active PICK! Social Members: 0 VND entry fee (included in 399k VND/mo membership).
+#     * Non-Members: 350,000 VND / player entry fee (just below the 399k/mo membership fee,
+#       creating a high-converting upsell into PICK! Social membership).
+#   - Acquisition, Retention & Ancillary Spend Effects:
+#     * 22.0% mean conversion of non-member tournament entrants into paying PICK! Social members.
+#     * 20.0% relative reduction in monthly subscriber churn during tournament months (0.80x multiplier).
+#     * +15.0% boost to monthly social follower acquisition in tournament months from highlight reels.
+#     * Incremental weekend tournament ancillary spend across all participants (members + non-members):
+#       ~85.0k VND/participant (55.0k F&B + 10.0k Paddle/Balls + 20.0k Pre-Tournament Coaching Clinics).
+# ------------------------------------------------------------------------------
+
+[quarterly_tournaments]
+enabled = true
+start_month_index = 6                   # First tournament in Month 6 (Jun-27: Summer Tournament, after M5 launch)
+quarter_end_calendar_months = [3, 6, 9, 12] # Mar (Spring), Jun (Summer), Sep (Fall), Dec (Winter)
+member_entry_fee_kvnd = 0.0             # Free entry for active PICK! Social members
+tournament_month_churn_multiplier = 0.80 # -20% relative churn reduction in tournament months
+tournament_month_follower_boost_mult = 1.15 # +15% social follower acquisition in tournament months
+
+[quarterly_tournaments.participants_6_courts]
+dist = "truncated_normal"
+mean = 192.0
+std = 16.0
+min = 150.0
+max = 230.0
+unit = "players/tournament"
+source = "6-court Venue 1 + partner-court weekend seasonal tournament field (Beginner/Intermediate/Competitive)"
+
+[quarterly_tournaments.participants_20_courts]
+dist = "truncated_normal"
+mean = 420.0
+std = 32.0
+min = 340.0
+max = 500.0
+unit = "players/tournament"
+source = "20-court Venue 1 + Venue 2 flagship seasonal tournament field across 3 skill brackets"
+
+[quarterly_tournaments.non_member_share_6_courts]
+dist = "truncated_normal"
+mean = 0.450
+std = 0.040
+min = 0.350
+max = 0.550
+unit = "fraction of tournament players"
+source = "45% non-member paid entrants (~86 players) vs 55% free member entrants (~106 players) in 6-court phase"
+
+[quarterly_tournaments.non_member_share_20_courts]
+dist = "truncated_normal"
+mean = 0.400
+std = 0.040
+min = 0.300
+max = 0.500
+unit = "fraction of tournament players"
+source = "40% non-member paid entrants (~168 players) vs 60% free member entrants (~252 players) in 20-court phase"
+
+[quarterly_tournaments.non_member_entry_fee_kvnd]
+dist = "truncated_normal"
+mean = 350.0
+std = 25.0
+min = 300.0
+max = 400.0
+unit = "k VND/non-member entrant"
+source = "HCMC amateur pickleball tournament entry benchmark (priced below 399k/mo membership to drive conversion)"
+
+[quarterly_tournaments.non_member_to_member_conversion_rate]
+dist = "truncated_normal"
+mean = 0.220
+std = 0.030
+min = 0.150
+max = 0.300
+unit = "fraction of non-member entrants converting to paid membership"
+source = "Post-tournament conversion of non-members who register on PICK! Social for brackets/ratings"
+
+[quarterly_tournaments.ancillary_fnb_per_participant_kvnd]
+dist = "truncated_normal"
+mean = 55.0
+std = 6.5
+min = 42.0
+max = 72.0
+unit = "k VND/tournament player"
+source = "Full-day tournament hydration, energy drinks, coffee & cafe snacks per participant (members + non-members)"
+
+[quarterly_tournaments.ancillary_paddle_balls_per_participant_kvnd]
+dist = "truncated_normal"
+mean = 10.0
+std = 1.5
+min = 7.0
+max = 14.0
+unit = "k VND/tournament player"
+source = "Tournament overgrips, warmup balls & demo paddle rentals per participant"
+
+[quarterly_tournaments.ancillary_coaching_clinic_per_participant_kvnd]
+dist = "truncated_normal"
+mean = 20.0
+std = 3.0
+min = 13.0
+max = 28.0
+unit = "k VND/tournament player"
+source = "Pre-tournament doubles strategy & warmup coaching clinics per participant"

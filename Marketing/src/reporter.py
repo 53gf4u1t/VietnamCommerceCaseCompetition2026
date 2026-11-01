@@ -181,6 +181,12 @@ To model **Revenue Line 2 (Paddle Rental & Balls = 15.00M VND/mo)**, **Revenue L
 | **4. Families** | 648 | **3.40 +/- 0.35 k** (2.20M/mo) | **25.15 +/- 2.10 k** (16.30M/mo) | **10.03 +/- 0.95 k** (6.50M/mo) | 38.58 k | 46.42 k | **85.00 kVND** (Exh. 4 = 85k) |
 | **Baseline Monthly Sum** | **7,596** | **15.005M VND/mo** (Exh. 1 = **15.00M**) | **115.001M VND/mo** (Exh. 1 = **115.00M**) | **74.995M VND/mo** (Exh. 1 = **75.00M**) | **205.00M/mo** | **436.70M/mo** | **641.70M VND/mo** (Exh. 1 = **640M**) |
 
+### 3.1 Quarterly Seasonal Tournament Ancillary & Follower Boost (`Mar, Jun, Sep, Dec` from Month 6+)
+Starting in **Month 6 (`Jun-27`, Summer Tournament)** after `PICK! Social` launches in `Month 5 (May-27)`, PICK! hosts a flagship seasonal tournament every quarter (`Spring [Mar]`, `Summer [Jun]`, `Fall [Sep]`, `Winter [Dec]`):
+- **Tournament Participant Field**: `192 +/- 16` players in the `6`-court phase (`Months 6, 9, 12`), scaling to `420 +/- 32` players across the `20`-court network (`Months 15, 18, ..., 60`).
+- **Social Follower Boost**: Tournament highlight reels and brackets multiply monthly new follower acquisition by **`1.15x` (`+15%`)** in tournament months.
+- **Ancillary Spend Lift (`+85.0k VND / participant`)**: Both active members (who enter for **free**) and non-members (who pay **`350,000 VND`** entry fee) generate incremental full-day tournament ancillary spending of **`55.0k VND`** in `Food & Drinks`, **`10.0k VND`** in `Paddle & Balls`, and **`20.0k VND`** in pre-tournament `Coaching` clinics (`~16.3M VND/qtr` in 6-court phase; `~35.7M VND/qtr` in 20-court phase).
+
 ---
 
 ## 4. 60-Month ML Marketing Allocation & Ancillary Revenue Trajectory Summary
