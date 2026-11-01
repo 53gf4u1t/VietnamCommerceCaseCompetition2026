@@ -10,6 +10,7 @@ import pandas as pd
 
 from .config import FinancialModelConfig
 from .model import FinancialModelResults
+import theme as _theme  # noqa: F401
 
 plt.rcParams.update({
     "font.family": "sans-serif",

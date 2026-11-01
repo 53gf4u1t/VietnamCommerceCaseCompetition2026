@@ -9,6 +9,7 @@ import numpy as np
 
 from .config import VenueScalingConfig
 from .schedule_model import ScheduledVenueStage, ScheduledVenueTask, VenueScalingResults
+import theme as _theme  # noqa: F401
 
 plt.rcParams.update({
     "font.family": "sans-serif",

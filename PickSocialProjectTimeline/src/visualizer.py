@@ -10,6 +10,7 @@ import numpy as np
 
 from .config import TimelineConfig
 from .schedule_model import ScheduledTask, StageSummary, TimelineResults
+import theme as _theme  # noqa: F401
 
 plt.rcParams.update({
     "font.family": "sans-serif",

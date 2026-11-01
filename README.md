@@ -147,10 +147,14 @@ Static spreadsheets fail because they ignore variance, capacity ceilings, and ex
 
 ## 5. Repository Structure & Reproducibility
 
-Run the entire 5-stage simulation, ML training, and chart-generation pipeline from the root directory with a single command:
+Run the entire 5-stage simulation, ML training, and chart-generation pipeline from the root directory with a single command (supporting both **Catppuccin Mocha** dark mode and **Catppuccin Latte** light mode):
 
 ```bash
-uv run main
+# Default (Catppuccin Mocha — Dark Mode)
+uv run main --theme Mocha
+
+# Poster / Print Mode (Catppuccin Latte — Light Mode)
+uv run main --theme Latte
 ```
 
 | Directory / File | Description |

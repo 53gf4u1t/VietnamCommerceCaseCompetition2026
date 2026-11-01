@@ -12,6 +12,7 @@ from scipy.stats import norm
 from .config import AppConfig
 from .simulator import SimulationResults
 from .model import EvaluationResults
+import theme as _theme  # noqa: F401
 
 
 plt.rcParams.update({

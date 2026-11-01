@@ -14,6 +14,7 @@ import numpy as np
 from .config import MarketingAppConfig
 from .model import MarketingMLEvaluationResults
 from .simulator import MarketingSimulationResults
+import theme as _theme  # noqa: F401
 
 SEG_COLORS = ["#89b4fa", "#94e2d5", "#fab387", "#cba6f7"]
 SEG_SHORT_LABELS = ["Competitive", "Social", "Trend Explorers", "Families"]

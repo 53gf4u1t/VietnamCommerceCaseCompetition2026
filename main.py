@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 import sys
 
@@ -9,6 +10,7 @@ ROOT_DIR = Path(__file__).resolve().parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from theme import set_theme
 from AdaptivePricing.main import run_adaptive_pricing
 from FinancialModel.main import run_financial_model
 from Marketing.main import run_marketing
@@ -18,9 +20,9 @@ from VenueScalingTimeline.main import run_venue_scaling_timeline
 CENTRAL_CONFIGS_DIR = ROOT_DIR / "configs"
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
     """
-    Execute the complete 5-stage CaseComp pipeline via a single command (`uv run main`):
+    Execute the complete 5-stage CaseComp pipeline via a single command (`uv run main [--theme Mocha|Latte]`):
       1. AdaptivePricing           — Loads `configs/pricing.toml` & `configs/randomness.toml`,
                                      runs Monte Carlo simulation & ML court pricing optimization,
                                      writing required reports & schedules into AdaptivePricing/outputs/.
@@ -47,6 +49,20 @@ def main() -> None:
                                      3-statement trajectories, and outputs all tables, charts, and
                                      monthly cash balance schedules in FinancialModel/outputs/.
     """
+    parser = argparse.ArgumentParser(
+        description="Run the complete 5-stage PICK! Case Competition simulation, ML & visualization pipeline."
+    )
+    parser.add_argument(
+        "--theme",
+        type=str,
+        default="Mocha",
+        help="Catppuccin color scheme for all 22 generated visualizations: 'Mocha' (dark) or 'Latte' (light). Default: Mocha.",
+    )
+    args = parser.parse_args(argv)
+    active_theme = set_theme(args.theme)
+
+    print("=" * 86)
+    print(f"ACTIVE VISUALIZATION THEME: Catppuccin {active_theme} ({'Light Mode' if active_theme == 'Latte' else 'Dark Mode'})")
     print("=" * 86)
     print("VIETNAM COMMERCE CASE COMPETITION 2026 — STAGE 1/5: AdaptivePricing (Central configs/)")
     print("=" * 86)
