@@ -140,18 +140,18 @@ source = "16.0% of Case Exhibit 2 VND 25.00M marketing budget (4,000,000 VND / 6
 #        a month."
 #   - Scaling other facility & club staffing expenses from Venue 1 (6 courts) to
 #     Venue 2 (14 courts = 2.333x courts, with shared central management/platform):
-#     * Venue 2 Lease: Fixed VND 330.00M/month (active from Month 7 / Jul-27).
-#     * Venue 2 Electricity, Lighting & Water: Active from Month 11 (Nov-27).
+#     * Venue 2 Lease: Fixed VND 330.00M/month (active from Month 10 / Oct-27).
+#     * Venue 2 Electricity, Lighting & Water: Active from Month 14 (Feb-28).
 #       56 modern 500-lux LED court fixtures + cafe espresso/chiller + showers
-#       scale at ~2.05x Venue 1's 40M utility bill = 82.00M VND/month at steady
+#       scale at ~2.375x Venue 1's 40M utility bill = 95.00M VND/month at steady
 #       state (with 65% fixed base + 35% flexing with the 6-to-9 month fill-up ramp).
-#     * Venue 2 Maintenance & Insurance: Active from Month 11 (Nov-27). 14 courts
-#       under new warranty + property/liability insurance = 38.00M VND/month.
+#     * Venue 2 Maintenance & Insurance: Active from Month 14 (Feb-28). 14 courts
+#       under new warranty + property/liability insurance = 48.00M VND/month.
 #     * Venue 2 Club Staff Wages (Site Manager, Front Desk, Baristas, Cleaning):
-#       Active from Month 11 (Nov-27). Because executive leadership, finance, and
+#       Active from Month 14 (Feb-28). Because executive leadership, finance, and
 #       the automated PICK! Social QR check-in platform are shared across both
-#       clubs, on-site 14-court staffing + cafe crew requires 215.00M VND/month
-#       (1.65x Venue 1's 130M payroll).
+#       clubs, on-site 14-court staffing + cafe crew requires 280.00M VND/month
+#       (2.15x Venue 1's 130M payroll).
 # ------------------------------------------------------------------------------
 
 [venue2_opex_and_sga]
@@ -205,8 +205,8 @@ source = "Scaled from Case Exhibit 2 (130M for 6 courts) for 14-court site manag
 #     1) Cloud Infrastructure & Managed DB/Redis Hosting (4.50M VND/mo mean):
 #        AWS ap-southeast-1 / Viettel Cloud multi-AZ PostgreSQL, Redis cluster,
 #        application containers, automated S3 backups, and Cloudflare Pro CDN/WAF.
-#     2) Zalo ZNS / SMS OTP & Push Notification Messaging (2.20M VND/mo mean):
-#        Phone OTP verification, booking confirmation ZNS messages (350-550 VND/msg),
+#     2) SMS OTP & Push Notification Messaging (2.20M VND/mo mean):
+#        Phone OTP verification, booking confirmation SMS messages (350-550 VND/msg),
 #        and automated open-play matchmaking reminders.
 #     3) Observability, CI/CD, Telemetry & Security SaaS (1.80M VND/mo mean):
 #        Sentry error/performance monitoring, PostHog analytics, GitHub Actions CI
@@ -238,14 +238,14 @@ max = 5.60
 unit = "M VND/month"
 source = "AWS ap-southeast-1 / Viettel Cloud Managed PostgreSQL + Redis + Cloudflare CDN pricing"
 
-[platform_monthly_opex.zalo_zns_otp_notifications_mvnd]
+[platform_monthly_opex.sms_otp_notifications_mvnd]
 dist = "truncated_normal"
 mean = 2.20
 std = 0.25
 min = 1.60
 max = 3.00
 unit = "M VND/month"
-source = "Zalo Cloud ZNS & Vietnam eSMS commercial rates across 3,600-7,600 monthly visits"
+source = "Vietnam eSMS & push notification commercial rates across 3,600-7,600 monthly visits"
 
 [platform_monthly_opex.observability_cicd_security_saas_mvnd]
 dist = "truncated_normal"
@@ -338,7 +338,7 @@ color = "#cba6f7"
 light_color = "#292338"
 target_weeks = 2.5
 effort_share_pct = 11.0
-summary = "IaC cloud provisioning, PostgreSQL + Redis clusters, GitHub Actions CI/CD, automated test harness, Zalo/Phone OTP auth & RBAC"
+summary = "IaC cloud provisioning, PostgreSQL + Redis clusters, GitHub Actions CI/CD, automated test harness, Phone OTP auth & RBAC"
 
 [stages.S3]
 id = "S3"
@@ -368,7 +368,7 @@ color = "#f38ba8"
 light_color = "#30212b"
 target_weeks = 4.0
 effort_share_pct = 6.0
-summary = "Zalo/Excel customer & booking ETL migration, 2-week shadow/parallel booking run, VIP cohort soft launch, legacy cutover"
+summary = "Legacy customer & booking ETL migration, 2-week shadow/parallel booking run, VIP cohort soft launch, legacy cutover"
 
 [stages.S6]
 id = "S6"
@@ -520,8 +520,8 @@ cost_rationale = "1.50 person-weeks of QA/DevOps SDET @ 11.0M/w = 16.50M labor +
 [[tasks]]
 id = "T2.3"
 stage_id = "S2"
-name = "Auth Service, Phone/Zalo OTP & Role-Based Access (RBAC)"
-core_feature = "Zalo/SMS OTP Login & 4-Role RBAC"
+name = "Auth Service, Phone SMS OTP & Role-Based Access (RBAC)"
+core_feature = "SMS OTP Login & 4-Role RBAC"
 track = "Core Backend"
 start_week = 4.0
 duration_weeks = 1.5
@@ -530,7 +530,7 @@ is_critical_path = true
 is_simultaneous_qa = false
 owner = "Backend Devs"
 citation_keys = ["NextLevelSports2025", "OWASP2024"]
-estimation_rationale = "Standard JWT/OAuth2 authentication with Vietnam Zalo/SMS OTP and 4-role RBAC (Player, Coach, Front-Desk, Manager) is benchmarked at 1.5 weeks in sports booking MVP studies."
+estimation_rationale = "Standard JWT/OAuth2 authentication with Vietnam SMS OTP and 4-role RBAC (Player, Coach, Front-Desk, Manager) is benchmarked at 1.5 weeks in sports booking MVP studies."
 role_allocation = "1.0 Full-Stack (12.0M/w) + 0.5 Tech Lead (16.5M/w)"
 person_weeks = 2.25
 blended_weekly_rate_mvnd = 13.50
@@ -541,7 +541,7 @@ cost_dist_std_mvnd = 1.59
 cost_dist_min_mvnd = 31.88
 cost_dist_max_mvnd = 36.66
 cost_citation_keys = ["ITviecTopDev2025", "CloudPricingVN2025", "PMBOK7th"]
-cost_rationale = "2.25 person-weeks (1.5w Full-Stack @ 12.0M + 0.75w Tech Lead @ 16.5M) = 30.38M labor + 1.50M Zalo ZNS / eSMS OTP sandbox & sender ID registration = 31.88M base, plus 15% buffer (+4.78M = 36.66M buffered)."
+cost_rationale = "2.25 person-weeks (1.5w Full-Stack @ 12.0M + 0.75w Tech Lead @ 16.5M) = 30.38M labor + 1.50M SMS OTP sandbox & sender ID registration = 31.88M base, plus 15% buffer (+4.78M = 36.66M buffered)."
 
 [[tasks]]
 id = "T3.1"
@@ -780,7 +780,7 @@ cost_rationale = "3.00 person-weeks (0.75w Tech Lead + 1.5w UI/UX FE + 0.75w QA)
 [[tasks]]
 id = "T5.1"
 stage_id = "S5"
-name = "Legacy Data Audit, Cleansing & ETL (Zalo/Sheets to Postgres)"
+name = "Legacy Data Audit, Cleansing & ETL (Legacy Sheets to Postgres)"
 core_feature = "ETL of 1,150 Accounts & 3,600 Players"
 track = "Data Migration"
 start_week = 16.0
@@ -790,7 +790,7 @@ is_critical_path = true
 is_simultaneous_qa = false
 owner = "Backend + Club Ops"
 citation_keys = ["Kimball2013", "NextLevelSports2025"]
-estimation_rationale = "Cleaning unstructured Zalo/Excel records (1,150 registered accounts, prepaid coaching packs, recurring bookings) and running 2 staging ETL dry runs takes 1.5 weeks per Kimball ETL benchmarks."
+estimation_rationale = "Cleaning unstructured legacy spreadsheet records (1,150 registered accounts, prepaid coaching packs, recurring bookings) and running 2 staging ETL dry runs takes 1.5 weeks per Kimball ETL benchmarks."
 role_allocation = "1.0 Full-Stack (12.0M/w) + 0.5 QA SDET (11.0M/w)"
 person_weeks = 2.25
 blended_weekly_rate_mvnd = 11.67
@@ -801,7 +801,7 @@ cost_dist_std_mvnd = 2.38
 cost_dist_min_mvnd = 28.50
 cost_dist_max_mvnd = 35.63
 cost_citation_keys = ["ITviecTopDev2025", "Kimball2013", "PMBOK7th"]
-cost_rationale = "2.25 person-weeks (1.5w Full-Stack @ 12.0M + 0.75w QA @ 11.0M) = 26.26M labor + 2.24M staging ETL snapshot storage & data reconciliation scripts = 28.50M base. Unstructured Zalo/Excel data cleansing carries a 25% buffer (+7.13M = 35.63M buffered)."
+cost_rationale = "2.25 person-weeks (1.5w Full-Stack @ 12.0M + 0.75w QA @ 11.0M) = 26.26M labor + 2.24M staging ETL snapshot storage & data reconciliation scripts = 28.50M base. Unstructured legacy spreadsheet data cleansing carries a 25% buffer (+7.13M = 35.63M buffered)."
 
 [[tasks]]
 id = "T5.2"
@@ -827,13 +827,13 @@ cost_dist_std_mvnd = 2.53
 cost_dist_min_mvnd = 38.01
 cost_dist_max_mvnd = 45.61
 cost_citation_keys = ["ITviecTopDev2025", "Kimball2013", "CloudPricingVN2025"]
-cost_rationale = "3.00 person-weeks across 2.0 weeks of parallel shadow operation = 34.74M labor + 3.27M production cloud + VIP soft-launch Zalo ZNS onboarding notifications = 38.01M base, plus 20% buffer (+7.60M = 45.61M buffered)."
+cost_rationale = "3.00 person-weeks across 2.0 weeks of parallel shadow operation = 34.74M labor + 3.27M production cloud + VIP soft-launch SMS onboarding notifications = 38.01M base, plus 20% buffer (+7.60M = 45.61M buffered)."
 
 [[tasks]]
 id = "T5.3"
 stage_id = "S5"
 name = "Legacy Booking Cutover & 100% Self-Service Public Launch"
-core_feature = "Retire Manual Zalo Booking & Go-Live"
+core_feature = "Retire Legacy Booking & Go-Live"
 track = "Cutover & Launch"
 start_week = 19.0
 duration_weeks = 1.0
@@ -842,7 +842,7 @@ is_critical_path = true
 is_simultaneous_qa = false
 owner = "Tech Lead + Manager"
 citation_keys = ["NextLevelSports2025"]
-estimation_rationale = "Off-peak Sunday night final delta sync, switching Zalo OA to automated web-booking deep links, and full public launch execution takes 1.0 week."
+estimation_rationale = "Off-peak Sunday night final delta sync, switching social bio links to automated web-booking deep links, and full public launch execution takes 1.0 week."
 role_allocation = "0.5 Tech Lead + 1.0 Full-Stack + 0.5 UI/UX FE"
 person_weeks = 2.00
 blended_weekly_rate_mvnd = 12.63
@@ -853,7 +853,7 @@ cost_dist_std_mvnd = 1.53
 cost_dist_min_mvnd = 30.50
 cost_dist_max_mvnd = 35.08
 cost_citation_keys = ["ITviecTopDev2025", "CloudPricingVN2025", "PMBOK7th"]
-cost_rationale = "2.00 person-weeks during cutover week = 25.26M labor + 5.24M SMS/Zalo OA blast to 3,600 monthly players & on-court QR standees = 30.50M base, plus 15% buffer (+4.58M = 35.08M buffered)."
+cost_rationale = "2.00 person-weeks during cutover week = 25.26M labor + 5.24M SMS/social notification blast to 3,600 monthly players & on-court QR standees = 30.50M base, plus 15% buffer (+4.58M = 35.08M buffered)."
 
 [[tasks]]
 id = "T6.1"
@@ -949,7 +949,7 @@ id = "M2"
 name = "M2: Cloud & CI/CD Foundation Live"
 week = 5.5
 stage_id = "S2"
-description = "Staging/Prod cloud, CI/CD test harness, and Zalo/Phone OTP RBAC operational"
+description = "Staging/Prod cloud, CI/CD test harness, and Phone SMS OTP RBAC operational"
 
 [[milestones]]
 id = "M3"
@@ -970,7 +970,7 @@ id = "M5"
 name = "M5: 100% Legacy Cutover Complete"
 week = 20.0
 stage_id = "S5"
-description = "Legacy Zalo/spreadsheet booking retired; 100% bookings on PICK! Platform"
+description = "Legacy spreadsheet booking retired; 100% bookings on PICK! Platform"
 
 [[milestones]]
 id = "M6"
@@ -1133,8 +1133,8 @@ benchmark_used = "Establishes (1) task-specific Contingency Reserves (15% for st
 
 [[citations]]
 key = "CloudPricingVN2025"
-title = "AWS ap-southeast-1 (Singapore) & Viettel Cloud / Zalo ZNS Commercial Pricing Schedule"
-authors = "Amazon Web Services, Viettel Cloud & Zalo Cloud (ZNS)"
+title = "AWS ap-southeast-1 (Singapore) & Viettel Cloud / SMS Gateway Commercial Pricing Schedule"
+authors = "Amazon Web Services & Viettel Cloud"
 publication = "Southeast Asia Cloud & Notification Tariff Schedule (2025)"
 url = "https://aws.amazon.com/pricing/"
-benchmark_used = "Direct non-labor costs across staging/production PostgreSQL + Redis clusters (4.5M VND/mo), Zalo ZNS / SMS OTP verification bundles (2.2M VND/mo across 3,600+ players), observability/CI-CD SaaS (1.8M VND/mo), distributed k6 load testing generators, and 2D QR check-in scanners at the front desk."
+benchmark_used = "Direct non-labor costs across staging/production PostgreSQL + Redis clusters (4.5M VND/mo), SMS OTP & push notification verification bundles (2.2M VND/mo across 3,600+ players), observability/CI-CD SaaS (1.8M VND/mo), distributed k6 load testing generators, and 2D QR check-in scanners at the front desk."

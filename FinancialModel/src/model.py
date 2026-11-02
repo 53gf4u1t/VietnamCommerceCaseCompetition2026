@@ -1078,7 +1078,7 @@ def _run_monte_carlo_financial_simulations(
         # Once Venue 2 (14 courts) opens in Month 14, PICK! hosts more member leagues on its own 20 courts
         # rather than renting external partner courts @ 200k/hr, reducing external partner-court COGS per member by 18%
         own_venue_event_efficiency = 1.0 - 0.18 * f_v2
-        # Includes monthly member league fulfillment + Quarterly Seasonal Tournament organization cost (45M in 6-ct / 85M in 20-ct)
+        # Includes monthly member league fulfillment + Quarterly Seasonal Tournament organization cost (45M in 6-court / 85M in 20-court)
         c_mem_event = subs_mat[:, m] * (per_mem_event_kvnd / 1000.0) * own_venue_event_efficiency + tourney_org_cost
 
         c_tot_cogs = c_coach + c_fnb + c_pay_cons + c_mem_event
@@ -1151,14 +1151,14 @@ def _run_monte_carlo_financial_simulations(
         elif m < post_hc_m_idx:
             s_plat_rec = (
                 _sample_month_conditioned(popex_cfg.cloud_hosting_db_redis_dist, rng, n_sims, shared_weight=0.58)
-                + _sample_month_conditioned(popex_cfg.zalo_zns_otp_notifications_dist, rng, n_sims, shared_weight=0.58)
+                + _sample_month_conditioned(popex_cfg.sms_otp_notifications_dist, rng, n_sims, shared_weight=0.58)
                 + _sample_month_conditioned(popex_cfg.observability_cicd_security_saas_dist, rng, n_sims, shared_weight=0.58)
                 + _sample_month_conditioned(popex_cfg.school_university_community_ops_dist, rng, n_sims, shared_weight=0.58)
             )
         else:
             s_plat_rec = (
                 _sample_month_conditioned(popex_cfg.cloud_hosting_db_redis_dist, rng, n_sims, shared_weight=0.58)
-                + _sample_month_conditioned(popex_cfg.zalo_zns_otp_notifications_dist, rng, n_sims, shared_weight=0.58)
+                + _sample_month_conditioned(popex_cfg.sms_otp_notifications_dist, rng, n_sims, shared_weight=0.58)
                 + _sample_month_conditioned(popex_cfg.observability_cicd_security_saas_dist, rng, n_sims, shared_weight=0.58)
                 + _sample_month_conditioned(popex_cfg.school_university_community_ops_dist, rng, n_sims, shared_weight=0.58)
                 + _sample_month_conditioned(popex_cfg.ongoing_maintenance_patching_retainer_dist, rng, n_sims, shared_weight=0.58)
@@ -1747,7 +1747,7 @@ def build_financial_model(
             "COGS", "COGS", "Partner Courts & Events (New)",
             "Partner courts (@ 200k/hr), member leagues & seasonal tournaments", "Variable (COGS, May-27+)",
             0.0, m_mem_event,
-            "Monthly member leagues/partner courts + quarterly seasonal tournament organization (45M in 6-ct / 85M in 20-ct)",
+            "Monthly member leagues/partner courts + quarterly seasonal tournament organization (45M in 6-court / 85M in 20-court)",
         ),
         _rec(
             "SUMMARY", "COGS", "TOTAL COGS",
@@ -1778,26 +1778,26 @@ def build_financial_model(
             "OPEX", "SG&A / OpEx", "Utilities (6 to 20 Courts)",
             "Electricity, lighting and water (Venue 1 + Venue 2 from Feb-28)", "Mostly Fixed (OpEx)",
             case_utilities, m_util,
-            "40M/mo Venue 1 + ~82M/mo Venue 2 (from Feb-28) + commercial utility inflation drift",
+            "40M/mo Venue 1 + ~95M/mo Venue 2 (from Feb-28) + commercial utility inflation drift",
         ),
         _rec(
             "OPEX", "SG&A / OpEx", "Insurance & Upkeep (6 to 20 Courts)",
             "Maintenance and insurance (Venue 1 + Venue 2 from Feb-28)", "Fixed (OpEx)",
             case_maint_ins, m_maint,
-            "20M/mo Venue 1 + 38M/mo Venue 2 (from Feb-28) + upkeep inflation drift",
+            "20M/mo Venue 1 + 48M/mo Venue 2 (from Feb-28) + upkeep inflation drift",
         ),
         _rec(
             "SUMMARY", "SG&A / OpEx", "SUBTOTAL OpEx",
             "Subtotal Facility Operating Expenses (OpEx)", "Subtotal",
             case_total_opex, m_tot_opex,
-            "210M/mo (Jan-Sep 27) to 540M/mo (Oct 27-Jan 28 Fit-Out) to ~665M/mo (Feb 28+ 20-Court Operations)",
+            "210M/mo (Jan-Sep 27) to 540M/mo (Oct 27-Jan 28 Fit-Out) to ~692M/mo (Feb 28+ 20-Court Operations)",
         ),
 
         _rec(
             "SGA", "SG&A", "Staff & Payroll (6 to 20 Courts)",
-            "Staff wages (Venue 1 130M + Venue 2 215M from Feb-28)", "Fixed (SG&A)",
+            "Staff wages (Venue 1 130M + Venue 2 280M from Feb-28)", "Fixed (SG&A)",
             case_staff_wages, m_staff,
-            "130M/mo Venue 1 crew + 215M/mo Venue 2 site manager, front desk, baristas & cleaning (from Feb-28)",
+            "130M/mo Venue 1 crew + 280M/mo Venue 2 site manager, front desk, baristas & cleaning (from Feb-28)",
         ),
         _rec(
             "SGA", "SG&A", "Tech Support & Admin",

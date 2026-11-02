@@ -43,9 +43,9 @@
 
 | Operating Regime | Anchor Constraint & Mean Linear Demand Curve | Test $R^2$ | Test RMSE | Test MAE | Test MAPE | Oracle Revenue Capture (%) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Weekday Daytime (06:00-17:00)** | Anchor `(160k, 40% [2.40 cts])` | $Q_1(x) = -0.0350x + 8.01$ | **0.0285** | 5.11 k VND | 4.06 k VND | 3.52% | **99.80%** |
-| **Weekday Evening (17:00-22:00)** | Anchor `(260k, 95% [5.70 cts])` | $Q_2(x) = -0.0140x + 9.34$ | **0.9884** | 2.14 k VND | 0.76 k VND | 0.26% | **99.99%** |
-| **Weekend (Sat-Sun 06:00-22:00)** | Anchor `(260k, 90% [5.40 cts])` | $Q_3(x) = -0.0170x + 9.81$ | **0.2979** | 13.43 k VND | 11.16 k VND | 3.96% | **99.62%** |
+| **Weekday Daytime (06:00-17:00)** | Anchor `(160k, 40% [2.40 courts])` | $Q_1(x) = -0.0350x + 8.01$ | **0.0285** | 5.11 k VND | 4.06 k VND | 3.52% | **99.80%** |
+| **Weekday Evening (17:00-22:00)** | Anchor `(260k, 95% [5.70 courts])` | $Q_2(x) = -0.0140x + 9.34$ | **0.9884** | 2.14 k VND | 0.76 k VND | 0.26% | **99.99%** |
+| **Weekend (Sat-Sun 06:00-22:00)** | Anchor `(260k, 90% [5.40 courts])` | $Q_3(x) = -0.0170x + 9.81$ | **0.2979** | 13.43 k VND | 11.16 k VND | 3.96% | **99.62%** |
 
 
 ---

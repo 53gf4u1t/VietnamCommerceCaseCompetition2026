@@ -285,8 +285,8 @@ estimation_rationale = "Laying 15-mil polyolefin vapor barriers (essential in hu
 [[venue_tasks]]
 id = "V2.3"
 stage_id = "V2"
-name = "[Mandatory Physics Gate] 28-Day Concrete Moisture Cure & Stress-Relief"
-core_deliverable = "Hydration Cure to <3 lbs/1,000 sq.ft MVER"
+name = "Mandatory 28-Day Concrete Drying & Curing Period"
+core_deliverable = "Slab Moisture Cure Before Acrylic Coating"
 track = "Slab Curing Window"
 start_week = 4.5
 duration_weeks = 4.0

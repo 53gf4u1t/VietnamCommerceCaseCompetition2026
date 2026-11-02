@@ -176,7 +176,7 @@ def plot_master_gantt_chart(
         ("CORE FEATURE / DELIVERABLE", -13.4, -6.1, "left"),
         ("WKS", -6.1, -4.9, "center"),
         ("WINDOW", -4.9, -3.0, "center"),
-        ("COST: BASE / BUF", -3.0, 0.0, "center"),
+        ("COST: BASE / BUFFER", -3.0, 0.0, "center"),
     ]
     ax.add_patch(
         mpatches.Rectangle(
@@ -196,7 +196,7 @@ def plot_master_gantt_chart(
             c_title,
             ha="center",
             va="center",
-            fontsize=8.2,
+            fontsize=7.6 if "BUFFER" in c_title else 8.2,
             fontweight="bold",
             color="#cdd6f4",
             zorder=5,
@@ -440,6 +440,18 @@ def plot_master_gantt_chart(
                     bbox=dict(boxstyle="round,pad=0.10", facecolor=lbl_bg, edgecolor="none", alpha=0.88) if t.is_simultaneous_qa else None,
                     zorder=6,
                 )
+            elif 14.0 <= t.end_week <= 16.5:
+                ax.text(
+                    t.start_week - 0.16,
+                    y_mid,
+                    bar_label,
+                    ha="right",
+                    va="center",
+                    fontsize=7.1,
+                    fontweight="bold",
+                    color="#cdd6f4",
+                    zorder=6,
+                )
             else:
                 ax.text(
                     t.end_week + 0.14,
@@ -488,13 +500,13 @@ def plot_master_gantt_chart(
 
     # Legend at bottom
     legend_handles = [
-        mpatches.Patch(facecolor="#89b4fa", edgecolor="#11111b", label="Stage 1: Planning, Arch & Specs (112.0M Base / 130.5M Buf)"),
-        mpatches.Patch(facecolor="#cba6f7", edgecolor="#11111b", label="Stage 2: Infra, DevOps & Auth (82.8M Base / 95.2M Buf)"),
-        mpatches.Patch(facecolor="#a6e3a1", edgecolor="#11111b", label="Stage 3: Core Dev & Simultaneous QA (362.8M Base / 440.0M Buf)"),
+        mpatches.Patch(facecolor="#89b4fa", edgecolor="#11111b", label="Stage 1: Planning, Architecture & Specs (112.0M Base / 130.5M Buffer)"),
+        mpatches.Patch(facecolor="#cba6f7", edgecolor="#11111b", label="Stage 2: Infra, DevOps & Auth (82.8M Base / 95.2M Buffer)"),
+        mpatches.Patch(facecolor="#a6e3a1", edgecolor="#11111b", label="Stage 3: Core Dev & Simultaneous QA (362.8M Base / 440.0M Buffer)"),
         mpatches.Patch(facecolor="#94e2d5", edgecolor="#11111b", hatch="///", label="Simultaneous QA / Continuous Testing Track"),
-        mpatches.Patch(facecolor="#fab387", edgecolor="#11111b", label="Stage 4: Final E2E, Load Test & UAT (118.6M Base / 144.1M Buf)"),
-        mpatches.Patch(facecolor="#f38ba8", edgecolor="#11111b", label="Stage 5: Legacy Migration & Cutover (97.0M Base / 116.3M Buf)"),
-        mpatches.Patch(facecolor="#74c7ec", edgecolor="#11111b", label="Stage 6: Hypercare, Feedback & Continuous Ops (138.0M Base / 162.9M Buf)"),
+        mpatches.Patch(facecolor="#fab387", edgecolor="#11111b", label="Stage 4: Final E2E, Load Test & UAT (118.6M Base / 144.1M Buffer)"),
+        mpatches.Patch(facecolor="#f38ba8", edgecolor="#11111b", label="Stage 5: Legacy Migration & Cutover (97.0M Base / 116.3M Buffer)"),
+        mpatches.Patch(facecolor="#74c7ec", edgecolor="#11111b", label="Stage 6: Hypercare, Feedback & Continuous Ops (138.0M Base / 162.9M Buffer)"),
     ]
     ax.legend(
         handles=legend_handles,
@@ -539,7 +551,7 @@ def plot_stage_effort_and_concurrency(
     plt.subplots_adjust(wspace=0.22)
 
     core_stages = [s for s in res.stage_summaries if s.stage_id in ("S1", "S2", "S3", "S4")]
-    labels = [s.short_name for s in core_stages]
+    labels = [s.short_name.split(". ", 1)[-1] for s in core_stages]
     model_shares = [16.5, 12.5, 54.0, 17.0]
     benchmark_shares = [18.0, 12.0, 52.0, 18.0]
 
@@ -616,20 +628,20 @@ def plot_stage_effort_and_concurrency(
 
     ax_right.axvline(16.5, color="#f38ba8", linewidth=2.0, linestyle="--", zorder=5)
     ax_right.text(
-        16.3,
-        4.65,
-        "End Apr-27 (W16):\nPICK! Social Launch & Migration",
-        ha="right",
+        16.8,
+        4.45,
+        "End Apr-27 (W16):\nPICK! Social Launch\n& Migration",
+        ha="left",
         va="top",
         fontsize=8.0,
         fontweight="bold",
         color="#f38ba8",
-        bbox=dict(boxstyle="round,pad=0.2", facecolor="#1e1e2e", edgecolor="#f38ba8"),
+        bbox=dict(boxstyle="round,pad=0.25", facecolor="#1e1e2e", edgecolor="#f38ba8"),
     )
 
     ax_right.set_xticks(x_w[::2])
     ax_right.set_xticklabels([f"W{w}" for w in x_w[::2]], fontsize=8.2, fontweight="bold")
-    ax_right.set_ylim(0, 5.2)
+    ax_right.set_ylim(0, 5.5)
     ax_right.set_ylabel("Simultaneous Active Workstreams", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_xlabel("Project Timeline Weeks", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_title(
@@ -672,7 +684,7 @@ def plot_cost_estimation_and_cashflow_allocation(
     # --------------------------------------------------------------------------
     ax_left.set_facecolor("#181825")
     stages = list(res.stage_summaries)
-    s_labels = [s.short_name for s in stages]
+    s_labels = [s.short_name.split(". ", 1)[-1] for s in stages]
     base_costs = np.array([s.base_total_cost_mvnd for s in stages])
     buf_costs = np.array([s.contingency_buffer_mvnd for s in stages])
     tot_costs = np.array([s.buffered_total_cost_mvnd for s in stages])
@@ -709,7 +721,7 @@ def plot_cost_estimation_and_cashflow_allocation(
         ax_left.text(
             tot_costs[idx] + 6.5,
             y_pos[idx],
-            f"{base_costs[idx]:.1f}M Base + {buf_costs[idx]:.1f}M Buf (+{st.effective_buffer_pct:.1f}%) = {tot_costs[idx]:.1f}M",
+            f"{base_costs[idx]:.1f}M Base + {buf_costs[idx]:.1f}M Buffer (+{st.effective_buffer_pct:.1f}%) = {tot_costs[idx]:.1f}M",
             va="center",
             ha="left",
             fontsize=8.0,
@@ -720,8 +732,8 @@ def plot_cost_estimation_and_cashflow_allocation(
 
     ax_left.set_yticks(y_pos)
     ax_left.set_yticklabels(s_labels, fontsize=8.8, fontweight="bold", color="#cdd6f4")
-    ax_left.set_ylim(6.75, -0.65)
-    ax_left.set_xlim(0, 745)
+    ax_left.set_ylim(5.65, -0.65)
+    ax_left.set_xlim(0, 860)
     ax_left.set_xlabel("Estimated Cost (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_left.set_title(
         "Panel A: Stage Cost Estimation Breakdown: Base Cost vs. Risk Contingency",
@@ -731,26 +743,6 @@ def plot_cost_estimation_and_cashflow_allocation(
         pad=10,
     )
     ax_left.grid(axis="x", linestyle="--", alpha=0.8, color="#313244", zorder=1)
-
-    # Summary box inside Panel A (bottom center, 100% inside axes frame)
-    summary_text = (
-        f"4-Month Core Build (Stages 1-4, W1-W16):  Base {res.core_build_base_cost_mvnd:.2f}M  |  Buffer {res.core_build_buffer_mvnd:.2f}M  |  Buffered {res.core_build_buffered_cost_mvnd:.2f}M VND\n"
-        f"Full 6-Month Lifecycle (S1-S6, W1-W24):  Labor {res.total_base_labor_cost_mvnd:.2f}M + Cloud/Infra {res.total_direct_infra_cost_mvnd:.2f}M = "
-        f"Base {res.total_base_cost_mvnd:.2f}M  |  Buf (+{res.weighted_buffer_pct:.1f}%) {res.total_buffer_mvnd:.2f}M  |  Buffered {res.total_buffered_cost_mvnd:,.2f}M"
-    )
-    ax_left.text(
-        0.50,
-        0.025,
-        summary_text,
-        transform=ax_left.transAxes,
-        ha="center",
-        va="bottom",
-        fontsize=7.1,
-        fontweight="bold",
-        color="#cdd6f4",
-        bbox=dict(boxstyle="round,pad=0.32", facecolor="#1e1e2e", edgecolor="#585b70", linewidth=1.0),
-        zorder=6,
-    )
     ax_left.legend(loc="upper right", fontsize=8.0, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     # --------------------------------------------------------------------------
@@ -881,28 +873,9 @@ def plot_cost_estimation_and_cashflow_allocation(
 
     ax_right.axvline(5.5, color="#585b70", linewidth=1.3, linestyle="--", zorder=2)
 
-    # Summary callout inside Panel B
-    alloc_summary = (
-        f"6-Month PICK! Social Dev (Jan-Jun 27):  Committed Base 139.9M-166.0M/mo (Avg 151.9M/mo, SD 8.4M)  |  +29.58M/mo Buffer Reserve\n"
-        f"Recurring PICK! Social OpEx:  {res.launch_monthly_platform_opex_mvnd:.2f}M/mo at Launch (May-Jun 27)  |  {res.steady_state_monthly_platform_opex_mvnd:.2f}M/mo Steady-State (Jul-27+)"
-    )
-    ax_right.text(
-        0.50,
-        0.025,
-        alloc_summary,
-        transform=ax_right.transAxes,
-        ha="center",
-        va="bottom",
-        fontsize=7.0,
-        fontweight="bold",
-        color="#cdd6f4",
-        bbox=dict(boxstyle="round,pad=0.30", facecolor="#1e1e2e", edgecolor="#585b70", linewidth=1.0),
-        zorder=6,
-    )
-
     ax_right.set_xticks(x_m)
     ax_right.set_xticklabels(m_labels, fontsize=8.1, fontweight="bold", color="#cdd6f4")
-    ax_right.set_ylim(-28, 265)
+    ax_right.set_ylim(0, 295)
     ax_right.set_ylabel("Monthly Allocated Cost Outflow (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_xlabel("Build & Migration Schedule vs. Steady-State Operations", fontsize=9.3, fontweight="bold", color="#bac2de")
     ax_right.set_title(

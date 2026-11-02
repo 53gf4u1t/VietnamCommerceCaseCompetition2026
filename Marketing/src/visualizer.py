@@ -126,7 +126,7 @@ def plot_funnel_and_12_distributions(
             color="#cdd6f4",
             va="center",
         )
-    ax_b.set_xlim(900, 11100)
+    ax_b.set_xlim(900, 11800)
     ax_b.tick_params(axis="y", labelsize=9.8)
     ax_b.set_title("Panel B: Marketing Acquisition Cost per Visit by Segment", fontsize=12, fontweight="bold", color="#cdd6f4", pad=10)
     ax_b.set_xlabel("Marketing Spend Required per Player Visit (VND / Visit)", fontsize=10, color="#bac2de")
@@ -136,6 +136,7 @@ def plot_funnel_and_12_distributions(
     for i, (label, color) in enumerate(zip(SEG_SHORT_LABELS, SEG_COLORS)):
         vis_s = sim.sampled_base_visits_seg[:, :, i].ravel()
         ax_c.hist(vis_s, bins=35, alpha=0.72, color=color, edgecolor="#11111b", linewidth=0.5, label=f"{label}: Mean {np.mean(vis_s):,.0f} visits/mo")
+    ax_c.set_ylim(0, 1480)
     ax_c.set_title("Panel C: Monthly Player Visit Distributions by Segment", fontsize=12, fontweight="bold", color="#cdd6f4", pad=10)
     ax_c.set_xlabel("Monthly Player Visits per Segment (Visits / Month)", fontsize=10, color="#bac2de")
     ax_c.set_ylabel("Simulation Frequency", fontsize=10, color="#bac2de")
@@ -260,7 +261,7 @@ def plot_ml_segment_budgets_and_visits(
     ax1.axvline(4, color="#a6e3a1", linestyle="--", linewidth=1.4, alpha=0.85)
     ax1.text(
         4.3,
-        np.max(bottom) * 0.63,
+        63.0,
         "May-27: PICK! Social Launch",
         fontsize=8.8,
         fontweight="bold",
@@ -270,14 +271,14 @@ def plot_ml_segment_budgets_and_visits(
     ax1.axvline(13, color="#f38ba8", linestyle="--", linewidth=1.5, alpha=0.85)
     ax1.text(
         13.35,
-        np.max(bottom) * 0.88,
+        88.0,
         "Feb-28: Venue 2 Opens (20 Courts)",
         fontsize=8.8,
         fontweight="bold",
         color="#f38ba8",
         bbox=dict(boxstyle="round,pad=0.22", facecolor="#1e1e2e", edgecolor="#f38ba8", alpha=0.94),
     )
-    ax1.set_ylim(0, float(np.max(bottom)) * 1.18)
+    ax1.set_ylim(0, 114.0)
 
     ax1.set_title("Panel A: Monthly Marketing Spend Allocation by Customer Segment", fontsize=12, fontweight="bold", color="#cdd6f4", pad=8)
     ax1.set_ylabel("Marketing Spend (Million VND / Month)", fontsize=10, color="#bac2de")
@@ -329,6 +330,7 @@ def plot_ml_segment_budgets_and_visits(
     )
     ax2.axvline(4, color="#a6e3a1", linestyle="--", linewidth=1.4, alpha=0.85)
     ax2.axvline(13, color="#f38ba8", linestyle="--", linewidth=1.5, alpha=0.85)
+    ax2.set_ylim(0, float(np.max(ml_visits_total_mean)) * 1.28)
 
     tick_idx = np.arange(0, sim.n_months, 3)
     ax2.set_xticks(tick_idx)
@@ -435,6 +437,7 @@ def plot_segment_ancillary_revenue_breakdown(
             label=f"Case Baseline (Jan-27: {case_m1:.1f}M/mo)",
         )
         ax.axvline(13, color="#f38ba8", linestyle="--", linewidth=1.4, alpha=0.85)
+        ax.set_ylim(0, float(np.max(tot_arr)) * 1.30)
         ax.set_title(title, fontsize=11.5, fontweight="bold", color="#cdd6f4", pad=6)
         ax.set_ylabel("Million VND / Month", fontsize=9.5, color="#bac2de")
         ax.legend(loc="upper left", ncol=3, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a", fontsize=8.8)

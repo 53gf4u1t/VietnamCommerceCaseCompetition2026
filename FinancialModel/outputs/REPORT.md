@@ -20,12 +20,12 @@ Every assumption in this model is parameterized as a **Truncated Normal probabil
 - **Months 1-6 (`Jan-27` to `Jun-27`) Leveled Platform Development Allocation**:
   - Committed Base Outflow: **`911.18M VND`** (`139.93M` to `165.97M VND/month`) + Conditional Risk Contingency Reserve **`+177.36M VND`** (`29.58M/month` max; Monte Carlo expected drawdown `50%` = **`~999.91M VND`** expected total build cost across `Months 1-6`).
 - **Month 5+ (`May-27` onward) Recurring Monthly Platform & Community OpEx**:
-  - **Months 5-6 (`May-Jun 2027`, Launch & Hypercare)**: **`16.50M VND/month`** (`4.50M` Cloud/DB/Redis + `2.20M` Zalo ZNS/OTP + `1.80M` Observability/CI-CD SaaS + `8.00M` School/University & Beginner League Ops).
+  - **Months 5-6 (`May-Jun 2027`, Launch & Hypercare)**: **`16.50M VND/month`** (`4.50M` Cloud/DB/Redis + `2.20M` SMS OTP/Push Notifications + `1.80M` Observability/CI-CD SaaS + `8.00M` School/University & Beginner League Ops).
   - **Months 7-60 (`Jul 2027 - Dec 2031`, Steady-State)**: **`26.50M VND/month`** (`16.50M` above + `10.00M/month` ongoing engineering maintenance, security patching & ML retraining retainer).
 
 ### 1.3 Venue 2 Expansion Schedule (Q4 2027 14-Court Build & 2-Tranche Equity Drawdown)
 - **2-Tranche Investor Minh Tran Equity Drawdown (`8,000.00M VND` Total)**:
-  - **Tranche 1 (`Month 1 / Jan-27` upon Signing)**: **`+500.00M VND`** drawn into cash reserves (`starting_cash = 800.00M + 500.00M = 1,300.00M VND` before M1 operations), ensuring **zero negative cash months (`> 0 VND`) across all 60 months even under a permanent `-30%` lower-demand stress test starting Day 1**.
+  - **Tranche 1 (`Month 1 / Jan-27` upon Signing)**: **`+500.00M VND`** drawn into cash reserves (`starting_cash = 500.00M + 500.00M = 1,000.00M VND` before M1 operations), ensuring **zero negative cash months (`> 0 VND`) across all 60 months even under a permanent `-30%` lower-demand stress test starting Day 1**.
   - **Tranche 2 (`Month 10 / Oct-27` at Q4 2027 Expansion Kickoff)**: **`+7,500.00M VND`** drawn (`7,000.00M VND` funding the even **`-1,750.00M VND/month`** fit-out CapEx across `Months 10-13: Oct 2027 - Jan 2028` + the remaining **`+500.00M VND`** reserve buffer).
 - **Grand Opening (`Month 14 / Feb-28`) & 6-to-9 Month Fill-Up Ramp (`Feb-Sep/Oct 2028`)**: Scales PICK! from **`6` courts (`Months 1-13`) to `20` courts (`Months 14-60`)**, reaching `100%` steady-state utilization by `Oct 2028 (Month 22)`-**2 full months before Year 3 (`FY 2029`) begins**.
 
@@ -78,7 +78,7 @@ Instead of sampling monthly subscriber counts independently, each Monte Carlo tr
 | Utilities (6 to 20 Courts) | Electricity, lighting and water (Venue 1 + Venue 2 from Feb-28) | Mostly Fixed (OpEx) | `40.00` | `39.24` | `38.29` | `141.88` | `7,296.38` | `5.21%` | Case Exhibit 1 & Venue 2 Plan |
 | Insurance & Upkeep (6 to 20 Courts) | Maintenance and insurance (Venue 1 + Venue 2 from Feb-28) | Fixed (OpEx) | `20.00` | `20.01` | `19.58` | `69.65` | `3,697.98` | `2.64%` | Case Exhibit 1 & Venue 2 Plan |
 | **SUBTOTAL OpEx** | **Subtotal Facility Operating Expenses (OpEx)** | Subtotal | `210.00` | `209.25` | `207.86` | `691.54` | **`36,824.36`** | `26.29%` | Calculated Subtotal |
-| Staff & Payroll (6 to 20 Courts) | Staff wages (Venue 1 130M + Venue 2 215M from Feb-28) | Fixed (SG&A) | `130.00` | `129.60` | `129.73` | `404.90` | `20,706.03` | `14.79%` | Case Exhibit 1 & Venue 2 Plan |
+| Staff & Payroll (6 to 20 Courts) | Staff wages (Venue 1 130M + Venue 2 280M from Feb-28) | Fixed (SG&A) | `130.00` | `129.60` | `129.73` | `404.90` | `20,706.03` | `14.79%` | Case Exhibit 1 & Venue 2 Plan |
 | Tech Support & Admin | Booking system and administration (Base) | Fixed (SG&A) | `10.00` | `10.02` | `10.15` | `10.12` | `598.88` | `0.43%` | Case Exhibit 1 |
 | Marketing & Growth | Marketing (Social & Community) | Variable (SG&A) | `25.00` | `48.84` | `44.01` | `50.43` | `3,219.84` | `2.30%` | Case Exhibit 1 & Marketing Model |
 | PICK! Social Dev (New) | PICK! Social development & migration (Jan-Jun 2027) | PICK! Social Dev (Jan-Jun 27) | `0.00` | `153.99` | `161.17` | `0.00` | `987.70` | `0.71%` | Platform Build Schedule |

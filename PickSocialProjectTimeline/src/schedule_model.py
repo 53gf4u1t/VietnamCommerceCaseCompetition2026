@@ -312,9 +312,9 @@ def build_project_schedule(cfg: TimelineConfig) -> TimelineResults:
         ),
         (
             "POPEX_2",
-            "Zalo ZNS / SMS OTP Verification & Open-Play Push Notifications",
+            "SMS OTP Verification & Open-Play Push Notifications",
             "Month 5+ (May-27 onward)",
-            pm.zalo_zns_otp_notifications,
+            pm.sms_otp_notifications,
         ),
         (
             "POPEX_3",

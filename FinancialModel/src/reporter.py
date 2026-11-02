@@ -78,12 +78,12 @@ Every assumption in this model is parameterized as a **Truncated Normal probabil
 - **Months 1-6 (`Jan-27` to `Jun-27`) Leveled Platform Development Allocation**:
   - Committed Base Outflow: **`{tl.total_committed_dev_base_mvnd:.2f}M VND`** (`139.93M` to `165.97M VND/month`) + Conditional Risk Contingency Reserve **`+{tl.total_contingency_reserve_mvnd:.2f}M VND`** (`29.58M/month` max; Monte Carlo expected drawdown `50%` = **`~999.91M VND`** expected total build cost across `Months 1-6`).
 - **Month 5+ (`May-27` onward) Recurring Monthly Platform & Community OpEx**:
-  - **Months 5-6 (`May-Jun 2027`, Launch & Hypercare)**: **`{tl.launch_platform_opex_m5_m6_mvnd:.2f}M VND/month`** (`4.50M` Cloud/DB/Redis + `2.20M` Zalo ZNS/OTP + `1.80M` Observability/CI-CD SaaS + `8.00M` School/University & Beginner League Ops).
+  - **Months 5-6 (`May-Jun 2027`, Launch & Hypercare)**: **`{tl.launch_platform_opex_m5_m6_mvnd:.2f}M VND/month`** (`4.50M` Cloud/DB/Redis + `2.20M` SMS OTP/Push Notifications + `1.80M` Observability/CI-CD SaaS + `8.00M` School/University & Beginner League Ops).
   - **Months 7-60 (`Jul 2027 - Dec 2031`, Steady-State)**: **`{tl.steady_state_platform_opex_m7_plus_mvnd:.2f}M VND/month`** (`16.50M` above + `10.00M/month` ongoing engineering maintenance, security patching & ML retraining retainer).
 
 ### 1.3 Venue 2 Expansion Schedule (Q4 2027 14-Court Build & 2-Tranche Equity Drawdown)
 - **2-Tranche Investor Minh Tran Equity Drawdown (`8,000.00M VND` Total)**:
-  - **Tranche 1 (`Month 1 / Jan-27` upon Signing)**: **`+500.00M VND`** drawn into cash reserves (`starting_cash = 800.00M + 500.00M = 1,300.00M VND` before M1 operations), ensuring **zero negative cash months (`> 0 VND`) across all 60 months even under a permanent `-30%` lower-demand stress test starting Day 1**.
+  - **Tranche 1 (`Month 1 / Jan-27` upon Signing)**: **`+500.00M VND`** drawn into cash reserves (`starting_cash = 500.00M + 500.00M = 1,000.00M VND` before M1 operations), ensuring **zero negative cash months (`> 0 VND`) across all 60 months even under a permanent `-30%` lower-demand stress test starting Day 1**.
   - **Tranche 2 (`Month 10 / Oct-27` at Q4 2027 Expansion Kickoff)**: **`+7,500.00M VND`** drawn (`7,000.00M VND` funding the even **`-1,750.00M VND/month`** fit-out CapEx across `Months 10-13: Oct 2027 - Jan 2028` + the remaining **`+500.00M VND`** reserve buffer).
 - **Grand Opening (`Month 14 / Feb-28`) & 6-to-9 Month Fill-Up Ramp (`Feb-Sep/Oct 2028`)**: Scales PICK! from **`6` courts (`Months 1-13`) to `20` courts (`Months 14-60`)**, reaching `100%` steady-state utilization by `Oct 2028 (Month 22)`-**2 full months before Year 3 (`FY 2029`) begins**.
 

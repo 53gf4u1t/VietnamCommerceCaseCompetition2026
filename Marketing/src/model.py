@@ -17,17 +17,17 @@ from .config import MarketingAppConfig
 from .simulator import MarketingSimulationResults, evaluate_budget_response_step
 
 FEATURE_NAMES = [
-    "Last Month Cust: Competitive",
-    "Last Month Cust: Social",
-    "Last Month Cust: Trend Explorers",
-    "Last Month Cust: Families",
+    "Last Month Customers: Competitive",
+    "Last Month Customers: Social",
+    "Last Month Customers: Trend Explorers",
+    "Last Month Customers: Families",
     "Last Month Visits: Competitive",
     "Last Month Visits: Social",
     "Last Month Visits: Trend Explorers",
     "Last Month Visits: Families",
-    "Social Media Followers (k)",
-    "Follower-to-Cust Conv Rate (~8.57%)",
-    "Macro Pickleball Trend Index (I_t)",
+    "Social Media Followers (Thousands)",
+    "Follower-to-Customer Conversion Rate",
+    "Macro Pickleball Trend Index",
     "Active Courts & Venue 2 Headroom",
 ]
 

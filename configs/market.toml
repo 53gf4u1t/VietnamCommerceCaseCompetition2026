@@ -1,0 +1,399 @@
+# ==============================================================================
+# CENTRAL CONFIGURATION: VIETNAM & HCMC PICKLEBALL MARKET SIZING (TAM/SAM/SOM),
+#                        HCMC COMPETITIVE LANDSCAPE (REAL RESEARCHED CLUBS),
+#                        AND CUSTOMER PROFILES & DERIVED MUTUAL DEMAND
+# File: CaseComp/configs/market.toml
+# Strict Rule: 100% ASCII only (ord(c) <= 127). Zero cryptic abbreviations.
+# ==============================================================================
+
+[market_overview]
+country = "Vietnam"
+primary_city = "Ho Chi Minh City (HCMC)"
+base_year = 2026
+target_year = 2029
+horizon_years = [2024, 2025, 2026, 2027, 2028, 2029]
+vietnam_awareness_pct = 88.0
+vietnam_trial_pct = 37.0
+vietnam_frequent_players_millions = 16.0
+vietnam_ecommerce_gear_2025_bvnd = 1000.0
+vietnam_ecommerce_yoy_growth_pct = 1282.0
+hcmc_active_courts_2026 = 1050
+hcmc_active_venues_2026 = 165
+hcmc_active_courts_2029 = 1650
+hcmc_active_venues_2029 = 240
+local_radius_km = 3.0
+new_local_rivals_past_year = 4
+cheaper_peak_local_rivals = 2
+
+# ------------------------------------------------------------------------------
+# 1. TAM / SAM / SOM MARKET SIZING & INDUSTRY GROWTH (BILLION VND / YEAR)
+# ------------------------------------------------------------------------------
+[market_sizing]
+years = [2024, 2025, 2026, 2027, 2028, 2029]
+
+# TAM: Vietnam National Pickleball Ecosystem
+tam_vietnam_bvnd = [680.0, 1650.0, 2450.0, 3210.0, 4120.0, 5180.0]
+tam_cagr_2026_2029_pct = 28.35
+
+# SAM: Ho Chi Minh City (HCMC) Commercial Pickleball Venue, Coaching, F&B &
+# Community Membership Market
+sam_hcmc_bvnd = [310.0, 740.0, 1120.0, 1430.0, 1775.0, 2145.0]
+sam_cagr_2026_2029_pct = 24.18
+
+# Prime Urban HCMC Catchment SAM
+sam_prime_catchment_bvnd = [42.0, 95.0, 142.0, 178.0, 210.0, 241.0]
+catchment_cagr_2026_2029_pct = 19.28
+
+# SOM: PICK! Serviceable Obtainable Market in HCMC
+som_pick_bvnd = [3.20, 6.10, 7.68, 10.61, 26.55, 33.23]
+som_cagr_2026_2029_pct = 62.95
+
+[market_sizing.tam_2026_breakdown]
+court_hire_and_memberships_bvnd = 980.0
+equipment_and_apparel_retail_bvnd = 820.0
+coaching_and_academies_bvnd = 360.0
+fnb_and_social_tournaments_bvnd = 290.0
+
+[market_sizing.sam_2026_breakdown]
+court_hire_bvnd = 655.0
+coaching_and_clinics_bvnd = 215.0
+fnb_and_hospitality_bvnd = 165.0
+rentals_events_and_memberships_bvnd = 85.0
+
+# ------------------------------------------------------------------------------
+# 2. HCMC COMPETITIVE LANDSCAPE (PICK! BASELINE + 9 REAL RESEARCHED HCMC CLUBS)
+#    Social Followers = Combined Multi-Platform Reach (Facebook + TikTok + IG)
+# ------------------------------------------------------------------------------
+
+[[competitors]]
+id = "pick_baseline"
+name = "PICK! Pickleball Club"
+category = "PICK! (Our Venue)"
+district = "Ho Chi Minh City Core"
+courts = 6
+offpeak_price_kvnd = 160.0
+peak_price_kvnd = 260.0
+blended_price_kvnd = 230.0
+daytime_util_pct = 40.0
+peak_util_pct = 92.5
+blended_util_pct = 66.0
+facebook_followers_k = 0.0
+tiktok_followers_k = 24.5
+instagram_followers_k = 17.5
+social_followers_k = 42.0
+annual_revenue_mvnd = 7680.0
+positioning_note = "Highest online attention in HCMC (42.0k followers), but capped by 60% empty weekday daytime courts and 6-court peak capacity ceiling."
+
+[[competitors]]
+id = "hcmc_djoy"
+name = "D-Joy Pickleball"
+category = "HCMC Cheaper-Peak Rival (<260k/hr)"
+district = "Thu Thiem & District 7"
+courts = 14
+offpeak_price_kvnd = 120.0
+peak_price_kvnd = 250.0
+blended_price_kvnd = 200.0
+daytime_util_pct = 46.0
+peak_util_pct = 91.0
+blended_util_pct = 68.0
+facebook_followers_k = 18.0
+tiktok_followers_k = 8.5
+instagram_followers_k = 5.0
+social_followers_k = 31.5
+annual_revenue_mvnd = 12900.0
+positioning_note = "Large 14-court tournament complex pricing peak hours at 250k VND/hour with strong Facebook and TikTok event reach."
+
+[[competitors]]
+id = "hcmc_002"
+name = "002 Pickleball Club"
+category = "HCMC Cheaper-Peak Rival (<260k/hr)"
+district = "Thao Dien (Thu Duc)"
+courts = 12
+offpeak_price_kvnd = 130.0
+peak_price_kvnd = 240.0
+blended_price_kvnd = 195.0
+daytime_util_pct = 48.0
+peak_util_pct = 93.0
+blended_util_pct = 69.5
+facebook_followers_k = 14.2
+tiktok_followers_k = 6.5
+instagram_followers_k = 7.8
+social_followers_k = 28.5
+annual_revenue_mvnd = 10800.0
+positioning_note = "12-court covered hub with over 6,600 Reclub players, pricing peak hours at 240k VND/hour."
+
+[[competitors]]
+id = "hcmc_usc"
+name = "USC Pickleball"
+category = "HCMC Parity/Premium Club (>=260k/hr)"
+district = "Thao Dien & Phu My Hung"
+courts = 10
+offpeak_price_kvnd = 160.0
+peak_price_kvnd = 300.0
+blended_price_kvnd = 245.0
+daytime_util_pct = 46.0
+peak_util_pct = 92.0
+blended_util_pct = 68.0
+facebook_followers_k = 13.5
+tiktok_followers_k = 4.0
+instagram_followers_k = 6.5
+social_followers_k = 24.0
+annual_revenue_mvnd = 11400.0
+positioning_note = "Premium multi-branch coaching and tournament venue charging up to 300k VND/hour at peak."
+
+[[competitors]]
+id = "hcmc_rudal"
+name = "Rudal Pickleball & Academy"
+category = "HCMC Cheaper-Peak Rival (<260k/hr)"
+district = "Binh An (Thu Duc)"
+courts = 8
+offpeak_price_kvnd = 120.0
+peak_price_kvnd = 250.0
+blended_price_kvnd = 202.0
+daytime_util_pct = 45.0
+peak_util_pct = 90.0
+blended_util_pct = 66.5
+facebook_followers_k = 11.8
+tiktok_followers_k = 5.4
+instagram_followers_k = 3.8
+social_followers_k = 21.0
+annual_revenue_mvnd = 7950.0
+positioning_note = "1,300 m2 covered roof complex with academy coaching and 250k VND/hour peak pricing."
+
+[[competitors]]
+id = "hcmc_pickoland"
+name = "PickoLand Thao Dien"
+category = "HCMC Cheaper-Peak Rival (<260k/hr)"
+district = "Nguyen Van Huong, Thao Dien"
+courts = 4
+offpeak_price_kvnd = 150.0
+peak_price_kvnd = 250.0
+blended_price_kvnd = 212.0
+daytime_util_pct = 44.0
+peak_util_pct = 91.0
+blended_util_pct = 65.5
+facebook_followers_k = 9.2
+tiktok_followers_k = 4.0
+instagram_followers_k = 6.3
+social_followers_k = 19.5
+annual_revenue_mvnd = 4320.0
+positioning_note = "Boutique riverside social venue hosting weekend community nights; revenue capped by 4-court footprint."
+
+[[competitors]]
+id = "hcmc_ese"
+name = "ESE Pickleball Arena"
+category = "HCMC Parity/Premium Club (>=260k/hr)"
+district = "Phu Thuan (District 7)"
+courts = 10
+offpeak_price_kvnd = 150.0
+peak_price_kvnd = 260.0
+blended_price_kvnd = 218.0
+daytime_util_pct = 43.0
+peak_util_pct = 91.0
+blended_util_pct = 65.0
+facebook_followers_k = 9.5
+tiktok_followers_k = 4.2
+instagram_followers_k = 2.5
+social_followers_k = 16.2
+annual_revenue_mvnd = 9600.0
+positioning_note = "High-ceiling indoor complex in District 7 matching 260k VND/hour peak pricing with active social play."
+
+[[competitors]]
+id = "hcmc_hitpark"
+name = "HitPark Pickleball Club"
+category = "HCMC Cheaper-Peak Rival (<260k/hr)"
+district = "Binh An (An Phu / Thu Duc)"
+courts = 6
+offpeak_price_kvnd = 120.0
+peak_price_kvnd = 240.0
+blended_price_kvnd = 190.0
+daytime_util_pct = 41.0
+peak_util_pct = 89.0
+blended_util_pct = 63.5
+facebook_followers_k = 7.4
+tiktok_followers_k = 3.4
+instagram_followers_k = 2.0
+social_followers_k = 12.8
+annual_revenue_mvnd = 5580.0
+positioning_note = "Modern 6-court An Phu venue undercutting peak at 240k VND/hour and daytime at 120k VND/hour."
+
+[[competitors]]
+id = "hcmc_thanhda"
+name = "Thanh Da Pickleball Club"
+category = "HCMC Cheaper-Peak Rival (<260k/hr)"
+district = "Binh Thanh District"
+courts = 6
+offpeak_price_kvnd = 110.0
+peak_price_kvnd = 210.0
+blended_price_kvnd = 168.0
+daytime_util_pct = 38.0
+peak_util_pct = 88.0
+blended_util_pct = 61.0
+facebook_followers_k = 5.6
+tiktok_followers_k = 1.8
+instagram_followers_k = 1.0
+social_followers_k = 8.4
+annual_revenue_mvnd = 4650.0
+positioning_note = "Neighborhood 6-court venue competing aggressively on price (210k peak, 110k daytime) with basic amenities."
+
+[[competitors]]
+id = "hcmc_happyura"
+name = "Happyura / Happy Pickleball"
+category = "HCMC Cheaper-Peak Rival (<260k/hr)"
+district = "Phuoc Kien (Nha Be / South HCMC)"
+courts = 6
+offpeak_price_kvnd = 80.0
+peak_price_kvnd = 150.0
+blended_price_kvnd = 122.0
+daytime_util_pct = 34.0
+peak_util_pct = 82.0
+blended_util_pct = 55.0
+facebook_followers_k = 3.8
+tiktok_followers_k = 1.0
+instagram_followers_k = 0.4
+social_followers_k = 5.2
+annual_revenue_mvnd = 3150.0
+positioning_note = "Suburban budget courts (80k-150k VND/hour); low social reach and minimal coaching or food & drinks."
+
+# ------------------------------------------------------------------------------
+# 3. CUSTOMER PROFILES, UNIT ECONOMICS & DERIVED MUTUAL DEMAND
+#    (Zero fake personal names; clean bullet-point profiles; zero abbreviations)
+# ------------------------------------------------------------------------------
+[[personas]]
+id = "competitive"
+segment_name = "Competitive Players"
+persona_title = "Advanced Racket-Sport Regulars"
+priority_tier = "Tier 2: High-Frequency Anchor (20% of Customers)"
+priority_rank = 3
+customer_share_pct = 20.0
+baseline_customers = 720
+visits_per_month = 4.5
+baseline_visits_monthly = 3240
+visit_share_pct = 42.65
+total_spend_per_visit_kvnd = 95.00
+court_hire_per_visit_kvnd = 62.90
+paddle_balls_per_visit_kvnd = 0.80
+coaching_per_visit_kvnd = 21.30
+fnb_per_visit_kvnd = 10.00
+ancillary_per_visit_kvnd = 32.10
+baseline_monthly_revenue_mvnd = 307.80
+baseline_marketing_budget_mvnd = 5.00
+marketing_cost_per_visit_vnd = 1543.21
+marketing_cost_per_customer_vnd = 6944.44
+demographics = "- Age 24 to 38 urban professionals\n- Former tennis and badminton players\n- Monthly income 25M to 60M+ VND"
+schedule_habit = "- Plays 4.5 visits per month\n- Books prime weekday evenings & weekends\n- Owns personal carbon paddles"
+main_case_need = "Improve skills and find good opponents"
+pain_points = "- Evening courts are 95% full at peak\n- Hard to find equal-skill 4th players\n- Lacks structured ranked leagues"
+derived_demand = "- Skill-verified 4-player matchmaking\n- Reliable peak court availability\n- Ranked leagues & advanced drills"
+
+[[personas]]
+id = "social"
+segment_name = "Social Players"
+persona_title = "After-Work Young Professionals"
+priority_tier = "Priority #1: Core Volume Segment (35% of Customers)"
+priority_rank = 1
+customer_share_pct = 35.0
+baseline_customers = 1260
+visits_per_month = 2.0
+baseline_visits_monthly = 2520
+visit_share_pct = 33.18
+total_spend_per_visit_kvnd = 80.00
+court_hire_per_visit_kvnd = 57.38
+paddle_balls_per_visit_kvnd = 1.60
+coaching_per_visit_kvnd = 9.52
+fnb_per_visit_kvnd = 11.50
+ancillary_per_visit_kvnd = 22.62
+baseline_monthly_revenue_mvnd = 201.60
+baseline_marketing_budget_mvnd = 8.50
+marketing_cost_per_visit_vnd = 3373.02
+marketing_cost_per_customer_vnd = 6746.03
+demographics = "- Age 21 to 32 office & agency staff\n- Socializes in 4 to 8 friend groups\n- Monthly income 12M to 30M VND"
+schedule_habit = "- Plays 2.0 visits per month\n- Books late afternoons & evenings\n- Highest food & drink spend (11.5k/visit)"
+main_case_need = "Play with friends and enjoy the atmosphere"
+pain_points = "- Cheaper peak rivals tempt groups away\n- Last-minute 4th-player dropouts\n- No loyalty perks for repeat bookings"
+derived_demand = "- Easy group booking & bill splitting\n- Drop-in open play to fill 4-player games\n- Lively cafe hangout & member perks"
+
+[[personas]]
+id = "trend_explorers"
+segment_name = "Trend Explorers"
+persona_title = "University Students & First-Timers"
+priority_tier = "Priority #2: High-Churn Trial Segment (30% of Customers)"
+priority_rank = 2
+customer_share_pct = 30.0
+baseline_customers = 1080
+visits_per_month = 1.1
+baseline_visits_monthly = 1188
+visit_share_pct = 15.64
+total_spend_per_visit_kvnd = 65.00
+court_hire_per_visit_kvnd = 49.01
+paddle_balls_per_visit_kvnd = 5.20
+coaching_per_visit_kvnd = 4.80
+fnb_per_visit_kvnd = 5.99
+ancillary_per_visit_kvnd = 15.99
+baseline_monthly_revenue_mvnd = 77.22
+baseline_marketing_budget_mvnd = 7.50
+marketing_cost_per_visit_vnd = 6313.13
+marketing_cost_per_customer_vnd = 6944.44
+demographics = "- Age 18 to 26 students & young creators\n- Discovers pickleball on TikTok & IG\n- Flexible daytime hours, budget-aware"
+schedule_habit = "- Plays only 1.1 visits per month\n- Most visit once or twice then churn\n- Highest paddle rental spend (5.2k/visit)"
+main_case_need = "Try something seen online; many visit once or twice"
+pain_points = "- Highest Marketing Cost (6,313 VND/visit)\n- 160k daytime rate is too high for students\n- Intimidated by experienced players"
+derived_demand = "- Affordable weekday daytime student rates\n- Beginner-only social mixer sessions\n- Easy starter equipment & 2nd-visit hook"
+
+[[personas]]
+id = "families"
+segment_name = "Families"
+persona_title = "Weekend Parents & Junior Beginners"
+priority_tier = "Tier 3: High-Ancillary Coaching Segment (15% of Customers)"
+priority_rank = 4
+customer_share_pct = 15.0
+baseline_customers = 540
+visits_per_month = 1.2
+baseline_visits_monthly = 648
+visit_share_pct = 8.53
+total_spend_per_visit_kvnd = 85.00
+court_hire_per_visit_kvnd = 46.42
+paddle_balls_per_visit_kvnd = 3.40
+coaching_per_visit_kvnd = 25.15
+fnb_per_visit_kvnd = 10.03
+ancillary_per_visit_kvnd = 38.58
+baseline_monthly_revenue_mvnd = 55.08
+baseline_marketing_budget_mvnd = 4.00
+marketing_cost_per_visit_vnd = 6172.84
+marketing_cost_per_customer_vnd = 7407.41
+demographics = "- Parents age 33 to 50 with kids age 8 to 16\n- Affluent urban HCMC households\n- Values safety, shade & coaching"
+schedule_habit = "- Plays 1.2 visits per month on weekends\n- Prefers morning & afternoon slots\n- Highest coaching spend (25.2k/visit)"
+main_case_need = "A welcoming activity and beginner lessons"
+pain_points = "- Fast adult games intimidate children\n- Lacks structured junior lesson tracks\n- Needs shaded family seating areas"
+derived_demand = "- Dedicated family & junior beginner lessons\n- Safe weekend family court blocks\n- Shaded spectator seating & refreshments"
+
+# ------------------------------------------------------------------------------
+# 4. DERIVED MUTUAL DEMAND PILLARS (CROSS-SEGMENT CUSTOMER NEEDS)
+# ------------------------------------------------------------------------------
+[[mutual_demand_pillars]]
+pillar_id = "skill_matching"
+pillar_name = "1. Frictionless 4-Player Skill Matching & Open Play Liquidity"
+segments_served = "All 4 Segments (100% of Customers)"
+customer_friction = "Manual group coordination, last-minute 4th-player dropouts, and intimidating skill mismatches on court."
+mutual_need_statement = "Players across every tier need effortless, level-appropriate game matching so solo players, beginners, and 3-person crews can always play a balanced 4-player game."
+
+[[mutual_demand_pillars]]
+pillar_id = "daytime_affordability"
+pillar_name = "2. Accessible Off-Peak Daytime Rates & Peak Court Availability"
+segments_served = "Trend Explorers (30%), Social Players (35%), Competitive Players (20%)"
+customer_friction = "Static 160k VND/hour weekday daytime rates price out flexible students (leaving 60% of daytime courts empty), while 95% evening congestion turns away peak groups."
+mutual_need_statement = "Price-elastic daytime players need affordable off-peak access (06:00-17:00), while after-work regulars need relief from evening and weekend court bottlenecks."
+
+[[mutual_demand_pillars]]
+pillar_id = "structured_progression"
+pillar_name = "3. Structured Beginner-to-Competitive Skill Progression"
+segments_served = "Trend Explorers (30%), Families (15%), Competitive Players (20%)"
+customer_friction = "First-timers (1.1 visits/month) and Families (1.2 visits/month) lack a clear pathway from their first viral trial to confident regular play."
+mutual_need_statement = "Beginners and families need welcoming introductory clinics and guided games, while competitive players need advanced drills and seasonal tournament benchmarks."
+
+[[mutual_demand_pillars]]
+pillar_id = "social_third_place"
+pillar_name = "4. Welcoming Social 'Third-Place' Community & Regular Recognition"
+segments_served = "Social Players (35%), Competitive Players (20%), Trend Explorers (30%), Families (15%)"
+customer_friction = "1,150 free registered accounts experience purely transactional walk-in bookings with zero community identity or loyalty privileges against cheaper local rivals."
+mutual_need_statement = "Customers want more than bare concrete courts: they want a vibrant social clubhouse (specialty drinks, post-match hangout, and member recognition) that rewards repeat play."

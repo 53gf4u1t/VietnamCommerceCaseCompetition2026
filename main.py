@@ -13,6 +13,7 @@ if str(ROOT_DIR) not in sys.path:
 from theme import set_theme
 from AdaptivePricing.main import run_adaptive_pricing
 from FinancialModel.main import run_financial_model
+from MarketResearch.main import run_market_research
 from Marketing.main import run_marketing
 from PickSocialProjectTimeline.main import run_project_timeline
 from VenueScalingTimeline.main import run_venue_scaling_timeline
@@ -64,6 +65,14 @@ def main(argv: list[str] | None = None) -> None:
     print("=" * 86)
     print(f"ACTIVE VISUALIZATION THEME: Catppuccin {active_theme} ({'Light Mode' if active_theme == 'Latte' else 'Dark Mode'})")
     print("=" * 86)
+    print("VIETNAM COMMERCE CASE COMPETITION 2026 - STAGE 0/5: MarketResearch (Central configs/)")
+    print("=" * 86)
+    run_market_research(
+        config_path=CENTRAL_CONFIGS_DIR,
+        output_dir=ROOT_DIR / "MarketResearch" / "outputs",
+    )
+
+    print("\n" + "=" * 86)
     print("VIETNAM COMMERCE CASE COMPETITION 2026 - STAGE 1/5: AdaptivePricing (Central configs/)")
     print("=" * 86)
     ap_output_dir = run_adaptive_pricing(

@@ -10,6 +10,7 @@ import numpy as np
 from .config import VenueScalingConfig
 from .schedule_model import ScheduledVenueStage, ScheduledVenueTask, VenueScalingResults
 import theme as _theme  # noqa: F401
+import theme as _theme  # noqa: F401
 
 plt.rcParams.update({
     "font.family": "sans-serif",
@@ -367,7 +368,7 @@ def plot_venue_scaling_gantt_chart(
                     bbox=dict(boxstyle="round,pad=0.08", facecolor="#1e1e2e", edgecolor="none", alpha=0.80) if hatch_pat else None,
                     zorder=6,
                 )
-            elif disp_start >= 22.0:
+            elif disp_start >= 22.0 or (14.0 <= t.end_week <= 16.5):
                 ax.text(
                     disp_start - 0.18,
                     y_mid,
@@ -476,16 +477,15 @@ def plot_court_capacity_and_fill_up_ramp(
     plt.subplots_adjust(wspace=0.22)
 
     x_m = np.arange(1, 61)
-    tick_idx = [0, 8, 13, 20, 23, 35, 47, 59]
+    tick_idx = [0, 8, 13, 21, 35, 47, 59]
     tick_lbls = [
-        "Jan-27\n(Start)",
-        "Sep-27\n(Pre-Build)",
-        "Feb-28\n(Venue 2 Open)",
-        "Sep-28\n(Full Ramp)",
-        "Dec-28\n(End Y2)",
-        "Dec-29\n(End Y3)",
-        "Dec-30\n(End Y4)",
-        "Dec-31\n(End Y5)",
+        "Jan-27 (Start)",
+        "Sep-27 (Pre-Build)",
+        "Feb-28 (V2 Open)",
+        "Oct-28 (Full Ramp)",
+        "Dec-29 (End Y3)",
+        "Dec-30 (End Y4)",
+        "Dec-31 (End Y5)",
     ]
 
     # -------------------------------------------------------------------------
@@ -532,8 +532,8 @@ def plot_court_capacity_and_fill_up_ramp(
     ax_left.axvspan(14, 21.5, color="#89b4fa", alpha=0.14, label="6-to-9 Month Fill-Up Window (Feb 2028 - Sep 2028)", zorder=1)
 
     ax_left.set_xticks([t + 1 for t in tick_idx])
-    ax_left.set_xticklabels(tick_lbls, fontsize=7.6, fontweight="bold")
-    ax_left.set_ylim(0, 23.5)
+    ax_left.set_xticklabels(tick_lbls, fontsize=8.0, fontweight="bold", rotation=25, ha="right")
+    ax_left.set_ylim(0, 26.8)
     ax_left.set_ylabel("Number of Courts (Physical vs. Effective Filled)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_left.set_title(
         "Panel A: Physical Court Capacity Expansion & Effective Utilization Ramp",
@@ -597,8 +597,8 @@ def plot_court_capacity_and_fill_up_ramp(
     )
 
     ax_right.set_xticks([t + 1 for t in tick_idx])
-    ax_right.set_xticklabels(tick_lbls, fontsize=7.6, fontweight="bold")
-    ax_right.set_ylim(-50, 1850)
+    ax_right.set_xticklabels(tick_lbls, fontsize=8.0, fontweight="bold", rotation=25, ha="right")
+    ax_right.set_ylim(-60, 2220)
     ax_right.set_ylabel("Venue 2 Monthly Revenue (M VND / Month)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_title(
         "Panel B: Second Club Monthly Revenue Ramp by Stream",
@@ -637,7 +637,7 @@ def plot_capex_allocation_and_unit_economics(
     # -------------------------------------------------------------------------
     ax_left.set_facecolor("#181825")
     build_stages = [s for s in res.stages if s.stage_capex_mvnd > 0]
-    s_labels = [s.short_name for s in build_stages] + ["Investor Cash Reserve (Held in Bank)"]
+    s_labels = [s.short_name.split(". ", 1)[-1] for s in build_stages] + ["Investor Cash Reserve (Held in Bank)"]
     s_vals = [s.stage_capex_mvnd for s in build_stages] + [cfg.meta.investor_reserve_mvnd]
     s_colors = [s.color for s in build_stages] + ["#7f849c"]
 
@@ -677,7 +677,7 @@ def plot_capex_allocation_and_unit_economics(
     ax_left.set_yticks(y_pos)
     ax_left.set_yticklabels(s_labels, fontsize=8.8, fontweight="bold", color="#cdd6f4")
     ax_left.set_ylim(len(s_labels) - 0.25, -0.65)
-    ax_left.set_xlim(0, 3450)
+    ax_left.set_xlim(0, 3950)
     ax_left.set_xlabel("Capital Allocation in Millions of VND (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_left.set_title(
         "Panel A: Expansion Capital Allocation by Construction Stage & Cash Reserve",

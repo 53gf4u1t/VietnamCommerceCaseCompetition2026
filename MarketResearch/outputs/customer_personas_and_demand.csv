@@ -1,0 +1,37 @@
+id,priority_rank,priority_tier,segment_name,persona_title,customer_share_pct,baseline_customers,visits_per_month,baseline_visits_monthly,visit_share_pct,total_spend_per_visit_kvnd,court_hire_per_visit_kvnd,paddle_balls_per_visit_kvnd,coaching_per_visit_kvnd,fnb_per_visit_kvnd,ancillary_per_visit_kvnd,baseline_monthly_revenue_mvnd,baseline_marketing_budget_mvnd,marketing_cost_per_visit_vnd,marketing_cost_per_customer_vnd,main_case_need,demographics,schedule_habit,pain_points,derived_demand
+social,1,Priority #1: Core Volume Segment (35% of Customers),Social Players,After-Work Young Professionals,35.0,1260,2.00,2520,33.18,80.00,57.38,1.60,9.52,11.50,22.62,201.60,8.50,3373.02,6746.03,Play with friends and enjoy the atmosphere,"- Age 21 to 32 office & agency staff
+- Socializes in 4 to 8 friend groups
+- Monthly income 12M to 30M VND","- Plays 2.0 visits per month
+- Books late afternoons & evenings
+- Highest food & drink spend (11.5k/visit)","- Cheaper peak rivals tempt groups away
+- Last-minute 4th-player dropouts
+- No loyalty perks for repeat bookings","- Easy group booking & bill splitting
+- Drop-in open play to fill 4-player games
+- Lively cafe hangout & member perks"
+trend_explorers,2,Priority #2: High-Churn Trial Segment (30% of Customers),Trend Explorers,University Students & First-Timers,30.0,1080,1.10,1188,15.64,65.00,49.01,5.20,4.80,5.99,15.99,77.22,7.50,6313.13,6944.44,Try something seen online; many visit once or twice,"- Age 18 to 26 students & young creators
+- Discovers pickleball on TikTok & IG
+- Flexible daytime hours, budget-aware","- Plays only 1.1 visits per month
+- Most visit once or twice then churn
+- Highest paddle rental spend (5.2k/visit)","- Highest Marketing Cost (6,313 VND/visit)
+- 160k daytime rate is too high for students
+- Intimidated by experienced players","- Affordable weekday daytime student rates
+- Beginner-only social mixer sessions
+- Easy starter equipment & 2nd-visit hook"
+competitive,3,Tier 2: High-Frequency Anchor (20% of Customers),Competitive Players,Advanced Racket-Sport Regulars,20.0,720,4.50,3240,42.65,95.00,62.90,0.80,21.30,10.00,32.10,307.80,5.00,1543.21,6944.44,Improve skills and find good opponents,"- Age 24 to 38 urban professionals
+- Former tennis and badminton players
+- Monthly income 25M to 60M+ VND","- Plays 4.5 visits per month
+- Books prime weekday evenings & weekends
+- Owns personal carbon paddles","- Evening courts are 95% full at peak
+- Hard to find equal-skill 4th players
+- Lacks structured ranked leagues","- Skill-verified 4-player matchmaking
+- Reliable peak court availability
+- Ranked leagues & advanced drills"
+families,4,Tier 3: High-Ancillary Coaching Segment (15% of Customers),Families,Weekend Parents & Junior Beginners,15.0,540,1.20,648,8.53,85.00,46.42,3.40,25.15,10.03,38.58,55.08,4.00,6172.84,7407.41,A welcoming activity and beginner lessons,"- Parents age 33 to 50 with kids age 8 to 16
+- Affluent urban HCMC households
+- Values safety, shade & coaching","- Plays 1.2 visits per month on weekends
+- Prefers morning & afternoon slots
+- Highest coaching spend (25.2k/visit)","- Fast adult games intimidate children
+- Lacks structured junior lesson tracks
+- Needs shaded family seating areas","- Dedicated family & junior beginner lessons
+- Safe weekend family court blocks
+- Shaded spectator seating & refreshments"

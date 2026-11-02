@@ -874,18 +874,19 @@ def plot_revenue_costs_profit_comparison_charts(
     for i in range(n_years):
         ax_ann.text(
             i - bar_w / 2,
-            mc.base_annual_rev_p95[i] + 240,
+            base_ann_rev[i] * 0.52,
             f"+{base_ann_rev[i]:,.0f}M",
             ha="center",
-            va="bottom",
-            fontsize=7.8,
-            fontweight="normal",
-            color=BASE_TEXT_GREY,
-            alpha=0.90,
+            va="center",
+            fontsize=7.6,
+            fontweight="bold",
+            color="#cdd6f4",
+            bbox=dict(boxstyle="round,pad=0.14", facecolor="#1e1e2e", edgecolor="none", alpha=0.75),
+            zorder=8,
         )
         ax_ann.text(
             i + bar_w / 2,
-            mc.annual_rev_p95[i] + 240,
+            mc.annual_rev_p95[i] + 350,
             f"+{mod_ann_rev[i]:,.0f}M",
             ha="center",
             va="bottom",
@@ -895,7 +896,7 @@ def plot_revenue_costs_profit_comparison_charts(
         )
         ax_ann.text(
             i - bar_w / 2,
-            -mc.base_annual_costs_p95[i] - 260,
+            -mc.base_annual_costs_p95[i] - 320,
             f"{base_ann_cost[i]:,.0f}M",
             ha="center",
             va="top",
@@ -906,7 +907,7 @@ def plot_revenue_costs_profit_comparison_charts(
         )
         ax_ann.text(
             i + bar_w / 2,
-            -mod_ann_total_outflow[i] - 260,
+            -mod_ann_total_outflow[i] - 320,
             f"-{mod_ann_total_outflow[i]:,.0f}M",
             ha="center",
             va="top",
@@ -918,7 +919,7 @@ def plot_revenue_costs_profit_comparison_charts(
     ax_ann.set_xticks(x_yr)
     ax_ann.set_xticklabels(res.year_labels, fontsize=9.8, fontweight="bold", color="#cdd6f4")
     ax_ann.set_ylabel("Million VND / Year", fontsize=10.2, fontweight="bold", color="#bac2de")
-    ax_ann.set_ylim(-float(np.max(mod_ann_total_outflow)) * 1.25, float(np.max(mc.annual_rev_p95)) * 1.36)
+    ax_ann.set_ylim(-float(np.max(mod_ann_total_outflow)) * 1.28, float(np.max(mc.annual_rev_p95)) * 1.44)
     ax_ann.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
     ax_ann.legend(loc="upper left", ncol=4, fontsize=7.5, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
     ax_ann.set_title(
@@ -1083,7 +1084,7 @@ def plot_revenue_costs_profit_comparison_charts(
     ax_mon.set_xticks(x_m)
     ax_mon.set_xticklabels(m24_labels, fontsize=7.8, fontweight="bold", color="#cdd6f4", rotation=25)
     ax_mon.set_ylabel("Million VND / Month", fontsize=10.2, fontweight="bold", color="#bac2de")
-    ax_mon.set_ylim(-float(np.max(mod_mon_total_outflow)) * 1.28, float(np.max(mod_mon_rev)) * 1.36)
+    ax_mon.set_ylim(-float(np.max(mod_mon_total_outflow)) * 1.32, float(np.max(mod_mon_rev)) * 1.44)
     ax_mon.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
     ax_mon.legend(loc="upper left", ncol=4, fontsize=7.3, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
     ax_mon.set_title(
@@ -1125,13 +1126,13 @@ def plot_membership_and_monte_carlo_distributions(
     x_m = np.arange(1, 61)
     tick_idx = [0, 5, 11, 23, 35, 47, 59]
     tick_lbls = [
-        "Jan-27\n(Start)",
-        "Jun-27\n(End Dev)",
-        "Dec-27\n(End Y1)",
-        "Dec-28\n(End Y2)",
-        "Dec-29\n(End Y3)",
-        "Dec-30\n(End Y4)",
-        "Dec-31\n(End Y5)",
+        "Jan-27 (Start)",
+        "Jun-27 (End Dev)",
+        "Dec-27 (End Y1)",
+        "Dec-28 (End Y2)",
+        "Dec-29 (End Y3)",
+        "Dec-30 (End Y4)",
+        "Dec-31 (End Y5)",
     ]
 
     # -------------------------------------------------------------------------
@@ -1182,18 +1183,18 @@ def plot_membership_and_monte_carlo_distributions(
     ax_a.annotate(
         f"End of Year 2 (Dec-28):\n{mc.m24_end_y2_subscribers:,.0f} Paying Members\n({mc.m24_end_y2_membership_rev_mvnd:,.1f}M VND/mo)",
         xy=(24, mc.m24_end_y2_subscribers),
-        xytext=(27.5, mc.m24_end_y2_subscribers - 360),
+        xytext=(13.5, mc.m24_end_y2_subscribers + 620),
         fontsize=8.0,
         fontweight="bold",
         color="#a6e3a1",
         bbox=dict(boxstyle="round,pad=0.28", facecolor="#1e1e2e", edgecolor="#a6e3a1", linewidth=1.0),
-        arrowprops=dict(arrowstyle="-", color="#a6e3a1", linewidth=1.2),
+        arrowprops=dict(arrowstyle="->", color="#a6e3a1", linewidth=1.3),
         zorder=8,
     )
 
     ax_a.set_xticks([t + 1 for t in tick_idx])
-    ax_a.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold")
-    ax_a.set_ylim(-50, float(np.max(mc.active_subscribers_p95)) * 1.16)
+    ax_a.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold", rotation=18, ha="right")
+    ax_a.set_ylim(-50, float(np.max(mc.active_subscribers_p95)) * 1.20)
     ax_a.set_ylabel("Active Paying Members (Subscribers)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_a.set_title(
         "Panel A: Active Paying Subscriber Cohort Evolution",
@@ -1277,8 +1278,8 @@ def plot_membership_and_monte_carlo_distributions(
     )
 
     ax_b.set_xticks([t + 1 for t in tick_idx])
-    ax_b.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold")
-    ax_b.set_ylim(0, float(np.max(mc.total_rev_p95)) * 1.15)
+    ax_b.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold", rotation=18, ha="right")
+    ax_b.set_ylim(0, float(np.max(mc.total_rev_p95)) * 1.22)
     ax_b.set_ylabel("Monthly Revenue (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_b.set_title(
         "Panel B: Monthly Total Revenue & PICK! Social Subscription Trajectory",
@@ -1328,8 +1329,8 @@ def plot_membership_and_monte_carlo_distributions(
     ax_c.axhline(0, color="#cdd6f4", linewidth=1.2, zorder=4)
 
     ax_c.set_xticks([t + 1 for t in tick_idx])
-    ax_c.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold")
-    ax_c.set_ylim(-115, 345)
+    ax_c.set_xticklabels(tick_lbls, fontsize=7.8, fontweight="bold", rotation=18, ha="right")
+    ax_c.set_ylim(-125, 415)
     ax_c.set_ylabel("Subscribers / Month", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_c.set_title(
         "Panel C: Monthly Subscriber Acquisition vs. Churn Flow Dynamics",
@@ -1346,7 +1347,8 @@ def plot_membership_and_monte_carlo_distributions(
     # -------------------------------------------------------------------------
     ax_d.set_facecolor("#181825")
     x_y = np.arange(5)
-    w_y = 0.26
+    w_y = 0.24
+    gap_y = 0.27
 
     base_y_ebitda = mc.base_annual_ebitda_mean
     mod_y_ebitda = res.annual_ebitda_arr
@@ -1366,7 +1368,7 @@ def plot_membership_and_monte_carlo_distributions(
     ])
 
     ax_d.bar(
-        x_y - w_y,
+        x_y - gap_y,
         base_y_ebitda,
         width=w_y,
         yerr=base_y_yerr,
@@ -1392,7 +1394,7 @@ def plot_membership_and_monte_carlo_distributions(
         zorder=4,
     )
     ax_d.bar(
-        x_y + w_y,
+        x_y + gap_y,
         stress_y_ebitda,
         width=w_y,
         yerr=stress_y_yerr,
@@ -1417,39 +1419,44 @@ def plot_membership_and_monte_carlo_distributions(
 
     for i in range(5):
         ax_d.text(
-            x_y[i] - w_y,
-            mc.base_annual_ebitda_p95[i] + 150,
+            x_y[i] - gap_y - 0.02,
+            mc.base_annual_ebitda_p95[i] + 240,
             f"{base_y_ebitda[i]:,.0f}M",
             ha="center",
             va="bottom",
-            fontsize=7.3,
+            fontsize=7.0,
             fontweight="normal",
             color="#a6adc8",
         )
         ax_d.text(
             x_y[i],
-            mc.annual_ebitda_p95[i] + 180,
+            mc.annual_ebitda_p95[i] + 280,
             f"{mod_y_ebitda[i]:,.0f}M",
             ha="center",
             va="bottom",
-            fontsize=8.0,
+            fontsize=7.6,
             fontweight="bold",
             color="#a6e3a1",
         )
+        stress_lbl_y = (
+            3780.0
+            if 2900.0 <= mc.stress_annual_ebitda_p95[i] <= 3650.0
+            else (mc.stress_annual_ebitda_p95[i] + 260 if stress_y_ebitda[i] >= 0 else mc.stress_annual_ebitda_p05[i] - 1050)
+        )
         ax_d.text(
-            x_y[i] + w_y,
-            mc.stress_annual_ebitda_p95[i] + 180 if stress_y_ebitda[i] >= 0 else mc.stress_annual_ebitda_p05[i] - 950,
+            x_y[i] + gap_y + 0.03,
+            stress_lbl_y,
             f"{stress_y_ebitda[i]:,.0f}M",
             ha="center",
             va="bottom",
-            fontsize=7.5,
+            fontsize=7.2,
             fontweight="bold",
             color="#fab387",
         )
 
     ax_d.set_xticks(x_y)
     ax_d.set_xticklabels(res.year_labels, fontsize=8.8, fontweight="bold")
-    ax_d.set_ylim(min(-2600.0, float(np.min(mc.stress_annual_ebitda_p05)) * 1.45), float(np.max(mc.annual_ebitda_p95)) * 1.18)
+    ax_d.set_ylim(min(-2900.0, float(np.min(mc.stress_annual_ebitda_p05)) * 1.55), float(np.max(mc.annual_ebitda_p95)) * 1.36)
     ax_d.set_ylabel("Annual Operating Profit / EBITDA (M VND / Year)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_d.set_title(
         "Panel D: Annual Operating Profit Across Scenarios vs. Investor Target",
@@ -1552,7 +1559,28 @@ def plot_monthly_cash_balance_and_externals(
         zorder=4,
     )
     ax1.axvline(10, color="#f9e2af", linestyle="--", linewidth=1.3, alpha=0.85)
+    ax1.text(
+        9.6,
+        29500,
+        "Oct-27: +7,500M Equity\n& Venue 2 Build Start",
+        ha="right",
+        fontsize=8.0,
+        fontweight="bold",
+        color="#f9e2af",
+        bbox=dict(boxstyle="round,pad=0.22", facecolor="#1e1e2e", edgecolor="#f9e2af", alpha=0.92),
+    )
     ax1.axvline(14, color="#a6e3a1", linestyle="--", linewidth=1.4, alpha=0.85)
+    ax1.text(
+        14.4,
+        21500,
+        "Feb-28: Venue 2 Opens\n(20 Courts Active)",
+        ha="left",
+        fontsize=8.0,
+        fontweight="bold",
+        color="#a6e3a1",
+        bbox=dict(boxstyle="round,pad=0.22", facecolor="#1e1e2e", edgecolor="#a6e3a1", alpha=0.92),
+    )
+    ax1.set_ylim(-2500, float(np.max(mc.ending_cash_p95)) * 1.18)
     ax1.set_title(
         "Panel A: Cumulative Cash Reserves Trajectory Across Scenarios",
         fontsize=11.2,
@@ -1589,8 +1617,8 @@ def plot_monthly_cash_balance_and_externals(
     ax3.set_facecolor("#181825")
     ax3_twin = ax3.twinx()
 
-    ax3.fill_between(x_m, mc.trend_index_p05, mc.trend_index_p95, color="#f9e2af", alpha=0.22, label="Pickleball Interest Trend Index I_t (P05-P95 Band)")
-    ax3.plot(x_m, mc.trend_index_mean, color="#fab387", linewidth=2.4, marker="o", markersize=3.5, label="Cumulative Pickleball Interest Trend Multiplier I_t (externals.toml)")
+    ax3.fill_between(x_m, mc.trend_index_p05, mc.trend_index_p95, color="#f9e2af", alpha=0.22, label="Macro Pickleball Trend Index (P05-P95 Band)")
+    ax3.plot(x_m, mc.trend_index_mean, color="#fab387", linewidth=2.4, marker="o", markersize=3.5, label="Macro Pickleball Demand Trend Multiplier")
     ax3.axhline(1.0, color="#7f849c", linestyle=":", linewidth=1.3)
 
     ax3_twin.plot(
@@ -1601,15 +1629,15 @@ def plot_monthly_cash_balance_and_externals(
         linestyle="--",
         marker="o",
         markersize=3.2,
-        label="Monthly Legal/Ward Noise & U-18 Safety Cost (M VND/mo)",
+        label="Monthly Legal, Ward Noise & Youth Safety Reserve (M VND/mo)",
     )
 
     ax3.set_xticks([t + 1 for t in tick_idx])
     ax3.set_xticklabels(tick_lbls, fontsize=8.5, fontweight="bold")
     ax3.set_ylim(0.65, 1.35)
     ax3_twin.set_ylim(0, 22.0)
-    ax3.set_ylabel("Macro Pickleball Trend Index (I_t)", fontsize=9.8, fontweight="bold", color="#fab387")
-    ax3_twin.set_ylabel("Legal/Noise & U-18 Safety (M VND/mo)", fontsize=9.5, fontweight="bold", color="#cba6f7")
+    ax3.set_ylabel("Macro Pickleball Trend Index", fontsize=9.8, fontweight="bold", color="#fab387")
+    ax3_twin.set_ylabel("Legal, Noise & Safety Reserve (M VND/mo)", fontsize=9.5, fontweight="bold", color="#cba6f7")
     ax3.set_xlabel("60-Month Projection Horizon (Jan 2027 - Dec 2031)", fontsize=10.0, fontweight="bold", color="#bac2de")
     ax3.set_title(
         "Panel C: Macro Market Demand Trend & Regulatory Compliance Provisions",
@@ -1633,6 +1661,546 @@ def plot_monthly_cash_balance_and_externals(
     )
 
     out_path = output_dir / "06_monthly_cash_balance_and_externals.png"
+    fig.savefig(out_path, bbox_inches="tight", pad_inches=0.14)
+    plt.close(fig)
+    return out_path
+
+
+def plot_executive_solution_master_roadmap(
+    cfg: FinancialModelConfig,
+    res: FinancialModelResults,
+    output_dir: Path,
+) -> Path:
+    """
+    Render `00_executive_solution_master_roadmap.png`:
+    A true, staggered multi-row Master Gantt Chart across Months M1-M24 (Jan 2027 - Dec 2028)
+    plus FY 2029 - FY 2031 (Years 3-5 Steady-State), showing the 4 Solution Pillars as Stage Headers
+    and their staggered sub-activities stepping across the timeline with short, punchy labels.
+    """
+    # Structure: 4 Pillar Header Rows + 13 Staggered Sub-Task Rows = 17 rows total
+    # Timeline X-axis [0.0 .. 28.0]:
+    #   0.0 .. 12.0  : Year 1 Months M1..M12 (Jan 2027 .. Dec 2027)
+    #   12.0 .. 24.0 : Year 2 Months M13..M24 (Jan 2028 .. Dec 2028)
+    #   24.0 .. 28.0 : Years 3-5 Steady-State (FY 2029 Target Year + FY 2030-2031)
+    rows_spec = [
+        # Pillar 1: 5.1 Adaptive Court Pricing
+        {
+            "type": "pillar",
+            "id": "5.1",
+            "name": "PILLAR 1: ADAPTIVE COURT PRICING (ML DYNAMIC TARIFF ENGINE)",
+            "window": "Jan 27 - Ongoing",
+            "metric": "+23.9M -> +79.6M/mo Lift",
+            "start": 0.0,
+            "end": 28.0,
+            "color": "#89b4fa",
+            "row_bg": "#24273a",
+        },
+        {
+            "type": "task",
+            "id": "5.1a",
+            "name": "Venue 1 (6 Courts): Lower Daytime 160k->115k & Peak 285k-300k",
+            "window": "Jan 27 - Jan 28",
+            "metric": "66.6% Daytime Fill (+23.9M/mo)",
+            "start": 0.0,
+            "end": 13.0,
+            "color": "#89b4fa",
+            "hatch": False,
+            "bar_text": "5.1a Venue 1 Dynamic Pricing (6 Courts: 460.8M/mo)",
+        },
+        {
+            "type": "task",
+            "id": "5.1b",
+            "name": "20-Court Network Pricing (Venue 1 + Venue 2 Unified Tariff Grid)",
+            "window": "Feb 28 - Dec 31",
+            "metric": "1,535.8M/mo (+79.6M/mo Lift)",
+            "start": 13.0,
+            "end": 28.0,
+            "color": "#74c7ec",
+            "hatch": False,
+            "bar_text": "5.1b Unified 20-Court Dynamic Pricing (1,535.8M/mo Court Revenue)",
+        },
+        # Pillar 2: 5.2 Segment-Optimized Marketing
+        {
+            "type": "pillar",
+            "id": "5.2",
+            "name": "PILLAR 2: SEGMENT-OPTIMIZED MARKETING & QUARTERLY TOURNAMENTS",
+            "window": "Jan 27 - Ongoing",
+            "metric": "7,596 -> ~21,600 Visits/mo",
+            "start": 0.0,
+            "end": 28.0,
+            "color": "#fab387",
+            "row_bg": "#302623",
+        },
+        {
+            "type": "task",
+            "id": "5.2a",
+            "name": "ML Daytime Fill & Segment Creative (Social 35% & Trend Explorers 30%)",
+            "window": "Jan 27 - Apr 27",
+            "metric": "Fix 89% 1st-Visit Churn",
+            "start": 0.0,
+            "end": 4.0,
+            "color": "#f9e2af",
+            "hatch": False,
+            "bar_text": "5.2a Daytime Fill (~48M/mo)",
+        },
+        {
+            "type": "task",
+            "id": "5.2b",
+            "name": "Launch Quarterly Open Tournaments (Jun/Sep/Dec Y1) & Uni Clubs",
+            "window": "May 27 - Jan 28",
+            "metric": "~44M/mo -> ~9,400 Visits/mo",
+            "start": 4.0,
+            "end": 13.0,
+            "color": "#fab387",
+            "hatch": False,
+            "bar_text": "5.2b Quarterly Tournaments & Uni Clubs (~44M/mo)",
+        },
+        {
+            "type": "task",
+            "id": "5.2c",
+            "name": "2-Club Acquisition Surge & Multi-Venue Tournament Circuit (Mar/Jun/Sep/Dec)",
+            "window": "Feb 28 - Dec 31",
+            "metric": "565M/mo Ancillary (2.75x Base)",
+            "start": 13.0,
+            "end": 28.0,
+            "color": "#fab387",
+            "hatch": False,
+            "bar_text": "5.2c 2-Club Growth Engine (82M Launch -> 52-60M/mo Steady; ~21,600 Visits/mo)",
+        },
+        # Pillar 3: 5.3 PICK! Social Community & Membership Network
+        {
+            "type": "pillar",
+            "id": "5.3",
+            "name": "PILLAR 3: PICK! SOCIAL COMMUNITY & MEMBERSHIP NETWORK (399K/MO)",
+            "window": "Jan 27 - Ongoing",
+            "metric": "1,489 Y2 -> 2,218 Y5 Members",
+            "start": 0.0,
+            "end": 28.0,
+            "color": "#a6e3a1",
+            "row_bg": "#212e28",
+        },
+        {
+            "type": "task",
+            "id": "5.3a",
+            "name": "Core Platform Build & Simultaneous QA (Booking, Skill Match, Split-Pay)",
+            "window": "Jan 27 - Apr 27",
+            "metric": "676.2M Base (4.0 Months)",
+            "start": 0.0,
+            "end": 4.0,
+            "color": "#cba6f7",
+            "hatch": True,
+            "bar_text": "5.3a 4-Mo Core Build",
+        },
+        {
+            "type": "task",
+            "id": "5.3b",
+            "name": "Legacy Booking Migration, Public Cutover & Hypercare",
+            "window": "May 27 - Jun 27",
+            "metric": "351 Launch Members (May-27)",
+            "start": 4.0,
+            "end": 6.0,
+            "color": "#f38ba8",
+            "hatch": False,
+            "bar_text": "5.3b Cutover (2m)",
+        },
+        {
+            "type": "task",
+            "id": "5.3c",
+            "name": "399k/mo Membership, ELO/DUPR Matchmaking & 'Find-a-4th' Scaling",
+            "window": "May 27 - Dec 31",
+            "metric": "645M/mo (Y2) -> 948M/mo (Y5)",
+            "start": 4.0,
+            "end": 28.0,
+            "color": "#a6e3a1",
+            "hatch": False,
+            "bar_text": "5.3c PICK! Social Recurring Membership Growth (351 May-27 -> 807 Dec-27 -> 1,489 Dec-28 -> 2,218 Dec-31)",
+        },
+        # Pillar 4: 5.4 Phased 14-Court Second Venue Expansion
+        {
+            "type": "pillar",
+            "id": "5.4",
+            "name": "PILLAR 4: PHASED 14-COURT SECOND VENUE EXPANSION (8.0B EQUITY)",
+            "window": "Jan 27 - Ongoing",
+            "metric": "20 Courts | 12.42B Y3 EBITDA",
+            "start": 0.0,
+            "end": 28.0,
+            "color": "#cba6f7",
+            "row_bg": "#292338",
+        },
+        {
+            "type": "task",
+            "id": "5.4a",
+            "name": "Phase 1 Proof-of-Demand Gate (+500M Cash Buffer & Pre-Sale Waitlist)",
+            "window": "Jan 27 - Sep 27",
+            "metric": "+500M Tranche 1 (9 Months)",
+            "start": 0.0,
+            "end": 9.0,
+            "color": "#94e2d5",
+            "hatch": True,
+            "bar_text": "5.4a Phase 1 Gate: Prove Demand & Build Waitlist (M1-M9)",
+        },
+        {
+            "type": "task",
+            "id": "5.4b",
+            "name": "14-Court Construction, 28-Day Slab Cure, Canopy, Cafe & PCCC",
+            "window": "Oct 27 - Jan 28",
+            "metric": "+7,500M Tranche 2 (7.0B Fit-Out)",
+            "start": 9.0,
+            "end": 13.0,
+            "color": "#f38ba8",
+            "hatch": False,
+            "bar_text": "5.4b 14-Court Build (4m)",
+        },
+        {
+            "type": "task",
+            "id": "5.4c",
+            "name": "Venue 2 Grand Opening (20 Courts Live) & 6-to-9 Month Fill-Up Ramp",
+            "window": "Feb 28 - Sep 28",
+            "metric": "Ramp 28% -> 100% Steady-State",
+            "start": 13.0,
+            "end": 21.0,
+            "color": "#fab387",
+            "hatch": True,
+            "bar_text": "5.4c 6-9 Mo Fill-Up Ramp (Feb-Sep 28)",
+        },
+        {
+            "type": "task",
+            "id": "5.4d",
+            "name": "Full 20-Court Steady-State Operations Across 2 Flagship HCMC Clubs",
+            "window": "Oct 28 - Dec 31",
+            "metric": "Y3 EBITDA: 12.42B (3.55x Target)",
+            "start": 21.0,
+            "end": 28.0,
+            "color": "#cba6f7",
+            "hatch": False,
+            "bar_text": "5.4d Steady-State (Y3: 12.42B EBITDA)",
+        },
+    ]
+
+    n_rows = len(rows_spec)
+    fig, ax = plt.subplots(figsize=(26.0, 11.8), dpi=240)
+    fig.patch.set_facecolor("#1e1e2e")
+    ax.set_facecolor("#181825")
+
+    x_left_min = -21.5
+    x_right_max = 28.05
+    hdr_top = n_rows + 1.65
+    hdr_mid = n_rows + 0.65
+    hdr_bot = float(n_rows)
+
+    ax.set_xlim(x_left_min, x_right_max)
+    ax.set_ylim(-1.45, hdr_top + 0.35)
+
+    # Top timeline banners across [0.0 .. 28.0]
+    period_banners = [
+        ("Q1 2027 (JAN-MAR)", "Pricing & App Build", 0.0, 3.0, "#181825", "#313244"),
+        ("Q2 2027 (APR-JUN)", "PICK! Social Launch", 3.0, 6.0, "#291e28", "#452738"),
+        ("Q3 2027 (JUL-SEP)", "Waitlist Proof Gate", 6.0, 9.0, "#181825", "#313244"),
+        ("Q4 2027 (OCT-DEC)", "+7.5B & V2 Build", 9.0, 12.0, "#1e1e2e", "#313244"),
+        ("Q1 2028 (JAN-MAR)", "20 Courts Open", 12.0, 15.0, "#1e2926", "#233b30"),
+        ("Q2 2028 (APR-JUN)", "6-9 Mo Fill-Up Ramp", 15.0, 18.0, "#181825", "#313244"),
+        ("Q3 2028 (JUL-SEP)", "100% Steady Fill", 18.0, 21.0, "#1e1e2e", "#313244"),
+        ("Q4 2028 (OCT-DEC)", "1,489 Y2 Members", 21.0, 24.0, "#181825", "#313244"),
+        ("FY 2029 - FY 2031 (Y3-Y5)", "Y3: 12.42B EBITDA (3.55x)", 24.0, 28.0, "#1e292e", "#253b3f"),
+    ]
+    for p_title, p_sub, x0, x1, bg_c, hdr_c in period_banners:
+        ax.add_patch(
+            patches.Rectangle((x0, 0.0), x1 - x0, n_rows, facecolor=bg_c, edgecolor="none", zorder=0)
+        )
+        ax.add_patch(
+            patches.Rectangle(
+                (x0, hdr_mid),
+                x1 - x0,
+                hdr_top - hdr_mid,
+                facecolor=hdr_c,
+                edgecolor="#585b70",
+                linewidth=1.0,
+                zorder=4,
+            )
+        )
+        ax.text(
+            (x0 + x1) / 2.0,
+            hdr_mid + 0.66,
+            p_title,
+            ha="center",
+            va="center",
+            fontsize=7.4,
+            fontweight="bold",
+            color="#cdd6f4",
+            zorder=5,
+        )
+        ax.text(
+            (x0 + x1) / 2.0,
+            hdr_mid + 0.28,
+            p_sub,
+            ha="center",
+            va="center",
+            fontsize=6.6,
+            fontweight="normal",
+            color="#bac2de",
+            zorder=5,
+        )
+
+    # Sub-header cells: Months M1..M24 + Y3, Y4, Y5
+    sub_cells = [(float(m), 1.0, f"M{m + 1}") for m in range(24)] + [
+        (24.0, 1.333, "Y3 (FY29)"),
+        (25.333, 1.333, "Y4 (FY30)"),
+        (26.666, 1.334, "Y5 (FY31)"),
+    ]
+    for idx_c, (cx, cw, clbl) in enumerate(sub_cells):
+        c_bg = "#313244" if (idx_c // 3) % 2 == 0 else "#45475a"
+        ax.add_patch(
+            patches.Rectangle(
+                (cx, hdr_bot),
+                cw,
+                hdr_mid - hdr_bot,
+                facecolor=c_bg,
+                edgecolor="#585b70",
+                linewidth=0.7,
+                zorder=4,
+            )
+        )
+        ax.axvline(cx, ymin=0.06, ymax=0.92, color="#313244", linewidth=0.55, linestyle=":", zorder=1)
+        ax.text(
+            cx + cw / 2.0,
+            (hdr_bot + hdr_mid) / 2.0,
+            clbl,
+            ha="center",
+            va="center",
+            fontsize=6.9,
+            fontweight="bold",
+            color="#cdd6f4",
+            zorder=5,
+        )
+
+    for qb in (0.0, 3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0, 24.0, 28.0):
+        ax.axvline(qb, ymin=0.06, ymax=0.92, color="#585b70", linewidth=1.0, zorder=2)
+
+    # Left WBS Table Header
+    col_defs = [
+        ("ID", -21.5, -20.1, "center"),
+        ("SOLUTION PILLAR / PHASED INITIATIVE (WBS)", -20.1, -7.8, "left"),
+        ("WINDOW", -7.8, -5.0, "center"),
+        ("TARGET IMPACT & KPI", -5.0, 0.0, "center"),
+    ]
+    ax.add_patch(
+        patches.Rectangle(
+            (x_left_min, hdr_bot),
+            -x_left_min,
+            hdr_top - hdr_bot,
+            facecolor="#11111b",
+            edgecolor="#585b70",
+            linewidth=1.0,
+            zorder=4,
+        )
+    )
+    for c_title, cx0, cx1, _ in col_defs:
+        ax.text(
+            (cx0 + cx1) / 2.0,
+            (hdr_bot + hdr_top) / 2.0,
+            c_title,
+            ha="center",
+            va="center",
+            fontsize=8.2,
+            fontweight="bold",
+            color="#cdd6f4",
+            zorder=5,
+        )
+        ax.axvline(cx1, ymin=0.06, ymax=0.95, color="#45475a", linewidth=0.7, zorder=3)
+
+    # Render each Pillar Header Row & Task Bar Row
+    for r_idx, r in enumerate(rows_spec):
+        y_top = n_rows - r_idx
+        y_bot = y_top - 1.0
+        y_mid = y_bot + 0.5
+
+        if r["type"] == "pillar":
+            ax.add_patch(
+                patches.Rectangle(
+                    (x_left_min, y_bot),
+                    28.0 - x_left_min,
+                    1.0,
+                    facecolor=r["row_bg"],
+                    edgecolor="#45475a",
+                    linewidth=0.9,
+                    zorder=1,
+                )
+            )
+            ax.axhline(y_top, color=r["color"], linewidth=1.55, zorder=4)
+            ax.axhline(y_bot, color=r["color"], linewidth=1.05, zorder=4)
+            ax.add_patch(
+                patches.Rectangle((x_left_min, y_bot), 0.22, 1.0, facecolor=r["color"], edgecolor="none", zorder=5)
+            )
+            ax.text(-20.8, y_mid, r["id"], ha="center", va="center", fontsize=8.2, fontweight="bold", color=r["color"], zorder=5)
+            ax.text(-19.9, y_mid, r["name"], ha="left", va="center", fontsize=7.6, fontweight="bold", color="#cdd6f4", zorder=5)
+            ax.text(-6.4, y_mid, r["window"], ha="center", va="center", fontsize=7.3, fontweight="bold", color="#bac2de", zorder=5)
+            ax.text(-2.5, y_mid, r["metric"], ha="center", va="center", fontsize=7.5, fontweight="bold", color=r["color"], zorder=5)
+
+            # Thin summary span bar on Gantt side (just like 01_pick_social & 01_venue_scaling)
+            ax.add_patch(
+                patches.FancyBboxPatch(
+                    (r["start"], y_mid - 0.13),
+                    r["end"] - r["start"],
+                    0.26,
+                    boxstyle="round,pad=0.01,rounding_size=0.05",
+                    facecolor=r["color"],
+                    edgecolor="#11111b",
+                    linewidth=0.95,
+                    alpha=0.90,
+                    zorder=4,
+                )
+            )
+        else:
+            row_bg = "#1e1e2e" if r_idx % 2 == 0 else "#181825"
+            ax.add_patch(
+                patches.Rectangle(
+                    (x_left_min, y_bot),
+                    -x_left_min,
+                    1.0,
+                    facecolor=row_bg,
+                    edgecolor="#313244",
+                    linewidth=0.6,
+                    zorder=1,
+                )
+            )
+            ax.axhline(y_bot, color="#313244", linewidth=0.55, zorder=1)
+
+            ax.text(-20.8, y_mid, r["id"], ha="center", va="center", fontsize=7.4, fontweight="bold", color="#a6adc8", zorder=5)
+            ax.plot([-19.75, -19.75], [y_bot + 0.16, y_top - 0.16], color=r["color"], linewidth=1.15, alpha=0.8, zorder=4)
+            ax.plot([-19.75, -19.50], [y_mid, y_mid], color=r["color"], linewidth=1.0, alpha=0.8, zorder=4)
+            ax.text(-19.35, y_mid, r["name"], ha="left", va="center", fontsize=7.2, fontweight="bold", color="#cdd6f4", zorder=5)
+            ax.text(-6.4, y_mid, r["window"], ha="center", va="center", fontsize=7.1, color="#a6adc8", zorder=5)
+            ax.text(-2.5, y_mid, r["metric"], ha="center", va="center", fontsize=7.2, fontweight="bold", color="#bac2de", zorder=5)
+
+            bar_h = 0.56
+            bar_y = y_mid - bar_h / 2.0
+            bw = r["end"] - r["start"]
+            is_h = bool(r["hatch"])
+            ax.add_patch(
+                patches.FancyBboxPatch(
+                    (r["start"], bar_y),
+                    bw,
+                    bar_h,
+                    boxstyle="round,pad=0.01,rounding_size=0.08",
+                    facecolor=r["color"],
+                    edgecolor="#11111b",
+                    linewidth=1.2,
+                    alpha=0.92,
+                    hatch="///" if is_h else None,
+                    zorder=4,
+                )
+            )
+            if bw >= 3.8:
+                ax.text(
+                    r["start"] + bw / 2.0,
+                    y_mid,
+                    r["bar_text"],
+                    ha="center",
+                    va="center",
+                    fontsize=7.2,
+                    fontweight="bold",
+                    color="#cdd6f4" if is_h else "#11111b",
+                    bbox=dict(
+                        boxstyle="round,pad=0.10",
+                        facecolor="#1e1e2e" if is_h else r["color"],
+                        edgecolor="none",
+                        alpha=0.92 if is_h else 1.0,
+                    ),
+                    zorder=8,
+                )
+            else:
+                ax.text(
+                    r["end"] + 0.18,
+                    y_mid,
+                    r["bar_text"],
+                    ha="left",
+                    va="center",
+                    fontsize=7.2,
+                    fontweight="bold",
+                    color="#cdd6f4",
+                    zorder=8,
+                )
+
+    ax.plot([x_left_min, 28.0], [0.0, 0.0], color="#585b70", linewidth=1.1, zorder=5)
+
+    # Key vertical milestone markers (May-27 Platform Launch at x=4.0, Oct-27 V2 Build at x=9.0, Feb-28 V2 Open at x=13.0)
+    ax.axvline(4.0, ymin=0.05, ymax=0.92, color="#a6e3a1", linewidth=2.0, linestyle="--", zorder=6)
+    ax.axvline(9.0, ymin=0.05, ymax=0.92, color="#f38ba8", linewidth=2.0, linestyle="--", zorder=6)
+    ax.axvline(13.0, ymin=0.05, ymax=0.92, color="#fab387", linewidth=2.0, linestyle="--", zorder=6)
+
+    # Bottom summary pills
+    ax.text(
+        -10.75,
+        -0.78,
+        "PHASE 1 (M1-M9): Prove Demand on 6 Courts (+500M)  |  PHASE 2 (M10-M14): Build 14-Court Venue 2 (+7,500M)",
+        ha="center",
+        va="center",
+        fontsize=7.5,
+        fontweight="bold",
+        color="#cdd6f4",
+        bbox=dict(boxstyle="round,pad=0.28", facecolor="#313244", edgecolor="#585b70", linewidth=1.1),
+        zorder=9,
+    )
+    ax.text(
+        4.0,
+        -0.78,
+        "M5 (MAY 2027):\nPICK! SOCIAL LAUNCH",
+        ha="center",
+        va="center",
+        fontsize=7.5,
+        fontweight="bold",
+        color="#11111b",
+        bbox=dict(boxstyle="round,pad=0.25", facecolor="#a6e3a1", edgecolor="#11111b", linewidth=1.1),
+        zorder=9,
+    )
+    ax.text(
+        9.0,
+        -0.78,
+        "M10 (OCT 2027):\n+7.5B & V2 BUILD START",
+        ha="center",
+        va="center",
+        fontsize=7.5,
+        fontweight="bold",
+        color="#11111b",
+        bbox=dict(boxstyle="round,pad=0.25", facecolor="#f38ba8", edgecolor="#11111b", linewidth=1.1),
+        zorder=9,
+    )
+    ax.text(
+        14.2,
+        -0.78,
+        "M14 (FEB 2028):\nVENUE 2 OPENS (20 COURTS)",
+        ha="center",
+        va="center",
+        fontsize=7.5,
+        fontweight="bold",
+        color="#11111b",
+        bbox=dict(boxstyle="round,pad=0.25", facecolor="#fab387", edgecolor="#11111b", linewidth=1.1),
+        zorder=9,
+    )
+    ax.text(
+        23.5,
+        -0.78,
+        "FY 2029 (YEAR 3): 33.23B REV & 12.42B EBITDA\n(3.55x MINH TRAN 3.50B TARGET | 1.72x AT -30% STRESS)",
+        ha="center",
+        va="center",
+        fontsize=7.5,
+        fontweight="bold",
+        color="#11111b",
+        bbox=dict(boxstyle="round,pad=0.25", facecolor="#74c7ec", edgecolor="#11111b", linewidth=1.1),
+        zorder=9,
+    )
+
+    ax.set_title(
+        "Integrated 4-Pillar Master Implementation Gantt Schedule (Months M1-M24 + Years 3-5 Steady-State)\n"
+        "Staggered Sequencing of Adaptive Pricing, Segment Marketing, PICK! Social Platform & Phased 14-Court Second Venue Expansion",
+        fontsize=12.2,
+        fontweight="bold",
+        color="#cdd6f4",
+        pad=14,
+    )
+    ax.axis("off")
+
+    out_path = output_dir / "00_executive_solution_master_roadmap.png"
     fig.savefig(out_path, bbox_inches="tight", pad_inches=0.14)
     plt.close(fig)
     return out_path

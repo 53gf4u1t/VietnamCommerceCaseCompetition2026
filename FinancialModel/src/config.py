@@ -268,7 +268,7 @@ class PlatformMonthlyOpExConfig:
     activation_month_index: int
     post_hypercare_month_index: int
     cloud_hosting_db_redis_dist: DistParam
-    zalo_zns_otp_notifications_dist: DistParam
+    sms_otp_notifications_dist: DistParam
     observability_cicd_security_saas_dist: DistParam
     ongoing_maintenance_patching_retainer_dist: DistParam
     school_university_community_ops_dist: DistParam
@@ -278,7 +278,7 @@ class PlatformMonthlyOpExConfig:
     def launch_months_5_6_mean_mvnd(self) -> float:
         return (
             self.cloud_hosting_db_redis_dist.mean
-            + self.zalo_zns_otp_notifications_dist.mean
+            + self.sms_otp_notifications_dist.mean
             + self.observability_cicd_security_saas_dist.mean
             + self.school_university_community_ops_dist.mean
         )
@@ -602,7 +602,7 @@ def load_config(config_path: Path | None = None) -> FinancialModelConfig:
         activation_month_index=int(pm_hdr.get("activation_month_index", 5)),
         post_hypercare_month_index=int(pm_hdr.get("post_hypercare_month_index", 7)),
         cloud_hosting_db_redis_dist=_parse_dist(pm_raw["cloud_hosting_db_redis_mvnd"]),
-        zalo_zns_otp_notifications_dist=_parse_dist(pm_raw["zalo_zns_otp_notifications_mvnd"]),
+        sms_otp_notifications_dist=_parse_dist(pm_raw["sms_otp_notifications_mvnd"]),
         observability_cicd_security_saas_dist=_parse_dist(pm_raw["observability_cicd_security_saas_mvnd"]),
         ongoing_maintenance_patching_retainer_dist=_parse_dist(pm_raw["ongoing_maintenance_patching_retainer_mvnd"]),
         school_university_community_ops_dist=_parse_dist(pm_raw["school_university_community_ops_mvnd"]),

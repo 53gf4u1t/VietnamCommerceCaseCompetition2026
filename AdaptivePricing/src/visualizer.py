@@ -147,7 +147,7 @@ def plot_assumptions_distributions(
         cfg.baseline_pricing.target_monthly_booked_hours_mean,
         cfg.baseline_pricing.target_monthly_booked_hours_std,
         "A. Monthly Booked Court-Hours",
-        "Booked Court-Hours per 6-Court Unit (Scale x3.33 for 20 Cts)",
+        "Booked Court-Hours per 6-Court Unit (Scale x3.33 for 20 Courts)",
         PALETTE["ml_blue"],
         unit_suffix=" hrs",
         decimals=0,
@@ -392,7 +392,7 @@ def plot_demand_curves_variations(
             zorder=7,
             edgecolor="#11111b",
             linewidth=1.3,
-            label=f"Case Baseline: {x0:.0f}k at {u0_pct:.0f}% ({q0_6:.1f} / {q0_20:.1f} cts)",
+            label=f"Case Baseline: {x0:.0f}k at {u0_pct:.0f}% ({q0_6:.1f} / {q0_20:.1f} courts)",
         )
         ax_top.scatter(
             [x_ml],
@@ -403,12 +403,12 @@ def plot_demand_curves_variations(
             zorder=8,
             edgecolor="#11111b",
             linewidth=1.3,
-            label=f"ML Adaptive: {x_ml:.0f}k at {u_ml_pct:.1f}% ({q_ml_6:.2f} / {q_ml_20:.1f} cts)",
+            label=f"ML Adaptive: {x_ml:.0f}k at {u_ml_pct:.1f}% ({q_ml_6:.2f} / {q_ml_20:.1f} courts)",
         )
 
         if rm["id"] == 0:
             ax_top.annotate(
-                f"Case Baseline\n({x0:.0f}k, {u0_pct:.0f}% | {q0_6:.1f}/{q0_20:.0f} cts)",
+                f"Case Baseline\n({x0:.0f}k, {u0_pct:.0f}% | {q0_6:.1f}/{q0_20:.0f} courts)",
                 xy=(x0, u0_pct),
                 xytext=(x0 + 18, u0_pct + 9),
                 fontsize=7.8,
@@ -418,7 +418,7 @@ def plot_demand_curves_variations(
                 arrowprops=dict(arrowstyle="->", color=PALETTE["coral"], lw=1.1),
             )
             ax_top.annotate(
-                f"ML Target\n({x_ml:.0f}k, {u_ml_pct:.0f}% | {q_ml_6:.1f}/{q_ml_20:.1f} cts)",
+                f"ML Target\n({x_ml:.0f}k, {u_ml_pct:.0f}% | {q_ml_6:.1f}/{q_ml_20:.1f} courts)",
                 xy=(x_ml, u_ml_pct),
                 xytext=(x_ml - 26, min(92.0, u_ml_pct + 18)),
                 fontsize=7.8,
@@ -429,7 +429,7 @@ def plot_demand_curves_variations(
             )
         else:
             ax_top.annotate(
-                f"Case Baseline\n({x0:.0f}k, {u0_pct:.0f}% | {q0_6:.1f}/{q0_20:.0f} cts)",
+                f"Case Baseline\n({x0:.0f}k, {u0_pct:.0f}% | {q0_6:.1f}/{q0_20:.0f} courts)",
                 xy=(x0, u0_pct),
                 xytext=(x0 - 95, u0_pct - 18),
                 fontsize=7.8,
@@ -439,7 +439,7 @@ def plot_demand_curves_variations(
                 arrowprops=dict(arrowstyle="->", color=PALETTE["coral"], lw=1.1),
             )
             ax_top.annotate(
-                f"ML Target\n({x_ml:.0f}k, {u_ml_pct:.0f}% | {q_ml_6:.1f}/{q_ml_20:.1f} cts)",
+                f"ML Target\n({x_ml:.0f}k, {u_ml_pct:.0f}% | {q_ml_6:.1f}/{q_ml_20:.1f} courts)",
                 xy=(x_ml, u_ml_pct),
                 xytext=(x_ml - 70, u_ml_pct - 26),
                 fontsize=7.8,
@@ -449,7 +449,7 @@ def plot_demand_curves_variations(
                 arrowprops=dict(arrowstyle="->", color=PALETTE["ml_blue"], lw=1.1),
             )
 
-        ax_top.axhline(100.0, color=PALETTE["navy"], linestyle=":", linewidth=1.2, label="100% Active Court Capacity (6 Cts -> 20 Cts from Feb-28)")
+        ax_top.axhline(100.0, color=PALETTE["navy"], linestyle=":", linewidth=1.2, label="100% Active Court Capacity (6 Courts -> 20 Courts from Feb-28)")
         ax_top.set_title(rm["title_top"], fontsize=10.5, fontweight="bold", color=PALETTE["navy"], pad=8)
         ax_top.set_xlabel("Hourly Court Rental Price x (Thousand VND)", fontsize=9.0)
         ax_top.set_ylabel("Court Utilization (% of Active Capacity)", fontsize=9.0)
@@ -464,7 +464,7 @@ def plot_demand_curves_variations(
         ax_top_r.set_yticks(pct_ticks)
         ax_top_r.set_yticklabels([f"{p*6//100} / {p*20//100}" for p in pct_ticks], fontsize=7.8, color=PALETTE["slate"])
         if col_idx == 2:
-            ax_top_r.set_ylabel("Courts Booked (6-Ct Phase / 20-Ct Phase)", fontsize=8.5, color=PALETTE["slate"])
+            ax_top_r.set_ylabel("Courts Booked (6-Court Phase / 20-Court Phase)", fontsize=8.5, color=PALETTE["slate"])
 
         # Bottom Panel: Revenue Frontier
         ax_bot.plot(x_grid, r_mean_6, color=rm["color"], linewidth=2.8, label="Expected Hourly Revenue Curve")
@@ -477,7 +477,7 @@ def plot_demand_curves_variations(
             zorder=7,
             edgecolor="#11111b",
             linewidth=1.3,
-            label=f"Case Baseline @ {x0:.0f}k: {r0_val:.0f}k (6 Cts) | {r0_val*20/6:,.0f}k (20 Cts)",
+            label=f"Case Baseline @ {x0:.0f}k: {r0_val:.0f}k (6 Courts) | {r0_val*20/6:,.0f}k (20 Courts)",
         )
         ax_bot.scatter(
             [x_ml],
@@ -488,14 +488,14 @@ def plot_demand_curves_variations(
             zorder=8,
             edgecolor="#11111b",
             linewidth=1.3,
-            label=f"ML Adaptive @ {x_ml:.0f}k: {r_ml_val:.0f}k (6 Cts) | {r_ml_val*20/6:,.0f}k (20 Cts)",
+            label=f"ML Adaptive @ {x_ml:.0f}k: {r_ml_val:.0f}k (6 Courts) | {r_ml_val*20/6:,.0f}k (20 Courts)",
         )
 
         pct_gain = (r_ml_val - r0_val) / max(1.0, r0_val) * 100.0
         ax_bot.annotate(
-            f"ML: {x_ml:.0f}k VND ({pct_gain:+.1f}%)\n6 Cts: {r_ml_val:.0f}k/hr | 20 Cts: {r_ml_val*20/6:,.0f}k/hr",
+            f"ML: {x_ml:.0f}k VND ({pct_gain:+.1f}%)\n6 Courts: {r_ml_val:.0f}k/hr | 20 Courts: {r_ml_val*20/6:,.0f}k/hr",
             xy=(x_ml, r_ml_val),
-            xytext=(x_ml + 12 if rm["id"] == 0 else x_ml - 105, r_ml_val + 80 if rm["id"] == 0 else r_ml_val - 280),
+            xytext=(x_ml - 28 if rm["id"] == 0 else 160, r_ml_val + 85 if rm["id"] == 0 else 760),
             fontsize=7.6,
             fontweight="bold",
             color=PALETTE["navy"],
@@ -507,7 +507,7 @@ def plot_demand_curves_variations(
         ax_bot.set_xlabel("Hourly Court Rental Price x (Thousand VND)", fontsize=9.0)
         ax_bot.set_ylabel("Hourly Revenue: 6-Court Phase (k VND)", fontsize=9.0)
         ax_bot.set_xlim(75, 320)
-        y_max_bot = 760 if rm["id"] == 0 else 1850
+        y_max_bot = 820 if rm["id"] == 0 else 1900
         ax_bot.set_ylim(0, y_max_bot)
         ax_bot.grid(True)
         ax_bot.legend(loc="upper right" if rm["id"] == 0 else "lower left", fontsize=7.2, framealpha=0.93)
@@ -581,7 +581,7 @@ def plot_daily_revenue_comparison(
         edgecolor=PALETTE["navy"],
         linewidth=0.6,
         error_kw=dict(lw=0.8, ecolor=PALETTE["navy"], alpha=0.6),
-        label=f"Case Baseline (6 Cts: {base_total_m:.1f}M/mo | 20 Cts: {base_total_m*20/6:,.1f}M/mo)",
+        label=f"Case Baseline (6 Courts: {base_total_m:.1f}M/mo | 20 Courts: {base_total_m*20/6:,.1f}M/mo)",
         zorder=3,
     )
     ax1.bar(
@@ -595,7 +595,7 @@ def plot_daily_revenue_comparison(
         edgecolor=PALETTE["navy"],
         linewidth=0.6,
         error_kw=dict(lw=0.8, ecolor=PALETTE["navy"], alpha=0.6),
-        label=f"ML Adaptive Pricing (6 Cts: {ml_total_m:.1f}M/mo | 20 Cts: {ml_total_m*20/6:,.1f}M/mo | +{lift_pct:.1f}%)",
+        label=f"ML Adaptive Pricing (6 Courts: {ml_total_m:.1f}M/mo | 20 Courts: {ml_total_m*20/6:,.1f}M/mo | +{lift_pct:.1f}%)",
         zorder=4,
     )
 
@@ -636,15 +636,15 @@ def plot_daily_revenue_comparison(
     cum_ml = np.cumsum(ml_d)
     cum_oracle = np.cumsum(eval_res.daily_ml_rev_mean_kvnd / 1000.0 * (eval_res.mean_oracle_monthly_rev_kvnd / eval_res.mean_ml_monthly_rev_kvnd))
 
-    ax2.plot(days, cum_base, color=PALETTE["baseline"], linewidth=2.5, marker="o", markersize=4, label=f"Cumulative Case Baseline (6 Cts: {cum_base[-1]:.1f}M | 20 Cts: {cum_base[-1]*20/6:,.1f}M VND)")
-    ax2.plot(days, cum_ml, color=PALETTE["ml_blue"], linewidth=3.0, marker="s", markersize=4.5, label=f"Cumulative ML Adaptive (6 Cts: {cum_ml[-1]:.1f}M | 20 Cts: {cum_ml[-1]*20/6:,.1f}M VND)")
-    ax2.plot(days, cum_oracle, color=PALETTE["emerald"], linestyle="--", linewidth=2.0, label=f"Theoretical Oracle Ceiling (6 Cts: {cum_oracle[-1]:.1f}M | 20 Cts: {cum_oracle[-1]*20/6:,.1f}M VND)")
-    ax2.fill_between(days, cum_base, cum_ml, color=PALETTE["ml_blue"], alpha=0.16, label=f"Cumulative Revenue Gain (+{lift_m:.2f}M on 6 Cts | +{lift_m*20/6:.2f}M on 20 Cts)")
+    ax2.plot(days, cum_base, color=PALETTE["baseline"], linewidth=2.5, marker="o", markersize=4, label=f"Cumulative Case Baseline (6 Courts: {cum_base[-1]:.1f}M | 20 Courts: {cum_base[-1]*20/6:,.1f}M VND)")
+    ax2.plot(days, cum_ml, color=PALETTE["ml_blue"], linewidth=3.0, marker="s", markersize=4.5, label=f"Cumulative ML Adaptive (6 Courts: {cum_ml[-1]:.1f}M | 20 Courts: {cum_ml[-1]*20/6:,.1f}M VND)")
+    ax2.plot(days, cum_oracle, color=PALETTE["emerald"], linestyle="--", linewidth=2.0, label=f"Theoretical Oracle Ceiling (6 Courts: {cum_oracle[-1]:.1f}M | 20 Courts: {cum_oracle[-1]*20/6:,.1f}M VND)")
+    ax2.fill_between(days, cum_base, cum_ml, color=PALETTE["ml_blue"], alpha=0.16, label=f"Cumulative Revenue Gain (+{lift_m:.2f}M on 6 Courts | +{lift_m*20/6:.2f}M on 20 Courts)")
 
     ax2.annotate(
-        f"Day 30 Net Lift: +{lift_pct:.1f}%\n+{lift_m:.2f}M/mo (6 Cts) | +{lift_m*20/6:.2f}M/mo (20 Cts)",
+        f"Day 30 Net Lift: +{lift_pct:.1f}%\n+{lift_m:.2f}M/mo (6 Courts) | +{lift_m*20/6:.2f}M/mo (20 Courts)",
         xy=(30, cum_ml[-1]),
-        xytext=(21.5, cum_ml[-1] - 95),
+        xytext=(14.5, cum_ml[-1] * 0.80),
         fontsize=9.0,
         fontweight="bold",
         color=PALETTE["navy"],
@@ -657,12 +657,12 @@ def plot_daily_revenue_comparison(
     ax2.set_xticklabels([f"Day {d}" for d in days], fontsize=8.0)
     ax2.set_ylabel("Cumulative Revenue: 6-Court Phase (M VND)", fontsize=9.8)
     ax2.set_xlim(0.5, 30.5)
-    ax2.set_ylim(0, cum_oracle[-1] * 1.12)
+    ax2.set_ylim(0, cum_oracle[-1] * 1.18)
     ax2.grid(True)
     ax2.legend(loc="upper left", fontsize=8.8, framealpha=0.94)
 
     ax2_r = ax2.twinx()
-    ax2_r.set_ylim(0, cum_oracle[-1] * 1.12 * (20.0 / 6.0))
+    ax2_r.set_ylim(0, cum_oracle[-1] * 1.18 * (20.0 / 6.0))
     ax2_r.set_ylabel("Cumulative Revenue: 20-Court Phase (M VND)", fontsize=9.2, color=PALETTE["slate"])
     ax2_r.tick_params(axis="y", labelsize=8.0, colors=PALETTE["slate"])
 
@@ -765,7 +765,7 @@ def plot_monthly_calendar_heatmap(
             ax_top.text(
                 c_idx,
                 r_idx + 0.34,
-                f"{u_val:.0f}% util",
+                f"{u_val:.0f}% booked",
                 ha="center",
                 va="center",
                 fontsize=6.8,
@@ -841,23 +841,23 @@ def plot_monthly_calendar_heatmap(
 
     ax_bot.axvline(10.5, color=PALETTE["coral"], linestyle="--", linewidth=1.4, zorder=4)
     ax_bot.text(
-        5.0,
-        102.0,
+        4.8,
+        103.0,
         "Daytime Off-Peak Window (06:00-17:00): Price Lowered 160k to 115k (+24.4 pp Weekday Utilization Lift)",
         ha="center",
         va="center",
-        fontsize=8.2,
+        fontsize=8.0,
         fontweight="bold",
         color=PALETTE["ml_teal"],
         bbox=dict(boxstyle="round,pad=0.25", facecolor="#1e1e2e", edgecolor=PALETTE["ml_teal"], lw=1.0),
     )
     ax_bot.text(
         13.0,
-        102.0,
-        "Evening Peak (17:00-22:00): 285k-300k Prime & 250k Noise Cap at 21h",
+        103.0,
+        "Evening Peak (17:00-22:00): 285k-300k Prime & 250k Noise Cap at 21:00",
         ha="center",
         va="center",
-        fontsize=8.2,
+        fontsize=8.0,
         fontweight="bold",
         color=PALETTE["coral"],
         bbox=dict(boxstyle="round,pad=0.25", facecolor="#1e1e2e", edgecolor=PALETTE["coral"], lw=1.0),
@@ -873,16 +873,16 @@ def plot_monthly_calendar_heatmap(
     ax_bot.set_xticks(x_idx)
     ax_bot.set_xticklabels(hour_labels, fontsize=8.2, fontweight="bold")
     ax_bot.set_ylabel("Court Utilization (% of Active Courts)", fontsize=9.5)
-    ax_bot.set_ylim(0, 112)
+    ax_bot.set_ylim(0, 130)
     ax_bot.grid(True, axis="y")
-    ax_bot.legend(loc="lower right", ncol=2, fontsize=8.2, framealpha=0.94)
+    ax_bot.legend(loc="upper center", ncol=4, fontsize=8.0, framealpha=0.95)
 
     ax_bot_r = ax_bot.twinx()
-    ax_bot_r.set_ylim(0, 112)
+    ax_bot_r.set_ylim(0, 130)
     pct_ticks = [0, 20, 40, 60, 80, 100]
     ax_bot_r.set_yticks(pct_ticks)
-    ax_bot_r.set_yticklabels([f"{p*6//100} / {p*20//100} cts" for p in pct_ticks], fontsize=8.0, color=PALETTE["slate"])
-    ax_bot_r.set_ylabel("Booked Courts (6-Ct Phase / 20-Ct Phase)", fontsize=8.8, color=PALETTE["slate"])
+    ax_bot_r.set_yticklabels([f"{p*6//100} / {p*20//100} courts" for p in pct_ticks], fontsize=8.0, color=PALETTE["slate"])
+    ax_bot_r.set_ylabel("Booked Courts (6-Court Phase / 20-Court Phase)", fontsize=8.8, color=PALETTE["slate"])
 
     fig.savefig(save_path, bbox_inches="tight")
     plt.close(fig)
@@ -949,13 +949,13 @@ def plot_occupancy_and_stress_test(
         ax1.text(bar.get_x() + bar.get_width() / 2, h + 1.2, f"{h:.1f}%", ha="center", va="bottom", fontsize=8.5, color=PALETTE["ml_teal"], fontweight="bold")
 
     ax1.annotate(
-        f"Daytime Occupancy Surge:\n{base_u[0]:.1f}% to {ml_u[0]:.1f}%\n(6 Cts: 2.4 to 3.9 | 20 Cts: 8.0 to 12.9)",
+        f"Daytime Occupancy Surge:\n{base_u[0]:.1f}% to {ml_u[0]:.1f}%\n(6 Courts: 2.4 to 3.9 | 20 Courts: 8.0 to 12.9)",
         xy=(0 + w / 2, ml_u[0]),
-        xytext=(0.15, 79),
-        fontsize=8.3,
+        xytext=(-0.38, 106),
+        fontsize=8.0,
         fontweight="bold",
         color=PALETTE["navy"],
-        bbox=dict(boxstyle="round,pad=0.35", facecolor="#1e1e2e", edgecolor=PALETTE["ml_teal"], lw=1.2),
+        bbox=dict(boxstyle="round,pad=0.32", facecolor="#1e1e2e", edgecolor=PALETTE["ml_teal"], lw=1.2),
         arrowprops=dict(arrowstyle="->", color=PALETTE["ml_teal"], lw=1.3),
     )
 
@@ -963,7 +963,7 @@ def plot_occupancy_and_stress_test(
     ax1.set_xticks(x)
     ax1.set_xticklabels(regimes, fontsize=8.8)
     ax1.set_ylabel("Court Utilization (% of Active Capacity)", fontsize=9.5)
-    ax1.set_ylim(0, 109)
+    ax1.set_ylim(0, 130)
     ax1.grid(True, axis="y")
     ax1.legend(loc="upper right", fontsize=8.8)
 
@@ -982,27 +982,28 @@ def plot_occupancy_and_stress_test(
     ]
 
     x2 = np.arange(len(scenarios))
-    s1 = ax2.bar(x2 - w / 2, base_rev, width=w, color=PALETTE["baseline"], edgecolor=PALETTE["navy"], lw=0.7, label="Case Baseline")
-    s2 = ax2.bar(x2 + w / 2, ml_rev, width=w, color=PALETTE["ml_blue"], edgecolor=PALETTE["navy"], lw=0.7, label="ML Adaptive Pricing")
+    w2 = 0.32
+    s1 = ax2.bar(x2 - 0.19, base_rev, width=w2, color=PALETTE["baseline"], edgecolor=PALETTE["navy"], lw=0.7, label="Case Baseline")
+    s2 = ax2.bar(x2 + 0.19, ml_rev, width=w2, color=PALETTE["ml_blue"], edgecolor=PALETTE["navy"], lw=0.7, label="ML Adaptive Pricing")
 
     for i in range(len(scenarios)):
         h_b = base_rev[i]
         h_m = ml_rev[i]
         diff = h_m - h_b
         pct = (diff / h_b) * 100.0
-        ax2.text(x2[i] - w / 2, h_b + 8, f"{h_b:.1f}M\n({h_b*20/6:,.0f}M @20c)", ha="center", va="bottom", fontsize=8.0, color=PALETTE["slate"], fontweight="bold")
-        ax2.text(x2[i] + w / 2, h_m + 8, f"{h_m:.1f}M (+{pct:.1f}%)\n({h_m*20/6:,.0f}M @20c)", ha="center", va="bottom", fontsize=8.0, color=PALETTE["ml_blue"], fontweight="bold")
+        ax2.text(x2[i] - 0.21, h_b + 8, f"{h_b:.1f}M\n(20 Courts: {h_b*20/6:,.0f}M)", ha="center", va="bottom", fontsize=7.6, color=PALETTE["slate"], fontweight="bold")
+        ax2.text(x2[i] + 0.21, h_m + 8, f"{h_m:.1f}M (+{pct:.1f}%)\n(20 Courts: {h_m*20/6:,.0f}M)", ha="center", va="bottom", fontsize=7.6, color=PALETTE["ml_blue"], fontweight="bold")
 
     ax2.set_title("B. Monthly Court Revenue Under Normal & Downside Demand", fontsize=11.2, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax2.set_xticks(x2)
     ax2.set_xticklabels(scenarios, fontsize=9.2)
     ax2.set_ylabel("Monthly Court Revenue: 6-Court Phase (M VND)", fontsize=9.5)
-    ax2.set_ylim(0, max(ml_rev) * 1.24)
+    ax2.set_ylim(0, max(ml_rev) * 1.30)
     ax2.grid(True, axis="y")
     ax2.legend(loc="upper right", fontsize=8.8)
 
     ax2_r = ax2.twinx()
-    ax2_r.set_ylim(0, max(ml_rev) * 1.24 * (20.0 / 6.0))
+    ax2_r.set_ylim(0, max(ml_rev) * 1.30 * (20.0 / 6.0))
     ax2_r.set_ylabel("Monthly Court Revenue: 20-Court Phase (M VND)", fontsize=9.0, color=PALETTE["slate"])
     ax2_r.tick_params(axis="y", labelsize=8.0, colors=PALETTE["slate"])
 
@@ -1062,11 +1063,11 @@ def plot_ml_model_diagnostics(
 
     metrics_box = (
         f"Out-of-Sample Test Metrics:\n"
-        f"* R^2 Score: {m.test_r2:.4f} (Train: {m.train_r2:.4f})\n"
-        f"* RMSE: {m.test_rmse_kvnd:.2f} k VND\n"
-        f"* MAE: {m.test_mae_kvnd:.2f} k VND | MedAE: {m.test_medae_kvnd:.2f} k\n"
-        f"* MAPE: {m.test_mape_pct:.2f}%\n"
-        f"* Oracle Revenue Capture: {m.oracle_capture_ratio_pct:.2f}%"
+        f"- R^2 Score: {m.test_r2:.4f} (Train: {m.train_r2:.4f})\n"
+        f"- RMSE: {m.test_rmse_kvnd:.2f} k VND\n"
+        f"- MAE: {m.test_mae_kvnd:.2f} k VND | MedAE: {m.test_medae_kvnd:.2f} k\n"
+        f"- MAPE: {m.test_mape_pct:.2f}%\n"
+        f"- Oracle Revenue Capture: {m.oracle_capture_ratio_pct:.2f}%"
     )
     ax_a.text(
         0.04,
@@ -1103,10 +1104,10 @@ def plot_ml_model_diagnostics(
 
     regret_box = (
         f"Counterfactual Economic Regret:\n"
-        f"* Mean Regret: {m.mean_hourly_regret_kvnd:.2f} k VND/hr\n"
-        f"* Median Regret: {m.median_hourly_regret_kvnd:.2f} k VND/hr\n"
-        f"* 90th Pct Regret: {m.p90_hourly_regret_kvnd:.2f} k VND/hr\n"
-        f"* Max Lift Captured: {m.uplift_capture_vs_oracle_pct:.1f}%"
+        f"- Mean Regret: {m.mean_hourly_regret_kvnd:.2f} k VND/hr\n"
+        f"- Median Regret: {m.median_hourly_regret_kvnd:.2f} k VND/hr\n"
+        f"- 90th Percentile Regret: {m.p90_hourly_regret_kvnd:.2f} k VND/hr\n"
+        f"- Max Lift Captured: {m.uplift_capture_vs_oracle_pct:.1f}%"
     )
     ax_b.text(
         0.04,
@@ -1124,6 +1125,7 @@ def plot_ml_model_diagnostics(
     ax_b.set_title("B. Out-of-Sample Prediction Residual Distribution", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax_b.set_xlabel("Prediction Error (Thousand VND)", fontsize=9.2)
     ax_b.set_ylabel("Density", fontsize=9.2)
+    ax_b.set_xlim(-32, 46)
     ax_b.grid(True)
     ax_b.legend(loc="upper right", fontsize=8.0, framealpha=0.94)
 
@@ -1174,7 +1176,7 @@ def plot_ml_model_diagnostics(
     regime_table_txt = "Regime-Specific Test Performance:\n"
     for r_name in m.regime_r2:
         regime_table_txt += (
-            f"* {r_name}: R^2={m.regime_r2[r_name]:.3f} | "
+            f"- {r_name}: R^2={m.regime_r2[r_name]:.3f} | "
             f"RMSE={m.regime_rmse_kvnd[r_name]:.1f}k | "
             f"Capture={m.regime_optimality_capture_pct[r_name]:.1f}%\n"
         )

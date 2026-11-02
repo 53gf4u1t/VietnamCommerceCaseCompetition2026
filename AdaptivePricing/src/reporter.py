@@ -129,12 +129,12 @@ Before running stochastic simulations, we verify that the Case Document figures 
 - **Total Monthly Court Hire Revenue:** $92.93 + 163.02 + 179.71 = \\mathbf{{435.66\\text{{M VND}}}}$ per 6 courts ($\\mathbf{{1,452.20\\text{{M VND}}}}$ at 20-court steady state).
 
 ### Impact of Machine Learning Adaptive Pricing
-| Metric | Baseline Static (6 Cts / 20 Cts) | ML Adaptive Pricing (6 Cts / 20 Cts) | Absolute Change (6 Cts / 20 Cts) | Relative Lift |
+| Metric | Baseline Static (6 Courts / 20 Courts) | ML Adaptive Pricing (6 Courts / 20 Courts) | Absolute Change (6 Courts / 20 Courts) | Relative Lift |
 | :--- | :---: | :---: | :---: | :---: |
 | **Monthly Court Hire Revenue** | **{base_rev_m:.2f}M / {base_rev_m*20/6:,.2f}M VND** | **{ml_rev_m:.2f}M / {ml_rev_m*20/6:,.2f}M VND** | **+{lift_m:.2f}M / +{lift_m*20/6:.2f}M VND/mo** | **+{lift_pct:.2f}%** |
 | **Annualized Court Hire Revenue** | {base_rev_m*12:.1f}M / {base_rev_m*40:,.1f}M VND/yr | {ml_rev_m*12:.1f}M / {ml_rev_m*40:,.1f}M VND/yr | +{(lift_m*12):.1f}M / +{(lift_m*40):.1f}M VND/yr | +{lift_pct:.2f}% |
 | **Monthly Booked Court-Hours** | {eval_res.mean_baseline_booked_hours:.0f} / {eval_res.mean_baseline_booked_hours*20/6:,.0f} hrs | {eval_res.mean_ml_booked_hours:.0f} / {eval_res.mean_ml_booked_hours*20/6:,.0f} hrs | +{extra_hours:.0f} / +{extra_hours*20/6:,.0f} hrs/mo | +{(extra_hours/eval_res.mean_baseline_booked_hours)*100:.1f}% |
-| **Weekday Daytime Utilization** | **{eval_res.baseline_wd_daytime_util*100:.1f}%** (2.40 / 8.00 cts) | **{eval_res.ml_wd_daytime_util*100:.1f}%** (3.86 / 12.87 cts) | **+{(eval_res.ml_wd_daytime_util - eval_res.baseline_wd_daytime_util)*100:.1f} pp** | **+{((eval_res.ml_wd_daytime_util/eval_res.baseline_wd_daytime_util)-1)*100:.1f}%** |
+| **Weekday Daytime Utilization** | **{eval_res.baseline_wd_daytime_util*100:.1f}%** (2.40 / 8.00 courts) | **{eval_res.ml_wd_daytime_util*100:.1f}%** (3.86 / 12.87 courts) | **+{(eval_res.ml_wd_daytime_util - eval_res.baseline_wd_daytime_util)*100:.1f} pp** | **+{((eval_res.ml_wd_daytime_util/eval_res.baseline_wd_daytime_util)-1)*100:.1f}%** |
 | **Weekday Evening Utilization** | {eval_res.baseline_wd_evening_util*100:.1f}% | {eval_res.ml_wd_evening_util*100:.1f}% | {(eval_res.ml_wd_evening_util - eval_res.baseline_wd_evening_util)*100:+.1f} pp | Balanced Peak |
 | **Weekend Utilization** | {eval_res.baseline_weekend_util*100:.1f}% | {eval_res.ml_weekend_util*100:.1f}% | {(eval_res.ml_weekend_util - eval_res.baseline_weekend_util)*100:+.1f} pp | Midday Filled |
 | **Ancillary Net Margin Lift** | Baseline Included | +{extra_ancillary_net_m:.2f}M / +{extra_ancillary_net_m*20/6:.2f}M VND/mo | +{extra_ancillary_net_m*12:.1f}M / +{extra_ancillary_net_m*40:.1f}M VND/yr | High-Margin Pull |
@@ -157,11 +157,11 @@ All parameters are stored cleanly in `configs/pricing.toml` and validated in `01
 3. **Regime Linear Demand Curves Constrained to Empirical Anchor Points:**
    - We model **3 separate linear demand curves** corresponding to PICK!'s 3 operating regimes, expressed in **court utilization $u_r(x) \\in [0\\%, 100\\%]$** (and scaled by active court capacity $C_t \\in \\{{6, 20\\}}$ so $Q_r(x, C_t) = C_t \\cdot u_r(x)$):
 
-| Operating Regime $r$ | Known Anchor Price $x_0$ | Known Anchor Utilization $u_0$ (`6 Cts / 20 Cts`) | Simulated Mean @ $x_0$ | Normalized Utilization Demand Curve $u_r(x)$ | Slope Distribution $a_r$ ($\\mu \\pm \\sigma$) | Intercept Distribution $b_r$ ($\\mu \\pm \\sigma$) | ML Adaptive Mean Price $\\hat{{x}}$ | ML Expected Utilization (`6 Cts / 20 Cts`) |
+| Operating Regime $r$ | Known Anchor Price $x_0$ | Known Anchor Utilization $u_0$ (`6 Courts / 20 Courts`) | Simulated Mean @ $x_0$ | Normalized Utilization Demand Curve $u_r(x)$ | Slope Distribution $a_r$ ($\\mu \\pm \\sigma$) | Intercept Distribution $b_r$ ($\\mu \\pm \\sigma$) | ML Adaptive Mean Price $\\hat{{x}}$ | ML Expected Utilization (`6 Courts / 20 Courts`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. Weekday Daytime** | **160k VND** | **40.0%** (`2.40 / 8.00 cts`) | **{q_wdd_160/6*100:.1f}%** | $u_1(x) = \\text{{clip}}({a_wdd.mean()/6*100:.3f}\\% \\cdot x + {b_wdd.mean()/6*100:.1f}\\%, 0, 100\\%)$ | ${a_wdd.mean():.4f} \\pm {a_wdd.std():.4f}$ | ${b_wdd.mean():.2f} \\pm {b_wdd.std():.2f}$ | **{p_ml_wdd:.0f}k VND** | **{eval_res.ml_wd_daytime_util*100:.1f}%** (`{eval_res.ml_wd_daytime_util*6:.2f} / {eval_res.ml_wd_daytime_util*20:.2f} cts`) |
-| **2. Weekday Evening** | **260k VND** | **95.0%** (`5.70 / 19.00 cts`) | **{q_wde_260/6*100:.1f}%** | $u_2(x) = \\text{{clip}}({a_wde.mean()/6*100:.3f}\\% \\cdot x + {b_wde.mean()/6*100:.1f}\\%, 0, 100\\%)$ | ${a_wde.mean():.4f} \\pm {a_wde.std():.4f}$ | ${b_wde.mean():.2f} \\pm {b_wde.std():.2f}$ | **{p_ml_wde:.0f}k VND** | **{eval_res.ml_wd_evening_util*100:.1f}%** (`{eval_res.ml_wd_evening_util*6:.2f} / {eval_res.ml_wd_evening_util*20:.2f} cts`) |
-| **3. Weekend** | **260k VND** | **90.0%** (`5.40 / 18.00 cts`) | **{q_wk_260/6*100:.1f}%** | $u_3(x) = \\text{{clip}}({a_wk.mean()/6*100:.3f}\\% \\cdot x + {b_wk.mean()/6*100:.1f}\\%, 0, 100\\%)$ | ${a_wk.mean():.4f} \\pm {a_wk.std():.4f}$ | ${b_wk.mean():.2f} \\pm {b_wk.std():.2f}$ | **{p_ml_wk:.0f}k VND** | **{eval_res.ml_weekend_util*100:.1f}%** (`{eval_res.ml_weekend_util*6:.2f} / {eval_res.ml_weekend_util*20:.2f} cts`) |
+| **1. Weekday Daytime** | **160k VND** | **40.0%** (`2.40 / 8.00 courts`) | **{q_wdd_160/6*100:.1f}%** | $u_1(x) = \\text{{clip}}({a_wdd.mean()/6*100:.3f}\\% \\cdot x + {b_wdd.mean()/6*100:.1f}\\%, 0, 100\\%)$ | ${a_wdd.mean():.4f} \\pm {a_wdd.std():.4f}$ | ${b_wdd.mean():.2f} \\pm {b_wdd.std():.2f}$ | **{p_ml_wdd:.0f}k VND** | **{eval_res.ml_wd_daytime_util*100:.1f}%** (`{eval_res.ml_wd_daytime_util*6:.2f} / {eval_res.ml_wd_daytime_util*20:.2f} courts`) |
+| **2. Weekday Evening** | **260k VND** | **95.0%** (`5.70 / 19.00 courts`) | **{q_wde_260/6*100:.1f}%** | $u_2(x) = \\text{{clip}}({a_wde.mean()/6*100:.3f}\\% \\cdot x + {b_wde.mean()/6*100:.1f}\\%, 0, 100\\%)$ | ${a_wde.mean():.4f} \\pm {a_wde.std():.4f}$ | ${b_wde.mean():.2f} \\pm {b_wde.std():.2f}$ | **{p_ml_wde:.0f}k VND** | **{eval_res.ml_wd_evening_util*100:.1f}%** (`{eval_res.ml_wd_evening_util*6:.2f} / {eval_res.ml_wd_evening_util*20:.2f} courts`) |
+| **3. Weekend** | **260k VND** | **90.0%** (`5.40 / 18.00 courts`) | **{q_wk_260/6*100:.1f}%** | $u_3(x) = \\text{{clip}}({a_wk.mean()/6*100:.3f}\\% \\cdot x + {b_wk.mean()/6*100:.1f}\\%, 0, 100\\%)$ | ${a_wk.mean():.4f} \\pm {a_wk.std():.4f}$ | ${b_wk.mean():.2f} \\pm {b_wk.std():.2f}$ | **{p_ml_wk:.0f}k VND** | **{eval_res.ml_weekend_util*100:.1f}%** (`{eval_res.ml_weekend_util*6:.2f} / {eval_res.ml_weekend_util*20:.2f} courts`) |
 
    - **Why Regime 1 (Weekday Daytime) Lowers Price:** At the anchor point $(160\\text{{k}}, 40.0\\%\\text{{ utilization}})$, university students and young social players are price-elastic ($|\\varepsilon| = {abs(a_wdd.mean()*160/2.40):.2f} > 1$). Lowering the daytime price toward $\\approx {p_ml_wdd:.0f}\\text{{k VND}}$ **boosts daytime court utilization from 40.0% to {eval_res.ml_wd_daytime_util*100:.1f}%** ($2.40 \\to 3.86$ courts in Phase 1; $8.00 \\to 12.87$ courts in Phase 2) and **increases daytime hourly revenue by +18.9%**.
    - **Why Regime 2 (Weekday Evening) & Regime 3 (Weekend) Adjust Around Peak:** At the anchor points $(260\\text{{k}}, 95.0\\%)$ and $(260\\text{{k}}, 90.0\\%)$, after-work and weekend players are price-inelastic ($|\\varepsilon| < 1$). The ML model nudges prime peak hours to **{p_ml_wde:.0f}k-{p_ml_wk:.0f}k VND** (while capping the 21:00-22:00 hour at $\\le 250\\text{{k VND}}$), capturing incremental revenue without sacrificing high occupancy.
@@ -221,9 +221,9 @@ All parameters are stored cleanly in `configs/pricing.toml` and validated in `01
 
     regime_rows_md = ""
     regime_curves_info = {
-        "Weekday Daytime (06:00-17:00)": f"Anchor `(160k, 40% [2.40 cts])` | $Q_1(x) = {a_wdd.mean():.4f}x + {b_wdd.mean():.2f}$",
-        "Weekday Evening (17:00-22:00)": f"Anchor `(260k, 95% [5.70 cts])` | $Q_2(x) = {a_wde.mean():.4f}x + {b_wde.mean():.2f}$",
-        "Weekend (Sat-Sun 06:00-22:00)": f"Anchor `(260k, 90% [5.40 cts])` | $Q_3(x) = {a_wk.mean():.4f}x + {b_wk.mean():.2f}$",
+        "Weekday Daytime (06:00-17:00)": f"Anchor `(160k, 40% [2.40 courts])` | $Q_1(x) = {a_wdd.mean():.4f}x + {b_wdd.mean():.2f}$",
+        "Weekday Evening (17:00-22:00)": f"Anchor `(260k, 95% [5.70 courts])` | $Q_2(x) = {a_wde.mean():.4f}x + {b_wde.mean():.2f}$",
+        "Weekend (Sat-Sun 06:00-22:00)": f"Anchor `(260k, 90% [5.40 courts])` | $Q_3(x) = {a_wk.mean():.4f}x + {b_wk.mean():.2f}$",
     }
     for r_name in m.regime_r2:
         regime_rows_md += (

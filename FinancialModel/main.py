@@ -8,6 +8,7 @@ try:
     from FinancialModel.src.config import load_config
     from FinancialModel.src.model import build_financial_model, FinancialModelResults
     from FinancialModel.src.visualizer import (
+        plot_executive_solution_master_roadmap,
         plot_drivers_and_cost_breakdown_sheet,
         plot_fs_month_projection_sheet,
         plot_fs_annual_and_structure_dashboard,
@@ -20,6 +21,7 @@ except ImportError:
     from src.config import load_config
     from src.model import build_financial_model, FinancialModelResults
     from src.visualizer import (
+        plot_executive_solution_master_roadmap,
         plot_drivers_and_cost_breakdown_sheet,
         plot_fs_month_projection_sheet,
         plot_fs_annual_and_structure_dashboard,
@@ -57,6 +59,7 @@ def run_financial_model(
     )
 
     print(f"[FinancialModel 3/4] Rendering Financial Statements (FS-Month, FS-Annual & Taxes) tables, stacked revenue/cost charts, Monte Carlo cohort & cash reserves plots in {out_dir.relative_to(base_dir.parent)}...")
+    c0 = plot_executive_solution_master_roadmap(cfg, res, out_dir)
     s1 = plot_drivers_and_cost_breakdown_sheet(cfg, res, out_dir)
     s2 = plot_fs_month_projection_sheet(cfg, res, out_dir)
     s3 = plot_fs_annual_and_structure_dashboard(cfg, res, out_dir)
@@ -65,7 +68,7 @@ def run_financial_model(
     c6 = plot_monthly_cash_balance_and_externals(cfg, res, out_dir)
 
     print(f"[FinancialModel 4/4] Exporting FS-Month, FS-Annual, Vietnam Tax Estimations CSV, cash reserves CSV, Monte Carlo cohort CSV & REPORT.md to {out_dir.relative_to(base_dir.parent)}...")
-    exported = export_all_outputs(cfg, res, [s1, s2, s3, c4, c5, c6], out_dir)
+    exported = export_all_outputs(cfg, res, [c0, s1, s2, s3, c4, c5, c6], out_dir)
 
     ap = res.adaptive
     mc = res.mc
