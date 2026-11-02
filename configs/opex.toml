@@ -572,7 +572,7 @@ cost_rationale = "6.75 person-weeks across 3.0 calendar weeks (1.5w Tech Lead @ 
 [[tasks]]
 id = "T3.2"
 stage_id = "S3"
-name = "AdaptivePricing ML Engine Integration & Dynamic Tariff API"
+name = "Adaptive Pricing ML Engine Integration & Dynamic Tariff API"
 core_feature = "ML Dynamic Pricing (85k–300k VND)"
 track = "ML & Pricing Dev"
 start_week = 6.5
@@ -582,7 +582,7 @@ is_critical_path = false
 is_simultaneous_qa = false
 owner = "Backend + ML Eng"
 citation_keys = ["Boehm2000", "InternalAdaptivePricing"]
-estimation_rationale = "Since the HistGBR model & tariff schedule are pre-validated in AdaptivePricing/, wrapping the 16h x 7d dynamic pricing lookup API, off-peak promo badges, and rule overrides takes 2.5 weeks."
+estimation_rationale = "Since the HistGBR model & tariff schedule are pre-validated in the Adaptive Pricing model, wrapping the 16h x 7d dynamic pricing lookup API, off-peak promo badges, and rule overrides takes 2.5 weeks."
 role_allocation = "0.5 Tech Lead (16.5M/w) + 0.75 Full-Stack (12.0M/w)"
 person_weeks = 3.125
 blended_weekly_rate_mvnd = 13.60

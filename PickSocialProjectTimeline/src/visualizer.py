@@ -218,8 +218,21 @@ def plot_master_gantt_chart(
                     1.0,
                     facecolor=st.light_color,
                     edgecolor="#45475a",
-                    linewidth=0.8,
+                    linewidth=0.9,
                     zorder=1,
+                )
+            )
+            # Bold stage-separator top & bottom rules + left accent bar for clear stage hierarchy
+            ax.axhline(y_top, color=st.color, linewidth=1.55, zorder=4)
+            ax.axhline(y_bot, color=st.color, linewidth=1.05, zorder=4)
+            ax.add_patch(
+                mpatches.Rectangle(
+                    (x_left_min, y_bot),
+                    0.22,
+                    1.0,
+                    facecolor=st.color,
+                    edgecolor="none",
+                    zorder=5,
                 )
             )
             ax.text(
@@ -228,7 +241,7 @@ def plot_master_gantt_chart(
                 st.stage_id,
                 ha="center",
                 va="center",
-                fontsize=8.0,
+                fontsize=8.1,
                 fontweight="bold",
                 color=st.color,
                 zorder=5,
@@ -236,7 +249,7 @@ def plot_master_gantt_chart(
             ax.text(
                 -24.5,
                 y_mid,
-                st.name.upper(),
+                f"▸ {st.name.upper()}",
                 ha="left",
                 va="center",
                 fontsize=7.3,
@@ -331,8 +344,9 @@ def plot_master_gantt_chart(
                 color=id_color,
                 zorder=5,
             )
+            ax.plot([-24.42, -24.42], [y_bot + 0.18, y_top - 0.18], color=t.stage_color, linewidth=1.1, alpha=0.65, zorder=4)
             ax.text(
-                -24.5,
+                -24.20,
                 y_mid,
                 t.name,
                 ha="left",

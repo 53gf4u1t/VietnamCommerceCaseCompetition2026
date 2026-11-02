@@ -38,7 +38,10 @@ FACE_MOCHA_TO_LATTE: dict[str, str] = {
     "#bac2de": "#5c5f77",  # Subtext1
     "#cdd6f4": "#4c4f69",  # Text
     # Tinted table & Gantt row/column backgrounds
-    "#252638": "#dce0e8",  # Subtotal row bg
+    "#162038": "#1e3a8a",  # Major Statement Banner bg (Deep Executive Navy in Latte)
+    "#2b3048": "#334155",  # Top Table Column Header bg (Dark Slate in Latte)
+    "#262b40": "#d6deeb",  # Subsection Group Header bg (Cool Slate-Blue tint in Latte)
+    "#252638": "#dce2ee",  # Subtotal row bg
     "#232436": "#e2e5ee",  # Memo row bg
     "#1f332c": "#d6eedb",  # Total highlight row bg (soft Latte Green)
     "#222c44": "#d8e5f8",  # Profit highlight row bg (soft Latte Blue)
@@ -86,8 +89,10 @@ TEXT_MOCHA_TO_LATTE: dict[str, str] = {
     "#a6adc8": "#6c6f85",  # Muted slate text
     "#9399b2": "#7c7f93",  # Overlay2 text
     "#7f849c": "#8c8fa1",  # Overlay1 text
-    # Text explicitly drawn in #11111b in Mocha is inside colored Gantt/stacked bars or pills -> crisp white in Latte
+    # Text explicitly drawn in #11111b or #f5f7ff in Mocha is inside dark banners/bars -> crisp white in Latte
     "#11111b": "#ffffff",
+    "#f5f7ff": "#ffffff",
+    "#dbeafe": "#dbeafe",
     "#181825": "#4c4f69",
 }
 

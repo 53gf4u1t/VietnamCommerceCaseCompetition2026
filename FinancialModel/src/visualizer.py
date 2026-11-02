@@ -34,7 +34,9 @@ plt.rcParams.update({
 })
 
 EXCEL_GRID_BORDER = "#313244"
-SECTION_BANNER = "#11111b"
+SECTION_BANNER = "#162038"
+TOP_COL_HEADER_BG = "#2b3048"
+SUBSECTION_BANNER_BG = "#262b40"
 SUBHEADER_BG = "#313244"
 SUBTOTAL_BG = "#252638"
 TOTAL_HIGHLIGHT_BG = "#1f332c"
@@ -47,6 +49,24 @@ FORMULA_BLACK = "#cdd6f4"
 FORMULA_DARKGRAY = "#bac2de"
 MUTED_SLATE = "#a6adc8"
 EMERALD_TEXT = "#a6e3a1"
+BANNER_WHITE = "#f5f7ff"
+
+
+def _row_weight(rstyle: str) -> float:
+    """Return proportional row height multiplier by hierarchical row style."""
+    if rstyle == "stmt_gap":
+        return 0.48
+    if rstyle == "sec_hdr":
+        return 1.38
+    if rstyle == "col_hdr":
+        return 1.24
+    if rstyle == "sub_hdr":
+        return 1.08
+    if rstyle in ("total", "grand_total"):
+        return 1.18
+    if rstyle == "subtotal":
+        return 1.08
+    return 1.00
 
 
 def _render_pure_table(
@@ -60,25 +80,42 @@ def _render_pure_table(
     font_size: float = 8.2,
 ) -> Path:
     """
-    Render ONLY the pure spreadsheet table (from row 1 to last row, col 1 to last col)
-    with zero Excel UI chrome, formula bars, row numbers, or column letters.
+    Render a hierarchical financial table with variable row heights, visual gaps
+    between major statements (`stmt_gap`), high-contrast executive banners (`sec_hdr`),
+    subsection group headers (`sub_hdr`), and indented child line items.
     """
-    n_rows = len(rows)
-    fig_height = max(2.0, n_rows * row_height_in)
+    weights = [_row_weight(rstyle) for rstyle, _ in rows]
+    total_weight = sum(weights)
+    fig_height = max(2.0, total_weight * row_height_in)
     fig = plt.figure(figsize=(fig_width, fig_height), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
     ax = fig.add_axes([0.0, 0.0, 1.0, 1.0])
-    ax.set_facecolor("#181825")
+    ax.set_facecolor("#1e1e2e")
 
     total_w = sum(col_widths)
-    row_h = 1.0 / n_rows
-
     ax.set_xlim(0.0, total_w)
     ax.set_ylim(0.0, 1.0)
     ax.axis("off")
 
-    for r_idx, (rstyle, cells) in enumerate(rows):
-        ry = 1.0 - (r_idx + 1) * row_h
+    curr_top_y = 1.0
+    for r_idx, ((rstyle, cells), w_r) in enumerate(zip(rows, weights)):
+        row_h = w_r / total_weight
+        ry = curr_top_y - row_h
+        curr_top_y = ry
+
+        if rstyle == "stmt_gap":
+            # Clean breathing-room gap between statements/sections
+            ax.add_patch(
+                patches.Rectangle(
+                    (0.0, ry),
+                    total_w,
+                    row_h,
+                    facecolor="#1e1e2e",
+                    edgecolor="none",
+                    linewidth=0.0,
+                )
+            )
+            continue
 
         if rstyle == "sec_hdr":
             ax.add_patch(
@@ -88,7 +125,69 @@ def _render_pure_table(
                     row_h,
                     facecolor=SECTION_BANNER,
                     edgecolor="#45475a",
-                    linewidth=0.8,
+                    linewidth=1.1,
+                )
+            )
+            # Bold left accent strip on every major statement banner
+            ax.add_patch(
+                patches.Rectangle(
+                    (0.0, ry),
+                    0.0045 * total_w,
+                    row_h,
+                    facecolor="#89b4fa",
+                    edgecolor="none",
+                )
+            )
+            ax.text(
+                0.009 * total_w,
+                ry + row_h * 0.5,
+                cells[0],
+                ha="left",
+                va="center",
+                fontsize=font_size + 0.8,
+                fontweight="bold",
+                color=BANNER_WHITE,
+            )
+            # If period column labels are provided in cells[1:], render them on the banner
+            if any(c.strip() for c in cells[1:]):
+                cx_hdr = col_widths[0]
+                for c_idx in range(1, len(col_widths)):
+                    cw = col_widths[c_idx]
+                    ctext = cells[c_idx] if c_idx < len(cells) else ""
+                    if ctext:
+                        ha_hdr = "center" if c_idx == 1 else "right"
+                        tx_hdr = (cx_hdr + cw * 0.5) if ha_hdr == "center" else (cx_hdr + cw - 0.005 * total_w)
+                        ax.text(
+                            tx_hdr,
+                            ry + row_h * 0.5,
+                            ctext,
+                            ha=ha_hdr,
+                            va="center",
+                            fontsize=font_size - 0.3,
+                            fontweight="bold",
+                            color=BANNER_WHITE,
+                        )
+                    cx_hdr += cw
+            continue
+
+        if rstyle == "sub_hdr":
+            ax.add_patch(
+                patches.Rectangle(
+                    (0.0, ry),
+                    total_w,
+                    row_h,
+                    facecolor=SUBSECTION_BANNER_BG,
+                    edgecolor="#45475a",
+                    linewidth=0.75,
+                )
+            )
+            ax.add_patch(
+                patches.Rectangle(
+                    (0.0, ry),
+                    0.0032 * total_w,
+                    row_h,
+                    facecolor="#cba6f7",
+                    edgecolor="none",
                 )
             )
             ax.text(
@@ -97,9 +196,9 @@ def _render_pure_table(
                 cells[0],
                 ha="left",
                 va="center",
-                fontsize=font_size + 0.5,
+                fontsize=font_size,
                 fontweight="bold",
-                color="#89b4fa",
+                color=FORMULA_BLACK,
             )
             continue
 
@@ -118,13 +217,35 @@ def _render_pure_table(
                 )
             )
 
+            # Left accent strip on total and grand_total rows in column 0
+            if c_idx == 0 and rstyle in ("total", "grand_total"):
+                strip_col = "#a6e3a1" if rstyle == "grand_total" else "#89b4fa"
+                ax.add_patch(
+                    patches.Rectangle(
+                        (0.0, ry),
+                        0.0038 * total_w,
+                        row_h,
+                        facecolor=strip_col,
+                        edgecolor="none",
+                    )
+                )
+            # Subtle vertical indent guide for child line items in column 0
+            elif c_idx == 0 and rstyle not in ("col_hdr", "subtotal", "total", "grand_total") and ctext.startswith("  "):
+                ax.plot(
+                    [0.0055 * total_w, 0.0055 * total_w],
+                    [ry + row_h * 0.15, ry + row_h * 0.85],
+                    color="#585b70",
+                    linewidth=0.9,
+                )
+
             if rstyle in ("subtotal", "total", "grand_total"):
-                ax.plot([cx, cx + cw], [ry + row_h, ry + row_h], color="#585b70", linewidth=1.0)
+                ax.plot([cx, cx + cw], [ry + row_h, ry + row_h], color="#45475a", linewidth=1.15)
                 if rstyle in ("total", "grand_total"):
-                    ax.plot([cx, cx + cw], [ry + row_h * 0.08, ry + row_h * 0.08], color="#89b4fa", linewidth=1.1)
-                    ax.plot([cx, cx + cw], [ry, ry], color="#89b4fa", linewidth=1.1)
+                    rule_col = "#a6e3a1" if rstyle == "grand_total" else "#89b4fa"
+                    ax.plot([cx, cx + cw], [ry + row_h * 0.10, ry + row_h * 0.10], color=rule_col, linewidth=1.2)
+                    ax.plot([cx, cx + cw], [ry, ry], color=rule_col, linewidth=1.4)
                 else:
-                    ax.plot([cx, cx + cw], [ry, ry], color="#585b70", linewidth=1.0)
+                    ax.plot([cx, cx + cw], [ry, ry], color="#45475a", linewidth=1.15)
 
             ha = align_fn(c_idx, rstyle)
             if ha == "right":
@@ -132,21 +253,25 @@ def _render_pure_table(
             elif ha == "center":
                 tx = cx + cw * 0.5
             else:
-                tx = cx + 0.005 * total_w
+                if c_idx == 0 and ctext.startswith("  "):
+                    tx = cx + 0.009 * total_w
+                else:
+                    tx = cx + 0.005 * total_w
 
+            f_sz = font_size + 0.25 if rstyle in ("total", "grand_total", "col_hdr") else font_size
             ax.text(
                 tx,
                 ry + row_h * 0.5,
                 ctext,
                 ha=ha,
                 va="center",
-                fontsize=font_size,
+                fontsize=f_sz,
                 fontweight=fw,
                 color=fg,
             )
             cx += cw
 
-    fig.savefig(out_path, bbox_inches="tight", pad_inches=0.01)
+    fig.savefig(out_path, bbox_inches="tight", pad_inches=0.02)
     plt.close(fig)
     return out_path
 
@@ -186,17 +311,36 @@ def _line_item_source_label(li) -> str:
     return "Case Exhibit 1 & Venue 2 Plan"
 
 
+_THREE_STMT_SUBHEADERS: dict[str, str] = {
+    "REV_1A": "▸ REVENUE STREAMS (COURT HIRE, PICK! SOCIAL & ANCILLARY)",
+    "COGS_1": "▸ DIRECT COST OF GOODS SOLD (VARIABLE COGS)",
+    "OPEX_1A": "▸ FACILITY OPERATING EXPENSES (FIXED & SEMI-FIXED OPEX)",
+    "SGA_1": "▸ SELLING, GENERAL, ADMIN, PLATFORM & COMPLIANCE (SG&A)",
+    "DA_EXP": "▸ DEPRECIATION (D&A), TAXABLE INCOME (EBT) & CORPORATE INCOME TAX",
+    "BS_CASH": "▸ ASSETS — CURRENT ASSETS (CASH, INVENTORY & LEASE DEPOSIT)",
+    "BS_PPE": "▸ ASSETS — LONG-TERM (FIXED) ASSETS (PP&E NET OF D&A)",
+    "BS_AP": "▸ LIABILITIES — CURRENT OPERATING & TAX PAYABLES",
+    "BS_CAP": "▸ OWNER'S EQUITY — CONTRIBUTED CAPITAL & RETAINED EARNINGS",
+    "CF_START": "▸ OPERATING ACTIVITIES (NET INCOME, D&A & WORKING CAPITAL)",
+    "CF_CAPEX": "▸ INVESTING ACTIVITIES (VENUE 2 TURNKEY FIT-OUT CAPEX)",
+    "CF_EQ": "▸ FINANCING ACTIVITIES & ENDING CASH RESERVES",
+    "TX_EBT": "▸ CORPORATE INCOME TAX SCHEDULE (VIETNAM CIT LAW 67/2025/QH15 @ 20.0%)",
+    "TX_VAT_OUT": "▸ VALUE-ADDED TAX SCHEDULE (8.0% OUTPUT VAT VS. 10.0% INPUT VAT — LAW 48/2024/QH15)",
+}
+
+
 def plot_drivers_and_cost_breakdown_sheet(
     cfg: FinancialModelConfig,
     res: FinancialModelResults,
     output_dir: Path,
 ) -> Path:
     """
-    Render Sheet 1: Pure single-table Income Statement Structure
+    Render Sheet 1: Hierarchical single-table Income Statement Structure
     (Revenue, COGS, Facility OpEx, SG&A, D&A & Taxes across Case Baseline,
     PICK! Social Dev, PICK! Social Launch, 20-Court Steady State, 5-Year Total, % of Revenue & Source).
     """
     col_widths = [0.110, 0.215, 0.095, 0.066, 0.090, 0.098, 0.088, 0.068, 0.058, 0.112]
+    empty_10 = [""] * 10
 
     rows: list[tuple[str, list[str]]] = [
         ("sec_hdr", [
@@ -217,11 +361,32 @@ def plot_drivers_and_cost_breakdown_sheet(
         ]),
     ]
 
+    seen_sections: set[str] = set()
     for li in res.line_items:
+        if li.section == "REVENUE" and "REVENUE" not in seen_sections:
+            seen_sections.add("REVENUE")
+            rows.append(("sub_hdr", ["▸ SECTION 1 — REVENUE STREAMS (COURT HIRE, PICK! SOCIAL & ANCILLARY)"] + [""] * 9))
+        elif li.section == "COGS" and "COGS" not in seen_sections:
+            seen_sections.add("COGS")
+            rows.append(("stmt_gap", empty_10))
+            rows.append(("sub_hdr", ["▸ SECTION 2 — DIRECT COST OF GOODS SOLD (VARIABLE COGS) & GROSS PROFIT"] + [""] * 9))
+        elif li.section == "OPEX" and "OPEX" not in seen_sections:
+            seen_sections.add("OPEX")
+            rows.append(("stmt_gap", empty_10))
+            rows.append(("sub_hdr", ["▸ SECTION 3 — FACILITY OPERATING EXPENSES (FIXED & SEMI-FIXED OPEX)"] + [""] * 9))
+        elif li.section == "SGA" and "SGA" not in seen_sections:
+            seen_sections.add("SGA")
+            rows.append(("stmt_gap", empty_10))
+            rows.append(("sub_hdr", ["▸ SECTION 4 — SELLING, GENERAL, ADMIN, PLATFORM & COMPLIANCE (SG&A)"] + [""] * 9))
+        elif "D&A" in li.template_category and "DA_TAX" not in seen_sections:
+            seen_sections.add("DA_TAX")
+            rows.append(("stmt_gap", empty_10))
+            rows.append(("sub_hdr", ["▸ SECTION 5 — DEPRECIATION (D&A), TAXABLE INCOME (EBT), VIETNAM CIT (20%) & NET INCOME"] + [""] * 9))
+
         if li.section == "SUMMARY":
             if "GROSS PROFIT" in li.template_category:
                 rstyle = "total"
-            elif "OPERATING PROFIT" in li.template_category:
+            elif "OPERATING PROFIT" in li.template_category or "NET INCOME" in li.template_category:
                 rstyle = "grand_total"
             else:
                 rstyle = "subtotal"
@@ -235,7 +400,7 @@ def plot_drivers_and_cost_breakdown_sheet(
         rows.append((
             rstyle,
             [
-                li.template_category,
+                f"{prefix}{li.template_category}" if li.section != "SUMMARY" else li.template_category,
                 f"{prefix}{li.line_item}",
                 li.behavior,
                 f"{li.case_baseline_monthly_mvnd:,.2f}",
@@ -250,7 +415,7 @@ def plot_drivers_and_cost_breakdown_sheet(
 
     def _style_s1(r_idx: int, c_idx: int, rstyle: str) -> tuple[str, str, str]:
         if rstyle == "col_hdr":
-            return SUBHEADER_BG, FORMULA_BLACK, "bold"
+            return TOP_COL_HEADER_BG, BANNER_WHITE, "bold"
         if rstyle == "subtotal":
             return SUBTOTAL_BG, FORMULA_BLACK, "bold"
         if rstyle == "total":
@@ -297,15 +462,16 @@ def plot_fs_month_projection_sheet(
     output_dir: Path,
 ) -> Path:
     """
-    Render Sheet 2: Pure table of FS-Month (Monthly 3-Statement Model:
+    Render Sheet 2: Hierarchical table of FS-Month (Monthly 3-Statement Model:
     Income Statement, Balance Sheet, Cash Flow Statement & Tax Schedule across Year 1 months
     plus End of Year 2 & End of Year 5 monthly snapshots — strictly monthly figures, no totals).
     """
     col_widths = [0.268, 0.044] + [0.046] * 12 + [0.068, 0.068]
     y1_months = list(res.month_labels[:12])
+    period_hdrs = ["Unit"] + y1_months + ["Dec-28 (End Y2)", "Dec-31 (End Y5)"]
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["FINANCIAL STATEMENTS — MONTHLY (YEAR 1 + END Y2 & END Y5 SNAPSHOTS)", "Unit"] + y1_months + ["Dec-28 (End Y2)", "Dec-31 (End Y5)"]),
+        ("col_hdr", ["FINANCIAL STATEMENTS — MONTHLY (YEAR 1 + END Y2 & END Y5 SNAPSHOTS)"] + period_hdrs),
     ]
 
     for _, df_row in res.fs_month_df.iterrows():
@@ -315,8 +481,15 @@ def plot_fs_month_projection_sheet(
         code = str(df_row["row_code"])
 
         if rtype == "header":
-            rows.append(("sec_hdr", [label] + [""] * 15))
+            if code != "KI_HDR":
+                rows.append(("stmt_gap", [""] * 16))
+                rows.append(("sec_hdr", [label] + period_hdrs))
+            else:
+                rows.append(("sec_hdr", [label] + [""] * 15))
             continue
+
+        if code in _THREE_STMT_SUBHEADERS:
+            rows.append(("sub_hdr", [_THREE_STMT_SUBHEADERS[code]] + [""] * 15))
 
         m_cells = []
         for m in y1_months:
@@ -338,7 +511,7 @@ def plot_fs_month_projection_sheet(
 
     def _style_s2(r_idx: int, c_idx: int, rstyle: str) -> tuple[str, str, str]:
         if rstyle == "col_hdr":
-            return SUBHEADER_BG, FORMULA_BLACK, "bold"
+            return TOP_COL_HEADER_BG, BANNER_WHITE, "bold"
         if rstyle == "subtotal":
             return SUBTOTAL_BG, FORMULA_BLACK, "bold"
         if rstyle == "total":
@@ -381,21 +554,21 @@ def plot_fs_annual_and_structure_dashboard(
     output_dir: Path,
 ) -> Path:
     """
-    Render Sheet 3: Pure table of FS-Annual 5-Year 3-Statement Model
+    Render Sheet 3: Hierarchical table of FS-Annual 5-Year 3-Statement Model
     (Standard Annual Income Statement, Balance Sheet, Cash Flow Statement & Tax Schedule for FY 2027 to FY 2031).
     """
     col_widths = [0.365, 0.060, 0.115, 0.115, 0.115, 0.115, 0.115]
+    period_hdrs = [
+        "Unit",
+        "FY 2027 (Y1)",
+        "FY 2028 (Y2)",
+        "FY 2029 (Y3)",
+        "FY 2030 (Y4)",
+        "FY 2031 (Y5)",
+    ]
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", [
-            "FINANCIAL STATEMENTS — ANNUAL (FY 2027 TO FY 2031)",
-            "Unit",
-            "FY 2027 (Y1)",
-            "FY 2028 (Y2)",
-            "FY 2029 (Y3)",
-            "FY 2030 (Y4)",
-            "FY 2031 (Y5)",
-        ]),
+        ("col_hdr", ["FINANCIAL STATEMENTS — ANNUAL (FY 2027 TO FY 2031)"] + period_hdrs),
     ]
 
     for _, df_row in res.fs_annual_df.iterrows():
@@ -405,8 +578,15 @@ def plot_fs_annual_and_structure_dashboard(
         code = str(df_row["row_code"])
 
         if rtype == "header":
-            rows.append(("sec_hdr", [label] + [""] * 6))
+            if code != "KI_HDR":
+                rows.append(("stmt_gap", [""] * 7))
+                rows.append(("sec_hdr", [label] + period_hdrs))
+            else:
+                rows.append(("sec_hdr", [label] + [""] * 6))
             continue
+
+        if code in _THREE_STMT_SUBHEADERS:
+            rows.append(("sub_hdr", [_THREE_STMT_SUBHEADERS[code]] + [""] * 6))
 
         def _fmt(v: float) -> str:
             if rtype == "pct":
@@ -420,7 +600,7 @@ def plot_fs_annual_and_structure_dashboard(
 
     def _style_s3(r_idx: int, c_idx: int, rstyle: str) -> tuple[str, str, str]:
         if rstyle == "col_hdr":
-            return SUBHEADER_BG, FORMULA_BLACK, "bold"
+            return TOP_COL_HEADER_BG, BANNER_WHITE, "bold"
         if rstyle == "subtotal":
             return SUBTOTAL_BG, FORMULA_BLACK, "bold"
         if rstyle == "total":

@@ -846,6 +846,17 @@ def _run_monte_carlo_financial_simulations(
     curr_base_tax_past_fy_sims = np.zeros(n_sims, dtype=float)
     tax_cfg = cfg.taxes_and_other
 
+    # Initial Operating Net Working Capital (t = 0):
+    #   OpNWC_0 = (Inventory_0 + Prepaid_Lease_Deposit_0) - (AP_0 + Accrued_Coaching_0)
+    #           = (30.0M + 150.0M) - (45.0M + 60.0M) = +75.0M VND
+    init_op_nwc = (
+        (bs_cfg.inventory_mvnd + bs_cfg.prepaid_expenses_mvnd)
+        - (bs_cfg.accounts_payable_mvnd + bs_cfg.accrued_expenses_payable_mvnd)
+    )
+    prev_op_nwc_sims = np.full(n_sims, init_op_nwc, dtype=float)
+    prev_st_op_nwc_sims = np.full(n_sims, init_op_nwc, dtype=float)
+    prev_base_op_nwc_sims = np.full(n_sims, init_op_nwc, dtype=float)
+
     for m in range(n_months):
         # 1. Sample External Pickleball Interest Trend Rate g_t & Update Cumulative Trend Multiplier I_t
         g_t = _sample_month_conditioned(ext_cfg.monthly_interest_change_rate_dist, rng, n_sims, shared_weight=0.58)
@@ -1281,9 +1292,24 @@ def _run_monte_carlo_financial_simulations(
             curr_st_tax_curr_fy_sims = curr_st_tax_curr_fy_sims + st_tax_m_sims
             curr_base_tax_curr_fy_sims = curr_base_tax_curr_fy_sims + base_tax_m_sims
 
-        curr_cash_sims = curr_cash_sims + ebitda_m - cit_paid_sims - capex_out_m + eq_in_m
-        curr_stress_cash_sims = curr_stress_cash_sims + st_ebitda_m - st_cit_paid_sims - capex_out_m + eq_in_m
-        curr_base_cash_sims = curr_base_cash_sims + base_ebitda_m - base_cit_paid_sims
+        # Operating Net Working Capital (1-mo Inventory + 1-mo Lease Security Deposit - 1-mo AP - 1-mo Accrued Coaching):
+        #   Inv = c_fnb, Prepaid/Lease Deposit = o_lease (150M in M1..M9 -> 480M in M10+ when Venue 2 lease starts),
+        #   AP = c_fnb + c_pay_cons, Accrued = c_coach  =>  OpNWC = o_lease - c_pay_cons - c_coach
+        op_nwc_m_sims = o_lease - c_pay_cons - c_coach
+        st_op_nwc_m_sims = o_lease - st_c_pay_cons - st_c_coach
+        base_op_nwc_m_sims = o_v1_lease - base_c_pay_cons - base_c_coach
+
+        delta_op_nwc_sims = op_nwc_m_sims - prev_op_nwc_sims
+        delta_st_op_nwc_sims = st_op_nwc_m_sims - prev_st_op_nwc_sims
+        delta_base_op_nwc_sims = base_op_nwc_m_sims - prev_base_op_nwc_sims
+
+        prev_op_nwc_sims = op_nwc_m_sims
+        prev_st_op_nwc_sims = st_op_nwc_m_sims
+        prev_base_op_nwc_sims = base_op_nwc_m_sims
+
+        curr_cash_sims = curr_cash_sims + ebitda_m - delta_op_nwc_sims - cit_paid_sims - capex_out_m + eq_in_m
+        curr_stress_cash_sims = curr_stress_cash_sims + st_ebitda_m - delta_st_op_nwc_sims - st_cit_paid_sims - capex_out_m + eq_in_m
+        curr_base_cash_sims = curr_base_cash_sims + base_ebitda_m - delta_base_op_nwc_sims - base_cit_paid_sims
         end_cash_mat[:, m] = curr_cash_sims
         stress_end_cash_mat[:, m] = curr_stress_cash_sims
         base_end_cash_mat[:, m] = curr_base_cash_sims
@@ -1932,9 +1958,15 @@ def build_financial_model(
     end_cash_arr = np.zeros(n_months)
     end_cash_case_arr = np.zeros(n_months)
 
-    inv_arr = np.full(n_months, bs.inventory_mvnd)
+    # Dynamic 1-Month Working Capital Accounts Scaling from 6 Courts -> 20 Courts:
+    #   - Inventory: 1 month of F&B supplies & court inventory (`m_fnb_cogs`, 30.0M at t=0 -> ~88.7M at 20 courts)
+    #   - Prepaid Expenses & Lease Security Deposit: 1 month of active venue lease security deposit
+    #     (`m_lease`, 150.0M for Venue 1 in Jan–Sep 2027 -> 480.0M from Oct-27 onward with Venue 2's 330.0M lease)
+    #   - Accounts Payable: 1 month of F&B supplies & payment/consumables (`m_fnb_cogs + m_pay_cons`, 45.0M at t=0 -> ~150.5M)
+    #   - Accrued Coaching & Staff Payables: 1 month of accrued coach fees (`m_coach_cogs`, 60.0M at t=0 -> ~172.3M)
+    inv_arr = m_fnb_cogs.copy()
     ar_arr = np.full(n_months, bs.accounts_receivable_mvnd)
-    prepaid_arr = np.full(n_months, bs.prepaid_expenses_mvnd)
+    prepaid_arr = m_lease.copy()
     tot_curr_assets_arr = np.zeros(n_months)
 
     ppe_net_arr = np.zeros(n_months)
@@ -1942,8 +1974,8 @@ def build_financial_model(
     tot_lt_assets_arr = np.zeros(n_months)
     tot_assets_arr = np.zeros(n_months)
 
-    ap_arr = np.full(n_months, bs.accounts_payable_mvnd)
-    accrued_arr = np.full(n_months, bs.accrued_expenses_payable_mvnd)
+    ap_arr = (m_fnb_cogs + m_pay_cons).copy()
+    accrued_arr = m_coach_cogs.copy()
     st_debt_arr = np.full(n_months, bs.short_term_debt_mvnd)
     tax_curr_fy_arr = np.zeros(n_months)
     tax_past_fy_arr = np.zeros(n_months)
@@ -1975,6 +2007,10 @@ def build_financial_model(
     curr_tax_curr_fy = 0.0
     curr_tax_past_fy = 0.0
     curr_vat_credit_carryforward = 0.0
+    prev_op_nwc = (
+        (bs.inventory_mvnd + bs.prepaid_expenses_mvnd)
+        - (bs.accounts_payable_mvnd + bs.accrued_expenses_payable_mvnd)
+    )
 
     cash_table_rows = []
     tax_table_rows = []
@@ -2053,9 +2089,17 @@ def build_financial_model(
         vat_receivable_arr[m_idx] = vat_rec_m
         vat_payable_arr[m_idx] = vat_pay_m
 
-        # Working capital change driven by CIT accrual vs. April cash settlement
-        # (-) Change in Working Capital = ΔNonCashCA - ΔCL = -(tax_m - cit_paid_m) = cit_paid_m - tax_m
-        nwc_change_m = cit_paid_m - tax_m
+        # Working capital change driven by:
+        #   (1) Operating NWC scaling (Inventory + Lease Security Deposit [150M -> 480M Oct-27+] - AP - Accrued Coaching)
+        #   (2) CIT accrual vs. April cash settlement
+        curr_op_nwc = (
+            (float(inv_arr[m_idx]) + float(prepaid_arr[m_idx]))
+            - (float(ap_arr[m_idx]) + float(accrued_arr[m_idx]))
+        )
+        delta_op_nwc_m = curr_op_nwc - prev_op_nwc
+        prev_op_nwc = curr_op_nwc
+
+        nwc_change_m = delta_op_nwc_m + (cit_paid_m - tax_m)
         nwc_change_arr[m_idx] = nwc_change_m
         ocf = float(m_net_inc[m_idx] + m_da[m_idx] - nwc_change_m)
 
@@ -2154,7 +2198,7 @@ def build_financial_model(
         ("KI_CASH", "KEY INDICATORS", "  Cash Reserves at End of Period (Cash in Hand)", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
 
         # ==================== INCOME STATEMENT ====================
-        ("IS_HDR", "INCOME STATEMENT", "INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
+        ("IS_HDR", "INCOME STATEMENT", "STATEMENT 1 — INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
         ("REV_1A", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 1 (6 Courts, Adaptive Pricing)", "input_linked", "flow", case_court_hire, m_v1_court),
         ("REV_1B", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 2 (14 Courts, Opens Feb-28)", "input_linked", "flow", 0.0, m_v2_court),
         ("REV_2", "INCOME STATEMENT", "  Revenue: PICK! Social Subscriptions & Seasonal Tournaments (May-27+)", "input_linked", "flow", 0.0, m_mem_rev),
@@ -2198,18 +2242,18 @@ def build_financial_model(
         ("NET_PCT", "INCOME STATEMENT", "  Net Margin (%)", "pct", "pct", (case_net_income / case_total_rev) * 100.0, m_net_margin_pct),
 
         # ==================== BALANCE SHEET ====================
-        ("BS_HDR", "BALANCE SHEET", "BALANCE SHEET (END OF PERIOD, M VND)", "header", "none", None, None),
+        ("BS_HDR", "BALANCE SHEET", "STATEMENT 2 — BALANCE SHEET (END OF PERIOD, M VND)", "header", "none", None, None),
         ("BS_CASH", "BALANCE SHEET", "  Cash and Cash Equivalents (Cash Reserves)", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
-        ("BS_INV", "BALANCE SHEET", "  Inventory (F&B & Court Equipment)", "input", "end_stock", bs.inventory_mvnd, inv_arr),
-        ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Security Deposit", "input", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
+        ("BS_INV", "BALANCE SHEET", "  Inventory (1-Mo F&B Supplies & Court Equipment)", "input", "end_stock", bs.inventory_mvnd, inv_arr),
+        ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Security Deposit (150M -> 480M Oct-27+)", "input_linked", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
         ("BS_CA_TOT", "BALANCE SHEET", "Total Current Assets", "subtotal", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd, tot_curr_assets_arr),
         ("BS_PPE", "BALANCE SHEET", "  Equipment / PP&E (+7,000M Fit-Out Oct-27–Jan-28, Net of D&A)", "input_linked", "end_stock", bs.equipment_ppe_gross_mvnd - da, ppe_net_arr),
         ("BS_INTANG", "BALANCE SHEET", "  Intangible Assets", "input", "end_stock", bs.intangible_assets_mvnd, intang_arr),
         ("BS_LTA_TOT", "BALANCE SHEET", "Total Long-Term (Fixed) Assets", "subtotal", "end_stock", bs.equipment_ppe_gross_mvnd - da + bs.intangible_assets_mvnd, tot_lt_assets_arr),
         ("BS_ASSETS_TOT", "BALANCE SHEET", "TOTAL ASSETS", "total", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd + bs.equipment_ppe_gross_mvnd - da, tot_assets_arr),
 
-        ("BS_AP", "BALANCE SHEET", "  Accounts Payable (Supplies & Payment Gateway)", "input", "end_stock", bs.accounts_payable_mvnd, ap_arr),
-        ("BS_ACC", "BALANCE SHEET", "  Accrued Coaching & Staff Payables", "input", "end_stock", bs.accrued_expenses_payable_mvnd, accrued_arr),
+        ("BS_AP", "BALANCE SHEET", "  Accounts Payable (1-Mo Supplies & Payment Gateway)", "input", "end_stock", bs.accounts_payable_mvnd, ap_arr),
+        ("BS_ACC", "BALANCE SHEET", "  Accrued Coaching & Staff Payables (1-Mo Coach Fees)", "input", "end_stock", bs.accrued_expenses_payable_mvnd, accrued_arr),
         ("BS_TAX_PAST", "BALANCE SHEET", "  Income Taxes Payable — Past FY (Settled in April)", "formula", "end_stock", 0.0, tax_past_fy_arr),
         ("BS_TAX_CURR", "BALANCE SHEET", "  Income Taxes Payable — Current FY (Accrued 20% CIT)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
         ("BS_LIAB_TOT", "BALANCE SHEET", "TOTAL LIABILITIES", "subtotal", "end_stock", bs.accounts_payable_mvnd + bs.accrued_expenses_payable_mvnd + case_taxes, tot_liab_arr),
@@ -2221,11 +2265,11 @@ def build_financial_model(
         ("BS_CHK", "BALANCE SHEET", "  Check (Total Assets - Total L&E)", "formula", "end_stock", 0.0, bs_check_arr),
 
         # ==================== CASH FLOW STATEMENT ====================
-        ("CF_HDR", "CASH FLOW", "CASH FLOW STATEMENT (M VND)", "header", "none", None, None),
+        ("CF_HDR", "CASH FLOW", "STATEMENT 3 — CASH FLOW STATEMENT (M VND)", "header", "none", None, None),
         ("CF_START", "CASH FLOW", "Starting Cash Balance", "formula", "start_stock", bs.starting_cash_mvnd, start_cash_arr),
         ("CF_NI", "CASH FLOW", "  (+) Net Income", "formula", "flow", case_net_income, m_net_inc),
         ("CF_DA", "CASH FLOW", "  (+) D&A (Non-Cash Expense)", "formula", "flow", da, m_da),
-        ("CF_NWC", "CASH FLOW", "  (-) Change in Working Capital (CIT Accrual vs. April Payment)", "formula", "flow", -case_taxes, nwc_change_arr),
+        ("CF_NWC", "CASH FLOW", "  (-) Change in Working Capital (Lease Deposit, Inventory, Payables & CIT)", "formula", "flow", -case_taxes, nwc_change_arr),
         ("CF_OCF", "CASH FLOW", "Total Operating Cash Flow", "subtotal", "flow", case_ebitda, ocf_arr),
         ("CF_CAPEX", "CASH FLOW", "  (-) CAPEX > PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27–Jan-28)", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
         ("CF_ICF", "CASH FLOW", "Total Investing Cash Flow", "subtotal", "flow", -bs.monthly_capex_mvnd, icf_arr),
@@ -2236,7 +2280,7 @@ def build_financial_model(
         ("CF_END_CASE", "CASH FLOW", "  Memo: Case Baseline Cash Reserves", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_case_arr),
 
         # ==================== TAX ESTIMATIONS (VIETNAM CIT & VAT) ====================
-        ("TX_HDR", "TAX ESTIMATIONS", "TAX ESTIMATIONS — VIETNAM CIT (20%) & VAT SCHEDULE (M VND)", "header", "none", None, None),
+        ("TX_HDR", "TAX ESTIMATIONS", "SUPPLEMENTARY — VIETNAM CIT (20%) & VAT TAX SCHEDULE (M VND)", "header", "none", None, None),
         ("TX_EBT", "TAX ESTIMATIONS", "  Taxable Income (EBT = EBITDA - D&A)", "formula", "flow", case_ebt, m_ebt),
         ("TX_CIT_EXP", "TAX ESTIMATIONS", "  Effective Monthly CIT Expense (20.0% Statutory Rate)", "formula", "flow", case_taxes, m_taxes),
         ("TX_CIT_CURR", "TAX ESTIMATIONS", "  Preliminary Income Tax Due (Current FY Accrued)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),

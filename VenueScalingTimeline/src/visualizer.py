@@ -212,12 +212,24 @@ def plot_venue_scaling_gantt_chart(
                     1.0,
                     facecolor=st.light_color,
                     edgecolor="#45475a",
-                    linewidth=0.8,
+                    linewidth=0.9,
                     zorder=1,
                 )
             )
-            ax.text(-29.35, y_mid, st.stage_id, ha="center", va="center", fontsize=8.0, fontweight="bold", color=st.color, zorder=5)
-            ax.text(-28.5, y_mid, st.name.upper(), ha="left", va="center", fontsize=6.8, fontweight="bold", color="#cdd6f4", zorder=5)
+            ax.axhline(y_top, color=st.color, linewidth=1.55, zorder=4)
+            ax.axhline(y_bot, color=st.color, linewidth=1.05, zorder=4)
+            ax.add_patch(
+                mpatches.Rectangle(
+                    (x_left_min, y_bot),
+                    0.22,
+                    1.0,
+                    facecolor=st.color,
+                    edgecolor="none",
+                    zorder=5,
+                )
+            )
+            ax.text(-29.35, y_mid, st.stage_id, ha="center", va="center", fontsize=8.1, fontweight="bold", color=st.color, zorder=5)
+            ax.text(-28.5, y_mid, f"▸ {st.name.upper()}", ha="left", va="center", fontsize=6.8, fontweight="bold", color="#cdd6f4", zorder=5)
             ax.text(
                 -14.0,
                 y_mid,
@@ -287,8 +299,9 @@ def plot_venue_scaling_gantt_chart(
 
             id_col = "#f38ba8" if t.is_critical_path else "#a6adc8"
             ax.text(-29.35, y_mid, t.id, ha="center", va="center", fontsize=7.5, fontweight="bold", color=id_col, zorder=5)
+            ax.plot([-28.42, -28.42], [y_bot + 0.18, y_top - 0.18], color=t.stage_color, linewidth=1.1, alpha=0.65, zorder=4)
             ax.text(
-                -28.5,
+                -28.20,
                 y_mid,
                 t.name,
                 ha="left",
