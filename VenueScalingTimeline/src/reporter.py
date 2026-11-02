@@ -35,9 +35,22 @@ def export_venue_scaling_outputs(
     task_rows = []
     for t in res.tasks:
         cites = ", ".join(f"`[{c}]`" for c in t.citation_keys)
+        rat_md = (
+            t.estimation_rationale
+            .replace("30x60 ft", "$30 \\times 60\\text{ ft}$")
+            .replace("~3,200 m2", "$\\sim 3{,}200\\text{ m}^2$")
+            .replace("6-8 C", "$6\\text{-}8^\\circ\\text{C}$")
+            .replace("<55 dBA", "$<55\\text{ dBA}$")
+            .replace("<3 lbs/1,000 sq.ft", "$<3\\text{ lbs}/1{,}000\\text{ sq.ft}$")
+        )
+        deliv_md = (
+            t.core_deliverable
+            .replace("<55 dBA", "$<55\\text{ dBA}$")
+            .replace("<3 lbs/1,000 sq.ft", "$<3\\text{ lbs}/1{,}000\\text{ sq.ft}$")
+        )
         task_rows.append(
-            f"| **`{t.id}`** | {t.name} | `W{t.start_week + 1:.1f}-W{t.end_week:.1f}` ({t.duration_weeks:.1f}w) | {t.core_deliverable} | "
-            f"**`{t.capex_mvnd:,.2f}M`** | {t.estimation_rationale} ({cites}) |"
+            f"| **`{t.id}`** | {t.name} | `W{t.start_week + 1:.1f}-W{t.end_week:.1f}` ({t.duration_weeks:.1f}w) | {deliv_md} | "
+            f"**`{t.capex_mvnd:,.2f}M`** | {rat_md} ({cites}) |"
         )
     task_table_md = "\n".join(task_rows)
 
@@ -68,7 +81,7 @@ Rather than taking the high-risk approach of signing a `VND 330M/month` lease an
 
 1. **Phase 1 - Build & Launch the Digital Core (`Months 1-4: Jan-Apr 2027`)**: Complete the `PICK! Social & Adaptive Booking Platform` (`Milestone M4: Apr 25, 2027`). Drawing `500.00M VND` of Minh Tran's `1,000.00M VND` reserve upon signing in `Month 1 (Jan-27)` ensures PICK! maintains a rock-solid positive cash buffer even under an immediate Day-1 `-30%` demand stress test.
 2. **Phase 2 - Validate Demand & Accumulate Cash (`Months 5-9: May-Sep 2027`)**: Operate the new platform and 4-segment ML marketing engine for 5 full months on the existing 6-court venue, lifting blended court utilization from `66.0%` to `78.4%` (`460.75M VND/mo` court hire), onboarding paying `PICK! Social` members (`@ 399k VND/mo`), and building a large organic cash reserve prior to construction.
-3. **Phase 3 - Flagship Venue Expansion (`Months 10-13 Build: Oct 2027 - Jan 2028` -> `Month 14 Open: Feb 2028`)**:
+3. **Phase 3 - Flagship Venue Expansion (`Months 10-13 Build: Oct 2027 - Jan 2028` to `Month 14 Open: Feb 2028`)**:
    - Draw the remaining `VND 7,500.00M` investor tranche in `Month 10 (Oct-27)` (`7,000.0M VND` fit-out split evenly at **`1,750.0M VND/month` across `Oct 2027 - Jan 2028`**, plus the remaining `500.0M VND` reserve buffer).
    - Open the 14 new courts (plus coaching video studio & specialty cafe) at the start of **Month 14 (`Feb 2028`)**, expanding PICK! to **20 courts total** and completing the **6-to-9 month fill-up ramp by `Aug-Oct 2028` (`Months 20-22`)**-giving PICK! full steady-state 20-court operations before **Year 3 (`FY 2029`)** begins!
 

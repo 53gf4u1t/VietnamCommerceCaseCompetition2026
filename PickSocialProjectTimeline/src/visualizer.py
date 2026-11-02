@@ -344,14 +344,15 @@ def plot_master_gantt_chart(
                 color=id_color,
                 zorder=5,
             )
-            ax.plot([-24.42, -24.42], [y_bot + 0.18, y_top - 0.18], color=t.stage_color, linewidth=1.1, alpha=0.65, zorder=4)
+            ax.plot([-24.15, -24.15], [y_bot + 0.16, y_top - 0.16], color=t.stage_color, linewidth=1.15, alpha=0.75, zorder=4)
+            ax.plot([-24.15, -23.92], [y_mid, y_mid], color=t.stage_color, linewidth=1.0, alpha=0.75, zorder=4)
             ax.text(
-                -24.20,
+                -23.78,
                 y_mid,
                 t.name,
                 ha="left",
                 va="center",
-                fontsize=7.1,
+                fontsize=7.0,
                 fontweight="bold" if t.is_critical_path or t.is_simultaneous_qa else "normal",
                 color="#cdd6f4",
                 zorder=5,

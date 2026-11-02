@@ -82,7 +82,7 @@ def export_timeline_outputs(
     for _, r in res.platform_opex_summary_df.iterrows():
         popex_table_rows.append(
             f"| **`{r['item_code']}`** | {r['expense_line']} | `{r['active_window']}` | `{r['dist_type']}` | "
-            f"**`{r['monthly_mean_mvnd']:.2f}M`** (`+/-{r['monthly_std_mvnd']:.2f}M`, `[{r['monthly_min_mvnd']:.2f}M, {r['monthly_max_mvnd']:.2f}M]`) | "
+            f"**`{r['monthly_mean_mvnd']:.2f}M`** ($\\pm {r['monthly_std_mvnd']:.2f}\\text{{M}}$, `[{r['monthly_min_mvnd']:.2f}M, {r['monthly_max_mvnd']:.2f}M]`) | "
             f"**`{r['annual_steady_state_mvnd']:.2f}M / yr`** | {r['source']} |"
         )
     popex_table_md = "\n".join(popex_table_rows)
@@ -261,7 +261,7 @@ To spread the platform development investment as evenly as possible across the 6
 
 Once the 4-month core build completes at the end of Month 4 (`Apr 25, 2027`) and the platform goes live in **Month 5 (`May 2027`)**, PICK! incurs recurring monthly operating expenses to run and maintain the digital ecosystem (configured as distributions in `configs/opex.toml`):
 
-| Code | Recurring Platform Expense Line | Active Window | Distribution | Monthly Mean (`+/-SD`, `[Min, Max]`) | Annual Steady-State | Derivation & Cited Sources |
+| Code | Recurring Platform Expense Line | Active Window | Distribution | Monthly Mean ($\\pm$ SD, `[Min, Max]`) | Annual Steady-State | Derivation & Cited Sources |
 | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
 {popex_table_md}
 | **M5-M6** | **Launch & Hypercare Monthly Platform OpEx (`May-Jun 2027`)** | `Months 5-6` | Sum of `POPEX_1..4` | **`{res.launch_monthly_platform_opex_mvnd:.2f}M / mo`** | - | Engineering maintenance covered by active Stage 6 squad |

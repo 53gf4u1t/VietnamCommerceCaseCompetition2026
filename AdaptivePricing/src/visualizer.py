@@ -843,7 +843,7 @@ def plot_monthly_calendar_heatmap(
     ax_bot.text(
         5.0,
         102.0,
-        "Daytime Off-Peak Window (06:00-17:00): Price Lowered 160k -> 115k (+24.4 pp Weekday Utilization Lift)",
+        "Daytime Off-Peak Window (06:00-17:00): Price Lowered 160k to 115k (+24.4 pp Weekday Utilization Lift)",
         ha="center",
         va="center",
         fontsize=8.2,
@@ -949,7 +949,7 @@ def plot_occupancy_and_stress_test(
         ax1.text(bar.get_x() + bar.get_width() / 2, h + 1.2, f"{h:.1f}%", ha="center", va="bottom", fontsize=8.5, color=PALETTE["ml_teal"], fontweight="bold")
 
     ax1.annotate(
-        f"Daytime Occupancy Surge:\n{base_u[0]:.1f}% -> {ml_u[0]:.1f}%\n(6 Cts: 2.4 -> 3.9 | 20 Cts: 8.0 -> 12.9)",
+        f"Daytime Occupancy Surge:\n{base_u[0]:.1f}% to {ml_u[0]:.1f}%\n(6 Cts: 2.4 to 3.9 | 20 Cts: 8.0 to 12.9)",
         xy=(0 + w / 2, ml_u[0]),
         xytext=(0.15, 79),
         fontsize=8.3,

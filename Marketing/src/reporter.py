@@ -159,32 +159,32 @@ Per **Case Page 2 ("PICK! At a glance")** and **Case Exhibit 2 ("Monthly Costs")
 
 Splitting the baseline **25.00M VND/month** marketing budget across the 4 customer segments from **Case Exhibit 4** and merging customer count and visits/month into direct **Monthly Segment Visits Distributions** yields the exact marketing spend required to drive **1 player visit** in each segment:
 
-| Customer Segment | Share of Customers | Baseline Customers | Visits / Customer / Mo | Merged Monthly Visits Dist (Mean +/- SD) | Baseline Marketing Budget Split | Marketing Cost per Visit (`VND / Visit`) | Marketing Cost per Active Customer (`VND / Cust`) | Strategic Interpretation |
+| Customer Segment | Share of Customers | Baseline Customers | Visits / Customer / Mo | Merged Monthly Visits Dist ($\\mu \\pm \\sigma$) | Baseline Marketing Budget Split | Marketing Cost per Visit (`VND / Visit`) | Marketing Cost per Active Customer (`VND / Cust`) | Strategic Interpretation |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **1. Competitive Players** | 20.0% | 720 | 4.5 | **3,240 +/- 165** | **5.00M VND** (20.0%) | **1,543 VND / visit** | 6,944 VND / cust | Lowest cost/visit due to high 4.5x/mo repeat frequency |
-| **2. Social Players** | 35.0% | 1,260 | 2.0 | **2,520 +/- 135** | **8.50M VND** (34.0%) | **3,373 VND / visit** | 6,746 VND / cust | Core group-play & PICK! Social membership audience |
-| **3. Trend Explorers** | 30.0% | 1,080 | 1.1 | **1,188 +/- 95** | **7.50M VND** (30.0%) | **6,313 VND / visit** | 6,944 VND / cust | Highest cost/visit (4.09x Competitive) due to 1.1x/mo low retention |
-| **4. Families** | 15.0% | 540 | 1.2 | **648 +/- 48** | **4.00M VND** (16.0%) | **6,173 VND / visit** | 7,407 VND / cust | High acquisition cost per visit, but highest ancillary coaching & F&B spend |
+| **1. Competitive Players** | 20.0% | 720 | 4.5 | **$3,240 \\pm 165$** | **5.00M VND** (20.0%) | **1,543 VND / visit** | 6,944 VND / cust | Lowest cost/visit due to high $4.5\\times$/mo repeat frequency |
+| **2. Social Players** | 35.0% | 1,260 | 2.0 | **$2,520 \\pm 135$** | **8.50M VND** (34.0%) | **3,373 VND / visit** | 6,746 VND / cust | Core group-play & PICK! Social membership audience |
+| **3. Trend Explorers** | 30.0% | 1,080 | 1.1 | **$1,188 \\pm 95$** | **7.50M VND** (30.0%) | **6,313 VND / visit** | 6,944 VND / cust | Highest cost/visit ($4.09\\times$ Competitive) due to $1.1\\times$/mo low retention |
+| **4. Families** | 15.0% | 540 | 1.2 | **$648 \\pm 48$** | **4.00M VND** (16.0%) | **6,173 VND / visit** | 7,407 VND / cust | High acquisition cost per visit, but highest ancillary coaching & F&B spend |
 | **Total / Weighted Avg** | **100.0%** | **3,600** | **2.11** | **7,596 (~7,600)** | **25.00M VND (100%)** | **3,291 VND / visit** | **6,944 VND / cust** | Exact reconciliation to Case Page 2, Exhibit 2 & Exhibit 4 |
 
 ---
 
-## 3. Grounding the 12 Segment-by-Ancillary Spending Distributions (`3 Lines x 4 Segments`)
+## 3. Grounding the 12 Segment-by-Ancillary Spending Distributions ($3\\text{{ Lines}} \\times 4\\text{{ Segments}}$)
 
-To model **Revenue Line 2 (Paddle Rental & Balls = 15.00M VND/mo)**, **Revenue Line 3 (Coaching = 115.00M VND/mo)**, and **Revenue Line 4 (Food & Drinks = 75.00M VND/mo)** dynamically from customer segment visits, we define **12 Truncated Normal distributions** in `configs/customers.toml` (`3 ancillary lines x 4 customer segments`), grounded simultaneously in **Case Exhibit 1** and **Case Exhibit 4**:
+To model **Revenue Line 2 (Paddle Rental & Balls = 15.00M VND/mo)**, **Revenue Line 3 (Coaching = 115.00M VND/mo)**, and **Revenue Line 4 (Food & Drinks = 75.00M VND/mo)** dynamically from customer segment visits, we define **12 Truncated Normal distributions** in `configs/customers.toml` ($3\\text{{ ancillary lines}} \\times 4\\text{{ customer segments}}$), grounded simultaneously in **Case Exhibit 1** and **Case Exhibit 4**:
 
-| Customer Segment | Baseline Visits / Mo | Dist 1: Paddle & Balls (`kVND/visit` -> `M VND/mo`) | Dist 2: Coaching (`kVND/visit` -> `M VND/mo`) | Dist 3: Food & Drinks (`kVND/visit` -> `M VND/mo`) | Total Ancillary (`kVND/visit`) | Court Hire Share (`kVND/visit`) | Total Spend / Visit (**Case Exhibit 4**) |
+| Customer Segment | Baseline Visits / Mo | Dist 1: Paddle & Balls ($\\text{{kVND/visit}} \\to \\text{{M VND/mo}}$) | Dist 2: Coaching ($\\text{{kVND/visit}} \\to \\text{{M VND/mo}}$) | Dist 3: Food & Drinks ($\\text{{kVND/visit}} \\to \\text{{M VND/mo}}$) | Total Ancillary (`kVND/visit`) | Court Hire Share (`kVND/visit`) | Total Spend / Visit (**Case Exhibit 4**) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. Competitive Players** | 3,240 | **0.80 +/- 0.12 k** (2.59M/mo) | **21.30 +/- 1.85 k** (69.01M/mo) | **10.00 +/- 0.95 k** (32.40M/mo) | 32.10 k | 62.90 k | **95.00 kVND** (Exh. 4 = 95k) |
-| **2. Social Players** | 2,520 | **1.60 +/- 0.20 k** (4.03M/mo) | **9.52 +/- 0.90 k** (23.99M/mo) | **11.50 +/- 1.05 k** (28.98M/mo) | 22.62 k | 57.38 k | **80.00 kVND** (Exh. 4 = 80k) |
-| **3. Trend Explorers** | 1,188 | **5.20 +/- 0.50 k** (6.18M/mo) | **4.80 +/- 0.55 k** (5.70M/mo) | **5.99 +/- 0.65 k** (7.12M/mo) | 15.99 k | 49.01 k | **65.00 kVND** (Exh. 4 = 65k) |
-| **4. Families** | 648 | **3.40 +/- 0.35 k** (2.20M/mo) | **25.15 +/- 2.10 k** (16.30M/mo) | **10.03 +/- 0.95 k** (6.50M/mo) | 38.58 k | 46.42 k | **85.00 kVND** (Exh. 4 = 85k) |
+| **1. Competitive Players** | 3,240 | **$0.80 \\pm 0.12\\text{{ k}}$** (2.59M/mo) | **$21.30 \\pm 1.85\\text{{ k}}$** (69.01M/mo) | **$10.00 \\pm 0.95\\text{{ k}}$** (32.40M/mo) | 32.10 k | 62.90 k | **95.00 kVND** (Exh. 4 = 95k) |
+| **2. Social Players** | 2,520 | **$1.60 \\pm 0.20\\text{{ k}}$** (4.03M/mo) | **$9.52 \\pm 0.90\\text{{ k}}$** (23.99M/mo) | **$11.50 \\pm 1.05\\text{{ k}}$** (28.98M/mo) | 22.62 k | 57.38 k | **80.00 kVND** (Exh. 4 = 80k) |
+| **3. Trend Explorers** | 1,188 | **$5.20 \\pm 0.50\\text{{ k}}$** (6.18M/mo) | **$4.80 \\pm 0.55\\text{{ k}}$** (5.70M/mo) | **$5.99 \\pm 0.65\\text{{ k}}$** (7.12M/mo) | 15.99 k | 49.01 k | **65.00 kVND** (Exh. 4 = 65k) |
+| **4. Families** | 648 | **$3.40 \\pm 0.35\\text{{ k}}$** (2.20M/mo) | **$25.15 \\pm 2.10\\text{{ k}}$** (16.30M/mo) | **$10.03 \\pm 0.95\\text{{ k}}$** (6.50M/mo) | 38.58 k | 46.42 k | **85.00 kVND** (Exh. 4 = 85k) |
 | **Baseline Monthly Sum** | **7,596** | **15.005M VND/mo** (Exh. 1 = **15.00M**) | **115.001M VND/mo** (Exh. 1 = **115.00M**) | **74.995M VND/mo** (Exh. 1 = **75.00M**) | **205.00M/mo** | **436.70M/mo** | **641.70M VND/mo** (Exh. 1 = **640M**) |
 
 ### 3.1 Quarterly Seasonal Tournament Ancillary & Follower Boost (`Mar, Jun, Sep, Dec` from Month 6+)
 Starting in **Month 6 (`Jun-27`, Summer Tournament)** after `PICK! Social` launches in `Month 5 (May-27)`, PICK! hosts a flagship seasonal tournament every quarter (`Spring [Mar]`, `Summer [Jun]`, `Fall [Sep]`, `Winter [Dec]`):
-- **Tournament Participant Field**: `192 +/- 16` players in the `6`-court phase (`Months 6, 9, 12`), scaling to `420 +/- 32` players across the `20`-court network (`Months 15, 18, ..., 60`).
-- **Social Follower Boost**: Tournament highlight reels and brackets multiply monthly new follower acquisition by **`1.15x` (`+15%`)** in tournament months.
+- **Tournament Participant Field**: $192 \\pm 16$ players in the `6`-court phase (`Months 6, 9, 12`), scaling to $420 \\pm 32$ players across the `20`-court network (`Months 15, 18, ..., 60`).
+- **Social Follower Boost**: Tournament highlight reels and brackets multiply monthly new follower acquisition by **$1.15\\times$ (`+15%`)** in tournament months.
 - **Ancillary Spend Lift (`+85.0k VND / participant`)**: Both active members (who enter for **free**) and non-members (who pay **`350,000 VND`** entry fee) generate incremental full-day tournament ancillary spending of **`55.0k VND`** in `Food & Drinks`, **`10.0k VND`** in `Paddle & Balls`, and **`20.0k VND`** in pre-tournament `Coaching` clinics (`~16.3M VND/qtr` in 6-court phase; `~35.7M VND/qtr` in 20-court phase).
 
 ---
@@ -209,8 +209,8 @@ Starting in **Month 6 (`Jun-27`, Summer Tournament)** after `PICK! Social` launc
 ## 1. Model Architecture & Train/Test Split
 
 - **Estimator**: 4 Segment-Specific `HistGradientBoostingRegressor` models (`max_iter=220`, `learning_rate=0.065`, `max_depth=6`, `l2_regularization=1.2`)
-- **Training Split (80%)**: `{sim.n_train}` Monte Carlo trajectories x `60` months = **`{m.n_train_obs:,}` monthly state transitions**
-- **Held-Out Test Split (20%)**: `{sim.n_test}` Monte Carlo trajectories x `60` months = **`{m.n_test_obs:,}` monthly state transitions**
+- **Training Split (80%)**: ${sim.n_train}\\text{{ Monte Carlo trajectories}} \\times 60\\text{{ months}} =$ **`{m.n_train_obs:,}` monthly state transitions**
+- **Held-Out Test Split (20%)**: ${sim.n_test}\\text{{ Monte Carlo trajectories}} \\times 60\\text{{ months}} =$ **`{m.n_test_obs:,}` monthly state transitions**
 - **Input Features (12)**: Last month's active unique customers by segment (4), last month's player visits by segment (4), social media followers (`k`), follower-to-customer conversion rate (`~8.57%`), cumulative pickleball trend index ($I_t$), and active court capacity & Venue 2 fill headroom (`6` vs `20` courts).
 
 ## 2. Overall & Per-Segment Out-of-Sample Regression Metrics

@@ -1,6 +1,6 @@
 row_code,statement,line_item,row_type,agg_mode,unit,FY 2027 (Y1),FY 2028 (Y2),FY 2029 (Y3),FY 2030 (Y4),FY 2031 (Y5)
 KI_HDR,KEY INDICATORS,KEY INDICATORS & MILESTONES,header,none,,,,,,
-MEM_COURTS,KEY INDICATORS,  Active Courts in Operation (6 -> 20 in Feb-28),input_linked,end_stock,Courts,6.0,20.0,20.0,20.0,20.0
+MEM_COURTS,KEY INDICATORS,  Active Courts in Operation (6 to 20 in Feb-28),input_linked,end_stock,Courts,6.0,20.0,20.0,20.0,20.0
 MEM_CNT,KEY INDICATORS,  Active Paying Members (PICK! Social @ 399k/mo),input_linked,end_stock,Members,807.3248,1488.938,1827.0284,2087.7131,2217.7501
 KI_EQ,KEY INDICATORS,"  Equity Funding (500M Signing Jan-27 + 7,500M Expansion Oct-27)",input_linked,flow,M VND,8000.0,0.0,0.0,0.0,0.0
 KI_CASH,KEY INDICATORS,  Cash Reserves at End of Period (Cash in Hand),grand_total,end_stock,M VND,4123.7374,9621.8724,20828.3814,31719.6785,42871.5572
@@ -43,7 +43,7 @@ NET_PCT,INCOME STATEMENT,  Net Margin (%),pct,pct,%,8.3722,18.0568,26.3764,26.96
 BS_HDR,BALANCE SHEET,"STATEMENT 2 - BALANCE SHEET (END OF PERIOD, M VND)",header,none,,,,,,
 BS_CASH,BALANCE SHEET,  Cash and Cash Equivalents (Cash Reserves),formula,end_stock,M VND,4123.7374,9621.8724,20828.3814,31719.6785,42871.5572
 BS_INV,BALANCE SHEET,  Inventory (1-Mo F&B Supplies & Court Equipment),input,end_stock,M VND,40.4998,88.6955,86.0603,96.8234,95.876
-BS_PRE,BALANCE SHEET,  Prepaid Expenses & Lease Security Deposit (150M -> 480M Oct-27+),input_linked,end_stock,M VND,480.0,480.0,480.0,480.0,480.0
+BS_PRE,BALANCE SHEET,  Prepaid Expenses & Lease Security Deposit (150M to 480M Oct-27+),input_linked,end_stock,M VND,480.0,480.0,480.0,480.0,480.0
 BS_CA_TOT,BALANCE SHEET,Total Current Assets,subtotal,end_stock,M VND,4644.2371,10190.568,21394.4417,32296.5019,43447.4332
 BS_PPE,BALANCE SHEET,"  Equipment / PP&E (+7,000M Fit-Out Oct-27-Jan-28, Net of D&A)",input_linked,end_stock,M VND,5506.0,5908.6667,4444.6667,2980.6667,1516.6667
 BS_INTANG,BALANCE SHEET,  Intangible Assets,input,end_stock,M VND,0.0,0.0,0.0,0.0,0.0
@@ -65,7 +65,7 @@ CF_NI,CASH FLOW,  (+) Net Income,formula,flow,M VND,888.4986,4794.4281,8765.1605
 CF_DA,CASH FLOW,  (+) D&A (Non-Cash Expense),formula,flow,M VND,64.0,1347.3333,1464.0,1464.0,1464.0
 CF_NWC,CASH FLOW,"  (-) Change in Working Capital (Lease Deposit, Inventory, Payables & CIT)",formula,flow,M VND,78.7612,-1106.3736,-977.3484,-142.4876,-94.634
 CF_OCF,CASH FLOW,Total Operating Cash Flow,subtotal,flow,M VND,873.7374,7248.1351,11206.5089,10891.2972,11151.8787
-CF_CAPEX,CASH FLOW,"  (-) CAPEX > PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27-Jan-28)",input_linked,flow,M VND,-5250.0,-1750.0,0.0,0.0,0.0
+CF_CAPEX,CASH FLOW,"  (-) CAPEX to PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27-Jan-28)",input_linked,flow,M VND,-5250.0,-1750.0,0.0,0.0,0.0
 CF_ICF,CASH FLOW,Total Investing Cash Flow,subtotal,flow,M VND,-5250.0,-1750.0,0.0,0.0,0.0
 CF_EQ,CASH FLOW,"  (+) Equity Funding (Investor Minh Tran: +500M Jan-27 & +7,500M Oct-27)",input_linked,flow,M VND,8000.0,0.0,0.0,0.0,0.0
 CF_FCF,CASH FLOW,Total Financing Cash Flow,subtotal,flow,M VND,8000.0,0.0,0.0,0.0,0.0

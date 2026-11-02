@@ -102,8 +102,8 @@ Nodes (7): HistGBR Demand Model Metrics, AdaptivePricing ML Optimization Report,
 
 ## Knowledge Gaps
 - **15 isolated node(s):** `casecomp`, `CaseComp Unified Pipeline`, `HistGBR Demand Model Metrics`, `Assumptions & Demand Distributions Chart`, `Demand & Revenue Curves Chart` (+10 more)
-  These have <=1 connection - possible missing edges or undocumented components. (Counts symbols only; 103 node(s) total have <=1 connection when file, concept and rationale nodes are included.)
-- **18 thin communities (<3 nodes) omitted from report** - run `graphify query` to explore isolated nodes.
+  These have $\le 1$ connection - possible missing edges or undocumented components. (Counts symbols only; 103 node(s) total have $\le 1$ connection when file, concept and rationale nodes are included.)
+- **18 thin communities ($< 3$ nodes) omitted from report** - run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

@@ -1702,19 +1702,19 @@ def build_financial_model(
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 3",
-            "Paddle rental and balls (Scales 6 -> 20 Courts)", "Revenue (Ancillary)",
+            "Paddle rental and balls (Scales 6 to 20 Courts)", "Revenue (Ancillary)",
             paddle_balls, m_paddle,
             "Equipment rentals & ball sales across Venue 1 (6 courts) + Venue 2 (14 courts from Feb-28)",
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 4",
-            "Coaching (Scales 6 -> 20 Courts + Coaching Studio)", "Revenue (Services)",
+            "Coaching (Scales 6 to 20 Courts + Coaching Studio)", "Revenue (Services)",
             coaching, m_coach_rev,
             "Individual, group & junior coaching across Venue 1 + Venue 2 coaching facilities",
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 5",
-            "Food and drinks (Scales 6 -> 20 Courts + Specialty Cafe)", "Revenue (F&B)",
+            "Food and drinks (Scales 6 to 20 Courts + Specialty Cafe)", "Revenue (F&B)",
             food_drinks, m_fnb_rev,
             "Courtside beverages & specialty cafe sales across Venue 1 + Venue 2",
         ),
@@ -1775,13 +1775,13 @@ def build_financial_model(
             "Fixed VND 330.0M/month 5-year lease starting Oct 2027",
         ),
         _rec(
-            "OPEX", "SG&A / OpEx", "Utilities (6 -> 20 Courts)",
+            "OPEX", "SG&A / OpEx", "Utilities (6 to 20 Courts)",
             "Electricity, lighting and water (Venue 1 + Venue 2 from Feb-28)", "Mostly Fixed (OpEx)",
             case_utilities, m_util,
             "40M/mo Venue 1 + ~82M/mo Venue 2 (from Feb-28) + commercial utility inflation drift",
         ),
         _rec(
-            "OPEX", "SG&A / OpEx", "Insurance & Upkeep (6 -> 20 Courts)",
+            "OPEX", "SG&A / OpEx", "Insurance & Upkeep (6 to 20 Courts)",
             "Maintenance and insurance (Venue 1 + Venue 2 from Feb-28)", "Fixed (OpEx)",
             case_maint_ins, m_maint,
             "20M/mo Venue 1 + 38M/mo Venue 2 (from Feb-28) + upkeep inflation drift",
@@ -1790,11 +1790,11 @@ def build_financial_model(
             "SUMMARY", "SG&A / OpEx", "SUBTOTAL OpEx",
             "Subtotal Facility Operating Expenses (OpEx)", "Subtotal",
             case_total_opex, m_tot_opex,
-            "210M/mo (Jan-Sep 27) -> 540M/mo (Oct 27-Jan 28 Fit-Out) -> ~665M/mo (Feb 28+ 20-Court Operations)",
+            "210M/mo (Jan-Sep 27) to 540M/mo (Oct 27-Jan 28 Fit-Out) to ~665M/mo (Feb 28+ 20-Court Operations)",
         ),
 
         _rec(
-            "SGA", "SG&A", "Staff & Payroll (6 -> 20 Courts)",
+            "SGA", "SG&A", "Staff & Payroll (6 to 20 Courts)",
             "Staff wages (Venue 1 130M + Venue 2 215M from Feb-28)", "Fixed (SG&A)",
             case_staff_wages, m_staff,
             "130M/mo Venue 1 crew + 215M/mo Venue 2 site manager, front desk, baristas & cleaning (from Feb-28)",
@@ -1821,7 +1821,7 @@ def build_financial_model(
             "SGA", "SG&A", "PICK! Social OpEx (New)",
             "PICK! Social cloud, OTP, maintenance & uni ops (May-27+)", "PICK! Social OpEx (May-27+)",
             0.0, m_plat_rec,
-            "16.5M/mo in May-Jun 27 -> 26.5M/mo Jul 27+ (Cloud, OTP, SaaS, Uni Ops & Maintenance Retainer)",
+            "16.5M/mo in May-Jun 27 to 26.5M/mo Jul 27+ (Cloud, OTP, SaaS, Uni Ops & Maintenance Retainer)",
         ),
         _rec(
             "SGA", "SG&A", "Legal & Safety Compliance (New)",
@@ -2192,7 +2192,7 @@ def build_financial_model(
     three_stmt_rows: list[tuple[str, str, str, str, str, float | None, np.ndarray | None]] = [
         # ==================== KEY INDICATORS ====================
         ("KI_HDR", "KEY INDICATORS", "KEY INDICATORS & MILESTONES", "header", "none", None, None),
-        ("MEM_COURTS", "KEY INDICATORS", "  Active Courts in Operation (6 -> 20 in Feb-28)", "input_linked", "end_stock", 6.0, venue_scaling.active_courts_60m.astype(float)),
+        ("MEM_COURTS", "KEY INDICATORS", "  Active Courts in Operation (6 to 20 in Feb-28)", "input_linked", "end_stock", 6.0, venue_scaling.active_courts_60m.astype(float)),
         ("MEM_CNT", "KEY INDICATORS", "  Active Paying Members (PICK! Social @ 399k/mo)", "input_linked", "end_stock", 0.0, mc.active_subscribers_mean),
         ("KI_EQ", "KEY INDICATORS", "  Equity Funding (500M Signing Jan-27 + 7,500M Expansion Oct-27)", "input_linked", "flow", 0.0, eq_funding_arr),
         ("KI_CASH", "KEY INDICATORS", "  Cash Reserves at End of Period (Cash in Hand)", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
@@ -2245,7 +2245,7 @@ def build_financial_model(
         ("BS_HDR", "BALANCE SHEET", "STATEMENT 2 - BALANCE SHEET (END OF PERIOD, M VND)", "header", "none", None, None),
         ("BS_CASH", "BALANCE SHEET", "  Cash and Cash Equivalents (Cash Reserves)", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
         ("BS_INV", "BALANCE SHEET", "  Inventory (1-Mo F&B Supplies & Court Equipment)", "input", "end_stock", bs.inventory_mvnd, inv_arr),
-        ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Security Deposit (150M -> 480M Oct-27+)", "input_linked", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
+        ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Security Deposit (150M to 480M Oct-27+)", "input_linked", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
         ("BS_CA_TOT", "BALANCE SHEET", "Total Current Assets", "subtotal", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd, tot_curr_assets_arr),
         ("BS_PPE", "BALANCE SHEET", "  Equipment / PP&E (+7,000M Fit-Out Oct-27-Jan-28, Net of D&A)", "input_linked", "end_stock", bs.equipment_ppe_gross_mvnd - da, ppe_net_arr),
         ("BS_INTANG", "BALANCE SHEET", "  Intangible Assets", "input", "end_stock", bs.intangible_assets_mvnd, intang_arr),
@@ -2271,7 +2271,7 @@ def build_financial_model(
         ("CF_DA", "CASH FLOW", "  (+) D&A (Non-Cash Expense)", "formula", "flow", da, m_da),
         ("CF_NWC", "CASH FLOW", "  (-) Change in Working Capital (Lease Deposit, Inventory, Payables & CIT)", "formula", "flow", -case_taxes, nwc_change_arr),
         ("CF_OCF", "CASH FLOW", "Total Operating Cash Flow", "subtotal", "flow", case_ebitda, ocf_arr),
-        ("CF_CAPEX", "CASH FLOW", "  (-) CAPEX > PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27-Jan-28)", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
+        ("CF_CAPEX", "CASH FLOW", "  (-) CAPEX to PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27-Jan-28)", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
         ("CF_ICF", "CASH FLOW", "Total Investing Cash Flow", "subtotal", "flow", -bs.monthly_capex_mvnd, icf_arr),
         ("CF_EQ", "CASH FLOW", "  (+) Equity Funding (Investor Minh Tran: +500M Jan-27 & +7,500M Oct-27)", "input_linked", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
         ("CF_FCF", "CASH FLOW", "Total Financing Cash Flow", "subtotal", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),

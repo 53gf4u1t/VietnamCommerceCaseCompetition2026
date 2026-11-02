@@ -3,8 +3,8 @@
 ## 1. Model Architecture & Train/Test Split
 
 - **Estimator**: 4 Segment-Specific `HistGradientBoostingRegressor` models (`max_iter=220`, `learning_rate=0.065`, `max_depth=6`, `l2_regularization=1.2`)
-- **Training Split (80%)**: `240` Monte Carlo trajectories x `60` months = **`14,400` monthly state transitions**
-- **Held-Out Test Split (20%)**: `60` Monte Carlo trajectories x `60` months = **`3,600` monthly state transitions**
+- **Training Split (80%)**: $240\text{ Monte Carlo trajectories} \times 60\text{ months} =$ **`14,400` monthly state transitions**
+- **Held-Out Test Split (20%)**: $60\text{ Monte Carlo trajectories} \times 60\text{ months} =$ **`3,600` monthly state transitions**
 - **Input Features (12)**: Last month's active unique customers by segment (4), last month's player visits by segment (4), social media followers (`k`), follower-to-customer conversion rate (`~8.57%`), cumulative pickleball trend index ($I_t$), and active court capacity & Venue 2 fill headroom (`6` vs `20` courts).
 
 ## 2. Overall & Per-Segment Out-of-Sample Regression Metrics

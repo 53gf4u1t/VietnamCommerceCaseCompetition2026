@@ -1,5 +1,5 @@
 # PICK! Adaptive Court Pricing - Simulation & ML Optimization Report
-**Dynamic Court Pricing Engine Across Active Venue Capacity (6 Courts M1-M13 -> 20 Courts M14-M60)**
+**Dynamic Court Pricing Engine Across Active Venue Capacity (6 Courts M1-M13 to 20 Courts M14-M60)**
 
 ---
 
@@ -9,9 +9,9 @@ PICK! operates **6 leased courts** in Months 1-13 (`2,880` available court-hours
 
 ### Mathematical Reconciliation of Baseline Court Data
 Before running stochastic simulations, we verify that the Case Document figures reconcile per 6-court unit (`2,880` available court-hours/month) and scale proportionally across the 20-court network (`9,600` available court-hours/month):
-- **Weekday Daytime (06:00-17:00, 11 hrs/day x 22 days = 242 operating hours/month):** At 40% utilization, $1,452 \times 0.40 = 580.8$ booked court-hours on 6 courts ($1,936.0$ on 20 courts) $\times 160\text{k VND} = 92.93\text{M VND}$ ($309.76\text{M VND}$ across 20 courts).
-- **Weekday Evening (17:00-22:00, 5 hrs/day x 22 days = 110 operating hours/month):** At 95% utilization, $660 \times 0.95 = 627.0$ booked court-hours on 6 courts ($2,090.0$ on 20 courts) $\times 260\text{k VND} = 163.02\text{M VND}$ ($543.40\text{M VND}$ across 20 courts).
-- **Weekends (06:00-22:00, 16 hrs/day x 8 days = 128 operating hours/month):** At 90% utilization, $768 \times 0.90 = 691.2$ booked court-hours on 6 courts ($2,304.0$ on 20 courts) $\times 260\text{k VND} = 179.71\text{M VND}$ ($599.04\text{M VND}$ across 20 courts).
+- **Weekday Daytime (06:00-17:00, $11\text{ hrs/day} \times 22\text{ days} = 242$ operating hours/month):** At 40% utilization, $1,452 \times 0.40 = 580.8$ booked court-hours on 6 courts ($1,936.0$ on 20 courts) $\times 160\text{k VND} = 92.93\text{M VND}$ ($309.76\text{M VND}$ across 20 courts).
+- **Weekday Evening (17:00-22:00, $5\text{ hrs/day} \times 22\text{ days} = 110$ operating hours/month):** At 95% utilization, $660 \times 0.95 = 627.0$ booked court-hours on 6 courts ($2,090.0$ on 20 courts) $\times 260\text{k VND} = 163.02\text{M VND}$ ($543.40\text{M VND}$ across 20 courts).
+- **Weekends (06:00-22:00, $16\text{ hrs/day} \times 8\text{ days} = 128$ operating hours/month):** At 90% utilization, $768 \times 0.90 = 691.2$ booked court-hours on 6 courts ($2,304.0$ on 20 courts) $\times 260\text{k VND} = 179.71\text{M VND}$ ($599.04\text{M VND}$ across 20 courts).
 - **Total Monthly Court Hours Booked:** $580.8 + 627.0 + 691.2 = \mathbf{1,899.0\text{ hours}}$ per 6 courts ($\mathbf{6,330.0\text{ hours}}$ at 20-court steady state).
 - **Total Monthly Court Hire Revenue:** $92.93 + 163.02 + 179.71 = \mathbf{435.66\text{M VND}}$ per 6 courts ($\mathbf{1,452.20\text{M VND}}$ at 20-court steady state).
 
@@ -46,11 +46,11 @@ All parameters are stored cleanly in `configs/pricing.toml` and validated in `01
 
 | Operating Regime $r$ | Known Anchor Price $x_0$ | Known Anchor Utilization $u_0$ (`6 Cts / 20 Cts`) | Simulated Mean @ $x_0$ | Normalized Utilization Demand Curve $u_r(x)$ | Slope Distribution $a_r$ ($\mu \pm \sigma$) | Intercept Distribution $b_r$ ($\mu \pm \sigma$) | ML Adaptive Mean Price $\hat{x}$ | ML Expected Utilization (`6 Cts / 20 Cts`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. Weekday Daytime** | **160k VND** | **40.0%** (`2.40 / 8.00 cts`) | **40.1%** | $u_1(x) = \text{clip}(-0.583\% \cdot x + 133.5\%, 0, 100\%)$ | `-0.0350 +/- 0.0032` | `8.01 +/- 0.59` | **115k VND** | **66.6%** (`4.00 / 13.32 cts`) |
-| **2. Weekday Evening** | **260k VND** | **95.0%** (`5.70 / 19.00 cts`) | **95.0%** | $u_2(x) = \text{clip}(-0.233\% \cdot x + 155.7\%, 0, 100\%)$ | `-0.0140 +/- 0.0018` | `9.34 +/- 0.49` | **290k VND** | **87.9%** (`5.27 / 17.57 cts`) |
-| **3. Weekend** | **260k VND** | **90.0%** (`5.40 / 18.00 cts`) | **90.0%** | $u_3(x) = \text{clip}(-0.283\% \cdot x + 163.6\%, 0, 100\%)$ | `-0.0170 +/- 0.0022` | `9.81 +/- 0.60` | **283k VND** | **83.8%** (`5.03 / 16.76 cts`) |
+| **1. Weekday Daytime** | **160k VND** | **40.0%** (`2.40 / 8.00 cts`) | **40.1%** | $u_1(x) = \text{clip}(-0.583\% \cdot x + 133.5\%, 0, 100\%)$ | $-0.0350 \pm 0.0032$ | $8.01 \pm 0.59$ | **115k VND** | **66.6%** (`4.00 / 13.32 cts`) |
+| **2. Weekday Evening** | **260k VND** | **95.0%** (`5.70 / 19.00 cts`) | **95.0%** | $u_2(x) = \text{clip}(-0.233\% \cdot x + 155.7\%, 0, 100\%)$ | $-0.0140 \pm 0.0018$ | $9.34 \pm 0.49$ | **290k VND** | **87.9%** (`5.27 / 17.57 cts`) |
+| **3. Weekend** | **260k VND** | **90.0%** (`5.40 / 18.00 cts`) | **90.0%** | $u_3(x) = \text{clip}(-0.283\% \cdot x + 163.6\%, 0, 100\%)$ | $-0.0170 \pm 0.0022$ | $9.81 \pm 0.60$ | **283k VND** | **83.8%** (`5.03 / 16.76 cts`) |
 
-   - **Why Regime 1 (Weekday Daytime) Lowers Price:** At the anchor point $(160\text{k}, 40.0\%\text{ utilization})$, university students and young social players are price-elastic ($|\varepsilon| = 2.33 > 1$). Lowering the daytime price toward $\approx 115\text{k VND}$ **boosts daytime court utilization from 40.0% to 66.6%** (`2.40 -> 3.86` courts in Phase 1; `8.00 -> 12.87` courts in Phase 2) and **increases daytime hourly revenue by +18.9%**.
+   - **Why Regime 1 (Weekday Daytime) Lowers Price:** At the anchor point $(160\text{k}, 40.0\%\text{ utilization})$, university students and young social players are price-elastic ($|\varepsilon| = 2.33 > 1$). Lowering the daytime price toward $\approx 115\text{k VND}$ **boosts daytime court utilization from 40.0% to 66.6%** ($2.40 \to 3.86$ courts in Phase 1; $8.00 \to 12.87$ courts in Phase 2) and **increases daytime hourly revenue by +18.9%**.
    - **Why Regime 2 (Weekday Evening) & Regime 3 (Weekend) Adjust Around Peak:** At the anchor points $(260\text{k}, 95.0\%)$ and $(260\text{k}, 90.0\%)$, after-work and weekend players are price-inelastic ($|\varepsilon| < 1$). The ML model nudges prime peak hours to **290k-283k VND** (while capping the 21:00-22:00 hour at $\le 250\text{k VND}$), capturing incremental revenue without sacrificing high occupancy.
 4. **Trust, Affordability & Noise Guardrails:**
    - Prices are bounded within **[85k VND, 300k VND]** and rounded to clean **5k VND increments** so prices remain transparent and predictable on the PICK! custom booking platform.

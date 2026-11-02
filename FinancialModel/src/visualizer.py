@@ -139,7 +139,7 @@ def _render_pure_table(
                 )
             )
             ax.text(
-                0.009 * total_w,
+                0.007 * total_w,
                 ry + row_h * 0.5,
                 cells[0],
                 ha="left",
@@ -183,7 +183,7 @@ def _render_pure_table(
             )
             ax.add_patch(
                 patches.Rectangle(
-                    (0.0, ry),
+                    (0.0045 * total_w, ry),
                     0.0032 * total_w,
                     row_h,
                     facecolor="#cba6f7",
@@ -191,7 +191,7 @@ def _render_pure_table(
                 )
             )
             ax.text(
-                0.008 * total_w,
+                0.011 * total_w,
                 ry + row_h * 0.5,
                 cells[0],
                 ha="left",
@@ -205,6 +205,10 @@ def _render_pure_table(
         cx = 0.0
         for c_idx, (cw, ctext) in enumerate(zip(col_widths, cells)):
             bg, fg, fw = style_fn(r_idx, c_idx, rstyle)
+            is_indented_cell = c_idx in (0, 1) and ctext.startswith("  ")
+            is_deep_submetric = c_idx == 0 and (
+                rstyle == "pct" or "Check (" in ctext or "Memo:" in ctext
+            )
 
             ax.add_patch(
                 patches.Rectangle(
@@ -223,19 +227,33 @@ def _render_pure_table(
                 ax.add_patch(
                     patches.Rectangle(
                         (0.0, ry),
-                        0.0038 * total_w,
+                        0.0042 * total_w,
                         row_h,
                         facecolor=strip_col,
                         edgecolor="none",
                     )
                 )
-            # Subtle vertical indent guide for child line items in column 0
-            elif c_idx == 0 and rstyle not in ("col_hdr", "subtotal", "total", "grand_total") and ctext.startswith("  "):
+            elif is_deep_submetric:
                 ax.plot(
-                    [0.0055 * total_w, 0.0055 * total_w],
+                    [cx + 0.022 * total_w, cx + 0.022 * total_w],
                     [ry + row_h * 0.15, ry + row_h * 0.85],
                     color="#585b70",
                     linewidth=0.9,
+                )
+                ax.plot(
+                    [cx + 0.022 * total_w, cx + 0.027 * total_w],
+                    [ry + row_h * 0.50, ry + row_h * 0.50],
+                    color="#585b70",
+                    linewidth=0.9,
+                )
+            # Clear stepped vertical indent guide for child line items
+            elif is_indented_cell and rstyle not in ("col_hdr", "subtotal", "total", "grand_total"):
+                guide_offset = 0.015 * total_w if c_idx == 0 else 0.009 * total_w
+                ax.plot(
+                    [cx + guide_offset, cx + guide_offset],
+                    [ry + row_h * 0.12, ry + row_h * 0.88],
+                    color="#585b70",
+                    linewidth=0.95,
                 )
 
             if rstyle in ("subtotal", "total", "grand_total"):
@@ -248,21 +266,33 @@ def _render_pure_table(
                     ax.plot([cx, cx + cw], [ry, ry], color="#45475a", linewidth=1.15)
 
             ha = align_fn(c_idx, rstyle)
+            disp_text = ctext.lstrip(" ") if (c_idx in (0, 1) and ha == "left") else ctext
             if ha == "right":
                 tx = cx + cw - 0.005 * total_w
             elif ha == "center":
                 tx = cx + cw * 0.5
             else:
-                if c_idx == 0 and ctext.startswith("  "):
-                    tx = cx + 0.009 * total_w
+                if c_idx == 0:
+                    if is_deep_submetric:
+                        tx = cx + 0.030 * total_w
+                    elif is_indented_cell:
+                        tx = cx + 0.021 * total_w
+                    elif rstyle == "subtotal":
+                        tx = cx + 0.013 * total_w
+                    elif rstyle in ("total", "grand_total"):
+                        tx = cx + 0.008 * total_w
+                    else:
+                        tx = cx + 0.007 * total_w
+                elif c_idx == 1 and is_indented_cell:
+                    tx = cx + 0.014 * total_w
                 else:
-                    tx = cx + 0.005 * total_w
+                    tx = cx + 0.006 * total_w
 
             f_sz = font_size + 0.25 if rstyle in ("total", "grand_total", "col_hdr") else font_size
             ax.text(
                 tx,
                 ry + row_h * 0.5,
-                ctext,
+                disp_text,
                 ha=ha,
                 va="center",
                 fontsize=f_sz,

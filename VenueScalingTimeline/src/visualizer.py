@@ -299,14 +299,15 @@ def plot_venue_scaling_gantt_chart(
 
             id_col = "#f38ba8" if t.is_critical_path else "#a6adc8"
             ax.text(-29.35, y_mid, t.id, ha="center", va="center", fontsize=7.5, fontweight="bold", color=id_col, zorder=5)
-            ax.plot([-28.42, -28.42], [y_bot + 0.18, y_top - 0.18], color=t.stage_color, linewidth=1.1, alpha=0.65, zorder=4)
+            ax.plot([-28.10, -28.10], [y_bot + 0.16, y_top - 0.16], color=t.stage_color, linewidth=1.15, alpha=0.75, zorder=4)
+            ax.plot([-28.10, -27.86], [y_mid, y_mid], color=t.stage_color, linewidth=1.0, alpha=0.75, zorder=4)
             ax.text(
-                -28.20,
+                -27.72,
                 y_mid,
                 t.name,
                 ha="left",
                 va="center",
-                fontsize=6.9,
+                fontsize=6.8,
                 fontweight="bold" if t.is_critical_path else "normal",
                 color="#cdd6f4",
                 zorder=5,
