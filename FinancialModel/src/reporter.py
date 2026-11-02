@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .config import FinancialModelConfig
 from .model import FinancialModelResults
+from .visualizer import _line_item_source_label
 
 
 def export_all_outputs(
@@ -46,11 +47,12 @@ def export_all_outputs(
     li_rows = []
     for li in res.line_items:
         bold = "**" if li.section == "SUMMARY" else ""
+        src_lbl = _line_item_source_label(li)
         li_rows.append(
             f"| {bold}{li.template_category}{bold} | {bold}{li.line_item}{bold} | {li.behavior} | "
             f"`{li.case_baseline_monthly_mvnd:,.2f}` | `{li.m1_build_monthly_mvnd:,.2f}` | "
             f"`{li.m5_launch_monthly_mvnd:,.2f}` | `{li.m24_end_y2_monthly_mvnd:,.2f}` | "
-            f"{bold}`{li.five_year_total_mvnd:,.2f}`{bold} | `{li.pct_of_5y_revenue:.2f}%` |"
+            f"{bold}`{li.five_year_total_mvnd:,.2f}`{bold} | `{li.pct_of_5y_revenue:.2f}%` | {src_lbl} |"
         )
     li_table_md = "\n".join(li_rows)
 
@@ -61,31 +63,25 @@ def export_all_outputs(
 **Monte Carlo Validation**: `{mc.n_simulations}` independent 60-month trajectories (`{mc.n_train}` Train / `{mc.n_test}` Held-Out Test) + `-30%` Lower-Demand Stress Test  
 **Financial Statements Included**: **1. Income Statement (P&L)**, **2. Balance Sheet**, **3. Cash Flow Statement**, **4. Vietnam Statutory Tax Estimations (`CIT` & `VAT`)**  
 **Currency**: Vietnamese Dong (`VND`), reported in **Million VND (`M VND`)**  
-**Central Configuration**: `CaseComp/configs/` (`pricing.toml`, `customers.toml`, `cogs.toml`, `opex.toml`, `capex.toml`, `randomness.toml`, `externals.toml`)  
-**Upstream Dependencies**: Verified `AdaptivePricing/outputs/`, `PickSocialProjectTimeline/outputs/`, `VenueScalingTimeline/outputs/` & `Marketing/outputs/`
 
 ---
 
-## 1. Upstream Integrations & Distribution-First Philosophy
+## 1. Key Model Drivers & Assumptions
 
-Every assumption in this model is parameterized as a **Truncated Normal probability distribution** in `CaseComp/configs/*.toml`, grounded in the Case Question exhibits and Vietnam statutory benchmarks:
+Every assumption in this model is parameterized as a **Truncated Normal probability distribution** grounded in the Case Question exhibits and Vietnam statutory benchmarks:
 
-### 1.1 `AdaptivePricing/outputs/` Integration (Court Hire Revenue)
-| Court Pricing Regime | Available Hrs/Mo | Case Static Util & Rate | Case Rev (M VND) | ML Adaptive Util & Avg Rate | ML Adaptive Rev (M VND) | Monthly Lift (M VND) |
-|---|---:|---|---:|---|---:|---:|
-| **Weekday Daytime (06:00–17:00)** | 1,452.0 | 40.0% @ 160k | 92.93 | {res.regimes[0].ml_utilisation_rate*100:.1f}% @ {res.regimes[0].ml_avg_price_kvnd:.0f}k | {res.regimes[0].ml_revenue_mvnd:.2f} | +{res.regimes[0].ml_revenue_mvnd - res.regimes[0].case_revenue_mvnd:.2f} |
-| **Weekday Evening (17:00–22:00)** | 660.0 | 95.0% @ 260k | 163.02 | {res.regimes[1].ml_utilisation_rate*100:.1f}% @ {res.regimes[1].ml_avg_price_kvnd:.0f}k | {res.regimes[1].ml_revenue_mvnd:.2f} | {res.regimes[1].ml_revenue_mvnd - res.regimes[1].case_revenue_mvnd:+.2f} |
-| **Weekend All Day (06:00–22:00)** | 768.0 | 90.0% @ 260k | 179.71 | {res.regimes[2].ml_utilisation_rate*100:.1f}% @ {res.regimes[2].ml_avg_price_kvnd:.0f}k | {res.regimes[2].ml_revenue_mvnd:.2f} | +{res.regimes[2].ml_revenue_mvnd - res.regimes[2].case_revenue_mvnd:.2f} |
-| **Total Court Hire (Venue 1 — 6 Courts)** | **2,880.0** | **~66.0% (~1,900 hrs)** | **435.00** | **{res.blended_utilisation_rate*100:.1f}% ({res.total_booked_court_hours:,.0f} hrs)** | **{res.venue1_court_hire_m1_mvnd:.2f}** | **+{ap.lift_vs_case_mvnd:.2f} (+{ap.lift_vs_case_pct:.2f}%)** |
+### 1.1 Adaptive Pricing Model Integration (Court Hire Revenue)
+- **Venue 1 (`6 Courts`)**: Adaptive pricing lifts monthly court-hire revenue from **`435.00M VND/month`** (`Case Baseline`, `~66.0%` blended utilization) to **`{res.venue1_court_hire_m1_mvnd:.2f}M VND/month`** (**`+{ap.lift_vs_case_mvnd:.2f}M VND/month`** or **`+{ap.lift_vs_case_pct:.2f}%`**, `~{res.blended_utilisation_rate*100:.1f}%` blended utilization across `{res.total_booked_court_hours:,.0f}` booked court-hours/month).
+- **Venue 2 (`14 Courts`, Opens `Feb-28`)**: Scales along the 6-to-9 month fill-up ramp from `Feb-28` to reach **`{res.line_items[1].m24_end_y2_monthly_mvnd:,.2f}M VND/month`** at steady state (`Dec-28`).
 
-### 1.2 `PickSocialProjectTimeline/outputs/` Integration (Platform Build & Recurring Platform OpEx)
+### 1.2 PICK! Social Platform Build & Recurring OpEx Schedule
 - **Months 1–6 (`Jan-27` to `Jun-27`) Leveled Platform Development Allocation**:
   - Committed Base Outflow: **`{tl.total_committed_dev_base_mvnd:.2f}M VND`** (`139.93M` to `165.97M VND/month`) + Conditional Risk Contingency Reserve **`+{tl.total_contingency_reserve_mvnd:.2f}M VND`** (`29.58M/month` max; Monte Carlo expected drawdown `50%` = **`~999.91M VND`** expected total build cost across `Months 1–6`).
 - **Month 5+ (`May-27` onward) Recurring Monthly Platform & Community OpEx**:
   - **Months 5–6 (`May–Jun 2027`, Launch & Hypercare)**: **`{tl.launch_platform_opex_m5_m6_mvnd:.2f}M VND/month`** (`4.50M` Cloud/DB/Redis + `2.20M` Zalo ZNS/OTP + `1.80M` Observability/CI-CD SaaS + `8.00M` School/University & Beginner League Ops).
   - **Months 7–60 (`Jul 2027 – Dec 2031`, Steady-State)**: **`{tl.steady_state_platform_opex_m7_plus_mvnd:.2f}M VND/month`** (`16.50M` above + `10.00M/month` ongoing engineering maintenance, security patching & ML retraining retainer).
 
-### 1.3 `VenueScalingTimeline/outputs/` Integration (Q4 2027 14-Court Expansion & 2-Tranche Equity Drawdown)
+### 1.3 Venue 2 Expansion Schedule (Q4 2027 14-Court Build & 2-Tranche Equity Drawdown)
 - **2-Tranche Investor Minh Tran Equity Drawdown (`8,000.00M VND` Total)**:
   - **Tranche 1 (`Month 1 / Jan-27` upon Signing)**: **`+500.00M VND`** drawn into cash reserves (`starting_cash = 800.00M + 500.00M = 1,300.00M VND` before M1 operations), ensuring **zero negative cash months (`> 0 VND`) across all 60 months even under a permanent `-30%` lower-demand stress test starting Day 1**.
   - **Tranche 2 (`Month 10 / Oct-27` at Q4 2027 Expansion Kickoff)**: **`+7,500.00M VND`** drawn (`7,000.00M VND` funding the even **`-1,750.00M VND/month`** fit-out CapEx across `Months 10–13: Oct 2027 – Jan 2028` + the remaining **`+500.00M VND`** reserve buffer).
@@ -120,8 +116,8 @@ Instead of sampling monthly subscriber counts independently, each Monte Carlo tr
 
 ## 2. Statement 1 — Income Statement Breakdown (Revenue, COGS, Facility OpEx, SG&A, D&A & Taxes)
 
-| Category | Line Item | Cost Behavior | Case Baseline `/mo` | PICK! Social Dev (`Jan-27`) | PICK! Social Launch (`May-27`) | 20-Court Steady (`Dec-28`) | 5-Year Total | % of Revenue |
-|---|---|---|---:|---:|---:|---:|---:|---:|
+| Category | Line Item | Cost Behavior | Case Baseline `/mo` | PICK! Social Dev (`Jan-27`) | PICK! Social Launch (`May-27`) | 20-Court Steady (`Dec-28`) | 5-Year Total | % of Revenue | Source |
+|---|---|---|---:|---:|---:|---:|---:|---:|---|
 {li_table_md}
 
 ---
@@ -160,7 +156,7 @@ Instead of sampling monthly subscriber counts independently, each Monte Carlo tr
 - **60-Month Cash Flow & Cash Reserves CSV**: `outputs/monthly_cash_flow_and_balance_60m.csv`
 - **Monte Carlo 60-Month Subscription Cohort & Stress-Test CSV**: `outputs/monte_carlo_subscription_cohort_60m.csv`
 - **Revenue, COGS, OpEx, SG&A, D&A & Tax Breakdown CSV**: `outputs/revenue_cogs_opex_sga_breakdown.csv`
-- **Sheet 1 Render (Drivers, Revenue, COGS, OpEx, SG&A, D&A & Taxes)**: `outputs/01_revenue_cogs_opex_sga_sheet.png`
+- **Sheet 1 Render (Income Statement Structure: Revenue, COGS, OpEx, SG&A, D&A & Taxes)**: `outputs/01_revenue_cogs_opex_sga_sheet.png`
 - **Sheet 2 Render (`FS-Month` 60-Month Financial Statements)**: `outputs/02_fs_month_60m_projection_sheet.png`
 - **Sheet 3 Render (`FS-Annual` 5-Year Financial Statements)**: `outputs/03_fs_annual_5y_projection_sheet.png`
 - **Chart 4 Render (Stacked Revenue-by-Line > 0, Stacked Costs-by-Category < 0 & Profit Lines vs. Baseline)**: `outputs/04_revenue_costs_profit_comparison_charts.png`

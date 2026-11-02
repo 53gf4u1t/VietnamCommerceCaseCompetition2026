@@ -1658,9 +1658,9 @@ def build_financial_model(
     line_items = (
         _rec(
             "REVENUE", "Revenue", "Revenue Line 1A (Venue 1)",
-            "Court hire: Venue 1 (6 Courts, AdaptivePricing ML)", "Revenue (Dynamic)",
+            "Court hire: Venue 1 (6 Courts, Adaptive Pricing)", "Revenue (Dynamic)",
             case_court_hire, m_v1_court,
-            "6 existing courts optimized via AdaptivePricing + scaled by monthly macro trend I_t",
+            "6 existing courts optimized via Adaptive Pricing + scaled by monthly macro trend I_t",
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 1B (Venue 2 New)",
@@ -1799,7 +1799,7 @@ def build_financial_model(
         ),
         _rec(
             "SGA", "SG&A", "Legal & Safety Compliance (New)",
-            "Ward noise-complaint legal handling & U-18 safety (externals.toml)", "External Risk (SG&A)",
+            "Ward noise-complaint legal handling & U-18 safety", "External Risk (SG&A)",
             0.0, m_ext_leg_saf,
             "Post-21:00 ward noise mediation/acoustic upkeep (~6.5M–9.4M/mo) + U-18 safety compliance (~3.2M–4.3M/mo)",
         ),
@@ -1853,7 +1853,56 @@ def build_financial_model(
             "Bottom-line profit after D&A and 20% Vietnam statutory Corporate Income Tax",
         ),
     )
-    line_items_df = pd.DataFrame([vars(r) for r in line_items])
+
+    def _source_for_li(li: LineItemBreakdown) -> str:
+        if "D&A" in li.template_category:
+            return "MOF Circular 45/2013"
+        if "CIT" in li.template_category:
+            return "Vietnam CIT Law (20%)"
+        if li.section == "SUMMARY":
+            return "Calculated Subtotal"
+        if "Venue 1 (" in li.line_item and "Court hire" in li.line_item:
+            return "Adaptive Pricing Model"
+        if "Venue 2 (" in li.line_item and "Court hire" in li.line_item:
+            return "Adaptive Pricing & Venue 2"
+        if "PICK! Social subscriptions" in li.line_item:
+            return "Case Exhibit 3 & Assumptions"
+        if li.section == "REVENUE":
+            return "Case Exhibit 1 & Segment Model"
+        if "Coach fees" in li.line_item or "Food and drink supplies" in li.line_item:
+            return "Case Exhibit 1 Ratios"
+        if "Payment gateway" in li.line_item:
+            return "Case Exhibit 1 & Assumptions"
+        if "Partner courts" in li.line_item:
+            return "Case Exhibit 3 & Event Plan"
+        if "Venue 1 lease" in li.line_item or "Booking system" in li.line_item:
+            return "Case Exhibit 1"
+        if "Venue 2 lease" in li.line_item:
+            return "Venue 2 Lease Terms"
+        if "Marketing" in li.line_item:
+            return "Case Exhibit 1 & Marketing Model"
+        if "PICK! Social" in li.line_item:
+            return "Platform Build Schedule"
+        if "Ward noise" in li.line_item:
+            return "Risk & Compliance Assumptions"
+        return "Case Exhibit 1 & Venue 2 Plan"
+
+    line_items_df = pd.DataFrame([
+        {
+            "Category": r.template_category,
+            "Line Item": r.line_item,
+            "Cost Behavior": r.behavior,
+            "Case Baseline": round(r.case_baseline_monthly_mvnd, 2),
+            "PICK! Social Dev (Jan-27)": round(r.m1_build_monthly_mvnd, 2),
+            "PICK! Social Launch (May-27)": round(r.m5_launch_monthly_mvnd, 2),
+            "20-Court Steady (Dec-28)": round(r.m24_end_y2_monthly_mvnd, 2),
+            "5-Year Total": round(r.five_year_total_mvnd, 2),
+            "% of Revenue": round(r.pct_of_5y_revenue, 2),
+            "Source": _source_for_li(r),
+            "Notes": r.notes,
+        }
+        for r in line_items
+    ])
 
     # 2. 60-MONTH (5-YEAR) FINANCIAL STATEMENTS & VIETNAM TAX SCHEDULE RECONCILIATION
     #    Incorporates:
@@ -2106,7 +2155,7 @@ def build_financial_model(
 
         # ==================== INCOME STATEMENT ====================
         ("IS_HDR", "INCOME STATEMENT", "INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
-        ("REV_1A", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 1 (6 Courts, AdaptivePricing)", "input_linked", "flow", case_court_hire, m_v1_court),
+        ("REV_1A", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 1 (6 Courts, Adaptive Pricing)", "input_linked", "flow", case_court_hire, m_v1_court),
         ("REV_1B", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 2 (14 Courts, Opens Feb-28)", "input_linked", "flow", 0.0, m_v2_court),
         ("REV_2", "INCOME STATEMENT", "  Revenue: PICK! Social Subscriptions & Seasonal Tournaments (May-27+)", "input_linked", "flow", 0.0, m_mem_rev),
         ("REV_3", "INCOME STATEMENT", "  Revenue: Paddle Rental and Balls (Scales to 20 Courts)", "input", "flow", paddle_balls, m_paddle),
@@ -2199,8 +2248,17 @@ def build_financial_model(
         ("TX_VAT_REM", "TAX ESTIMATIONS", "  Total VAT Remitted to State Treasury", "subtotal", "flow", max(0.0, case_total_rev * tax_cfg.vat_output_rate - (case_fb_supplies + case_pay_consumables + case_total_opex + case_booking_admin + case_marketing) * tax_cfg.vat_input_rate), vat_remitted_arr),
     ]
 
-    # Build FS-Month DataFrame (60 Months + FY1..FY5 + 5Y_Total + Pct_of_Rev)
+    # Build FS-Month DataFrame (60 Months strictly: Jan-27 to Dec-31)
+    # and FS-Annual DataFrame (5 Fiscal Years strictly: FY 2027 to FY 2031)
+    year_labels = (
+        "FY 2027 (Y1)",
+        "FY 2028 (Y2)",
+        "FY 2029 (Y3)",
+        "FY 2030 (Y4)",
+        "FY 2031 (Y5)",
+    )
     month_records = []
+    annual_records = []
     for code, stmt, label, rtype, agg_mode, case_m1, arr in three_stmt_rows:
         unit_str = (
             "Courts"
@@ -2211,99 +2269,54 @@ def build_financial_model(
                 else ("%" if rtype == "pct" else ("M VND" if rtype != "header" else ""))
             )
         )
-        row_dict: dict[str, object] = {
+        m_row_dict: dict[str, object] = {
             "row_code": code,
             "statement": stmt,
             "line_item": label,
             "row_type": rtype,
             "agg_mode": agg_mode,
             "unit": unit_str,
-            "Case_M1_Baseline": round(float(case_m1), 4) if case_m1 is not None else None,
+        }
+        a_row_dict: dict[str, object] = {
+            "row_code": code,
+            "statement": stmt,
+            "line_item": label,
+            "row_type": rtype,
+            "agg_mode": agg_mode,
+            "unit": unit_str,
         }
         if arr is None:
             for m in month_names:
-                row_dict[m] = None
-            for y_idx in range(1, 6):
-                row_dict[f"FY{y_idx}_Total"] = None
-            row_dict["5Y_Total"] = None
-            row_dict["Pct_of_Rev"] = None
+                m_row_dict[m] = None
+            for y_lbl in year_labels:
+                a_row_dict[y_lbl] = None
         else:
             for m_idx, m in enumerate(month_names):
-                row_dict[m] = round(float(arr[m_idx]), 4)
+                m_row_dict[m] = round(float(arr[m_idx]), 4)
 
-            for y_idx in range(1, 6):
+            for y_idx, y_lbl in enumerate(year_labels, 1):
                 s_i = (y_idx - 1) * 12
                 e_i = y_idx * 12
                 if agg_mode == "flow":
-                    row_dict[f"FY{y_idx}_Total"] = round(float(arr[s_i:e_i].sum()), 4)
+                    a_row_dict[y_lbl] = round(float(arr[s_i:e_i].sum()), 4)
                 elif agg_mode == "pct":
                     if code == "GP_PCT":
-                        row_dict[f"FY{y_idx}_Total"] = round(float(m_gp[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
+                        a_row_dict[y_lbl] = round(float(m_gp[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
                     elif code == "EBITDA_PCT":
-                        row_dict[f"FY{y_idx}_Total"] = round(float(m_ebitda[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
+                        a_row_dict[y_lbl] = round(float(m_ebitda[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
                     elif code == "NET_PCT":
-                        row_dict[f"FY{y_idx}_Total"] = round(float(m_net_inc[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
+                        a_row_dict[y_lbl] = round(float(m_net_inc[s_i:e_i].sum() / m_tot_rev[s_i:e_i].sum() * 100.0), 4)
                     else:
-                        row_dict[f"FY{y_idx}_Total"] = round(float(arr[s_i:e_i].mean()), 4)
+                        a_row_dict[y_lbl] = round(float(arr[s_i:e_i].mean()), 4)
                 elif agg_mode == "start_stock":
-                    row_dict[f"FY{y_idx}_Total"] = round(float(arr[s_i]), 4)
+                    a_row_dict[y_lbl] = round(float(arr[s_i]), 4)
                 elif agg_mode == "end_stock":
-                    row_dict[f"FY{y_idx}_Total"] = round(float(arr[e_i - 1]), 4)
+                    a_row_dict[y_lbl] = round(float(arr[e_i - 1]), 4)
 
-            if agg_mode == "flow":
-                tot5 = float(arr.sum())
-                row_dict["5Y_Total"] = round(tot5, 4)
-                row_dict["Pct_of_Rev"] = round((tot5 / tot_5y_rev) * 100.0, 4) if stmt in ("INCOME STATEMENT", "TAX ESTIMATIONS") else None
-            elif agg_mode == "pct":
-                if code == "GP_PCT":
-                    val5 = float(m_gp.sum() / tot_5y_rev * 100.0)
-                elif code == "EBITDA_PCT":
-                    val5 = float(m_ebitda.sum() / tot_5y_rev * 100.0)
-                elif code == "NET_PCT":
-                    val5 = float(m_net_inc.sum() / tot_5y_rev * 100.0)
-                else:
-                    val5 = float(arr.mean())
-                row_dict["5Y_Total"] = round(val5, 4)
-                row_dict["Pct_of_Rev"] = round(val5, 4)
-            elif agg_mode == "start_stock":
-                row_dict["5Y_Total"] = round(float(arr[0]), 4)
-                row_dict["Pct_of_Rev"] = None
-            elif agg_mode == "end_stock":
-                row_dict["5Y_Total"] = round(float(arr[-1]), 4)
-                row_dict["Pct_of_Rev"] = None
-
-        month_records.append(row_dict)
+        month_records.append(m_row_dict)
+        annual_records.append(a_row_dict)
 
     fs_month_df = pd.DataFrame(month_records)
-
-    # Build FS-Annual DataFrame (FY 2027 to FY 2031 + 5Y_Total)
-    year_labels = (
-        "FY 2027 (Y1)",
-        "FY 2028 (Y2)",
-        "FY 2029 (Y3)",
-        "FY 2030 (Y4)",
-        "FY 2031 (Y5)",
-    )
-    annual_records = []
-    for m_rec in month_records:
-        row_dict = {
-            "row_code": m_rec["row_code"],
-            "statement": m_rec["statement"],
-            "line_item": m_rec["line_item"],
-            "row_type": m_rec["row_type"],
-            "agg_mode": m_rec["agg_mode"],
-            "unit": m_rec["unit"],
-            "Case_M1_Baseline": m_rec["Case_M1_Baseline"],
-            "Model_M1_Build": m_rec["Jan-27"],
-            "Model_M5_Launch": m_rec["May-27"],
-            "Model_M11_Open20": m_rec["Feb-28"],
-        }
-        for y_idx, y_lbl in enumerate(year_labels, 1):
-            row_dict[y_lbl] = m_rec[f"FY{y_idx}_Total"]
-        row_dict["5Y_Total"] = m_rec["5Y_Total"]
-        row_dict["Pct_of_Rev"] = m_rec["Pct_of_Rev"]
-        annual_records.append(row_dict)
-
     fs_annual_df = pd.DataFrame(annual_records)
 
     ann_rev = np.array([m_tot_rev[(y * 12):((y + 1) * 12)].sum() for y in range(5)])

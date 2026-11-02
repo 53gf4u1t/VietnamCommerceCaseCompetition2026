@@ -151,77 +151,60 @@ def _render_pure_table(
     return out_path
 
 
+def _line_item_source_label(li) -> str:
+    """Return a clean, client-facing Source label for each Income Statement line item."""
+    if "D&A" in li.template_category:
+        return "MOF Circular 45/2013"
+    if "CIT" in li.template_category:
+        return "Vietnam CIT Law (20%)"
+    if li.section == "SUMMARY":
+        return "Calculated Subtotal"
+    if "Venue 1 (" in li.line_item and "Court hire" in li.line_item:
+        return "Adaptive Pricing Model"
+    if "Venue 2 (" in li.line_item and "Court hire" in li.line_item:
+        return "Adaptive Pricing & Venue 2"
+    if "PICK! Social subscriptions" in li.line_item:
+        return "Case Exhibit 3 & Assumptions"
+    if li.section == "REVENUE":
+        return "Case Exhibit 1 & Segment Model"
+    if "Coach fees" in li.line_item or "Food and drink supplies" in li.line_item:
+        return "Case Exhibit 1 Ratios"
+    if "Payment gateway" in li.line_item:
+        return "Case Exhibit 1 & Assumptions"
+    if "Partner courts" in li.line_item:
+        return "Case Exhibit 3 & Event Plan"
+    if "Venue 1 lease" in li.line_item or "Booking system" in li.line_item:
+        return "Case Exhibit 1"
+    if "Venue 2 lease" in li.line_item:
+        return "Venue 2 Lease Terms"
+    if "Marketing" in li.line_item:
+        return "Case Exhibit 1 & Marketing Model"
+    if "PICK! Social" in li.line_item:
+        return "Platform Build Schedule"
+    if "Ward noise" in li.line_item:
+        return "Risk & Compliance Assumptions"
+    return "Case Exhibit 1 & Venue 2 Plan"
+
+
 def plot_drivers_and_cost_breakdown_sheet(
     cfg: FinancialModelConfig,
     res: FinancialModelResults,
     output_dir: Path,
 ) -> Path:
     """
-    Render Sheet 1: Pure table of AdaptivePricing Court Hire Link + Full Path C Income Statement
-    (including Membership Subscriptions starting Month 5, Dynamic Payment & Event COGS,
-    Platform Build Allocation in Months 1–6, and Recurring Platform OpEx in Month 5+).
+    Render Sheet 1: Pure single-table Income Statement Structure
+    (Revenue, COGS, Facility OpEx, SG&A, D&A & Taxes across Case Baseline,
+    PICK! Social Dev, PICK! Social Launch, 20-Court Steady State, 5-Year Total, % of Revenue & Source).
     """
-    col_widths = [0.105, 0.225, 0.095, 0.070, 0.098, 0.108, 0.092, 0.072, 0.068, 0.067]
-    ap = res.adaptive
+    col_widths = [0.110, 0.215, 0.095, 0.066, 0.090, 0.098, 0.088, 0.068, 0.058, 0.112]
 
     rows: list[tuple[str, list[str]]] = [
         ("sec_hdr", [
-            "PART 1 — COURT HIRE REVENUE INTEGRATION BY OPERATING REGIME",
+            "INCOME STATEMENT STRUCTURE: REVENUE, COGS, FACILITY OPEX, SG&A, D&A & TAXES (M VND)",
             "", "", "", "", "", "", "", "", "",
         ]),
         ("col_hdr", [
-            "Pricing Regime",
-            "Operating Window & Schedule",
-            "Available Hrs",
-            "Case Baseline",
-            "Case Baseline Rev (M)",
-            "ML Adaptive",
-            "ML Rev (M VND)",
-            "Rev Lift (M VND)",
-            "Lift %",
-            "Upstream Source",
-        ]),
-    ]
-
-    for reg in res.regimes:
-        lift_m = reg.ml_revenue_mvnd - reg.case_revenue_mvnd
-        lift_p = (lift_m / reg.case_revenue_mvnd) * 100.0 if reg.case_revenue_mvnd > 0 else 0.0
-        rows.append((
-            "linked",
-            [
-                "Court Regime",
-                f"  {reg.regime_name}",
-                f"{reg.available_court_hours:,.0f} hrs",
-                f"{reg.case_utilisation_rate*100:.0f}% @ {reg.case_price_kvnd:.0f}k",
-                f"{reg.case_revenue_mvnd:,.2f}",
-                f"{reg.ml_utilisation_rate*100:.1f}% @ {reg.ml_avg_price_kvnd:.0f}k",
-                f"{reg.ml_revenue_mvnd:,.2f}",
-                f"{lift_m:+,.2f}",
-                f"{lift_p:+.1f}%",
-                "AdaptivePricing",
-            ],
-        ))
-
-    rows.extend([
-        ("subtotal", [
-            "COURT HIRE TOTAL",
-            "Total Court Hire (AdaptivePricing ML vs. Case Baseline)",
-            f"{res.total_available_court_hours:,.0f} hrs",
-            "65.9% (~1,900h)",
-            f"{res.case_court_hire_mvnd:,.2f}",
-            f"{res.blended_utilisation_rate*100:.1f}% ({res.total_booked_court_hours:,.0f}h)",
-            f"{res.court_hire_mvnd:,.2f}",
-            f"{ap.lift_vs_case_mvnd:+,.2f}",
-            f"{ap.lift_vs_case_pct:+.2f}%",
-            "Verified CSV",
-        ]),
-        ("blank", ["", "", "", "", "", "", "", "", "", ""]),
-        ("sec_hdr", [
-            "PART 2 — INTEGRATED INCOME STATEMENT STRUCTURE: REVENUE, COGS, FACILITY OPEX & SG&A",
-            "", "", "", "", "", "", "", "", "",
-        ]),
-        ("col_hdr", [
-            "Template Section",
+            "Category",
             "Line Item",
             "Cost Behavior",
             "Case Baseline",
@@ -230,9 +213,9 @@ def plot_drivers_and_cost_breakdown_sheet(
             "20-Court Steady (Dec-28)",
             "5-Year Total",
             "% of Revenue",
-            "Config / Source",
+            "Source",
         ]),
-    ])
+    ]
 
     for li in res.line_items:
         if li.section == "SUMMARY":
@@ -242,28 +225,12 @@ def plot_drivers_and_cost_breakdown_sheet(
                 rstyle = "grand_total"
             else:
                 rstyle = "subtotal"
-        elif "New" in li.template_category or "PICK! Social" in li.template_category or "AdaptivePricing" in li.line_item or "Payment gateway" in li.line_item:
+        elif "New" in li.template_category or "PICK! Social" in li.template_category or "Adaptive Pricing" in li.line_item or "Payment gateway" in li.line_item:
             rstyle = "linked"
         else:
             rstyle = "input"
 
-        src_lbl = (
-            "AdaptivePricing"
-            if "Court hire" in li.line_item
-            else (
-                "customers.toml"
-                if "PICK! Social subscriptions" in li.line_item
-                else (
-                    "cogs.toml"
-                    if li.section == "COGS"
-                    else (
-                        "opex.toml"
-                        if li.section in ("OPEX", "SGA")
-                        else "Reconciled Sum"
-                    )
-                )
-            )
-        )
+        src_lbl = _line_item_source_label(li)
         prefix = "  " if li.section != "SUMMARY" else ""
         rows.append((
             rstyle,
