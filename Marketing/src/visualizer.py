@@ -244,7 +244,7 @@ def plot_ml_segment_budgets_and_visits(
         base_total_b_p95,
         color="#7f849c",
         alpha=0.22,
-        label="Baseline Marketing P05-P95 Range",
+        label="Case Baseline Marketing P05-P95 Range",
     )
     ax1.plot(
         months,
@@ -255,13 +255,13 @@ def plot_ml_segment_budgets_and_visits(
         markersize=3.8,
         linewidth=1.8,
         alpha=0.85,
-        label=f"Baseline Total Marketing (~{np.mean(base_total_budget):.2f}M VND/mo)",
+        label=f"Case Baseline Marketing (~{np.mean(base_total_budget):.2f}M VND/mo)",
     )
     ax1.axvline(4, color="#a6e3a1", linestyle="--", linewidth=1.4, alpha=0.85)
     ax1.text(
         4.3,
         np.max(bottom) * 0.63,
-        "M5 (May-27): App Launch",
+        "May-27: PICK! Social Launch",
         fontsize=8.8,
         fontweight="bold",
         color="#a6e3a1",
@@ -271,7 +271,7 @@ def plot_ml_segment_budgets_and_visits(
     ax1.text(
         13.35,
         np.max(bottom) * 0.88,
-        "M14 (Feb-28): Venue 2 Opens (20 Courts)",
+        "Feb-28: Venue 2 Opens (20 Courts)",
         fontsize=8.8,
         fontweight="bold",
         color="#f38ba8",
@@ -283,7 +283,7 @@ def plot_ml_segment_budgets_and_visits(
     ax1.set_ylabel("Marketing Spend (Million VND / Month)", fontsize=10, color="#bac2de")
     ax1.legend(loc="upper left", ncol=3, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a", fontsize=8.8)
 
-    # Panel B: Resulting Monthly Visits by Segment vs. Baseline Total Visits
+    # Panel B: Resulting Monthly Visits by Segment vs. Case Baseline Total Visits
     ml_visits_mean = np.mean(ml_res.ml_visits_seg, axis=0)  # (60, 4)
     base_visits_total_mean = np.mean(sim.base_visits_total, axis=0)
     base_visits_p05 = np.percentile(sim.base_visits_total, 5, axis=0)
@@ -306,7 +306,7 @@ def plot_ml_segment_budgets_and_visits(
         base_visits_p95,
         color="#7f849c",
         alpha=0.22,
-        label="Baseline Visits P05-P95 Range",
+        label="Case Baseline Visits P05-P95 Range",
     )
     ax2.plot(
         months,
@@ -325,7 +325,7 @@ def plot_ml_segment_budgets_and_visits(
         marker="o",
         markersize=3.5,
         alpha=0.85,
-        label=f"Baseline Visits (5Y Avg: {np.mean(base_visits_total_mean):,.0f}/mo)",
+        label=f"Case Baseline Visits (5Y Avg: {np.mean(base_visits_total_mean):,.0f}/mo)",
     )
     ax2.axvline(4, color="#a6e3a1", linestyle="--", linewidth=1.4, alpha=0.85)
     ax2.axvline(13, color="#f38ba8", linestyle="--", linewidth=1.5, alpha=0.85)
@@ -413,7 +413,7 @@ def plot_segment_ancillary_revenue_breakdown(
             np.percentile(base_sims, 95, axis=0),
             color="#7f849c",
             alpha=0.22,
-            label="Baseline P05-P95 Range",
+            label="Case Baseline P05-P95 Range",
         )
         ax.plot(
             months,
@@ -432,7 +432,7 @@ def plot_segment_ancillary_revenue_breakdown(
             marker="o",
             markersize=3.2,
             alpha=0.82,
-            label=f"Baseline Trend-Adjusted (M1: {case_m1:.1f}M/mo)",
+            label=f"Case Baseline (Jan-27: {case_m1:.1f}M/mo)",
         )
         ax.axvline(13, color="#f38ba8", linestyle="--", linewidth=1.4, alpha=0.85)
         ax.set_title(title, fontsize=11.5, fontweight="bold", color="#cdd6f4", pad=6)

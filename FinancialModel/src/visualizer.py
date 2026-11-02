@@ -161,7 +161,7 @@ def plot_drivers_and_cost_breakdown_sheet(
     (including Membership Subscriptions starting Month 5, Dynamic Payment & Event COGS,
     Platform Build Allocation in Months 1–6, and Recurring Platform OpEx in Month 5+).
     """
-    col_widths = [0.115, 0.255, 0.105, 0.072, 0.076, 0.078, 0.082, 0.085, 0.062, 0.070]
+    col_widths = [0.105, 0.225, 0.095, 0.070, 0.098, 0.108, 0.092, 0.072, 0.068, 0.067]
     ap = res.adaptive
 
     rows: list[tuple[str, list[str]]] = [
@@ -173,11 +173,11 @@ def plot_drivers_and_cost_breakdown_sheet(
             "Pricing Regime",
             "Operating Window & Schedule",
             "Available Hrs",
-            "Case Static",
-            "Case Rev (M)",
+            "Case Baseline",
+            "Case Baseline Rev (M)",
             "ML Adaptive",
             "ML Rev (M VND)",
-            "Rev Lift (M)",
+            "Rev Lift (M VND)",
             "Lift %",
             "Upstream Source",
         ]),
@@ -205,7 +205,7 @@ def plot_drivers_and_cost_breakdown_sheet(
     rows.extend([
         ("subtotal", [
             "COURT HIRE TOTAL",
-            "Total Court Hire (AdaptivePricing ML vs Case Exhibit 1)",
+            "Total Court Hire (AdaptivePricing ML vs. Case Baseline)",
             f"{res.total_available_court_hours:,.0f} hrs",
             "65.9% (~1,900h)",
             f"{res.case_court_hire_mvnd:,.2f}",
@@ -224,12 +224,12 @@ def plot_drivers_and_cost_breakdown_sheet(
             "Template Section",
             "Line Item",
             "Cost Behavior",
-            "Case Base",
-            "M1 Build (Jan-27)",
-            "M5 Launch (May-27)",
-            "M24 End Y2 (Dec-28)",
-            "5Y Total (60M)",
-            "% 5Y Rev",
+            "Case Baseline",
+            "PICK! Social Dev (Jan-27)",
+            "PICK! Social Launch (May-27)",
+            "20-Court Steady (Dec-28)",
+            "5-Year Total",
+            "% of Revenue",
             "Config / Source",
         ]),
     ])
@@ -242,7 +242,7 @@ def plot_drivers_and_cost_breakdown_sheet(
                 rstyle = "grand_total"
             else:
                 rstyle = "subtotal"
-        elif "New" in li.template_category or "AdaptivePricing" in li.line_item or "Payment gateway" in li.line_item:
+        elif "New" in li.template_category or "PICK! Social" in li.template_category or "AdaptivePricing" in li.line_item or "Payment gateway" in li.line_item:
             rstyle = "linked"
         else:
             rstyle = "input"
@@ -252,7 +252,7 @@ def plot_drivers_and_cost_breakdown_sheet(
             if "Court hire" in li.line_item
             else (
                 "customers.toml"
-                if "Membership subscriptions" in li.line_item
+                if "PICK! Social subscriptions" in li.line_item
                 else (
                     "cogs.toml"
                     if li.section == "COGS"
@@ -330,15 +330,15 @@ def plot_fs_month_projection_sheet(
     output_dir: Path,
 ) -> Path:
     """
-    Render Sheet 2: Pure table of FS-Month (60-Month / 5-Year 3-Statement Model:
-    Income Statement, Balance Sheet, and Cash Flow Statement showing Year 1 monthly
-    transition from M1–M4 Core Build to M5+ Platform Launch plus M24 End Y2 & M60 End Y5).
+    Render Sheet 2: Pure table of FS-Month (Monthly 3-Statement Model:
+    Income Statement, Balance Sheet, Cash Flow Statement & Tax Schedule across Year 1 months
+    plus End of Year 2 & End of Year 5 monthly snapshots — strictly monthly figures, no totals).
     """
-    col_widths = [0.220, 0.038] + [0.039] * 12 + [0.048, 0.048, 0.054, 0.062, 0.040]
+    col_widths = [0.268, 0.044] + [0.046] * 12 + [0.068, 0.068]
     y1_months = list(res.month_labels[:12])
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["FINANCIAL STATEMENTS — MONTHLY (FS-MONTH, 60M HORIZON)", "Unit"] + y1_months + ["Dec-28 (M24)", "Dec-31 (M60)", "FY1 Total", "5Y (60M)", "% Rev"]),
+        ("col_hdr", ["FINANCIAL STATEMENTS — MONTHLY (YEAR 1 + END Y2 & END Y5 SNAPSHOTS)", "Unit"] + y1_months + ["Dec-28 (End Y2)", "Dec-31 (End Y5)"]),
     ]
 
     for _, df_row in res.fs_month_df.iterrows():
@@ -348,7 +348,7 @@ def plot_fs_month_projection_sheet(
         code = str(df_row["row_code"])
 
         if rtype == "header":
-            rows.append(("sec_hdr", [label] + [""] * 18))
+            rows.append(("sec_hdr", [label] + [""] * 15))
             continue
 
         m_cells = []
@@ -367,16 +367,7 @@ def plot_fs_month_projection_sheet(
         m60_val = float(df_row[res.month_labels[-1]])
         m60_str = f"{m60_val:.1f}%" if rtype == "pct" else (f"{m60_val:,.0f}" if code == "MEM_CNT" else f"{m60_val:,.1f}")
 
-        fy_val = float(df_row["FY1_Total"])
-        fy_str = f"{fy_val:.1f}%" if rtype == "pct" else (f"{fy_val:,.0f}" if code == "MEM_CNT" else f"{fy_val:,.1f}")
-
-        tot5y_val = float(df_row["5Y_Total"])
-        tot5y_str = f"{tot5y_val:.1f}%" if rtype == "pct" else (f"{tot5y_val:,.0f}" if code == "MEM_CNT" else f"{tot5y_val:,.1f}")
-
-        pct_val = df_row["Pct_of_Rev"]
-        pct_str = "-" if pct_val is None or pd.isna(pct_val) else f"{float(pct_val):.1f}%"
-
-        rows.append((rtype, [label, unit] + m_cells + [m24_str, m60_str, fy_str, tot5y_str, pct_str]))
+        rows.append((rtype, [label, unit] + m_cells + [m24_str, m60_str]))
 
     def _style_s2(r_idx: int, c_idx: int, rstyle: str) -> tuple[str, str, str]:
         if rstyle == "col_hdr":
@@ -394,8 +385,8 @@ def plot_fs_month_projection_sheet(
         bg = "#1e1e2e" if r_idx % 2 == 0 else "#181825"
         if rstyle == "input" and 2 <= c_idx <= 15:
             return bg, INPUT_BLUE, "normal"
-        if c_idx >= 16 or rstyle in ("formula", "unit"):
-            return bg, FORMULA_DARKGRAY, ("bold" if c_idx == 17 else "normal")
+        if rstyle in ("formula", "unit"):
+            return bg, FORMULA_DARKGRAY, "normal"
         return bg, FORMULA_BLACK, "normal"
 
     def _align_s2(c_idx: int, rstyle: str) -> str:
@@ -410,10 +401,10 @@ def plot_fs_month_projection_sheet(
         col_widths=col_widths,
         align_fn=_align_s2,
         style_fn=_style_s2,
-        fig_width=23.2,
+        fig_width=22.0,
         row_height_in=0.28,
         out_path=output_dir / "02_fs_month_60m_projection_sheet.png",
-        font_size=7.1,
+        font_size=7.3,
     )
 
 
@@ -424,24 +415,19 @@ def plot_fs_annual_and_structure_dashboard(
 ) -> Path:
     """
     Render Sheet 3: Pure table of FS-Annual 5-Year 3-Statement Model
-    (Income Statement, Balance Sheet, and Cash Flow Statement for FY 2027 to FY 2031).
+    (Standard Annual Income Statement, Balance Sheet, Cash Flow Statement & Tax Schedule for FY 2027 to FY 2031).
     """
-    col_widths = [0.245, 0.042, 0.064, 0.068, 0.068, 0.082, 0.082, 0.082, 0.082, 0.082, 0.088, 0.045]
+    col_widths = [0.365, 0.060, 0.115, 0.115, 0.115, 0.115, 0.115]
 
     rows: list[tuple[str, list[str]]] = [
         ("col_hdr", [
-            "FINANCIAL STATEMENTS — ANNUAL (FS-ANNUAL, FY 2027 TO FY 2031)",
+            "FINANCIAL STATEMENTS — ANNUAL (FY 2027 TO FY 2031)",
             "Unit",
-            "Case M1",
-            "M1 Build",
-            "M5 Launch",
             "FY 2027 (Y1)",
             "FY 2028 (Y2)",
             "FY 2029 (Y3)",
             "FY 2030 (Y4)",
             "FY 2031 (Y5)",
-            "5Y Total / End",
-            "% Rev",
         ]),
     ]
 
@@ -452,7 +438,7 @@ def plot_fs_annual_and_structure_dashboard(
         code = str(df_row["row_code"])
 
         if rtype == "header":
-            rows.append(("sec_hdr", [label] + [""] * 11))
+            rows.append(("sec_hdr", [label] + [""] * 6))
             continue
 
         def _fmt(v: float) -> str:
@@ -462,17 +448,8 @@ def plot_fs_annual_and_structure_dashboard(
                 return f"{v:,.0f}"
             return f"{v:,.2f}"
 
-        c_m1 = _fmt(float(df_row["Case_M1_Baseline"]))
-        m_m1 = _fmt(float(df_row["Model_M1_Build"]))
-        m_m5 = _fmt(float(df_row["Model_M5_Launch"]))
-
         y_cells = [_fmt(float(df_row[y_lbl])) for y_lbl in res.year_labels]
-        tot5_str = _fmt(float(df_row["5Y_Total"]))
-
-        pct_val = df_row["Pct_of_Rev"]
-        pct_str = "-" if pct_val is None or pd.isna(pct_val) else f"{float(pct_val):.1f}%"
-
-        rows.append((rtype, [label, unit, c_m1, m_m1, m_m5] + y_cells + [tot5_str, pct_str]))
+        rows.append((rtype, [label, unit] + y_cells))
 
     def _style_s3(r_idx: int, c_idx: int, rstyle: str) -> tuple[str, str, str]:
         if rstyle == "col_hdr":
@@ -486,12 +463,12 @@ def plot_fs_annual_and_structure_dashboard(
         if rstyle == "pct":
             return "#232436", "#a6adc8", "bold"
         if rstyle == "input_linked":
-            return LINKED_BG, (LINKED_PURPLE if c_idx >= 3 else INPUT_BLUE), "bold"
+            return LINKED_BG, (LINKED_PURPLE if c_idx >= 2 else FORMULA_BLACK), "bold"
         bg = "#1e1e2e" if r_idx % 2 == 0 else "#181825"
-        if rstyle == "input" and c_idx in (2, 3, 4):
-            return bg, INPUT_BLUE, ("bold" if c_idx == 4 else "normal")
-        if c_idx >= 5:
-            return bg, FORMULA_DARKGRAY, ("bold" if c_idx == 10 else "normal")
+        if rstyle == "input" and c_idx >= 2:
+            return bg, INPUT_BLUE, "normal"
+        if c_idx >= 2:
+            return bg, FORMULA_DARKGRAY, "normal"
         return bg, FORMULA_BLACK, "normal"
 
     def _align_s3(c_idx: int, rstyle: str) -> str:
@@ -506,10 +483,10 @@ def plot_fs_annual_and_structure_dashboard(
         col_widths=col_widths,
         align_fn=_align_s3,
         style_fn=_style_s3,
-        fig_width=21.5,
+        fig_width=18.5,
         row_height_in=0.29,
         out_path=output_dir / "03_fs_annual_5y_projection_sheet.png",
-        font_size=7.4,
+        font_size=7.8,
     )
 
 
@@ -607,7 +584,7 @@ def plot_revenue_costs_profit_comparison_charts(
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
         linewidth=0.85,
-        label="Baseline Status-Quo Revenue & Costs (Dimmed Grey)",
+        label="Case Baseline Revenue & Costs (Dimmed Grey)",
         zorder=2,
     )
     ax_ann.bar(
@@ -683,7 +660,7 @@ def plot_revenue_costs_profit_comparison_charts(
         markerfacecolor="#313244",
         markeredgecolor=BASE_PROFIT_LINE,
         markeredgewidth=1.5,
-        label="Baseline Operating Profit (EBITDA)",
+        label="Case Baseline Operating Profit (EBITDA)",
         zorder=5,
     )
     ax_ann.plot(
@@ -802,7 +779,7 @@ def plot_revenue_costs_profit_comparison_charts(
         edgecolor=BASE_BAR_EDGE,
         alpha=BASE_BAR_ALPHA,
         linewidth=0.65,
-        label="Baseline Status-Quo Monthly Revenue & Costs",
+        label="Case Baseline Monthly Revenue & Costs",
         zorder=2,
     )
     ax_mon.bar(
@@ -868,7 +845,7 @@ def plot_revenue_costs_profit_comparison_charts(
         markerfacecolor="#313244",
         markeredgecolor=BASE_PROFIT_LINE,
         markeredgewidth=1.2,
-        label="Baseline Monthly Operating Profit",
+        label="Case Baseline Monthly Operating Profit",
         zorder=5,
     )
     ax_mon.plot(
@@ -971,8 +948,8 @@ def plot_membership_and_monte_carlo_distributions(
     x_m = np.arange(1, 61)
     tick_idx = [0, 5, 11, 23, 35, 47, 59]
     tick_lbls = [
-        "Jan-27\n(M1)",
-        "Jun-27\n(M6)",
+        "Jan-27\n(Start)",
+        "Jun-27\n(End Dev)",
         "Dec-27\n(End Y1)",
         "Dec-28\n(End Y2)",
         "Dec-29\n(End Y3)",
@@ -1074,7 +1051,7 @@ def plot_membership_and_monte_carlo_distributions(
         mc.total_rev_mean,
         color="#a6e3a1",
         linewidth=2.6,
-        label="Total Monthly Revenue Mean (Court + Ancillary + Subscriptions)",
+        label="Total Monthly Revenue Mean (Court + Ancillary + PICK! Social)",
         zorder=5,
     )
     ax_b.fill_between(
@@ -1090,7 +1067,7 @@ def plot_membership_and_monte_carlo_distributions(
         mc.membership_rev_mean,
         color="#cba6f7",
         linewidth=2.3,
-        label="Membership Subscription Revenue (@ 399k VND/member/mo)",
+        label="PICK! Social Subscription Revenue (@ 399k VND/member/mo)",
         zorder=5,
     )
     ax_b.plot(
@@ -1108,7 +1085,7 @@ def plot_membership_and_monte_carlo_distributions(
         mc.base_total_rev_p95,
         color="#7f849c",
         alpha=0.20,
-        label="Baseline Stochastic Revenue P05–P95 Band",
+        label="Case Baseline Revenue P05–P95 Band",
         zorder=2,
     )
     ax_b.plot(
@@ -1118,7 +1095,7 @@ def plot_membership_and_monte_carlo_distributions(
         linestyle="-",
         linewidth=1.7,
         alpha=0.85,
-        label=f"Baseline Stochastic Revenue (~{mc.base_total_rev_mean.mean():.1f}M/mo)",
+        label=f"Case Baseline Revenue (~{mc.base_total_rev_mean.mean():.1f}M/mo)",
         zorder=3,
     )
 
@@ -1127,7 +1104,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_b.set_ylim(0, float(np.max(mc.total_rev_p95)) * 1.15)
     ax_b.set_ylabel("Monthly Revenue (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_b.set_title(
-        "Panel B: Monthly Total Revenue & Membership Subscription Revenue Trajectory",
+        "Panel B: Monthly Total Revenue & PICK! Social Subscription Trajectory",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -1221,7 +1198,7 @@ def plot_membership_and_monte_carlo_distributions(
         color="#585b70",
         edgecolor="#7f849c",
         alpha=0.68,
-        label=f"Baseline Stochastic EBITDA (~+{base_y_ebitda.mean():,.0f}M / yr, P05-P95)",
+        label=f"Case Baseline EBITDA (~+{base_y_ebitda.mean():,.0f}M / yr, P05-P95)",
         zorder=2,
     )
     ax_d.bar(
@@ -1328,8 +1305,8 @@ def plot_monthly_cash_balance_and_externals(
 ) -> Path:
     """
     Render `06_monthly_cash_balance_and_externals.png`:
-      - Panel A: 60-Month Ending Cash Balance Trajectory (Mean, P05-P95 Band, -30% Stress Cash & Stochastic Case Baseline with P05-P95 Band)
-      - Panel B: Monthly Cash Flow Components (Operating Cash Flow OCF, Venue 2 Fit-Out CapEx -1,750M/mo in M10-M13, +500M M1 & +7,500M M10 Equity)
+      - Panel A: 60-Month Ending Cash Balance Trajectory (Mean, P05-P95 Band, -30% Stress Cash & Case Baseline with P05-P95 Band)
+      - Panel B: Monthly Cash Flow Components (Operating Cash Flow OCF, Venue 2 Fit-Out CapEx -1,750M/mo in Oct-27–Jan-28, +500M Jan-27 & +7,500M Oct-27 Equity)
       - Panel C: External Macro Pickleball Interest Trend Multiplier I_t (externals.toml) & Legal/Safety Risk Provision
     """
     mc = res.mc
@@ -1364,7 +1341,7 @@ def plot_monthly_cash_balance_and_externals(
         mc.base_ending_cash_p95,
         color="#7f849c",
         alpha=0.22,
-        label="Baseline Cash Reserves P05-P95 Statistical Band (300 Sims)",
+        label="Case Baseline Cash Reserves P05-P95 Band (300 Sims)",
         zorder=2,
     )
     ax1.plot(
@@ -1374,7 +1351,7 @@ def plot_monthly_cash_balance_and_externals(
         linewidth=2.6,
         marker="o",
         markersize=3.8,
-        label=f"Solution Cash Reserves (M60: {res.ending_cash_60m_model_mvnd:,.1f}M | Min Cash: {res.min_cash_balance_model_mvnd:,.1f}M in {res.min_cash_month_label})",
+        label=f"Solution Cash Reserves (Dec-31: {res.ending_cash_60m_model_mvnd:,.1f}M | Min Cash: {res.min_cash_balance_model_mvnd:,.1f}M in {res.min_cash_month_label})",
         zorder=6,
     )
     ax1.plot(
@@ -1383,7 +1360,7 @@ def plot_monthly_cash_balance_and_externals(
         color="#f38ba8",
         linestyle="-.",
         linewidth=2.0,
-        label=f"-30% Lower Demand Stress Cash Reserves (M60: {mc.stress_ending_cash_mean[-1]:,.1f}M VND)",
+        label=f"-30% Lower Demand Stress Cash Reserves (Dec-31: {mc.stress_ending_cash_mean[-1]:,.1f}M VND)",
         zorder=5,
     )
     ax1.plot(
@@ -1394,7 +1371,7 @@ def plot_monthly_cash_balance_and_externals(
         marker="o",
         markersize=3.2,
         alpha=0.82,
-        label=f"Baseline Stochastic Cash Reserves (M60: {res.ending_cash_60m_case_mvnd:,.1f}M VND)",
+        label=f"Case Baseline Cash Reserves (Dec-31: {res.ending_cash_60m_case_mvnd:,.1f}M VND)",
         zorder=4,
     )
     ax1.axvline(10, color="#f9e2af", linestyle="--", linewidth=1.3, alpha=0.85)
@@ -1414,9 +1391,9 @@ def plot_monthly_cash_balance_and_externals(
     ax2 = axes[1]
     ax2.set_facecolor("#181825")
     ax2.bar(x_m - 0.2, res.monthly_ocf_model, width=0.38, color="#a6e3a1", edgecolor="#11111b", alpha=0.88, label="Operating Cash Flow (OCF, Net of April CIT Payment)")
-    ax2.bar(x_m + 0.2, res.monthly_icf_capex_model, width=0.38, color="#f38ba8", edgecolor="#11111b", alpha=0.88, label="Venue 2 Fit-Out CapEx Outflow (-1,750M/mo in M10-M13)")
+    ax2.bar(x_m + 0.2, res.monthly_icf_capex_model, width=0.38, color="#f38ba8", edgecolor="#11111b", alpha=0.88, label="Venue 2 Fit-Out CapEx Outflow (-1,750M/mo in Oct-27–Jan-28)")
     ax2.bar(x_m, -res.monthly_cit_cash_paid_arr, width=0.38, color="#fab387", edgecolor="#11111b", alpha=0.92, label="April Annual CIT Settlement (-20% Prior FY Tax)")
-    ax2.bar(x_m, res.monthly_fcf_equity_model, width=0.35, color="#cba6f7", edgecolor="#11111b", alpha=0.80, label="Investor Minh Tran Equity (+500M in M1 & +7,500M in M10)")
+    ax2.bar(x_m, res.monthly_fcf_equity_model, width=0.35, color="#cba6f7", edgecolor="#11111b", alpha=0.80, label="Investor Minh Tran Equity (+500M in Jan-27 & +7,500M in Oct-27)")
     ax2.plot(x_m, res.monthly_net_cash_flow_model, color="#f9e2af", linewidth=2.0, marker="o", markersize=3.5, label="Net Monthly Cash Flow (OCF + ICF + FCF)")
     ax2.axhline(0, color="#cdd6f4", linewidth=1.1)
     ax2.set_title(

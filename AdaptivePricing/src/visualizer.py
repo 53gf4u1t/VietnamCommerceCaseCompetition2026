@@ -392,7 +392,7 @@ def plot_demand_curves_variations(
             zorder=7,
             edgecolor="#11111b",
             linewidth=1.3,
-            label=f"Baseline Anchor: {x0:.0f}k at {u0_pct:.0f}% ({q0_6:.1f} / {q0_20:.1f} cts)",
+            label=f"Case Baseline: {x0:.0f}k at {u0_pct:.0f}% ({q0_6:.1f} / {q0_20:.1f} cts)",
         )
         ax_top.scatter(
             [x_ml],
@@ -408,7 +408,7 @@ def plot_demand_curves_variations(
 
         if rm["id"] == 0:
             ax_top.annotate(
-                f"Baseline Anchor\n({x0:.0f}k, {u0_pct:.0f}% | {q0_6:.1f}/{q0_20:.0f} cts)",
+                f"Case Baseline\n({x0:.0f}k, {u0_pct:.0f}% | {q0_6:.1f}/{q0_20:.0f} cts)",
                 xy=(x0, u0_pct),
                 xytext=(x0 + 18, u0_pct + 9),
                 fontsize=7.8,
@@ -429,7 +429,7 @@ def plot_demand_curves_variations(
             )
         else:
             ax_top.annotate(
-                f"Baseline Anchor\n({x0:.0f}k, {u0_pct:.0f}% | {q0_6:.1f}/{q0_20:.0f} cts)",
+                f"Case Baseline\n({x0:.0f}k, {u0_pct:.0f}% | {q0_6:.1f}/{q0_20:.0f} cts)",
                 xy=(x0, u0_pct),
                 xytext=(x0 - 95, u0_pct - 18),
                 fontsize=7.8,
@@ -449,7 +449,7 @@ def plot_demand_curves_variations(
                 arrowprops=dict(arrowstyle="->", color=PALETTE["ml_blue"], lw=1.1),
             )
 
-        ax_top.axhline(100.0, color=PALETTE["navy"], linestyle=":", linewidth=1.2, label="100% Active Court Capacity (6 Cts M1-13 | 20 Cts M14+)")
+        ax_top.axhline(100.0, color=PALETTE["navy"], linestyle=":", linewidth=1.2, label="100% Active Court Capacity (6 Cts -> 20 Cts from Feb-28)")
         ax_top.set_title(rm["title_top"], fontsize=10.5, fontweight="bold", color=PALETTE["navy"], pad=8)
         ax_top.set_xlabel("Hourly Court Rental Price x (Thousand VND)", fontsize=9.0)
         ax_top.set_ylabel("Court Utilization (% of Active Capacity)", fontsize=9.0)
@@ -477,7 +477,7 @@ def plot_demand_curves_variations(
             zorder=7,
             edgecolor="#11111b",
             linewidth=1.3,
-            label=f"Baseline @ {x0:.0f}k: {r0_val:.0f}k (6 Cts) | {r0_val*20/6:,.0f}k (20 Cts)",
+            label=f"Case Baseline @ {x0:.0f}k: {r0_val:.0f}k (6 Cts) | {r0_val*20/6:,.0f}k (20 Cts)",
         )
         ax_bot.scatter(
             [x_ml],
@@ -488,7 +488,7 @@ def plot_demand_curves_variations(
             zorder=8,
             edgecolor="#11111b",
             linewidth=1.3,
-            label=f"ML Optimal @ {x_ml:.0f}k: {r_ml_val:.0f}k (6 Cts) | {r_ml_val*20/6:,.0f}k (20 Cts)",
+            label=f"ML Adaptive @ {x_ml:.0f}k: {r_ml_val:.0f}k (6 Cts) | {r_ml_val*20/6:,.0f}k (20 Cts)",
         )
 
         pct_gain = (r_ml_val - r0_val) / max(1.0, r0_val) * 100.0
@@ -540,7 +540,7 @@ def plot_daily_revenue_comparison(
     lift_pct = (lift_m / base_total_m) * 100.0
 
     fig.suptitle(
-        "Daily & Cumulative Monthly Court Hire Revenue: Baseline vs. ML Adaptive Pricing",
+        "Daily & Cumulative Monthly Court Hire Revenue: Case Baseline vs. ML Adaptive Pricing",
         fontsize=15.0,
         fontweight="bold",
         color=PALETTE["navy"],
@@ -549,7 +549,7 @@ def plot_daily_revenue_comparison(
     fig.text(
         0.5,
         0.925,
-        "Evaluated on Out-of-Sample Held-Out Test Trajectories Across Active Court Capacity (6 Courts M1-M13 -> 20 Courts M14-M60)",
+        "Evaluated on Out-of-Sample Held-Out Test Trajectories Across Active Court Capacity (6 Courts -> 20 Courts from Feb-28)",
         ha="center",
         fontsize=10.2,
         color=PALETTE["slate"],
@@ -581,7 +581,7 @@ def plot_daily_revenue_comparison(
         edgecolor=PALETTE["navy"],
         linewidth=0.6,
         error_kw=dict(lw=0.8, ecolor=PALETTE["navy"], alpha=0.6),
-        label=f"Baseline Static Pricing (6 Cts: {base_total_m:.1f}M/mo | 20 Cts: {base_total_m*20/6:,.1f}M/mo)",
+        label=f"Case Baseline (6 Cts: {base_total_m:.1f}M/mo | 20 Cts: {base_total_m*20/6:,.1f}M/mo)",
         zorder=3,
     )
     ax1.bar(
@@ -636,7 +636,7 @@ def plot_daily_revenue_comparison(
     cum_ml = np.cumsum(ml_d)
     cum_oracle = np.cumsum(eval_res.daily_ml_rev_mean_kvnd / 1000.0 * (eval_res.mean_oracle_monthly_rev_kvnd / eval_res.mean_ml_monthly_rev_kvnd))
 
-    ax2.plot(days, cum_base, color=PALETTE["baseline"], linewidth=2.5, marker="o", markersize=4, label=f"Cumulative Baseline (6 Cts: {cum_base[-1]:.1f}M | 20 Cts: {cum_base[-1]*20/6:,.1f}M VND)")
+    ax2.plot(days, cum_base, color=PALETTE["baseline"], linewidth=2.5, marker="o", markersize=4, label=f"Cumulative Case Baseline (6 Cts: {cum_base[-1]:.1f}M | 20 Cts: {cum_base[-1]*20/6:,.1f}M VND)")
     ax2.plot(days, cum_ml, color=PALETTE["ml_blue"], linewidth=3.0, marker="s", markersize=4.5, label=f"Cumulative ML Adaptive (6 Cts: {cum_ml[-1]:.1f}M | 20 Cts: {cum_ml[-1]*20/6:,.1f}M VND)")
     ax2.plot(days, cum_oracle, color=PALETTE["emerald"], linestyle="--", linewidth=2.0, label=f"Theoretical Oracle Ceiling (6 Cts: {cum_oracle[-1]:.1f}M | 20 Cts: {cum_oracle[-1]*20/6:,.1f}M VND)")
     ax2.fill_between(days, cum_base, cum_ml, color=PALETTE["ml_blue"], alpha=0.16, label=f"Cumulative Revenue Gain (+{lift_m:.2f}M on 6 Cts | +{lift_m*20/6:.2f}M on 20 Cts)")
@@ -806,7 +806,7 @@ def plot_monthly_calendar_heatmap(
         alpha=0.75,
         edgecolor=PALETTE["navy"],
         linewidth=0.6,
-        label=f"Weekday Baseline Static (Avg: {wd_base_util.mean():.1f}%)",
+        label=f"Weekday Case Baseline (Avg: {wd_base_util.mean():.1f}%)",
     )
     ax_bot.bar(
         x_idx - 0.5 * w,
@@ -826,7 +826,7 @@ def plot_monthly_calendar_heatmap(
         alpha=0.65,
         edgecolor=PALETTE["navy"],
         linewidth=0.6,
-        label=f"Weekend Baseline Static (Avg: {wk_base_util.mean():.1f}%)",
+        label=f"Weekend Case Baseline (Avg: {wk_base_util.mean():.1f}%)",
     )
     ax_bot.bar(
         x_idx + 1.5 * w,
@@ -938,7 +938,7 @@ def plot_occupancy_and_stress_test(
 
     x = np.arange(len(regimes))
     w = 0.35
-    b1 = ax1.bar(x - w / 2, base_u, width=w, color=PALETTE["baseline"], edgecolor=PALETTE["navy"], lw=0.7, label="Baseline Static (160k / 260k)")
+    b1 = ax1.bar(x - w / 2, base_u, width=w, color=PALETTE["baseline"], edgecolor=PALETTE["navy"], lw=0.7, label="Case Baseline (160k / 260k)")
     b2 = ax1.bar(x + w / 2, ml_u, width=w, color=PALETTE["ml_teal"], edgecolor=PALETTE["navy"], lw=0.7, label="ML Adaptive Pricing (85k-300k)")
 
     for bar in b1:
@@ -969,7 +969,7 @@ def plot_occupancy_and_stress_test(
 
     # Panel B: Normal vs -30% Stress Test Revenue
     scenarios = [
-        "Expected Demand Trajectory\n(100% Baseline Demand)",
+        "Expected Demand Trajectory\n(100% Case Baseline Demand)",
         "Downside Stress Test\n(-30% Demand Shock)",
     ]
     base_rev = [
@@ -982,7 +982,7 @@ def plot_occupancy_and_stress_test(
     ]
 
     x2 = np.arange(len(scenarios))
-    s1 = ax2.bar(x2 - w / 2, base_rev, width=w, color=PALETTE["baseline"], edgecolor=PALETTE["navy"], lw=0.7, label="Baseline Static Pricing")
+    s1 = ax2.bar(x2 - w / 2, base_rev, width=w, color=PALETTE["baseline"], edgecolor=PALETTE["navy"], lw=0.7, label="Case Baseline")
     s2 = ax2.bar(x2 + w / 2, ml_rev, width=w, color=PALETTE["ml_blue"], edgecolor=PALETTE["navy"], lw=0.7, label="ML Adaptive Pricing")
 
     for i in range(len(scenarios)):

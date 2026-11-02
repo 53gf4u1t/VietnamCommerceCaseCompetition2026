@@ -83,12 +83,12 @@ def plot_venue_scaling_gantt_chart(
     ax.set_ylim(-1.65, hdr_top + 0.35)
 
     month_defs = [
-        ("MONTH 10: OCT 2027", "Handover, Permits & Earthworks", 0.0, 4.0, "#181825", "#313244"),
-        ("MONTH 11: NOV 2027", "14-Court Slab Pour & 28d Cure", 4.0, 8.0, "#1e1e2e", "#313244"),
-        ("MONTH 12: DEC 2027", "Canopy, MEP, LED & Acrylic Prep", 8.0, 12.0, "#181825", "#313244"),
-        ("MONTH 13: JAN 2028", "Surfacing, Acoustics & PCCC", 12.0, 16.0, "#291e28", "#452738"),
-        ("MONTH 14: FEB 2028", "20 Courts Live / Fill-Up M1", 16.0, 20.0, "#1e2926", "#233b30"),
-        ("MONTH 15: MAR 2028+", "Fill-Up Ramp (to Sep-28)", 20.0, 24.0, "#1e292e", "#253b3f"),
+        ("OCT 2027 (BUILD M1)", "Handover, Permits & Earthworks", 0.0, 4.0, "#181825", "#313244"),
+        ("NOV 2027 (BUILD M2)", "14-Court Slab Pour & 28d Cure", 4.0, 8.0, "#1e1e2e", "#313244"),
+        ("DEC 2027 (BUILD M3)", "Canopy, MEP, LED & Acrylic Prep", 8.0, 12.0, "#181825", "#313244"),
+        ("JAN 2028 (BUILD M4)", "Surfacing, Acoustics & PCCC", 12.0, 16.0, "#291e28", "#452738"),
+        ("FEB 2028 (VENUE 2 OPEN)", "20 Courts Live / Fill-Up Starts", 16.0, 20.0, "#1e2926", "#233b30"),
+        ("MAR 2028+ (RAMP)", "Fill-Up Ramp (to Sep-28)", 20.0, 24.0, "#1e292e", "#253b3f"),
     ]
 
     for m_title, m_sub, m_start, m_end, m_bg, hdr_bg in month_defs:
@@ -384,8 +384,8 @@ def plot_venue_scaling_gantt_chart(
     ax.text(
         -12.8,
         -0.85,
-        "4-MONTH BUILD (OCT 2027 – JAN 2028): 7,000.0M VND Fit-Out Split Evenly = 1,750.0M VND/Mo (M10–M13)  |  "
-        "5-YEAR LEASE: 330.0M VND/Mo (from Oct-27)  |  RESERVE: 1,000.0M VND (500M M1 + 500M M10)",
+        "4-MONTH BUILD (OCT 2027 – JAN 2028): 7,000.0M VND Fit-Out Split Evenly = 1,750.0M VND/Mo  |  "
+        "5-YEAR LEASE: 330.0M VND/Mo (from Oct-27)  |  RESERVE: 1,000.0M VND (500M Jan-27 + 500M Oct-27)",
         ha="center",
         va="center",
         fontsize=7.9,
@@ -395,12 +395,12 @@ def plot_venue_scaling_gantt_chart(
         zorder=9,
     )
 
-    # Highlight Week 16 (End of Month 13 / Jan 2028 = 14-Court Club Fit-Out Complete, Scaling 6 -> 20 Courts)
+    # Highlight Week 16 (End of Jan 2028 = 14-Court Club Fit-Out Complete, Scaling 6 -> 20 Courts)
     ax.axvline(16.0, ymin=0.04, ymax=0.92, color="#f38ba8", linewidth=2.4, linestyle="--", zorder=7)
     ax.text(
         16.0,
         -0.85,
-        "END OF MONTH 13 (W16: JAN 30, 2028) — 14-COURT FIT-OUT COMPLETE / TOTAL CAPACITY SCALES FROM 6 TO 20 COURTS",
+        "JAN 30, 2028 (W16) — VENUE 2 14-COURT FIT-OUT COMPLETE / TOTAL CAPACITY SCALES FROM 6 TO 20 COURTS",
         ha="center",
         va="center",
         fontsize=8.2,
@@ -464,10 +464,10 @@ def plot_court_capacity_and_fill_up_ramp(
     x_m = np.arange(1, 61)
     tick_idx = [0, 8, 13, 20, 23, 35, 47, 59]
     tick_lbls = [
-        "Jan-27\n(M1)",
-        "Sep-27\n(M9)",
-        "Feb-28\n(M14 Open)",
-        "Sep-28\n(M21 Fill)",
+        "Jan-27\n(Start)",
+        "Sep-27\n(Pre-Build)",
+        "Feb-28\n(Venue 2 Open)",
+        "Sep-28\n(Full Ramp)",
         "Dec-28\n(End Y2)",
         "Dec-29\n(End Y3)",
         "Dec-30\n(End Y4)",
@@ -490,7 +490,7 @@ def plot_court_capacity_and_fill_up_ramp(
         color="#cdd6f4",
         linewidth=2.4,
         linestyle="--",
-        label="Total Physical Courts Installed (6 Courts M1–M13; 20 Courts M14+)",
+        label="Total Physical Courts Installed (6 Courts Jan-27–Jan-28; 20 Courts Feb-28+)",
         zorder=4,
     )
     for path in res.sample_fill_paths_60m:
@@ -514,8 +514,8 @@ def plot_court_capacity_and_fill_up_ramp(
         zorder=5,
     )
 
-    ax_left.axvspan(10, 13.95, color="#f9e2af", alpha=0.14, label="Q4 2027 – Jan 2028 Construction & Curing Window (Months 10–13)", zorder=1)
-    ax_left.axvspan(14, 21.5, color="#89b4fa", alpha=0.14, label="6-to-9 Month Fill-Up Window (Months 14–21: Feb-28 to Sep-28)", zorder=1)
+    ax_left.axvspan(10, 13.95, color="#f9e2af", alpha=0.14, label="Venue 2 Construction & Curing Window (Oct 2027 – Jan 2028)", zorder=1)
+    ax_left.axvspan(14, 21.5, color="#89b4fa", alpha=0.14, label="6-to-9 Month Fill-Up Window (Feb 2028 – Sep 2028)", zorder=1)
 
     ax_left.set_xticks([t + 1 for t in tick_idx])
     ax_left.set_xticklabels(tick_lbls, fontsize=7.6, fontweight="bold")
@@ -552,7 +552,7 @@ def plot_court_capacity_and_fill_up_ramp(
         res.venue2_total_rev_mean_60m,
         color="#a6e3a1",
         linewidth=2.8,
-        label=f"Venue 2 Total Revenue (OUR Model: Steady-State = {res.venue2_steady_total_rev_mvnd:,.1f}M/mo)",
+        label=f"Venue 2 Total Revenue (Model Steady-State = {res.venue2_steady_total_rev_mvnd:,.1f}M/mo)",
         zorder=5,
     )
     ax_right.plot(
@@ -578,7 +578,7 @@ def plot_court_capacity_and_fill_up_ramp(
         color="#7f849c",
         linewidth=1.6,
         linestyle="--",
-        label="Case Unverified Static Reference (1,500.0M/mo — Not Used)",
+        label="Case Baseline Venue 2 Reference (1,500.0M/mo)",
         zorder=3,
     )
 

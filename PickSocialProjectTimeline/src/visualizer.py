@@ -579,7 +579,7 @@ def plot_stage_effort_and_concurrency(
     ax_left.set_xlim(0, 72)
     ax_left.set_xlabel("Share of Core Engineering Effort (%)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_left.set_title(
-        "Panel A: Core Build Effort Allocation vs. Industry Benchmark",
+        "Panel A: PICK! Social Dev Effort Allocation vs. Industry Benchmark",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -603,7 +603,7 @@ def plot_stage_effort_and_concurrency(
     ax_right.text(
         16.3,
         4.65,
-        "End M4 (W16):\nEnter Migration",
+        "End Apr-27 (W16):\nPICK! Social Launch & Migration",
         ha="right",
         va="top",
         fontsize=8.0,
@@ -744,8 +744,8 @@ def plot_cost_estimation_and_cashflow_allocation(
     ax_right.set_facecolor("#181825")
     df_m = res.monthly_cost_allocation_df
 
-    # 6 project months (M1..M6) + 7th bar showing ongoing M7+ steady-state monthly platform OpEx
-    m_labels = [f"{r['month_label']}\n({r['weeks_window']})" for _, r in df_m.iterrows()] + ["Jul-27+\n(M7+ Steady)"]
+    # 6 project months (Jan-27..Jun-27) + 7th bar showing ongoing Jul-27+ steady-state monthly platform OpEx
+    m_labels = [f"{r['month_label']}\n({r['weeks_window']})" for _, r in df_m.iterrows()] + ["Jul-27+\n(Steady Ops)"]
     x_m = np.arange(len(m_labels))
 
     sprint_arr = np.append(df_m["leveled_sprint_active_base_mvnd"].to_numpy(), 0.0)
@@ -769,7 +769,7 @@ def plot_cost_estimation_and_cashflow_allocation(
         label="Sprint Active Base Drawdown (Bi-Weekly Earned Value)",
         zorder=3,
     )
-    # Stack 2: Stage 3 Milestone Acceptance Holdback Release (M4 UAT, M5 Cutover, M6 Hypercare)
+    # Stack 2: Stage 3 Milestone Acceptance Holdback Release (Apr-27 UAT, May-27 Launch, Jun-27 Hypercare)
     ax_right.bar(
         x_m,
         hb_arr,
@@ -778,10 +778,10 @@ def plot_cost_estimation_and_cashflow_allocation(
         color="#74c7ec",
         edgecolor="#11111b",
         linewidth=1.0,
-        label="Stage 3 Milestone Holdback Release (M4 / M5 / M6 Gates)",
+        label="Stage 3 Milestone Holdback Release (Apr / May / Jun Gates)",
         zorder=3,
     )
-    # Stack 3: Conditional Contingency Reserve (29.58M/mo across M1-M6)
+    # Stack 3: Conditional Contingency Reserve (29.58M/mo across Jan–Jun 2027)
     ax_right.bar(
         x_m,
         reserve_arr,
@@ -795,7 +795,7 @@ def plot_cost_estimation_and_cashflow_allocation(
         label="Conditional Task Contingency Reserve (29.58M/mo)",
         zorder=3,
     )
-    # Stack 4: Recurring Monthly Platform & Community OpEx (Starts M5: 16.50M/mo; M7+: 26.50M/mo)
+    # Stack 4: Recurring Monthly PICK! Social & Community OpEx (May–Jun 27: 16.50M/mo; Jul-27+: 26.50M/mo)
     ax_right.bar(
         x_m,
         rec_opex_arr,
@@ -804,7 +804,7 @@ def plot_cost_estimation_and_cashflow_allocation(
         color="#a6e3a1",
         edgecolor="#11111b",
         linewidth=1.0,
-        label="Recurring Monthly Platform & Community OpEx (16.5M M5–6; 26.5M M7+)",
+        label="PICK! Social Cloud & Community OpEx (16.5M May–Jun; 26.5M Jul-27+)",
         zorder=4,
     )
 
@@ -850,11 +850,11 @@ def plot_cost_estimation_and_cashflow_allocation(
                 zorder=6,
             )
         else:
-            # M7+ steady-state recurring platform OpEx bar
+            # Jul-27+ steady-state recurring platform OpEx bar
             ax_right.text(
                 x_m[idx],
                 rec_opex_arr[idx] + 4.5,
-                f"Ongoing Platform OpEx\n{rec_opex_arr[idx]:.2f}M / mo\n(Cloud 8.5M + Uni 8.0M\n+ Maint 10.0M)",
+                f"PICK! Social OpEx\n{rec_opex_arr[idx]:.2f}M / mo\n(Cloud 8.5M + Uni 8.0M\n+ Maint 10.0M)",
                 ha="center",
                 va="bottom",
                 fontsize=7.1,
@@ -868,8 +868,8 @@ def plot_cost_estimation_and_cashflow_allocation(
 
     # Summary callout inside Panel B
     alloc_summary = (
-        f"6-Month Development Allocation (M1–M6):  Committed Base 139.9M–166.0M/mo (Avg 151.9M/mo, SD 8.4M)  |  +29.58M/mo Buffer Reserve\n"
-        f"Recurring Platform OpEx:  {res.launch_monthly_platform_opex_mvnd:.2f}M/mo at Launch (M5–M6)  |  {res.steady_state_monthly_platform_opex_mvnd:.2f}M/mo Steady-State (M7+ post-hypercare)"
+        f"6-Month PICK! Social Dev (Jan–Jun 27):  Committed Base 139.9M–166.0M/mo (Avg 151.9M/mo, SD 8.4M)  |  +29.58M/mo Buffer Reserve\n"
+        f"Recurring PICK! Social OpEx:  {res.launch_monthly_platform_opex_mvnd:.2f}M/mo at Launch (May–Jun 27)  |  {res.steady_state_monthly_platform_opex_mvnd:.2f}M/mo Steady-State (Jul-27+)"
     )
     ax_right.text(
         0.50,
