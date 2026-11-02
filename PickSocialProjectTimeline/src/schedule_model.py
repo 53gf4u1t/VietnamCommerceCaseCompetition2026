@@ -477,7 +477,7 @@ def build_project_schedule(cfg: TimelineConfig) -> TimelineResults:
                 "month_code": m_code,
                 "month_label": m_short,
                 "month_title": m_full,
-                "weeks_window": f"W{w_first}–W{w_last}",
+                "weeks_window": f"W{w_first}-W{w_last}",
                 "leveled_sprint_active_base_mvnd": sprint_base_m,
                 "leveled_milestone_holdback_release_mvnd": hb_rel_m,
                 "leveled_committed_base_mvnd": committed_base_m,

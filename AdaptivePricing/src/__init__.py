@@ -1,1 +1,1 @@
-"""PICK! Adaptive Court Pricing — Simulation & Machine Learning Package."""
+"""PICK! Adaptive Court Pricing - Simulation & Machine Learning Package."""

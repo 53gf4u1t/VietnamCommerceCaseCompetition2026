@@ -4,9 +4,9 @@
 - Corpus is ~31,206 words - fits in a single context window. You may not need a graph.
 
 ## Summary
-- 211 nodes · 465 edges · 27 communities (9 shown, 18 thin omitted)
-- Extraction: 89% EXTRACTED · 11% INFERRED · 0% AMBIGUOUS · INFERRED: 51 edges (avg confidence: 0.94)
-- Token cost: 3,400 input · 1,150 output
+- 211 nodes - 465 edges - 27 communities (9 shown, 18 thin omitted)
+- Extraction: 89% EXTRACTED - 11% INFERRED - 0% AMBIGUOUS - INFERRED: 51 edges (avg confidence: 0.94)
+- Token cost: 3,400 input - 1,150 output
 
 ## Community Hubs (Navigation)
 - 3-Statement Financial Model Engine
@@ -46,21 +46,21 @@
 
 ## Surprising Connections (you probably didn't know these)
 - `main()` --calls--> `run_adaptive_pricing()`  [EXTRACTED]
-  main.py → AdaptivePricing/main.py
+  main.py -> AdaptivePricing/main.py
 - `main()` --calls--> `run_financial_model()`  [EXTRACTED]
-  main.py → FinancialModel/main.py
+  main.py -> FinancialModel/main.py
 - `main()` --calls--> `run_project_timeline()`  [EXTRACTED]
-  main.py → PickSocialProjectTimeline/main.py
+  main.py -> PickSocialProjectTimeline/main.py
 - `Path C 4-Month Build & Migration Estimation Report` --conceptually_related_to--> `5-Year 3-Statement Financial Model Report (FY2027-FY2031)`  [INFERRED]
-  PickSocialProjectTimeline/outputs/REPORT.md → FinancialModel/outputs/REPORT.md
+  PickSocialProjectTimeline/outputs/REPORT.md -> FinancialModel/outputs/REPORT.md
 - `train_and_evaluate()` --uses--> `AppConfig`  [INFERRED]
-  AdaptivePricing/src/model.py → AdaptivePricing/src/config.py
+  AdaptivePricing/src/model.py -> AdaptivePricing/src/config.py
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **PICK! Unified 3-Module Case Competition Pipeline (Jan 2027 Start)** — adaptivepricing_outputs_report_ml_pricing, picksocialprojecttimeline_outputs_report_timeline, financialmodel_outputs_report_three_statement [EXTRACTED 1.00]
+- **PICK! Unified 3-Module Case Competition Pipeline (Jan 2027 Start)** - adaptivepricing_outputs_report_ml_pricing, picksocialprojecttimeline_outputs_report_timeline, financialmodel_outputs_report_three_statement [EXTRACTED 1.00]
 
 ## Communities (27 total, 18 thin omitted)
 
@@ -102,8 +102,8 @@ Nodes (7): HistGBR Demand Model Metrics, AdaptivePricing ML Optimization Report,
 
 ## Knowledge Gaps
 - **15 isolated node(s):** `casecomp`, `CaseComp Unified Pipeline`, `HistGBR Demand Model Metrics`, `Assumptions & Demand Distributions Chart`, `Demand & Revenue Curves Chart` (+10 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 103 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have <=1 connection - possible missing edges or undocumented components. (Counts symbols only; 103 node(s) total have <=1 connection when file, concept and rationale nodes are included.)
+- **18 thin communities (<3 nodes) omitted from report** - run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

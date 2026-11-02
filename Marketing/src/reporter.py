@@ -204,7 +204,7 @@ Starting in **Month 6 (`Jun-27`, Summer Tournament)** after `PICK! Social` launc
     report_path.write_text(report_md, encoding="utf-8")
 
     # 4. Export `ML_METRICS.md`
-    ml_md = f"""# Segment Marketing Budget ML Predictor — Technical Evaluation (`ML_METRICS.md`)
+    ml_md = f"""# Segment Marketing Budget ML Predictor - Technical Evaluation (`ML_METRICS.md`)
 
 ## 1. Model Architecture & Train/Test Split
 
@@ -218,7 +218,7 @@ Starting in **Month 6 (`Jun-27`, Summer Tournament)** after `PICK! Social` launc
 | Evaluation Split / Segment Target | $R^2$ Score | RMSE (`M VND`) | MAE (`M VND`) | MAPE (`%`) |
 | :--- | :---: | :---: | :---: | :---: |
 | **In-Sample Training Set (`N = {m.n_train_obs:,}`)** | **{m.train_r2:.4f}** | {m.train_rmse_mvnd:.4f} | {m.train_mae_mvnd:.4f} | {m.train_mape_pct:.2f}% |
-| **Out-of-Sample Test Set — Overall (`N = {m.n_test_obs:,}`)** | **{m.test_r2:.4f}** | **{m.test_rmse_mvnd:.4f}** | **{m.test_mae_mvnd:.4f}** | **{m.test_mape_pct:.2f}%** |
+| **Out-of-Sample Test Set - Overall (`N = {m.n_test_obs:,}`)** | **{m.test_r2:.4f}** | **{m.test_rmse_mvnd:.4f}** | **{m.test_mae_mvnd:.4f}** | **{m.test_mape_pct:.2f}%** |
 | Out-of-Sample: **Competitive Players Budget** | {m.seg_test_r2['competitive']:.4f} | {m.seg_test_rmse_mvnd['competitive']:.4f} | {m.seg_test_mae_mvnd['competitive']:.4f} | {m.seg_test_mape_pct['competitive']:.2f}% |
 | Out-of-Sample: **Social Players Budget** | {m.seg_test_r2['social']:.4f} | {m.seg_test_rmse_mvnd['social']:.4f} | {m.seg_test_mae_mvnd['social']:.4f} | {m.seg_test_mape_pct['social']:.2f}% |
 | Out-of-Sample: **Trend Explorers Budget** | {m.seg_test_r2['trend_explorers']:.4f} | {m.seg_test_rmse_mvnd['trend_explorers']:.4f} | {m.seg_test_mae_mvnd['trend_explorers']:.4f} | {m.seg_test_mape_pct['trend_explorers']:.2f}% |

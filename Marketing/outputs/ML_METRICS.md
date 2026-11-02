@@ -1,4 +1,4 @@
-# Segment Marketing Budget ML Predictor — Technical Evaluation (`ML_METRICS.md`)
+# Segment Marketing Budget ML Predictor - Technical Evaluation (`ML_METRICS.md`)
 
 ## 1. Model Architecture & Train/Test Split
 
@@ -12,7 +12,7 @@
 | Evaluation Split / Segment Target | $R^2$ Score | RMSE (`M VND`) | MAE (`M VND`) | MAPE (`%`) |
 | :--- | :---: | :---: | :---: | :---: |
 | **In-Sample Training Set (`N = 14,400`)** | **0.9637** | 0.9252 | 0.6769 | 5.14% |
-| **Out-of-Sample Test Set — Overall (`N = 3,600`)** | **0.9556** | **1.0307** | **0.7513** | **5.62%** |
+| **Out-of-Sample Test Set - Overall (`N = 3,600`)** | **0.9556** | **1.0307** | **0.7513** | **5.62%** |
 | Out-of-Sample: **Competitive Players Budget** | 0.8584 | 0.9108 | 0.6764 | 5.98% |
 | Out-of-Sample: **Social Players Budget** | 0.8726 | 1.0266 | 0.7878 | 4.64% |
 | Out-of-Sample: **Trend Explorers Budget** | 0.8736 | 1.4042 | 1.0776 | 6.42% |

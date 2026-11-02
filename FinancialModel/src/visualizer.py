@@ -312,20 +312,20 @@ def _line_item_source_label(li) -> str:
 
 
 _THREE_STMT_SUBHEADERS: dict[str, str] = {
-    "REV_1A": "▸ REVENUE STREAMS (COURT HIRE, PICK! SOCIAL & ANCILLARY)",
-    "COGS_1": "▸ DIRECT COST OF GOODS SOLD (VARIABLE COGS)",
-    "OPEX_1A": "▸ FACILITY OPERATING EXPENSES (FIXED & SEMI-FIXED OPEX)",
-    "SGA_1": "▸ SELLING, GENERAL, ADMIN, PLATFORM & COMPLIANCE (SG&A)",
-    "DA_EXP": "▸ DEPRECIATION (D&A), TAXABLE INCOME (EBT) & CORPORATE INCOME TAX",
-    "BS_CASH": "▸ ASSETS — CURRENT ASSETS (CASH, INVENTORY & LEASE DEPOSIT)",
-    "BS_PPE": "▸ ASSETS — LONG-TERM (FIXED) ASSETS (PP&E NET OF D&A)",
-    "BS_AP": "▸ LIABILITIES — CURRENT OPERATING & TAX PAYABLES",
-    "BS_CAP": "▸ OWNER'S EQUITY — CONTRIBUTED CAPITAL & RETAINED EARNINGS",
-    "CF_START": "▸ OPERATING ACTIVITIES (NET INCOME, D&A & WORKING CAPITAL)",
-    "CF_CAPEX": "▸ INVESTING ACTIVITIES (VENUE 2 TURNKEY FIT-OUT CAPEX)",
-    "CF_EQ": "▸ FINANCING ACTIVITIES & ENDING CASH RESERVES",
-    "TX_EBT": "▸ CORPORATE INCOME TAX SCHEDULE (VIETNAM CIT LAW 67/2025/QH15 @ 20.0%)",
-    "TX_VAT_OUT": "▸ VALUE-ADDED TAX SCHEDULE (8.0% OUTPUT VAT VS. 10.0% INPUT VAT — LAW 48/2024/QH15)",
+    "REV_1A": "REVENUE STREAMS (COURT HIRE, PICK! SOCIAL & ANCILLARY)",
+    "COGS_1": "DIRECT COST OF GOODS SOLD (VARIABLE COGS)",
+    "OPEX_1A": "FACILITY OPERATING EXPENSES (FIXED & SEMI-FIXED OPEX)",
+    "SGA_1": "SELLING, GENERAL, ADMIN, PLATFORM & COMPLIANCE (SG&A)",
+    "DA_EXP": "DEPRECIATION (D&A), TAXABLE INCOME (EBT) & CORPORATE INCOME TAX",
+    "BS_CASH": "ASSETS - CURRENT ASSETS (CASH, INVENTORY & LEASE DEPOSIT)",
+    "BS_PPE": "ASSETS - LONG-TERM (FIXED) ASSETS (PP&E NET OF D&A)",
+    "BS_AP": "LIABILITIES - CURRENT OPERATING & TAX PAYABLES",
+    "BS_CAP": "OWNER'S EQUITY - CONTRIBUTED CAPITAL & RETAINED EARNINGS",
+    "CF_START": "OPERATING ACTIVITIES (NET INCOME, D&A & WORKING CAPITAL)",
+    "CF_CAPEX": "INVESTING ACTIVITIES (VENUE 2 TURNKEY FIT-OUT CAPEX)",
+    "CF_EQ": "FINANCING ACTIVITIES & ENDING CASH RESERVES",
+    "TX_EBT": "CORPORATE INCOME TAX SCHEDULE (VIETNAM CIT LAW 67/2025/QH15 @ 20.0%)",
+    "TX_VAT_OUT": "VALUE-ADDED TAX SCHEDULE (8.0% OUTPUT VAT VS. 10.0% INPUT VAT - LAW 48/2024/QH15)",
 }
 
 
@@ -365,23 +365,23 @@ def plot_drivers_and_cost_breakdown_sheet(
     for li in res.line_items:
         if li.section == "REVENUE" and "REVENUE" not in seen_sections:
             seen_sections.add("REVENUE")
-            rows.append(("sub_hdr", ["▸ SECTION 1 — REVENUE STREAMS (COURT HIRE, PICK! SOCIAL & ANCILLARY)"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 1 - REVENUE STREAMS (COURT HIRE, PICK! SOCIAL & ANCILLARY)"] + [""] * 9))
         elif li.section == "COGS" and "COGS" not in seen_sections:
             seen_sections.add("COGS")
             rows.append(("stmt_gap", empty_10))
-            rows.append(("sub_hdr", ["▸ SECTION 2 — DIRECT COST OF GOODS SOLD (VARIABLE COGS) & GROSS PROFIT"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 2 - DIRECT COST OF GOODS SOLD (VARIABLE COGS) & GROSS PROFIT"] + [""] * 9))
         elif li.section == "OPEX" and "OPEX" not in seen_sections:
             seen_sections.add("OPEX")
             rows.append(("stmt_gap", empty_10))
-            rows.append(("sub_hdr", ["▸ SECTION 3 — FACILITY OPERATING EXPENSES (FIXED & SEMI-FIXED OPEX)"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 3 - FACILITY OPERATING EXPENSES (FIXED & SEMI-FIXED OPEX)"] + [""] * 9))
         elif li.section == "SGA" and "SGA" not in seen_sections:
             seen_sections.add("SGA")
             rows.append(("stmt_gap", empty_10))
-            rows.append(("sub_hdr", ["▸ SECTION 4 — SELLING, GENERAL, ADMIN, PLATFORM & COMPLIANCE (SG&A)"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 4 - SELLING, GENERAL, ADMIN, PLATFORM & COMPLIANCE (SG&A)"] + [""] * 9))
         elif "D&A" in li.template_category and "DA_TAX" not in seen_sections:
             seen_sections.add("DA_TAX")
             rows.append(("stmt_gap", empty_10))
-            rows.append(("sub_hdr", ["▸ SECTION 5 — DEPRECIATION (D&A), TAXABLE INCOME (EBT), VIETNAM CIT (20%) & NET INCOME"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 5 - DEPRECIATION (D&A), TAXABLE INCOME (EBT), VIETNAM CIT (20%) & NET INCOME"] + [""] * 9))
 
         if li.section == "SUMMARY":
             if "GROSS PROFIT" in li.template_category:
@@ -464,14 +464,14 @@ def plot_fs_month_projection_sheet(
     """
     Render Sheet 2: Hierarchical table of FS-Month (Monthly 3-Statement Model:
     Income Statement, Balance Sheet, Cash Flow Statement & Tax Schedule across Year 1 months
-    plus End of Year 2 & End of Year 5 monthly snapshots — strictly monthly figures, no totals).
+    plus End of Year 2 & End of Year 5 monthly snapshots - strictly monthly figures, no totals).
     """
     col_widths = [0.268, 0.044] + [0.046] * 12 + [0.068, 0.068]
     y1_months = list(res.month_labels[:12])
     period_hdrs = ["Unit"] + y1_months + ["Dec-28 (End Y2)", "Dec-31 (End Y5)"]
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["FINANCIAL STATEMENTS — MONTHLY (YEAR 1 + END Y2 & END Y5 SNAPSHOTS)"] + period_hdrs),
+        ("col_hdr", ["FINANCIAL STATEMENTS - MONTHLY (YEAR 1 + END Y2 & END Y5 SNAPSHOTS)"] + period_hdrs),
     ]
 
     for _, df_row in res.fs_month_df.iterrows():
@@ -568,7 +568,7 @@ def plot_fs_annual_and_structure_dashboard(
     ]
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["FINANCIAL STATEMENTS — ANNUAL (FY 2027 TO FY 2031)"] + period_hdrs),
+        ("col_hdr", ["FINANCIAL STATEMENTS - ANNUAL (FY 2027 TO FY 2031)"] + period_hdrs),
     ]
 
     for _, df_row in res.fs_annual_df.iterrows():
@@ -651,7 +651,7 @@ def plot_revenue_costs_profit_comparison_charts(
         Expenses (SG&A), D&A & 20% CIT)
       - Operating Profit (EBITDA) and Net Income (After D&A & 20% Vietnam CIT) plotted as lines with markers
       - Panel A: 5-Year Annual Comparison (FY 2027 to FY 2031)
-      - Panel B: Monthly Trajectory Across Year 1 & Year 2 (Months 1–24: Jan-27 to Dec-28)
+      - Panel B: Monthly Trajectory Across Year 1 & Year 2 (Months 1-24: Jan-27 to Dec-28)
     """
     fig, (ax_ann, ax_mon) = plt.subplots(2, 1, figsize=(19.4, 14.0), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
@@ -900,7 +900,7 @@ def plot_revenue_costs_profit_comparison_charts(
     )
 
     # =========================================================================
-    # PANEL B: Monthly Trajectory Across Years 1 & 2 (Months 1–24: Jan-27 to Dec-28)
+    # PANEL B: Monthly Trajectory Across Years 1 & 2 (Months 1-24: Jan-27 to Dec-28)
     # =========================================================================
     ax_mon.set_facecolor("#181825")
     m24_labels = list(res.month_labels[:24])
@@ -1077,14 +1077,14 @@ def plot_membership_and_monte_carlo_distributions(
 ) -> Path:
     """
     Generate Chart 5 (05_membership_and_monte_carlo_distributions.png):
-      - Panel A (Top Left): Smooth Active Paying Subscribers Trajectory S_t (Months 1–60: Jan-27 to Dec-31)
-        with 40 Monte Carlo simulation lines, P05–P95 confidence band, Train vs. Held-Out Test mean,
+      - Panel A (Top Left): Smooth Active Paying Subscribers Trajectory S_t (Months 1-60: Jan-27 to Dec-31)
+        with 40 Monte Carlo simulation lines, P05-P95 confidence band, Train vs. Held-Out Test mean,
         and Case Page 3 End-of-Year-2 benchmark (1,500 paying members at M24 / Dec-28).
       - Panel B (Top Right): Monthly Membership Revenue & Total Revenue Trajectory (M VND/month)
-        with P05–P95 band and -30% lower-demand stress test comparison.
+        with P05-P95 band and -30% lower-demand stress test comparison.
       - Panel C (Bottom Left): Monthly Subscriber Flow Dynamics (Monthly New Subscribers Acquired vs.
         Churned Subscribers & Net Monthly Member Additions from Month 5 onward).
-      - Panel D (Bottom Right): Annual Operating Profit (EBITDA) Across FY 2027–FY 2031 (Base Plan P05–P95
+      - Panel D (Bottom Right): Annual Operating Profit (EBITDA) Across FY 2027-FY 2031 (Base Plan P05-P95
         vs. -30% Lower Demand Stress Test vs. Investor Minh Tran's 3,500M VND Year 3 Target).
     """
     mc = res.mc
@@ -1117,7 +1117,7 @@ def plot_membership_and_monte_carlo_distributions(
         mc.active_subscribers_p95,
         color="#89b4fa",
         alpha=0.22,
-        label="90% Monte Carlo Band (P05–P95)",
+        label="90% Monte Carlo Band (P05-P95)",
         zorder=3,
     )
     ax_a.plot(
@@ -1190,7 +1190,7 @@ def plot_membership_and_monte_carlo_distributions(
         mc.total_rev_p95,
         color="#a6e3a1",
         alpha=0.22,
-        label="Total Monthly Revenue P05–P95 Band",
+        label="Total Monthly Revenue P05-P95 Band",
         zorder=3,
     )
     ax_b.plot(
@@ -1232,7 +1232,7 @@ def plot_membership_and_monte_carlo_distributions(
         mc.base_total_rev_p95,
         color="#7f849c",
         alpha=0.20,
-        label="Case Baseline Revenue P05–P95 Band",
+        label="Case Baseline Revenue P05-P95 Band",
         zorder=2,
     )
     ax_b.plot(
@@ -1312,7 +1312,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_c.legend(loc="upper right", fontsize=7.8, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     # -------------------------------------------------------------------------
-    # PANEL D: Annual Operating Profit (FY27–FY31) vs. Investor Minh Tran 3,500M Target
+    # PANEL D: Annual Operating Profit (FY27-FY31) vs. Investor Minh Tran 3,500M Target
     # -------------------------------------------------------------------------
     ax_d.set_facecolor("#181825")
     x_y = np.arange(5)
@@ -1453,7 +1453,7 @@ def plot_monthly_cash_balance_and_externals(
     """
     Render `06_monthly_cash_balance_and_externals.png`:
       - Panel A: 60-Month Ending Cash Balance Trajectory (Mean, P05-P95 Band, -30% Stress Cash & Case Baseline with P05-P95 Band)
-      - Panel B: Monthly Cash Flow Components (Operating Cash Flow OCF, Venue 2 Fit-Out CapEx -1,750M/mo in Oct-27–Jan-28, +500M Jan-27 & +7,500M Oct-27 Equity)
+      - Panel B: Monthly Cash Flow Components (Operating Cash Flow OCF, Venue 2 Fit-Out CapEx -1,750M/mo in Oct-27-Jan-28, +500M Jan-27 & +7,500M Oct-27 Equity)
       - Panel C: External Macro Pickleball Interest Trend Multiplier I_t (externals.toml) & Legal/Safety Risk Provision
     """
     mc = res.mc
@@ -1538,7 +1538,7 @@ def plot_monthly_cash_balance_and_externals(
     ax2 = axes[1]
     ax2.set_facecolor("#181825")
     ax2.bar(x_m - 0.2, res.monthly_ocf_model, width=0.38, color="#a6e3a1", edgecolor="#11111b", alpha=0.88, label="Operating Cash Flow (OCF, Net of April CIT Payment)")
-    ax2.bar(x_m + 0.2, res.monthly_icf_capex_model, width=0.38, color="#f38ba8", edgecolor="#11111b", alpha=0.88, label="Venue 2 Fit-Out CapEx Outflow (-1,750M/mo in Oct-27–Jan-28)")
+    ax2.bar(x_m + 0.2, res.monthly_icf_capex_model, width=0.38, color="#f38ba8", edgecolor="#11111b", alpha=0.88, label="Venue 2 Fit-Out CapEx Outflow (-1,750M/mo in Oct-27-Jan-28)")
     ax2.bar(x_m, -res.monthly_cit_cash_paid_arr, width=0.38, color="#fab387", edgecolor="#11111b", alpha=0.92, label="April Annual CIT Settlement (-20% Prior FY Tax)")
     ax2.bar(x_m, res.monthly_fcf_equity_model, width=0.35, color="#cba6f7", edgecolor="#11111b", alpha=0.80, label="Investor Minh Tran Equity (+500M in Jan-27 & +7,500M in Oct-27)")
     ax2.plot(x_m, res.monthly_net_cash_flow_model, color="#f9e2af", linewidth=2.0, marker="o", markersize=3.5, label="Net Monthly Cash Flow (OCF + ICF + FCF)")

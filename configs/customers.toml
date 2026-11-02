@@ -6,7 +6,7 @@
 # Philosophy: Every assumption is modeled as a probability distribution
 #             (Truncated Normal / Beta) rather than a brittle static scalar.
 #             Simulation trajectories sample from these distributions each month
-#             and propagate state smoothly across the 60-month (2027–2031) horizon.
+#             and propagate state smoothly across the 60-month (2027-2031) horizon.
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -330,7 +330,7 @@ unit = "kVND/visit"
 source = "Case Exhibit 1 (115M Coaching) & Exhibit 4 group clinic participation"
 
 [segments.social.fnb_spend_per_visit_kvnd]
-# Distribution 6 of 12: Main need is 'Play with friends and enjoy the atmosphere' -> highest café/beverage spend (~11.50 kVND/visit -> 28.980M VND/mo)
+# Distribution 6 of 12: Main need is 'Play with friends and enjoy the atmosphere' -> highest cafe/beverage spend (~11.50 kVND/visit -> 28.980M VND/mo)
 dist = "truncated_normal"
 mean = 11.50
 std = 1.05
@@ -455,7 +455,7 @@ std = 0.65
 min = 4.10
 max = 7.90
 unit = "kVND/visit"
-source = "Case Exhibit 1 (75M Food & Drinks) & Exhibit 4 casual café beverage purchase"
+source = "Case Exhibit 1 (75M Food & Drinks) & Exhibit 4 casual cafe beverage purchase"
 
 [segments.trend_explorers.subscription_propensity_weight]
 # Casual visitors have low direct membership conversion unless converted into social players
@@ -566,14 +566,14 @@ unit = "kVND/visit"
 source = "Case Exhibit 1 (115M Coaching) & Exhibit 4 ('Families: A welcoming activity and beginner lessons')"
 
 [segments.families.fnb_spend_per_visit_kvnd]
-# Distribution 12 of 12: Family snacks, fruit juices, smoothies & café items (~10.03 kVND/visit -> 6.499M VND/mo)
+# Distribution 12 of 12: Family snacks, fruit juices, smoothies & cafe items (~10.03 kVND/visit -> 6.499M VND/mo)
 dist = "truncated_normal"
 mean = 10.03
 std = 0.95
 min = 7.20
 max = 13.00
 unit = "kVND/visit"
-source = "Case Exhibit 1 (75M Food & Drinks) & Exhibit 4 family weekend café & refreshment spend"
+source = "Case Exhibit 1 (75M Food & Drinks) & Exhibit 4 family weekend cafe & refreshment spend"
 
 [segments.families.subscription_propensity_weight]
 # Moderate conversion for weekend family clinics and junior coaching discounts
@@ -685,7 +685,7 @@ source = "Case Exhibit 3 ('31% would consider paying VND 399,000 a month')"
 
 [survey_exhibit3.intent_to_actual_follow_through_multiplier]
 # Marketing science (Morrison 1979 / Jamieson & Bass 1989) shows stated subscription
-# intent converts to immediate/medium-term actual purchase at 25%–45% in Month 1 of launch,
+# intent converts to immediate/medium-term actual purchase at 25%-45% in Month 1 of launch,
 # building gradually toward the Path C 24-month target via network effects & open-play leagues.
 dist = "truncated_normal"
 mean = 0.300
@@ -704,7 +704,7 @@ source = "Case Exhibit 3 ('in real markets, fewer people usually follow through 
 #        VND 399,000 each, that equals about VND 598.5 million in monthly
 #        membership revenue before partner-court, event and service costs."
 #   - Timeline Integration:
-#     * Months 1–4 (Jan-27 to Apr-27): Core platform is under development (Stages 1–4).
+#     * Months 1-4 (Jan-27 to Apr-27): Core platform is under development (Stages 1-4).
 #       Active paying members = 0 (Membership revenue = 0.0 M VND).
 #     * Month 5 (May-27, index 4): Platform completes UAT at end of Month 4 (Apr 25, 2027)
 #       and launches in Month 5 (Stage 5 soft-launch & cutover).

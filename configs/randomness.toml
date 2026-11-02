@@ -49,7 +49,7 @@ std = 0.045
 min = 0.85
 max = 1.15
 unit = "dimensionless multiplier"
-source = "Hour-to-hour arrival jitter across 6 courts (06:00–22:00)"
+source = "Hour-to-hour arrival jitter across 6 courts (06:00-22:00)"
 
 # ------------------------------------------------------------------------------
 # 3. FINANCIAL MODEL & SUBSCRIPTION COHORT RANDOM SHOCK DISTRIBUTIONS

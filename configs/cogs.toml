@@ -6,7 +6,7 @@
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 1. COACH FEES (PAID PER LESSON) — DIRECT SERVICE COGS
+# 1. COACH FEES (PAID PER LESSON) - DIRECT SERVICE COGS
 # Derivation:
 #   - Case Exhibit 1: Coaching revenue = VND 115.0 million/month (18% of 640M revenue).
 #   - Case Exhibit 2: Coach fees (paid per lesson) = VND 60.0 million/month (Variable).
@@ -35,7 +35,7 @@ unit = "M VND/month"
 source = "Case Exhibit 2 ('Coach fees (paid per lesson): Variable, VND 60 million')"
 
 # ------------------------------------------------------------------------------
-# 2. FOOD AND DRINK SUPPLIES — DIRECT INVENTORY COGS
+# 2. FOOD AND DRINK SUPPLIES - DIRECT INVENTORY COGS
 # Derivation:
 #   - Case Exhibit 1: Revenue: food and drinks = VND 75.0 million/month (12% of rev).
 #   - Case Exhibit 2: Food and drink supplies = VND 30.0 million/month (Variable).
@@ -133,7 +133,7 @@ source = "Case Exhibit 2 ('Payment fees and consumables: Variable, VND 15 millio
 #     * Each paying member (399k VND/mo) participates in hosted social open-play
 #       sessions / league nights & receives tournament balls/refreshments.
 #     * When overflow leagues/events are hosted at partner courts (@ 200k VND/court-hr
-#       shared across 8–12 league players per court-hour = ~20k–25k VND/member/event)
+#       shared across 8-12 league players per court-hour = ~20k-25k VND/member/event)
 #       plus event hosts/referees & balls (~20k VND/member/mo), each active paying
 #       member incurs ~42.0k VND/month (~10.5% of the 399k membership fee) in direct
 #       partner-court & event delivery COGS, in addition to the 1.50% payment gateway fee!

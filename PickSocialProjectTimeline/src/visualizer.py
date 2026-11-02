@@ -249,7 +249,7 @@ def plot_master_gantt_chart(
             ax.text(
                 -24.5,
                 y_mid,
-                f"▸ {st.name.upper()}",
+                f"{st.name.upper()}",
                 ha="left",
                 va="center",
                 fontsize=7.3,
@@ -282,7 +282,7 @@ def plot_master_gantt_chart(
             ax.text(
                 -3.95,
                 y_mid,
-                f"{st.start_date.strftime('%b %d')}–{st.end_date.strftime('%b %d')}",
+                f"{st.start_date.strftime('%b %d')}-{st.end_date.strftime('%b %d')}",
                 ha="center",
                 va="center",
                 fontsize=7.0,
@@ -380,7 +380,7 @@ def plot_master_gantt_chart(
             ax.text(
                 -3.95,
                 y_mid,
-                f"W{t.start_week + 1:g}–W{t.end_week:g}",
+                f"W{t.start_week + 1:g}-W{t.end_week:g}",
                 ha="center",
                 va="center",
                 fontsize=7.0,
@@ -422,7 +422,7 @@ def plot_master_gantt_chart(
             )
             ax.add_patch(rect)
 
-            # Presentation-clean label (Task ID & duration only — no citation keys)
+            # Presentation-clean label (Task ID & duration only - no citation keys)
             bar_label = f"{t.id} ({t.duration_weeks:.1f}w)"
             if t.duration_weeks >= 2.5 or t.end_week >= 23.5:
                 lbl_bg = "#1e1e2e" if t.is_simultaneous_qa else "none"
@@ -459,8 +459,8 @@ def plot_master_gantt_chart(
     ax.text(
         -11.1,
         -0.85,
-        f"4-MONTH CORE BUILD (S1–S4): {res.core_build_base_cost_mvnd:.2f}M Base / {res.core_build_buffered_cost_mvnd:.2f}M Buffered   |   "
-        f"FULL 6-MONTH LIFECYCLE (S1–S6): {res.total_base_cost_mvnd:.2f}M Base + {res.total_buffer_mvnd:.2f}M Buffer (+{res.weighted_buffer_pct:.1f}%) = {res.total_buffered_cost_mvnd:.2f}M VND",
+        f"4-MONTH CORE BUILD (S1-S4): {res.core_build_base_cost_mvnd:.2f}M Base / {res.core_build_buffered_cost_mvnd:.2f}M Buffered   |   "
+        f"FULL 6-MONTH LIFECYCLE (S1-S6): {res.total_base_cost_mvnd:.2f}M Base + {res.total_buffer_mvnd:.2f}M Buffer (+{res.weighted_buffer_pct:.1f}%) = {res.total_buffered_cost_mvnd:.2f}M VND",
         ha="center",
         va="center",
         fontsize=8.0,
@@ -470,12 +470,12 @@ def plot_master_gantt_chart(
         zorder=9,
     )
 
-    # Highlight Week 16 (End of Month 4 = Target Product Completion & Entry into Migration) — NO ICONS
+    # Highlight Week 16 (End of Month 4 = Target Product Completion & Entry into Migration) - NO ICONS
     ax.axvline(16.0, ymin=0.04, ymax=0.92, color="#f38ba8", linewidth=2.4, linestyle="--", zorder=7)
     ax.text(
         16.0,
         -0.85,
-        "END OF MONTH 4 (W16: APR 25, 2027) — CORE PRODUCT COMPLETE / ENTER MIGRATION PHASE",
+        "END OF MONTH 4 (W16: APR 25, 2027) - CORE PRODUCT COMPLETE / ENTER MIGRATION PHASE",
         ha="center",
         va="center",
         fontsize=8.3,
@@ -507,7 +507,7 @@ def plot_master_gantt_chart(
     )
 
     ax.set_title(
-        "PICK! Social & Adaptive Booking Platform — Production Engineering Schedule & Work Breakdown Structure\n"
+        "PICK! Social & Adaptive Booking Platform - Production Engineering Schedule & Work Breakdown Structure\n"
         "Phased Engineering Delivery Across Core Platform Build, Legacy Migration & Continuous Operations",
         fontsize=12.2,
         fontweight="bold",
@@ -733,8 +733,8 @@ def plot_cost_estimation_and_cashflow_allocation(
 
     # Summary box inside Panel A (bottom center, 100% inside axes frame)
     summary_text = (
-        f"4-Month Core Build (Stages 1–4, W1–W16):  Base {res.core_build_base_cost_mvnd:.2f}M  |  Buffer {res.core_build_buffer_mvnd:.2f}M  |  Buffered {res.core_build_buffered_cost_mvnd:.2f}M VND\n"
-        f"Full 6-Month Lifecycle (S1–S6, W1–W24):  Labor {res.total_base_labor_cost_mvnd:.2f}M + Cloud/Infra {res.total_direct_infra_cost_mvnd:.2f}M = "
+        f"4-Month Core Build (Stages 1-4, W1-W16):  Base {res.core_build_base_cost_mvnd:.2f}M  |  Buffer {res.core_build_buffer_mvnd:.2f}M  |  Buffered {res.core_build_buffered_cost_mvnd:.2f}M VND\n"
+        f"Full 6-Month Lifecycle (S1-S6, W1-W24):  Labor {res.total_base_labor_cost_mvnd:.2f}M + Cloud/Infra {res.total_direct_infra_cost_mvnd:.2f}M = "
         f"Base {res.total_base_cost_mvnd:.2f}M  |  Buf (+{res.weighted_buffer_pct:.1f}%) {res.total_buffer_mvnd:.2f}M  |  Buffered {res.total_buffered_cost_mvnd:,.2f}M"
     )
     ax_left.text(
@@ -795,7 +795,7 @@ def plot_cost_estimation_and_cashflow_allocation(
         label="Stage 3 Milestone Holdback Release (Apr / May / Jun Gates)",
         zorder=3,
     )
-    # Stack 3: Conditional Contingency Reserve (29.58M/mo across Jan–Jun 2027)
+    # Stack 3: Conditional Contingency Reserve (29.58M/mo across Jan-Jun 2027)
     ax_right.bar(
         x_m,
         reserve_arr,
@@ -809,7 +809,7 @@ def plot_cost_estimation_and_cashflow_allocation(
         label="Conditional Task Contingency Reserve (29.58M/mo)",
         zorder=3,
     )
-    # Stack 4: Recurring Monthly PICK! Social & Community OpEx (May–Jun 27: 16.50M/mo; Jul-27+: 26.50M/mo)
+    # Stack 4: Recurring Monthly PICK! Social & Community OpEx (May-Jun 27: 16.50M/mo; Jul-27+: 26.50M/mo)
     ax_right.bar(
         x_m,
         rec_opex_arr,
@@ -818,7 +818,7 @@ def plot_cost_estimation_and_cashflow_allocation(
         color="#a6e3a1",
         edgecolor="#11111b",
         linewidth=1.0,
-        label="PICK! Social Cloud & Community OpEx (16.5M May–Jun; 26.5M Jul-27+)",
+        label="PICK! Social Cloud & Community OpEx (16.5M May-Jun; 26.5M Jul-27+)",
         zorder=4,
     )
 
@@ -882,8 +882,8 @@ def plot_cost_estimation_and_cashflow_allocation(
 
     # Summary callout inside Panel B
     alloc_summary = (
-        f"6-Month PICK! Social Dev (Jan–Jun 27):  Committed Base 139.9M–166.0M/mo (Avg 151.9M/mo, SD 8.4M)  |  +29.58M/mo Buffer Reserve\n"
-        f"Recurring PICK! Social OpEx:  {res.launch_monthly_platform_opex_mvnd:.2f}M/mo at Launch (May–Jun 27)  |  {res.steady_state_monthly_platform_opex_mvnd:.2f}M/mo Steady-State (Jul-27+)"
+        f"6-Month PICK! Social Dev (Jan-Jun 27):  Committed Base 139.9M-166.0M/mo (Avg 151.9M/mo, SD 8.4M)  |  +29.58M/mo Buffer Reserve\n"
+        f"Recurring PICK! Social OpEx:  {res.launch_monthly_platform_opex_mvnd:.2f}M/mo at Launch (May-Jun 27)  |  {res.steady_state_monthly_platform_opex_mvnd:.2f}M/mo Steady-State (Jul-27+)"
     )
     ax_right.text(
         0.50,
@@ -915,7 +915,7 @@ def plot_cost_estimation_and_cashflow_allocation(
     ax_right.legend(loc="upper right", fontsize=7.6, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     fig.suptitle(
-        "PICK! Social & Adaptive Booking Platform — Cost Estimation, Risk Contingency & Leveled Cash Allocation",
+        "PICK! Social & Adaptive Booking Platform - Cost Estimation, Risk Contingency & Leveled Cash Allocation",
         fontsize=12.5,
         fontweight="bold",
         color="#cdd6f4",

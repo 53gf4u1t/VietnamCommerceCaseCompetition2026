@@ -70,7 +70,7 @@ def run_financial_model(
     ap = res.adaptive
     mc = res.mc
     print("\n" + "=" * 86)
-    print("PICK! 5-YEAR (60-MONTH) FINANCIAL STATEMENTS MODEL (FS-MONTH & FS-ANNUAL) — SUMMARY")
+    print("PICK! 5-YEAR (60-MONTH) FINANCIAL STATEMENTS MODEL (FS-MONTH & FS-ANNUAL) - SUMMARY")
     print("=" * 86)
     print(f"  Verified AdaptivePricing Files : {', '.join(ap.verified_files)}")
     print(f"  Verified Timeline Cost Files   : {', '.join(res.timeline_cost.verified_files)}")

@@ -53,7 +53,7 @@ def plot_venue_scaling_gantt_chart(
 ) -> Path:
     """
     Render Chart 1 (01_venue_scaling_gantt_chart.png):
-      - Master Construction, Mandatory 28-Day Slab Cure, Fit-Out & Launch Gantt Chart (Q3–Q4 2027: Weeks 1–16, Months 7–10: Jul–Oct 2027)
+      - Master Construction, Mandatory 28-Day Slab Cure, Fit-Out & Launch Gantt Chart (Q3-Q4 2027: Weeks 1-16, Months 7-10: Jul-Oct 2027)
         plus Entry into the 6-to-9 Month Fill-Up Ramp (Month 11 / Nov 2027 onward).
       - Zero icons, zero diamond markers, zero inline citation keys.
     """
@@ -72,7 +72,7 @@ def plot_venue_scaling_gantt_chart(
     fig.patch.set_facecolor("#1e1e2e")
     ax.set_facecolor("#181825")
 
-    # Timeline x-axis displays Weeks 0..24 from Q4 2027 Kickoff (Oct 2027 – Mar 2028)
+    # Timeline x-axis displays Weeks 0..24 from Q4 2027 Kickoff (Oct 2027 - Mar 2028)
     x_left_min = -30.0
     x_right_max = 24.05
     hdr_top = n_rows + 1.65
@@ -229,7 +229,7 @@ def plot_venue_scaling_gantt_chart(
                 )
             )
             ax.text(-29.35, y_mid, st.stage_id, ha="center", va="center", fontsize=8.1, fontweight="bold", color=st.color, zorder=5)
-            ax.text(-28.5, y_mid, f"▸ {st.name.upper()}", ha="left", va="center", fontsize=6.8, fontweight="bold", color="#cdd6f4", zorder=5)
+            ax.text(-28.5, y_mid, f"{st.name.upper()}", ha="left", va="center", fontsize=6.8, fontweight="bold", color="#cdd6f4", zorder=5)
             ax.text(
                 -14.0,
                 y_mid,
@@ -245,7 +245,7 @@ def plot_venue_scaling_gantt_chart(
             ax.text(
                 -3.70,
                 y_mid,
-                f"{st.start_date.strftime('%b %d')}–{st.end_date.strftime('%b %d')}",
+                f"{st.start_date.strftime('%b %d')}-{st.end_date.strftime('%b %d')}",
                 ha="center",
                 va="center",
                 fontsize=6.8,
@@ -313,7 +313,7 @@ def plot_venue_scaling_gantt_chart(
             )
             ax.text(-14.0, y_mid, t.core_deliverable, ha="left", va="center", fontsize=6.6, color="#bac2de", zorder=5)
             ax.text(-5.40, y_mid, f"{t.duration_weeks:.1f}w", ha="center", va="center", fontsize=7.2, fontweight="bold", color="#cdd6f4", zorder=5)
-            ax.text(-3.70, y_mid, f"W{t.start_week + 1:g}–W{t.end_week:g}", ha="center", va="center", fontsize=6.8, color="#a6adc8", zorder=5)
+            ax.text(-3.70, y_mid, f"W{t.start_week + 1:g}-W{t.end_week:g}", ha="center", va="center", fontsize=6.8, color="#a6adc8", zorder=5)
             ax.text(
                 -1.30,
                 y_mid,
@@ -397,7 +397,7 @@ def plot_venue_scaling_gantt_chart(
     ax.text(
         -12.8,
         -0.85,
-        "4-MONTH BUILD (OCT 2027 – JAN 2028): 7,000.0M VND Fit-Out Split Evenly = 1,750.0M VND/Mo  |  "
+        "4-MONTH BUILD (OCT 2027 - JAN 2028): 7,000.0M VND Fit-Out Split Evenly = 1,750.0M VND/Mo  |  "
         "5-YEAR LEASE: 330.0M VND/Mo (from Oct-27)  |  RESERVE: 1,000.0M VND (500M Jan-27 + 500M Oct-27)",
         ha="center",
         va="center",
@@ -413,7 +413,7 @@ def plot_venue_scaling_gantt_chart(
     ax.text(
         16.0,
         -0.85,
-        "JAN 30, 2028 (W16) — VENUE 2 14-COURT FIT-OUT COMPLETE / TOTAL CAPACITY SCALES FROM 6 TO 20 COURTS",
+        "JAN 30, 2028 (W16) - VENUE 2 14-COURT FIT-OUT COMPLETE / TOTAL CAPACITY SCALES FROM 6 TO 20 COURTS",
         ha="center",
         va="center",
         fontsize=8.2,
@@ -429,7 +429,7 @@ def plot_venue_scaling_gantt_chart(
         mpatches.Patch(facecolor="#a6e3a1", edgecolor="#11111b", hatch="///", label="Stage 3: Canopy Roof, 3-Phase MEP, LED, Cafe & Coaching (2,310.0M / 33.0%)"),
         mpatches.Patch(facecolor="#fab387", edgecolor="#11111b", label="Stage 4: Cushioned Acrylic Surfacing & STC-32 Acoustics (1,505.0M / 21.5%)"),
         mpatches.Patch(facecolor="#f38ba8", edgecolor="#11111b", label="Stage 5: PCCC Final Audit, POS Integration & Launch (560.0M / 8.0%)"),
-        mpatches.Patch(facecolor="#94e2d5", edgecolor="#11111b", label="Stage 6: 6-to-9 Month Capacity Fill-Up Ramp (Feb 2028 – Sep 2028)"),
+        mpatches.Patch(facecolor="#94e2d5", edgecolor="#11111b", label="Stage 6: 6-to-9 Month Capacity Fill-Up Ramp (Feb 2028 - Sep 2028)"),
     ]
     ax.legend(
         handles=legend_handles,
@@ -465,7 +465,7 @@ def plot_court_capacity_and_fill_up_ramp(
 ) -> Path:
     """
     Render Chart 2 (02_court_capacity_and_fill_up_ramp.png):
-      - Panel A (Left): Active Court Capacity Step-Up (6 Courts in M1–M10 -> 20 Courts in M11+) &
+      - Panel A (Left): Active Court Capacity Step-Up (6 Courts in M1-M10 -> 20 Courts in M11+) &
         Stochastic 6-to-9 Month Fill-Up Ramp (Effective Full-Equivalent Courts & Utilization Band across 60 Months).
       - Panel B (Right): New 14-Court Club Monthly Revenue Ramp Under OUR Model (AdaptivePricing Court Hire +
         Ancillary Services = 1,553.4M VND/mo at steady state) vs. the Case's Untested 1,500M Static Reference.
@@ -503,7 +503,7 @@ def plot_court_capacity_and_fill_up_ramp(
         color="#cdd6f4",
         linewidth=2.4,
         linestyle="--",
-        label="Total Physical Courts Installed (6 Courts Jan-27–Jan-28; 20 Courts Feb-28+)",
+        label="Total Physical Courts Installed (6 Courts Jan-27-Jan-28; 20 Courts Feb-28+)",
         zorder=4,
     )
     for path in res.sample_fill_paths_60m:
@@ -515,7 +515,7 @@ def plot_court_capacity_and_fill_up_ramp(
         eff_courts_p95,
         color="#89dceb",
         alpha=0.25,
-        label="6-to-9 Month Fill-Up 90% Monte Carlo Band (P05–P95)",
+        label="6-to-9 Month Fill-Up 90% Monte Carlo Band (P05-P95)",
         zorder=3,
     )
     ax_left.plot(
@@ -527,8 +527,8 @@ def plot_court_capacity_and_fill_up_ramp(
         zorder=5,
     )
 
-    ax_left.axvspan(10, 13.95, color="#f9e2af", alpha=0.14, label="Venue 2 Construction & Curing Window (Oct 2027 – Jan 2028)", zorder=1)
-    ax_left.axvspan(14, 21.5, color="#89b4fa", alpha=0.14, label="6-to-9 Month Fill-Up Window (Feb 2028 – Sep 2028)", zorder=1)
+    ax_left.axvspan(10, 13.95, color="#f9e2af", alpha=0.14, label="Venue 2 Construction & Curing Window (Oct 2027 - Jan 2028)", zorder=1)
+    ax_left.axvspan(14, 21.5, color="#89b4fa", alpha=0.14, label="6-to-9 Month Fill-Up Window (Feb 2028 - Sep 2028)", zorder=1)
 
     ax_left.set_xticks([t + 1 for t in tick_idx])
     ax_left.set_xticklabels(tick_lbls, fontsize=7.6, fontweight="bold")
@@ -557,7 +557,7 @@ def plot_court_capacity_and_fill_up_ramp(
         res.venue2_total_rev_p95_60m,
         color="#a6e3a1",
         alpha=0.24,
-        label="Venue 2 Total Revenue 90% Band (6–9 Month Fill-Up Variance)",
+        label="Venue 2 Total Revenue 90% Band (6-9 Month Fill-Up Variance)",
         zorder=3,
     )
     ax_right.plot(
@@ -622,10 +622,10 @@ def plot_capex_allocation_and_unit_economics(
 ) -> Path:
     """
     Render Chart 3 (03_capex_allocation_and_unit_economics.png):
-      - Panel A (Left): Breakdown of the VND 7,000.0M (7.0 Billion VND) Fit-Out & Launch CapEx by Stage (V1–V5)
+      - Panel A (Left): Breakdown of the VND 7,000.0M (7.0 Billion VND) Fit-Out & Launch CapEx by Stage (V1-V5)
         plus the VND 1,000.0M Cash Reserve (= VND 8,000.0M Total Investor Capital).
       - Panel B (Right): Even Monthly Fit-Out CapEx Allocation (7,000.0M / 4 Build Months = 1,750.0M VND/Month
-        across Oct 2027 – Jan 2028) & Ongoing Venue 2 Lease (330.0M VND/mo) + Operating Cost Schedule across Year 1 & Year 2.
+        across Oct 2027 - Jan 2028) & Ongoing Venue 2 Lease (330.0M VND/mo) + Operating Cost Schedule across Year 1 & Year 2.
     """
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(20.4, 7.6), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
@@ -659,7 +659,7 @@ def plot_capex_allocation_and_unit_economics(
         lbl_txt = (
             f"{s_vals[idx]:,.0f}M VND ({pct_7b:.1f}% of 7,000M Fit-Out)"
             if idx < len(build_stages)
-            else f"{s_vals[idx]:,.0f}M VND (Mandatory Cash Reserve — Total = 8,000M)"
+            else f"{s_vals[idx]:,.0f}M VND (Mandatory Cash Reserve - Total = 8,000M)"
         )
         ax_left.text(
             s_vals[idx] + 35.0,
@@ -688,7 +688,7 @@ def plot_capex_allocation_and_unit_economics(
     ax_left.grid(axis="x", linestyle="--", alpha=0.8, color="#313244", zorder=1)
 
     # -------------------------------------------------------------------------
-    # PANEL B: Even Monthly CapEx Split (1,750M/mo in M10–M13) & Venue 2 Lease/OpEx
+    # PANEL B: Even Monthly CapEx Split (1,750M/mo in M10-M13) & Venue 2 Lease/OpEx
     # -------------------------------------------------------------------------
     ax_right.set_facecolor("#181825")
     # Show Months 8..21 (Aug-27 to Sep-28) covering pre-expansion M8-M9, 4-month build M10-M13, and 8-month fill-up M14-M21
@@ -713,7 +713,7 @@ def plot_capex_allocation_and_unit_economics(
         color="#f38ba8",
         edgecolor="#11111b",
         linewidth=1.0,
-        label="Even Monthly Fit-Out CapEx Split (7,000M / 4 Months = 1,750.0M/mo in Oct 2027 – Jan 2028)",
+        label="Even Monthly Fit-Out CapEx Split (7,000M / 4 Months = 1,750.0M/mo in Oct 2027 - Jan 2028)",
         zorder=3,
     )
     ax_right.bar(

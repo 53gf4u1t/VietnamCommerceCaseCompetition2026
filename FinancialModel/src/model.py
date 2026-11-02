@@ -385,8 +385,8 @@ class FinancialModelResults:
     # Structured tables
     line_items: tuple[LineItemRecord, ...]
     line_items_df: pd.DataFrame
-    fs_month_df: pd.DataFrame          # 60 months (Jan-27 to Dec-31) Financial Statements — Monthly
-    fs_annual_df: pd.DataFrame         # 5 years (FY 2027 to FY 2031) Financial Statements — Annual
+    fs_month_df: pd.DataFrame          # 60 months (Jan-27 to Dec-31) Financial Statements - Monthly
+    fs_annual_df: pd.DataFrame         # 5 years (FY 2027 to FY 2031) Financial Statements - Annual
     cash_flow_60m_df: pd.DataFrame     # Dedicated 60-Month Cash Flow & Cash Reserves Table
     tax_estimations_60m_df: pd.DataFrame # Dedicated 60-Month Vietnam CIT & VAT Tax Estimations Table
     month_labels: tuple[str, ...]      # 60 month labels
@@ -467,7 +467,7 @@ def verify_and_load_adaptive_pricing(
 
     regimes = (
         CourtRegimeMetrics(
-            regime_name="Weekday Daytime (06:00–17:00)",
+            regime_name="Weekday Daytime (06:00-17:00)",
             days_per_month=ops.weekdays_per_month,
             hours_per_day=ops.weekday_daytime_hours_per_day,
             available_court_hours=avail_wd_day,
@@ -481,7 +481,7 @@ def verify_and_load_adaptive_pricing(
             ml_revenue_mvnd=wd_day_r,
         ),
         CourtRegimeMetrics(
-            regime_name="Weekday Evening (17:00–22:00)",
+            regime_name="Weekday Evening (17:00-22:00)",
             days_per_month=ops.weekdays_per_month,
             hours_per_day=ops.weekday_evening_hours_per_day,
             available_court_hours=avail_wd_eve,
@@ -495,7 +495,7 @@ def verify_and_load_adaptive_pricing(
             ml_revenue_mvnd=wd_eve_r,
         ),
         CourtRegimeMetrics(
-            regime_name="Weekend All Day (06:00–22:00)",
+            regime_name="Weekend All Day (06:00-22:00)",
             days_per_month=ops.weekend_days_per_month,
             hours_per_day=ops.weekend_hours_per_day,
             available_court_hours=avail_we,
@@ -592,7 +592,7 @@ def verify_and_load_venue_scaling(
 ) -> VenueScalingIntegration:
     """
     Ensure that VenueScalingTimeline/outputs/ contains all required reports and load
-    the 60-month court capacity, even 1,750M/mo CapEx split (Jul–Oct 2027), and lease schedule.
+    the 60-month court capacity, even 1,750M/mo CapEx split (Jul-Oct 2027), and lease schedule.
     """
     vs_dir = (override_dir or cfg.resolved_venue_scaling_output_dir).resolve()
     if not vs_dir.exists():
@@ -724,8 +724,8 @@ def _run_monte_carlo_financial_simulations(
     including:
       - External macro pickleball interest trend multiplier `I_t = I_{t-1} * (1 + g_t)` (`externals.toml`)
       - Legal/ward post-21:00 noise handling cost, U-18 safety compliance, weather, competitor drag, inflation (`externals.toml`)
-      - Path C custom platform build (`M1–M6`) & membership subscriptions (`M5+`)
-      - Path A 14-court second club expansion (`M10–M13` build @ 1,750M/mo CapEx + 330M/mo lease; `M14+` 20 courts live with 6–9 month fill-up distribution using OUR model).
+      - Path C custom platform build (`M1-M6`) & membership subscriptions (`M5+`)
+      - Path A 14-court second club expansion (`M10-M13` build @ 1,750M/mo CapEx + 330M/mo lease; `M14+` 20 courts live with 6-9 month fill-up distribution using OUR model).
     """
     rng = np.random.default_rng(cfg.randomness.random_seed)
     n_sims = cfg.randomness.n_simulations
@@ -881,7 +881,7 @@ def _run_monte_carlo_financial_simulations(
         infl_rate = _sample_month_conditioned(ext_cfg.input_cost_drift_rate_dist, rng, n_sims, shared_weight=0.58)
         curr_cost_inflation_idx = curr_cost_inflation_idx * (1.0 + infl_rate)
 
-        # 2. Venue 2 (14 Courts) Fill-Up Factor f_k (0 in Months 1..13; ramps over 6–9 months from Month 14 / Feb-28)
+        # 2. Venue 2 (14 Courts) Fill-Up Factor f_k (0 in Months 1..13; ramps over 6-9 months from Month 14 / Feb-28)
         if m < v2_open_idx:
             f_v2 = np.zeros(n_sims, dtype=float)
         else:
@@ -1012,7 +1012,7 @@ def _run_monte_carlo_financial_simulations(
             stress_acq = (stress_pool * new_sub_r + tourney_converted_subs * stress_mult) * stress_headroom
             stress_subs_mat[:, m] = np.clip(prev_stress_s - stress_churned + stress_acq, 0.0, stress_ceiling)
 
-        # 5. Sample Monthly Revenue Lines (M VND) — Using OUR Model for 6 -> 20 Courts + External Multipliers
+        # 5. Sample Monthly Revenue Lines (M VND) - Using OUR Model for 6 -> 20 Courts + External Multipliers
         macro_shock = _sample_month_conditioned(rand_cfg.monthly_demand_macro_shock_dist, rng, n_sims, shared_weight=0.68)
         anc_shock = _sample_month_conditioned(rand_cfg.ancillary_revenue_shock_dist, rng, n_sims, shared_weight=0.68)
 
@@ -1526,7 +1526,7 @@ def build_financial_model(
     Build the 5-year (60-month: Jan-27 to Dec-31) 3-Statement financial model integrating:
       1. AdaptivePricing ML court hire revenue (`AdaptivePricing/outputs/`),
       2. PickSocialProjectTimeline 6-month leveled dev cost allocation & recurring platform OpEx (`PickSocialProjectTimeline/outputs/`),
-      3. VenueScalingTimeline Q3 2027 14-court expansion (`6` to `20` courts, even `1,750M/mo` CapEx in `M7–M10`, `330M/mo` lease, `6–9` month fill-up ramp in `M11+`),
+      3. VenueScalingTimeline Q3 2027 14-court expansion (`6` to `20` courts, even `1,750M/mo` CapEx in `M7-M10`, `330M/mo` lease, `6-9` month fill-up ramp in `M11+`),
       4. Marketing 4-Segment ML Budget Predictor, Follower-to-Customer (~8.57%) Funnel & 12-Distribution Ancillary Revenue Engine (`Marketing/outputs/`),
       5. External macro factors (`externals.toml`: monthly pickleball interest trend multiplier `I_t`, legal/ward noise handling, U-18 safety compliance, weather, inflation).
     """
@@ -1692,7 +1692,7 @@ def build_financial_model(
             "REVENUE", "Revenue", "Revenue Line 1B (Venue 2 New)",
             "Court hire: Venue 2 (14 Courts, Opens Feb-28)", "Revenue (Venue 2 Ramp)",
             0.0, m_v2_court,
-            "14 new courts opening Feb-28 after 4-month build (Oct 2027 – Jan 2028), ramping over 6–9 months",
+            "14 new courts opening Feb-28 after 4-month build (Oct 2027 - Jan 2028), ramping over 6-9 months",
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 2 (PICK! Social)",
@@ -1763,13 +1763,13 @@ def build_financial_model(
         ),
 
         _rec(
-            "OPEX", "SG&A / OpEx", "Rent — Venue 1 (6 Courts)",
+            "OPEX", "SG&A / OpEx", "Rent - Venue 1 (6 Courts)",
             "Venue 1 lease (Existing 6-Court Club)", "Fixed (OpEx)",
             case_venue_lease, m_v1_lease,
             "Fixed VND 150.0M/month lease for Venue 1 (Case Baseline)",
         ),
         _rec(
-            "OPEX", "SG&A / OpEx", "Rent — Venue 2 (14 Courts New)",
+            "OPEX", "SG&A / OpEx", "Rent - Venue 2 (14 Courts New)",
             "Venue 2 lease (New 14-Court Club, Starts Oct-27)", "Fixed (OpEx, Oct-27+)",
             0.0, m_v2_lease,
             "Fixed VND 330.0M/month 5-year lease starting Oct 2027",
@@ -1790,7 +1790,7 @@ def build_financial_model(
             "SUMMARY", "SG&A / OpEx", "SUBTOTAL OpEx",
             "Subtotal Facility Operating Expenses (OpEx)", "Subtotal",
             case_total_opex, m_tot_opex,
-            "210M/mo (Jan–Sep 27) -> 540M/mo (Oct 27–Jan 28 Fit-Out) -> ~665M/mo (Feb 28+ 20-Court Operations)",
+            "210M/mo (Jan-Sep 27) -> 540M/mo (Oct 27-Jan 28 Fit-Out) -> ~665M/mo (Feb 28+ 20-Court Operations)",
         ),
 
         _rec(
@@ -1813,7 +1813,7 @@ def build_financial_model(
         ),
         _rec(
             "SGA", "SG&A", "PICK! Social Dev (New)",
-            "PICK! Social development & migration (Jan–Jun 2027)", "PICK! Social Dev (Jan–Jun 27)",
+            "PICK! Social development & migration (Jan-Jun 2027)", "PICK! Social Dev (Jan-Jun 27)",
             0.0, m_plat_dev,
             "Pay-as-needed 6-month sprint drawdown + milestone holdback + expected contingency",
         ),
@@ -1821,13 +1821,13 @@ def build_financial_model(
             "SGA", "SG&A", "PICK! Social OpEx (New)",
             "PICK! Social cloud, OTP, maintenance & uni ops (May-27+)", "PICK! Social OpEx (May-27+)",
             0.0, m_plat_rec,
-            "16.5M/mo in May–Jun 27 -> 26.5M/mo Jul 27+ (Cloud, OTP, SaaS, Uni Ops & Maintenance Retainer)",
+            "16.5M/mo in May-Jun 27 -> 26.5M/mo Jul 27+ (Cloud, OTP, SaaS, Uni Ops & Maintenance Retainer)",
         ),
         _rec(
             "SGA", "SG&A", "Legal & Safety Compliance (New)",
             "Ward noise-complaint legal handling & U-18 safety", "External Risk (SG&A)",
             0.0, m_ext_leg_saf,
-            "Post-21:00 ward noise mediation/acoustic upkeep (~6.5M–9.4M/mo) + U-18 safety compliance (~3.2M–4.3M/mo)",
+            "Post-21:00 ward noise mediation/acoustic upkeep (~6.5M-9.4M/mo) + U-18 safety compliance (~3.2M-4.3M/mo)",
         ),
         _rec(
             "SUMMARY", "SG&A", "SUBTOTAL SG&A",
@@ -1856,7 +1856,7 @@ def build_financial_model(
         ),
         _rec(
             "SUMMARY", "FS-Month", "D&A EXPENSE",
-            "Depreciation & Amortization (D&A — Circular 45/2013/TT-BTC)", "Non-Cash Expense",
+            "Depreciation & Amortization (D&A - Circular 45/2013/TT-BTC)", "Non-Cash Expense",
             da, m_da,
             "5.33M/mo Venue 1 equipment + 116.67M/mo Venue 2 7,000M fit-out over 60-month lease (from Feb-28)",
         ),
@@ -1932,12 +1932,12 @@ def build_financial_model(
 
     # 2. 60-MONTH (5-YEAR) FINANCIAL STATEMENTS & VIETNAM TAX SCHEDULE RECONCILIATION
     #    Incorporates:
-    #      - Months 10–13 (Oct-27 to Jan-28): Evenly split Fit-Out CapEx = -1,750.0M VND/month (-7,000.0M total)
+    #      - Months 10-13 (Oct-27 to Jan-28): Evenly split Fit-Out CapEx = -1,750.0M VND/month (-7,000.0M total)
     #      - Month 1 (Jan-27): Investor Minh Tran Signing Tranche = +500.0M VND
     #      - Month 10 (Oct-27, Q4 2027 Expansion Kickoff): Investor Minh Tran Expansion Tranche = +7,500.0M VND
     #        (7,000.0M for Venue 2 fit-out + 1,000.0M total added to PICK! Cash Reserves)
     #      - Vietnam Corporate Income Tax (CIT @ 20.0%, Law 67/2025/QH15): accrues into `Income Taxes Payable - Current FY`
-    #        during Months 1–11, consolidates into `Income Taxes Payable - Past FY` in Month 12 (Dec), and is settled in cash
+    #        during Months 1-11, consolidates into `Income Taxes Payable - Past FY` in Month 12 (Dec), and is settled in cash
     #        in Month 4 (April) of the following fiscal year (`tax_consolidation_month = 4`).
     #      - Vietnam Value-Added Tax (VAT, Law 48/2024/QH15): tracks 8.0% Output VAT collected vs. 10.0% Input VAT paid.
     bs = cfg.balance_sheet
@@ -1961,7 +1961,7 @@ def build_financial_model(
     # Dynamic 1-Month Working Capital Accounts Scaling from 6 Courts -> 20 Courts:
     #   - Inventory: 1 month of F&B supplies & court inventory (`m_fnb_cogs`, 30.0M at t=0 -> ~88.7M at 20 courts)
     #   - Prepaid Expenses & Lease Security Deposit: 1 month of active venue lease security deposit
-    #     (`m_lease`, 150.0M for Venue 1 in Jan–Sep 2027 -> 480.0M from Oct-27 onward with Venue 2's 330.0M lease)
+    #     (`m_lease`, 150.0M for Venue 1 in Jan-Sep 2027 -> 480.0M from Oct-27 onward with Venue 2's 330.0M lease)
     #   - Accounts Payable: 1 month of F&B supplies & payment/consumables (`m_fnb_cogs + m_pay_cons`, 45.0M at t=0 -> ~150.5M)
     #   - Accrued Coaching & Staff Payables: 1 month of accrued coach fees (`m_coach_cogs`, 60.0M at t=0 -> ~172.3M)
     inv_arr = m_fnb_cogs.copy()
@@ -2188,7 +2188,7 @@ def build_financial_model(
     cash_flow_60m_df = pd.DataFrame(cash_table_rows)
     tax_estimations_60m_df = pd.DataFrame(tax_table_rows)
 
-    # Row specifications for Financial Statements — Monthly (FS-Month) & Annual (FS-Annual):
+    # Row specifications for Financial Statements - Monthly (FS-Month) & Annual (FS-Annual):
     three_stmt_rows: list[tuple[str, str, str, str, str, float | None, np.ndarray | None]] = [
         # ==================== KEY INDICATORS ====================
         ("KI_HDR", "KEY INDICATORS", "KEY INDICATORS & MILESTONES", "header", "none", None, None),
@@ -2198,9 +2198,9 @@ def build_financial_model(
         ("KI_CASH", "KEY INDICATORS", "  Cash Reserves at End of Period (Cash in Hand)", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
 
         # ==================== INCOME STATEMENT ====================
-        ("IS_HDR", "INCOME STATEMENT", "STATEMENT 1 — INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
-        ("REV_1A", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 1 (6 Courts, Adaptive Pricing)", "input_linked", "flow", case_court_hire, m_v1_court),
-        ("REV_1B", "INCOME STATEMENT", "  Revenue: Court Hire — Venue 2 (14 Courts, Opens Feb-28)", "input_linked", "flow", 0.0, m_v2_court),
+        ("IS_HDR", "INCOME STATEMENT", "STATEMENT 1 - INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
+        ("REV_1A", "INCOME STATEMENT", "  Revenue: Court Hire - Venue 1 (6 Courts, Adaptive Pricing)", "input_linked", "flow", case_court_hire, m_v1_court),
+        ("REV_1B", "INCOME STATEMENT", "  Revenue: Court Hire - Venue 2 (14 Courts, Opens Feb-28)", "input_linked", "flow", 0.0, m_v2_court),
         ("REV_2", "INCOME STATEMENT", "  Revenue: PICK! Social Subscriptions & Seasonal Tournaments (May-27+)", "input_linked", "flow", 0.0, m_mem_rev),
         ("REV_3", "INCOME STATEMENT", "  Revenue: Paddle Rental and Balls (Scales to 20 Courts)", "input", "flow", paddle_balls, m_paddle),
         ("REV_4", "INCOME STATEMENT", "  Revenue: Coaching Services (Scales to 20 Courts + Studio)", "input", "flow", coaching, m_coach_rev),
@@ -2216,16 +2216,16 @@ def build_financial_model(
         ("GP_TOT", "INCOME STATEMENT", "Gross Profit", "total", "flow", case_gross_profit, m_gp),
         ("GP_PCT", "INCOME STATEMENT", "  Gross Margin (%)", "pct", "pct", (case_gross_profit / case_total_rev) * 100.0, m_gp_pct),
 
-        ("OPEX_1A", "INCOME STATEMENT", "  Facility OpEx: Rent — Venue 1 Lease (6 Courts, 150M/mo)", "input", "flow", case_venue_lease, m_v1_lease),
-        ("OPEX_1B", "INCOME STATEMENT", "  Facility OpEx: Rent — Venue 2 Lease (14 Courts, 330M/mo Oct-27+)", "input_linked", "flow", 0.0, m_v2_lease),
-        ("OPEX_2", "INCOME STATEMENT", "  Facility OpEx: Utilities — Electricity, Lighting & Water", "input", "flow", case_utilities, m_util),
+        ("OPEX_1A", "INCOME STATEMENT", "  Facility OpEx: Rent - Venue 1 Lease (6 Courts, 150M/mo)", "input", "flow", case_venue_lease, m_v1_lease),
+        ("OPEX_1B", "INCOME STATEMENT", "  Facility OpEx: Rent - Venue 2 Lease (14 Courts, 330M/mo Oct-27+)", "input_linked", "flow", 0.0, m_v2_lease),
+        ("OPEX_2", "INCOME STATEMENT", "  Facility OpEx: Utilities - Electricity, Lighting & Water", "input", "flow", case_utilities, m_util),
         ("OPEX_3", "INCOME STATEMENT", "  Facility OpEx: Insurance & Facility Maintenance", "input", "flow", case_maint_ins, m_maint),
         ("OPEX_TOT", "INCOME STATEMENT", "Subtotal Facility Operating Expenses (OpEx)", "subtotal", "flow", case_total_opex, m_tot_opex),
 
         ("SGA_1", "INCOME STATEMENT", "  Expenses (SG&A): Staff & Payroll (Venue 1 + Venue 2 Feb-28+)", "input", "flow", case_staff_wages, m_staff),
         ("SGA_2", "INCOME STATEMENT", "  Expenses (SG&A): Tech Support & Administration (Base)", "input", "flow", case_booking_admin, m_admin),
         ("SGA_3", "INCOME STATEMENT", "  Expenses (SG&A): Marketing & Growth (Social & Segments)", "input", "flow", case_marketing, m_mkt),
-        ("SGA_4", "INCOME STATEMENT", "  Expenses (SG&A): PICK! Social Dev & Migration (Jan–Jun 2027)", "input_linked", "flow", 0.0, m_plat_dev),
+        ("SGA_4", "INCOME STATEMENT", "  Expenses (SG&A): PICK! Social Dev & Migration (Jan-Jun 2027)", "input_linked", "flow", 0.0, m_plat_dev),
         ("SGA_5", "INCOME STATEMENT", "  Expenses (SG&A): PICK! Social Cloud, OTP & Community Ops (May-27+)", "input_linked", "flow", 0.0, m_plat_rec),
         ("SGA_6", "INCOME STATEMENT", "  Expenses (SG&A): Legal / Ward Noise & U-18 Safety Compliance", "input_linked", "flow", 0.0, m_ext_leg_saf),
         ("SGA_TOT", "INCOME STATEMENT", "Subtotal Expenses (SG&A)", "subtotal", "flow", case_total_sga, m_tot_sga),
@@ -2242,20 +2242,20 @@ def build_financial_model(
         ("NET_PCT", "INCOME STATEMENT", "  Net Margin (%)", "pct", "pct", (case_net_income / case_total_rev) * 100.0, m_net_margin_pct),
 
         # ==================== BALANCE SHEET ====================
-        ("BS_HDR", "BALANCE SHEET", "STATEMENT 2 — BALANCE SHEET (END OF PERIOD, M VND)", "header", "none", None, None),
+        ("BS_HDR", "BALANCE SHEET", "STATEMENT 2 - BALANCE SHEET (END OF PERIOD, M VND)", "header", "none", None, None),
         ("BS_CASH", "BALANCE SHEET", "  Cash and Cash Equivalents (Cash Reserves)", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
         ("BS_INV", "BALANCE SHEET", "  Inventory (1-Mo F&B Supplies & Court Equipment)", "input", "end_stock", bs.inventory_mvnd, inv_arr),
         ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Security Deposit (150M -> 480M Oct-27+)", "input_linked", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
         ("BS_CA_TOT", "BALANCE SHEET", "Total Current Assets", "subtotal", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd, tot_curr_assets_arr),
-        ("BS_PPE", "BALANCE SHEET", "  Equipment / PP&E (+7,000M Fit-Out Oct-27–Jan-28, Net of D&A)", "input_linked", "end_stock", bs.equipment_ppe_gross_mvnd - da, ppe_net_arr),
+        ("BS_PPE", "BALANCE SHEET", "  Equipment / PP&E (+7,000M Fit-Out Oct-27-Jan-28, Net of D&A)", "input_linked", "end_stock", bs.equipment_ppe_gross_mvnd - da, ppe_net_arr),
         ("BS_INTANG", "BALANCE SHEET", "  Intangible Assets", "input", "end_stock", bs.intangible_assets_mvnd, intang_arr),
         ("BS_LTA_TOT", "BALANCE SHEET", "Total Long-Term (Fixed) Assets", "subtotal", "end_stock", bs.equipment_ppe_gross_mvnd - da + bs.intangible_assets_mvnd, tot_lt_assets_arr),
         ("BS_ASSETS_TOT", "BALANCE SHEET", "TOTAL ASSETS", "total", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd + bs.equipment_ppe_gross_mvnd - da, tot_assets_arr),
 
         ("BS_AP", "BALANCE SHEET", "  Accounts Payable (1-Mo Supplies & Payment Gateway)", "input", "end_stock", bs.accounts_payable_mvnd, ap_arr),
         ("BS_ACC", "BALANCE SHEET", "  Accrued Coaching & Staff Payables (1-Mo Coach Fees)", "input", "end_stock", bs.accrued_expenses_payable_mvnd, accrued_arr),
-        ("BS_TAX_PAST", "BALANCE SHEET", "  Income Taxes Payable — Past FY (Settled in April)", "formula", "end_stock", 0.0, tax_past_fy_arr),
-        ("BS_TAX_CURR", "BALANCE SHEET", "  Income Taxes Payable — Current FY (Accrued 20% CIT)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
+        ("BS_TAX_PAST", "BALANCE SHEET", "  Income Taxes Payable - Past FY (Settled in April)", "formula", "end_stock", 0.0, tax_past_fy_arr),
+        ("BS_TAX_CURR", "BALANCE SHEET", "  Income Taxes Payable - Current FY (Accrued 20% CIT)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
         ("BS_LIAB_TOT", "BALANCE SHEET", "TOTAL LIABILITIES", "subtotal", "end_stock", bs.accounts_payable_mvnd + bs.accrued_expenses_payable_mvnd + case_taxes, tot_liab_arr),
 
         ("BS_CAP", "BALANCE SHEET", "  Contributed Capital (Equity Rounds: +500M Jan-27 & +7,500M Oct-27)", "input_linked", "end_stock", bs.contributed_capital_mvnd, contrib_cap_arr),
@@ -2265,13 +2265,13 @@ def build_financial_model(
         ("BS_CHK", "BALANCE SHEET", "  Check (Total Assets - Total L&E)", "formula", "end_stock", 0.0, bs_check_arr),
 
         # ==================== CASH FLOW STATEMENT ====================
-        ("CF_HDR", "CASH FLOW", "STATEMENT 3 — CASH FLOW STATEMENT (M VND)", "header", "none", None, None),
+        ("CF_HDR", "CASH FLOW", "STATEMENT 3 - CASH FLOW STATEMENT (M VND)", "header", "none", None, None),
         ("CF_START", "CASH FLOW", "Starting Cash Balance", "formula", "start_stock", bs.starting_cash_mvnd, start_cash_arr),
         ("CF_NI", "CASH FLOW", "  (+) Net Income", "formula", "flow", case_net_income, m_net_inc),
         ("CF_DA", "CASH FLOW", "  (+) D&A (Non-Cash Expense)", "formula", "flow", da, m_da),
         ("CF_NWC", "CASH FLOW", "  (-) Change in Working Capital (Lease Deposit, Inventory, Payables & CIT)", "formula", "flow", -case_taxes, nwc_change_arr),
         ("CF_OCF", "CASH FLOW", "Total Operating Cash Flow", "subtotal", "flow", case_ebitda, ocf_arr),
-        ("CF_CAPEX", "CASH FLOW", "  (-) CAPEX > PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27–Jan-28)", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
+        ("CF_CAPEX", "CASH FLOW", "  (-) CAPEX > PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27-Jan-28)", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
         ("CF_ICF", "CASH FLOW", "Total Investing Cash Flow", "subtotal", "flow", -bs.monthly_capex_mvnd, icf_arr),
         ("CF_EQ", "CASH FLOW", "  (+) Equity Funding (Investor Minh Tran: +500M Jan-27 & +7,500M Oct-27)", "input_linked", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
         ("CF_FCF", "CASH FLOW", "Total Financing Cash Flow", "subtotal", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
@@ -2280,7 +2280,7 @@ def build_financial_model(
         ("CF_END_CASE", "CASH FLOW", "  Memo: Case Baseline Cash Reserves", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_case_arr),
 
         # ==================== TAX ESTIMATIONS (VIETNAM CIT & VAT) ====================
-        ("TX_HDR", "TAX ESTIMATIONS", "SUPPLEMENTARY — VIETNAM CIT (20%) & VAT TAX SCHEDULE (M VND)", "header", "none", None, None),
+        ("TX_HDR", "TAX ESTIMATIONS", "SUPPLEMENTARY - VIETNAM CIT (20%) & VAT TAX SCHEDULE (M VND)", "header", "none", None, None),
         ("TX_EBT", "TAX ESTIMATIONS", "  Taxable Income (EBT = EBITDA - D&A)", "formula", "flow", case_ebt, m_ebt),
         ("TX_CIT_EXP", "TAX ESTIMATIONS", "  Effective Monthly CIT Expense (20.0% Statutory Rate)", "formula", "flow", case_taxes, m_taxes),
         ("TX_CIT_CURR", "TAX ESTIMATIONS", "  Preliminary Income Tax Due (Current FY Accrued)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),

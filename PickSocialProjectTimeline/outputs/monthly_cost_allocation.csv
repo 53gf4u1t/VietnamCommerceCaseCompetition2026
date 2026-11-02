@@ -1,7 +1,7 @@
 month_code,month_label,month_title,weeks_window,leveled_sprint_active_base_mvnd,leveled_milestone_holdback_release_mvnd,leveled_committed_base_mvnd,leveled_contingency_reserve_mvnd,leveled_max_buffered_total_mvnd,recurring_platform_opex_mvnd,total_platform_cost_with_opex_base_mvnd,total_platform_cost_with_opex_buffered_mvnd,cumulative_committed_base_mvnd,cumulative_max_buffered_mvnd,disbursement_mechanism
-M1,Jan-27,Month 1: Jan 2027 (Planning & Infra),W1–W4,139.93,0.0,139.93,29.56,169.49,0.0,139.93,169.49,139.93,169.49,Bi-weekly Sprint 1-2 actuals (S1/S2); 0% upfront lump-sum
-M2,Feb-27,Month 2: Feb 2027 (Booking & ML Core),W5–W8,165.97,0.0,165.97,29.56,195.53,0.0,165.97,195.53,305.9,365.02,78% Stage 3 bi-weekly sprint drawdowns; 22% held back for M4/M5/M6 gates
-M3,Mar-27,Month 3: Mar 2027 (Payments & Social),W9–W12,152.12,0.0,152.12,29.56,181.68,0.0,152.12,181.68,458.02,546.7,78% Stage 3 bi-weekly sprint drawdowns; 22% held back for M4/M5/M6 gates
-M4,Apr-27,Month 4: Apr 2027 (Integration & UAT),W13–W16,138.33,11.98,150.31,29.56,179.87,0.0,150.31,179.87,608.33,726.57,Stage 4 integration/UAT actuals + 15% Stage 3 holdback released at M4 UAT sign-off
-M5,May-27,Month 5: May 2027 (Legacy Migration),W17–W20,109.5,35.92,145.42,29.56,174.98,16.48,161.9,191.46,753.75,901.55,Stage 5 migration/cutover + 45% holdback at M5 + live Platform OpEx (16.5M/mo)
-M6,Jun-27,Month 6: Jun 2027 (Hypercare & Continuous Ops),W21–W24,125.51,31.92,157.43,29.56,186.99,16.48,173.91,203.47,911.18,1088.54,Stage 6 hypercare/ML calibration + 40% holdback at M6 + live Platform OpEx (16.5M/mo)
+M1,Jan-27,Month 1: Jan 2027 (Planning & Infra),W1-W4,139.93,0.0,139.93,29.56,169.49,0.0,139.93,169.49,139.93,169.49,Bi-weekly Sprint 1-2 actuals (S1/S2); 0% upfront lump-sum
+M2,Feb-27,Month 2: Feb 2027 (Booking & ML Core),W5-W8,165.97,0.0,165.97,29.56,195.53,0.0,165.97,195.53,305.9,365.02,78% Stage 3 bi-weekly sprint drawdowns; 22% held back for M4/M5/M6 gates
+M3,Mar-27,Month 3: Mar 2027 (Payments & Social),W9-W12,152.12,0.0,152.12,29.56,181.68,0.0,152.12,181.68,458.02,546.7,78% Stage 3 bi-weekly sprint drawdowns; 22% held back for M4/M5/M6 gates
+M4,Apr-27,Month 4: Apr 2027 (Integration & UAT),W13-W16,138.33,11.98,150.31,29.56,179.87,0.0,150.31,179.87,608.33,726.57,Stage 4 integration/UAT actuals + 15% Stage 3 holdback released at M4 UAT sign-off
+M5,May-27,Month 5: May 2027 (Legacy Migration),W17-W20,109.5,35.92,145.42,29.56,174.98,16.48,161.9,191.46,753.75,901.55,Stage 5 migration/cutover + 45% holdback at M5 + live Platform OpEx (16.5M/mo)
+M6,Jun-27,Month 6: Jun 2027 (Hypercare & Continuous Ops),W21-W24,125.51,31.92,157.43,29.56,186.99,16.48,173.91,203.47,911.18,1088.54,Stage 6 hypercare/ML calibration + 40% holdback at M6 + live Platform OpEx (16.5M/mo)

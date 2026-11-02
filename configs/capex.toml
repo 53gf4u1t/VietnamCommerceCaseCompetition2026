@@ -5,8 +5,8 @@
 # Philosophy: Configures the 14-court venue expansion (expanding PICK! from 6 courts to
 #             20 courts total by opening a second 14-court club in Ho Chi Minh
 #             City starting Q4 2027 / Month 10: Oct 2027, after 4 months of
-#             platform development [M1–M4] and 5 months of live platform
-#             operation [M5–M9]).
+#             platform development [M1-M4] and 5 months of live platform
+#             operation [M5-M9]).
 #             - Total fit-out & launch CapEx = VND 7,000.0M (7.0 billion VND,
 #               preset by Case Page 3), split EVENLY across the 4 researched
 #               construction months (Oct-27 to Jan-28): 7,000.0M / 4 = 1,750.0M/mo.
@@ -33,31 +33,31 @@
 #     * "Do not use our VND 1.5B revenue est, use OUR model to estimate (earlier
 #        it was 6, WHEN IT IS DONE, it's 20 courts)."
 #   - Strategic Sequencing:
-#     * Months 1–4 (Jan–Apr 2027): Build custom PICK! Social & AdaptivePricing
+#     * Months 1-4 (Jan-Apr 2027): Build custom PICK! Social & AdaptivePricing
 #       platform.
-#     * Months 5–9 (May–Sep 2027): Launch platform & operate for 5 months,
+#     * Months 5-9 (May-Sep 2027): Launch platform & operate for 5 months,
 #       proving out higher court utilization, membership cash flow, and
 #       waitlist demand to justify physical expansion.
-#     * Months 10–13 (Oct 2027 – Jan 2028, Start of Q4 2027 = 4.0 Months / 16.0 Weeks):
+#     * Months 10-13 (Oct 2027 - Jan 2028, Start of Q4 2027 = 4.0 Months / 16.0 Weeks):
 #       Execute the 14-court commercial fit-out & construction in HCMC. Why
 #       4.0 months (16.0 weeks)? Commercial pickleball slab engineering
-#       (ASBA / PickleTile / Endurance Courts) requires 2–3 weeks of sub-base
+#       (ASBA / PickleTile / Endurance Courts) requires 2-3 weeks of sub-base
 #       laser grading & post-tensioned concrete pouring, followed by a MANDATORY
-#       28-to-35 day (4.0–5.0 week) concrete moisture curing & vapor-emission
+#       28-to-35 day (4.0-5.0 week) concrete moisture curing & vapor-emission
 #       window before 100% acrylic silica-sand surfacing can be applied (Weeks
-#       9–14), while MEP rough-in, café/coaching studio carpentry, acoustic
+#       9-14), while MEP rough-in, cafe/coaching studio carpentry, acoustic
 #       baffles, and Vietnam PCCC fire safety inspection run in parallel,
 #       concluding in Week 16 (end of Jan 2028 / Month 13).
 #     * Month 14+ (Feb 2028 onward): Venue 2 opens! Total network capacity jumps
 #       from 6 courts to 20 courts (6 + 14 = 20 courts, +233.33% capacity).
 #       Utilization of the 14 new courts ramps smoothly over a sampled 6-to-9
-#       month fill-up window (Feb 2028 – Aug/Oct 2028), reaching 100% steady-state
+#       month fill-up window (Feb 2028 - Aug/Oct 2028), reaching 100% steady-state
 #       well ahead of Investor Minh Tran's Year 3 (FY 2029) deadline.
 # ------------------------------------------------------------------------------
 
 [venue_scaling]
 enabled = true
-project_name = "PICK! Club #2 — 14-Court HCMC Flagship Venue Expansion (Path A)"
+project_name = "PICK! Club #2 - 14-Court HCMC Flagship Venue Expansion (Path A)"
 company = "PICK! Pickleball Club (Ho Chi Minh City)"
 existing_courts = 6
 new_venue_courts = 14
@@ -70,12 +70,12 @@ build_start_date = "2027-10-04"          # First Monday of Q4 2027 (Oct 2027)
 build_start_month_index = 10             # Month 10 = Oct-27 (Start of Q4 2027, after 4M build + 5M live ops)
 build_start_month_label = "Oct-27"
 build_duration_months = 4                # 4.0 months (16.0 weeks): Oct-27, Nov-27, Dec-27, Jan-28 (Months 10..13)
-build_duration_weeks = 16.0              # Weeks 1..16 of Q4 2027 – Jan 2028
+build_duration_weeks = 16.0              # Weeks 1..16 of Q4 2027 - Jan 2028
 build_end_month_index = 13               # Month 13 = Jan-28
 build_end_month_label = "Jan-28"
 open_month_index = 14                    # Month 14 = Feb-28 (20 courts active from Feb-28 onward!)
 open_month_label = "Feb-28"
-total_timeline_horizon_weeks = 48.0      # 16 weeks build (Oct 2027 – Jan 2028) + 32 weeks (~7.5–8 mo) fill-up window (Feb–Sep 2028)
+total_timeline_horizon_weeks = 48.0      # 16 weeks build (Oct 2027 - Jan 2028) + 32 weeks (~7.5-8 mo) fill-up window (Feb-Sep 2028)
 
 # Preset Case Page 3 Investment & Lease Parameters (Staged 2-Tranche Drawdown of 8,000.0M VND)
 total_fitout_capex_mvnd = 7000.00        # VND 7.0 billion preset by Case Page 3 for fit-out and launch
@@ -124,9 +124,9 @@ unit = "multiplier on total 2-club unique customer catchment & membership ceilin
 source = "Derived from scaling 6 courts to 20 courts (3.33x capacity) across 2 HCMC districts with cross-club overlap"
 
 # ------------------------------------------------------------------------------
-# 2. VENUE SCALING STAGES (V1–V6) FOR GANTT CHART & CAPEX BREAKDOWN
-#    Total Fit-Out CapEx across Stages V1–V5 = exactly 7,000.00 M VND (7.0B VND),
-#    paid in 4 equal monthly installments of 1,750.00 M VND/month (Jul–Oct 2027).
+# 2. VENUE SCALING STAGES (V1-V6) FOR GANTT CHART & CAPEX BREAKDOWN
+#    Total Fit-Out CapEx across Stages V1-V5 = exactly 7,000.00 M VND (7.0B VND),
+#    paid in 4 equal monthly installments of 1,750.00 M VND/month (Jul-Oct 2027).
 # ------------------------------------------------------------------------------
 
 [venue_stages.V1]
@@ -149,7 +149,7 @@ light_color = "#292338"
 target_weeks = 6.0
 budget_share_pct = 31.0
 stage_capex_mvnd = 2170.00
-summary = "Demolition, compacted aggregate base, 0.83%–1.0% laser slope, 14-court post-tensioned concrete slab pour & mandatory 28–35 day moisture cure"
+summary = "Demolition, compacted aggregate base, 0.83%-1.0% laser slope, 14-court post-tensioned concrete slab pour & mandatory 28-35 day moisture cure"
 
 [venue_stages.V3]
 id = "V3"
@@ -187,19 +187,19 @@ summary = "HCMC PCCC fire safety acceptance, QR turnstile & AdaptivePricing POS 
 [venue_stages.V6]
 id = "V6"
 name = "Stage 6: 6-to-9 Month Venue Fill-Up, League Expansion & Utilization Ramp"
-short_name = "6. 6–9 Month Fill-Up Ramp (20 Courts)"
+short_name = "6. 6-9 Month Fill-Up Ramp (20 Courts)"
 color = "#94e2d5"
 light_color = "#1f2e30"
 target_weeks = 32.0
 budget_share_pct = 0.0
 stage_capex_mvnd = 0.00
-summary = "Smooth 6-to-9 month capacity ramp (Feb 2028 – Sep 2028) driven by AdaptivePricing off-peak discounts, PICK! Social leagues & school/uni partnerships"
+summary = "Smooth 6-to-9 month capacity ramp (Feb 2028 - Sep 2028) driven by AdaptivePricing off-peak discounts, PICK! Social leagues & school/uni partnerships"
 
 # ------------------------------------------------------------------------------
-# 3. VENUE SCALING WORK BREAKDOWN STRUCTURE (16 TASKS: V1.1–V6.2)
-#    Stages V1–V5 span Weeks 1–16 (Months 7–10: Jul 2027 – Oct 2027) and sum to
-#    exactly VND 7,000.00M in fit-out CapEx. Stage V6 spans Weeks 17–48 (Months
-#    11–18: Nov 2027 – Jun 2028), representing the 6-to-9 month fill-up period.
+# 3. VENUE SCALING WORK BREAKDOWN STRUCTURE (16 TASKS: V1.1-V6.2)
+#    Stages V1-V5 span Weeks 1-16 (Months 7-10: Jul 2027 - Oct 2027) and sum to
+#    exactly VND 7,000.00M in fit-out CapEx. Stage V6 spans Weeks 17-48 (Months
+#    11-18: Nov 2027 - Jun 2028), representing the 6-to-9 month fill-up period.
 # ------------------------------------------------------------------------------
 
 [[venue_tasks]]
@@ -248,7 +248,7 @@ is_parallel_track = false
 owner = "Project Director + Legal"
 capex_mvnd = 130.00
 citation_keys = ["VietnamPCCC2024", "HCMCFitOut2025"]
-estimation_rationale = "In Ho Chi Minh City, interior/canopy fit-out notifications and Police Fire Prevention (PCCC Decree 50/2024/ND-CP) design thẩm duyệt for commercial sports venues require 2.0 weeks."
+estimation_rationale = "In Ho Chi Minh City, interior/canopy fit-out notifications and Police Fire Prevention (PCCC Decree 50/2024/ND-CP) design tham duyet for commercial sports venues require 2.0 weeks."
 
 [[venue_tasks]]
 id = "V2.1"
@@ -312,7 +312,7 @@ is_parallel_track = true
 owner = "Steel Canopy Contractor"
 capex_mvnd = 980.00
 citation_keys = ["HCMCFitOut2025", "EnduranceCourts2025"]
-estimation_rationale = "Erecting perimeter steel trusses, PU-insulated roofing (reducing HCMC afternoon court heat by 6–8 C), and monsoon rain louvers runs in parallel with slab pouring/curing across 4.5 weeks."
+estimation_rationale = "Erecting perimeter steel trusses, PU-insulated roofing (reducing HCMC afternoon court heat by 6-8 C), and monsoon rain louvers runs in parallel with slab pouring/curing across 4.5 weeks."
 
 [[venue_tasks]]
 id = "V3.2"
@@ -424,7 +424,7 @@ is_parallel_track = true
 owner = "Tech Lead + Ops Manager"
 capex_mvnd = 215.00
 citation_keys = ["InternalPickSocial", "NextLevelSports2025"]
-estimation_rationale = "Because the PICK! Social & AdaptivePricing platform is already live since May 2027, onboarding Courts 7–20 into the Redis/Postgres grid and wiring QR check-in scanners + café POS takes 1.5 weeks."
+estimation_rationale = "Because the PICK! Social & AdaptivePricing platform is already live since May 2027, onboarding Courts 7-20 into the Redis/Postgres grid and wiring QR check-in scanners + cafe POS takes 1.5 weeks."
 
 [[venue_tasks]]
 id = "V5.3"
@@ -440,12 +440,12 @@ is_parallel_track = false
 owner = "Club Manager + Head Coach"
 capex_mvnd = 200.00
 citation_keys = ["HCMCFitOut2025", "CasePage3PathA"]
-estimation_rationale = "Training front-desk, cleaning, café baristas, and certified coaches (including U-18 safeguarding) plus hosting a 300-player HCMC inter-university launch tournament completes Week 16 (end of Jan 2028)."
+estimation_rationale = "Training front-desk, cleaning, cafe baristas, and certified coaches (including U-18 safeguarding) plus hosting a 300-player HCMC inter-university launch tournament completes Week 16 (end of Jan 2028)."
 
 [[venue_tasks]]
 id = "V6.1"
 stage_id = "V6"
-name = "Phase 1 Fill-Up (Months 14–16: Feb 2028 – Apr 2028): Member Migration & Off-Peak Ramp"
+name = "Phase 1 Fill-Up (Months 14-16: Feb 2028 - Apr 2028): Member Migration & Off-Peak Ramp"
 core_deliverable = "Ramp 14 New Courts from ~28% to ~60% of Steady-State"
 track = "Fill-Up & Growth"
 start_week = 16.0
@@ -461,8 +461,8 @@ estimation_rationale = "During the first 3 months post-opening (Feb-28 to Apr-28
 [[venue_tasks]]
 id = "V6.2"
 stage_id = "V6"
-name = "Phase 2 Fill-Up (Months 17–21: May 2028 – Sep 2028): Full 20-Court Steady-State Maturity"
-core_deliverable = "Reach 100% Steady-State 20-Court Capacity (6–9 Mo Target)"
+name = "Phase 2 Fill-Up (Months 17-21: May 2028 - Sep 2028): Full 20-Court Steady-State Maturity"
+core_deliverable = "Reach 100% Steady-State 20-Court Capacity (6-9 Mo Target)"
 track = "Fill-Up & Maturity"
 start_week = 28.0
 duration_weeks = 20.0
@@ -472,10 +472,10 @@ is_parallel_track = false
 owner = "Club Ops + League Directors"
 capex_mvnd = 0.00
 citation_keys = ["CasePage3PathA"]
-estimation_rationale = "Per Case Page 3 ('New clubs usually take six to nine months to fill up'), Months 4–8 of operation (May–Sep 2028) complete the smooth S-curve ramp to 100% steady-state 20-court utilization."
+estimation_rationale = "Per Case Page 3 ('New clubs usually take six to nine months to fill up'), Months 4-8 of operation (May-Sep 2028) complete the smooth S-curve ramp to 100% steady-state 20-court utilization."
 
 # ------------------------------------------------------------------------------
-# 4. VENUE SCALING MILESTONES (MV1–MV5)
+# 4. VENUE SCALING MILESTONES (MV1-MV5)
 # ------------------------------------------------------------------------------
 
 [[venue_milestones]]
@@ -501,14 +501,14 @@ description = "Tournament-grade cushioned acrylic courts, STC-32 post-21:00 nois
 
 [[venue_milestones]]
 id = "MV4"
-name = "END OF MONTH 13 (W16: JAN 2028) — VENUE 2 COMPLETE (6 -> 20 COURTS LIVE)"
+name = "END OF MONTH 13 (W16: JAN 2028) - VENUE 2 COMPLETE (6 -> 20 COURTS LIVE)"
 week = 16.0
 stage_id = "V5"
 description = "PCCC fire safety certified, POS/AdaptivePricing integrated, and 14 new courts open for play at the start of Month 14 (Feb 2028)."
 
 [[venue_milestones]]
 id = "MV5"
-name = "Full 20-Court Steady-State Capacity Reached (6–9 Month Fill-Up Complete)"
+name = "Full 20-Court Steady-State Capacity Reached (6-9 Month Fill-Up Complete)"
 week = 46.0
 stage_id = "V6"
 description = "Second club reaches 100% steady-state utilization (~7.5 months post-opening in Aug/Sep 2028), well ahead of Year 3 (FY 2029)."
@@ -519,24 +519,24 @@ description = "Second club reaches 100% steady-state utilization (~7.5 months po
 
 [[venue_citations]]
 key = "CasePage3PathA"
-title = "Vietnam Case Competition 2026 — Case Question Data Pack (Path A: Expand the Club Network)"
+title = "Vietnam Case Competition 2026 - Case Question Data Pack (Path A: Expand the Club Network)"
 authors = "Case Competition Committee (2026)"
 url = "Case-Question-2026-Vietnam-Case-Competition.pdf (Page 3 & Page 4)"
-relevance = "Specifies 14 courts, coaching facilities and a cafe, 5-year lease at VND 330M/month, 6–9 months to fill up, and VND 7.0B fit-out & launch CapEx + VND 1.0B reserve."
+relevance = "Specifies 14 courts, coaching facilities and a cafe, 5-year lease at VND 330M/month, 6-9 months to fill up, and VND 7.0B fit-out & launch CapEx + VND 1.0B reserve."
 
 [[venue_citations]]
 key = "ASBA2024"
 title = "Pickleball Courts: A Construction & Maintenance Manual (3rd Edition)"
 authors = "American Sports Builders Association (ASBA) & USA Pickleball"
 url = "https://sportsbuilders.org/"
-relevance = "Industry standard for 0.83%–1.0% laser slope grading, post-tensioned concrete slab thickness, vapor retarders, and mandatory 28-day concrete moisture cure before acrylic surfacing."
+relevance = "Industry standard for 0.83%-1.0% laser slope grading, post-tensioned concrete slab thickness, vapor retarders, and mandatory 28-day concrete moisture cure before acrylic surfacing."
 
 [[venue_citations]]
 key = "PickleTile2025"
 title = "Commercial Pickleball Court Construction Timeline, Curing & Surfacing Benchmarks"
 authors = "PickleTile & Pro Track and Tennis Commercial Court Engineering (2025)"
 url = "https://pickletile.com/ / https://protrackandtennis.com/"
-relevance = "Documents multi-court commercial construction phases: 2–4 weeks earthworks/grading, 1–2 weeks slab pour, mandatory 28–30 day concrete cure, and 2–3 weeks multi-coat acrylic surfacing & fencing."
+relevance = "Documents multi-court commercial construction phases: 2-4 weeks earthworks/grading, 1-2 weeks slab pour, mandatory 28-30 day concrete cure, and 2-3 weeks multi-coat acrylic surfacing & fencing."
 
 [[venue_citations]]
 key = "EnduranceCourts2025"
@@ -550,11 +550,11 @@ key = "VietnamPCCC2024"
 title = "Decree 50/2024/ND-CP & QCVN 06:2022/BXD on Fire Prevention and Fighting (PCCC) Acceptance in Vietnam"
 authors = "Government of Vietnam / Ministry of Construction & Police Department of Fire Prevention"
 url = "https://thuvienphapluat.vn/"
-relevance = "Governs mandatory PCCC fire safety design appraisal (tham duyet) and final on-site inspection (nghiem thu) timelines (1.5–2.0 weeks each) for commercial sports and hospitality facilities in HCMC."
+relevance = "Governs mandatory PCCC fire safety design appraisal (tham duyet) and final on-site inspection (nghiem thu) timelines (1.5-2.0 weeks each) for commercial sports and hospitality facilities in HCMC."
 
 [[venue_citations]]
 key = "QCVN26BTNMT"
-title = "National Technical Regulation on Noise (QCVN 26:2010/BTNMT) — Residential Nighttime Limit (After 21:00)"
+title = "National Technical Regulation on Noise (QCVN 26:2010/BTNMT) - Residential Nighttime Limit (After 21:00)"
 authors = "Ministry of Natural Resources and Environment (MONRE Vietnam)"
 url = "https://luatvietnam.vn/"
 relevance = "Mandates maximum 55 dBA exterior noise in residential areas between 21:00 and 06:00, directly driving Stage V1.2/V4.3 acoustic curtain specifications."
@@ -562,9 +562,9 @@ relevance = "Mandates maximum 55 dBA exterior noise in residential areas between
 [[venue_citations]]
 key = "HCMCFitOut2025"
 title = "Ho Chi Minh City Commercial Sports & Hospitality Turnkey Fit-Out Cost and Schedule Benchmarks"
-authors = "Savills Vietnam / Cushman & Wakefield Vietnam Fit-Out Guide (2024–2025)"
+authors = "Savills Vietnam / Cushman & Wakefield Vietnam Fit-Out Guide (2024-2025)"
 url = "https://www.savills.com.vn/"
-relevance = "Validates 14–16 week turnkey fit-out duration in HCMC when steel canopy erection, 3-phase MEP, and F&B cafe carpentry are overlapped with concrete slab curing."
+relevance = "Validates 14-16 week turnkey fit-out duration in HCMC when steel canopy erection, 3-phase MEP, and F&B cafe carpentry are overlapped with concrete slab curing."
 
 # ------------------------------------------------------------------------------
 # 6. GENERAL CAPEX & DEPRECIATION DEFAULTS (Used by FinancialModel)
@@ -580,7 +580,7 @@ std = 0.00
 min = 0.00
 max = 0.00
 unit = "M VND/month (Base recurring CapEx outside the Q4 2027 7,000M expansion)"
-source = "Expansion CapEx (1,750M/mo in Months 10–13) is scheduled explicitly via [venue_scaling]"
+source = "Expansion CapEx (1,750M/mo in Months 10-13) is scheduled explicitly via [venue_scaling]"
 
 [new_capex.depreciation_amortization_monthly_mvnd]
 dist = "truncated_normal"

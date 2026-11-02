@@ -22,7 +22,7 @@ def run_project_timeline(
     out_dir = output_dir if output_dir is not None else (base_dir / "outputs")
 
     print("=" * 86)
-    print("PICK! SOCIAL & BOOKING PLATFORM (PATH C) — TIMELINE, COST & CASH-FLOW ALLOCATION")
+    print("PICK! SOCIAL & BOOKING PLATFORM (PATH C) - TIMELINE, COST & CASH-FLOW ALLOCATION")
     print("=" * 86)
 
     print(f"[1/4] Loading timeline & cost configuration from {cfg_path.name}...")
@@ -34,11 +34,11 @@ def run_project_timeline(
     print(f"      Scheduled {len(res.tasks)} tasks across {len(res.stage_summaries)} stages & {len(res.milestones)} milestones")
     print(f"      Core Product Complete Date (M4): {res.core_build_end_date.isoformat()} (Enters Migration Phase)")
     print(
-        f"      4-Month Core Build (S1–S4): {res.core_build_base_cost_mvnd:.2f}M Base + "
+        f"      4-Month Core Build (S1-S4): {res.core_build_base_cost_mvnd:.2f}M Base + "
         f"{res.core_build_buffer_mvnd:.2f}M Buffer = {res.core_build_buffered_cost_mvnd:.2f}M VND"
     )
     print(
-        f"      6-Month Full Lifecycle (S1–S6): {res.total_base_cost_mvnd:.2f}M Base + "
+        f"      6-Month Full Lifecycle (S1-S6): {res.total_base_cost_mvnd:.2f}M Base + "
         f"{res.total_buffer_mvnd:.2f}M Buffer (+{res.weighted_buffer_pct:.2f}%) = {res.total_buffered_cost_mvnd:.2f}M VND"
     )
 

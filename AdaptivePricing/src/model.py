@@ -26,9 +26,9 @@ FEATURE_NAMES = [
     "Court 4 State (0/1)",
     "Court 5 State (0/1)",
     "Court 6 State (0/1)",
-    "Hour of Day (6–21)",
-    "Day of Week (0–6)",
-    "Day of Month (1–30)",
+    "Hour of Day (6-21)",
+    "Day of Week (0-6)",
+    "Day of Month (1-30)",
 ]
 
 
@@ -290,9 +290,9 @@ def train_and_evaluate(
     # Regime-specific technical breakdown
     reg_flat = reg_test.reshape(-1)
     regime_names = {
-        0: "Weekday Daytime (06:00–17:00)",
-        1: "Weekday Evening (17:00–22:00)",
-        2: "Weekend (Sat–Sun 06:00–22:00)",
+        0: "Weekday Daytime (06:00-17:00)",
+        1: "Weekday Evening (17:00-22:00)",
+        2: "Weekend (Sat-Sun 06:00-22:00)",
     }
     regime_r2 = {}
     regime_rmse = {}

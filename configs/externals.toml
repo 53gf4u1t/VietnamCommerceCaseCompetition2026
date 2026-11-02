@@ -106,7 +106,7 @@ source = "Preventive acoustic baffling in Venue 2 fit-out mitigates post-21:00 w
 # Derivation:
 #   - Case Page 2 ("External pressures"): "Within 3 km of PICK!, four new venues
 #     have opened in the past year, two of them cheaper at peak times."
-#   - While `AdaptivePricing` optimizes PICK!'s off-peak (121k) and peak (279k–290k)
+#   - While `AdaptivePricing` optimizes PICK!'s off-peak (121k) and peak (279k-290k)
 #     tariffs and `PICK! Social` locks in players via ELO matchmaking, nearby
 #     discount courts create a small stochastic monthly pressure on non-member
 #     court utilization (`mean = -0.008`, i.e., -0.8% baseline utilization drag

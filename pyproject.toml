@@ -1,7 +1,7 @@
 [project]
 name = "vietnam-commerce-case-competition-2026"
 version = "0.1.0"
-description = "2026 Vietnam Commerce Case Competition — PICK! Unified Pipeline (AdaptivePricing + PickSocialProjectTimeline + VenueScalingTimeline + Marketing + FinancialModel)"
+description = "2026 Vietnam Commerce Case Competition - PICK! Unified Pipeline (AdaptivePricing + PickSocialProjectTimeline + VenueScalingTimeline + Marketing + FinancialModel)"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
