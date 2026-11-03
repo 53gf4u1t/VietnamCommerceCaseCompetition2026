@@ -427,47 +427,47 @@ def plot_customer_personas_and_mutual_demand(
         & Implied Marketing Cost per Visit (VND/visit).
     """
     _apply_clean_style()
-    fig = plt.figure(figsize=(22.4, 14.2), dpi=220)
+    fig = plt.figure(figsize=(18.6, 10.1), dpi=320)
     fig.patch.set_facecolor("#1e1e2e")
 
     gs = gridspec.GridSpec(
         2,
         2,
         figure=fig,
-        height_ratios=[1.26, 1.0],
+        height_ratios=[0.96, 0.96],
         width_ratios=[1.0, 1.08],
-        left=0.042,
-        right=0.978,
-        top=0.898,
+        left=0.036,
+        right=0.985,
+        top=0.910,
         bottom=0.062,
-        wspace=0.20,
-        hspace=0.26,
+        wspace=0.15,
+        hspace=0.19,
     )
 
     fig.suptitle(
         "Section 2 (Our Customers): HCMC Customer Profiles, Unit Economics & Derived Mutual Demand",
-        fontsize=15.5,
+        fontsize=15.8,
         fontweight="bold",
         color="#cdd6f4",
-        y=0.966,
+        y=0.968,
     )
     fig.text(
         0.5,
-        0.932,
+        0.936,
         "4 Customer Segments (3,600 Unique Customers & 7,596 Visits/Month), Per-Visit Spend Breakdown & Data-Driven Priority Focus",
         ha="center",
-        fontsize=10.4,
+        fontsize=10.8,
         color="#a6adc8",
     )
 
     # ==========================================================================
-    # PANEL A (Top Half, Spans Both Columns): Spacious Bullet-Point Grid Table
+    # PANEL A (Top Half, Spans Both Columns): Compact High-Readability Grid Table
     # ==========================================================================
     ax_tbl = fig.add_subplot(gs[0, :])
     ax_tbl.set_facecolor("#1e1e2e")
     ax_tbl.axis("off")
 
-    col_widths = [0.140, 0.160, 0.155, 0.125, 0.160, 0.155, 0.105]
+    col_widths = [0.128, 0.150, 0.148, 0.114, 0.162, 0.170, 0.128]
     total_w = sum(col_widths)
     ax_tbl.set_xlim(0.0, total_w)
     ax_tbl.set_ylim(0.0, 1.0)
@@ -541,10 +541,10 @@ def plot_customer_personas_and_mutual_demand(
         c4 = p.pain_points
         c5 = p.derived_demand
         c6 = (
-            f"- {p.visits_per_month:.1f} visits/month\n"
-            f"- {p.baseline_visits_monthly:,} total visits ({p.visit_share_pct:.1f}%)\n"
-            f"- {p.total_spend_per_visit_kvnd:.0f}k VND Spend/visit\n"
-            f"- Marketing Cost:\n  {p.marketing_cost_per_visit_vnd:,.0f} VND/visit"
+            f"- {p.visits_per_month:.1f} visits/customer/mo\n"
+            f"- {p.baseline_visits_monthly:,} visits ({p.visit_share_pct:.1f}%)\n"
+            f"- {p.total_spend_per_visit_kvnd:.0f}k VND spend/visit\n"
+            f"- {p.marketing_cost_per_visit_vnd:,.0f} VND mktg/visit"
         )
         table_rows.append((r_style, [c0, c1, c2, c3, c4, c5, c6]))
 
@@ -559,12 +559,12 @@ def plot_customer_personas_and_mutual_demand(
                 "Skill Match + Social\nAtmosphere + Easy\nTrial + Coaching",
                 "- 89% first-visit churn\n  in Trend Explorers\n- Zero loyalty lock-in",
                 "- 4-player skill matching\n- Affordable daytime rates\n- Beginner progression\n- Social cafe community",
-                "- 641.7M VND/month\n  (Exhibit 1: 640M)\n- 84.5k Average/visit\n- Marketing Cost:\n  3,291 VND/visit",
+                "- 641.7M/mo (Exh. 1: 640M)\n- 84.5k VND avg spend/visit\n- 3,291 VND mktg/visit",
             ],
         )
     )
 
-    row_weights = [0.58, 0.78, 1.48, 1.48, 1.48, 1.48, 1.24]
+    row_weights = [0.38, 0.56, 1.02, 1.02, 1.02, 1.02, 0.88]
     tot_weight = sum(row_weights)
     curr_y = 1.0
 
@@ -585,12 +585,12 @@ def plot_customer_personas_and_mutual_demand(
                 )
             )
             ax_tbl.text(
-                0.012,
+                0.008,
                 ry + rh * 0.5,
                 cells[0],
                 ha="left",
                 va="center",
-                fontsize=9.4,
+                fontsize=11.2,
                 fontweight="bold",
                 color="#f5f7ff",
             )
@@ -602,13 +602,13 @@ def plot_customer_personas_and_mutual_demand(
                 bg = "#2b3048"
                 fg = "#f5f7ff"
                 fw = "bold"
-                fs = 8.3
+                fs = 9.6
                 ha = "center"
             elif rtype == "footer":
                 bg = "#1f332c"
                 fg = "#a6e3a1" if c_idx in (0, 5, 6) else "#cdd6f4"
                 fw = "bold"
-                fs = 7.7
+                fs = 8.95
                 ha = "center" if c_idx in (0, 3) else "left"
             else:
                 if rtype == "row_priority1":
@@ -648,7 +648,7 @@ def plot_customer_personas_and_mutual_demand(
                     fg = "#cdd6f4"
                     fw = "normal"
                     ha = "left"
-                fs = 7.75
+                fs = 9.05
 
             ax_tbl.add_patch(
                 mpatches.Rectangle(
@@ -661,7 +661,7 @@ def plot_customer_personas_and_mutual_demand(
                 )
             )
 
-            tx = cx + cw * 0.5 if ha == "center" else cx + 0.009
+            tx = cx + cw * 0.5 if ha == "center" else cx + 0.0048
             ax_tbl.text(
                 tx,
                 ry + rh * 0.5,
@@ -671,7 +671,7 @@ def plot_customer_personas_and_mutual_demand(
                 fontsize=fs,
                 fontweight=fw,
                 color=fg,
-                linespacing=1.32,
+                linespacing=1.14,
             )
             cx += cw
 
@@ -683,11 +683,11 @@ def plot_customer_personas_and_mutual_demand(
 
     segs = cfg.personas  # Case Exhibit 4 order: Competitive, Social, Trend Explorers, Families
     seg_labels = [
-        f"{p.segment_name}\n({p.customer_share_pct:.0f}% Customers, {p.visits_per_month:.1f} visits/month)"
+        f"{p.segment_name}\n({p.customer_share_pct:.0f}% Cust | {p.visits_per_month:.1f} visits/mo)"
         for p in segs
     ]
     x_pos = np.arange(len(segs))
-    bar_w = 0.46
+    bar_w = 0.52
 
     court_vals = np.array([p.court_hire_per_visit_kvnd for p in segs])
     coach_vals = np.array([p.coaching_per_visit_kvnd for p in segs])
@@ -732,10 +732,10 @@ def plot_customer_personas_and_mutual_demand(
         ax_b.text(
             i,
             p.court_hire_per_visit_kvnd * 0.5,
-            f"Court Hire: {p.court_hire_per_visit_kvnd:.1f}k",
+            f"Court: {p.court_hire_per_visit_kvnd:.1f}k",
             ha="center",
             va="center",
-            fontsize=7.7,
+            fontsize=7.9,
             fontweight="bold",
             color="#11111b",
         )
@@ -743,10 +743,10 @@ def plot_customer_personas_and_mutual_demand(
             ax_b.text(
                 i,
                 p.court_hire_per_visit_kvnd + p.coaching_per_visit_kvnd * 0.5,
-                f"Coaching: {p.coaching_per_visit_kvnd:.1f}k",
+                f"Coach: {p.coaching_per_visit_kvnd:.1f}k",
                 ha="center",
                 va="center",
-                fontsize=7.5,
+                fontsize=7.7,
                 fontweight="bold",
                 color="#11111b",
             )
@@ -763,7 +763,8 @@ def plot_customer_personas_and_mutual_demand(
             )
 
     ax_b.set_xticks(x_pos)
-    ax_b.set_xticklabels(seg_labels, fontsize=8.4, fontweight="bold", color="#cdd6f4")
+    ax_b.set_xticklabels(seg_labels, fontsize=8.8, fontweight="bold", color="#cdd6f4")
+    ax_b.set_xlim(-0.56, len(segs) - 0.44)
     ax_b.set_ylim(0, 126)
     ax_b.set_ylabel("Spend per Player Visit (kVND / Visit)", fontsize=10.0, color="#bac2de")
     ax_b.set_title(
@@ -873,7 +874,8 @@ def plot_customer_personas_and_mutual_demand(
         )
 
     ax_c.set_xticks(x_pos)
-    ax_c.set_xticklabels(seg_labels, fontsize=8.4, fontweight="bold", color="#cdd6f4")
+    ax_c.set_xticklabels(seg_labels, fontsize=8.8, fontweight="bold", color="#cdd6f4")
+    ax_c.set_xlim(-0.56, len(segs) - 0.44)
     ax_c.set_ylim(0, 74)
     ax_c.set_ylabel("Segment Share of Club Total (%)", fontsize=10.0, color="#bac2de")
     ax_c.set_title(

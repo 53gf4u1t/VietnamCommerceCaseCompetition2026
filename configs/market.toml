@@ -280,8 +280,8 @@ baseline_monthly_revenue_mvnd = 307.80
 baseline_marketing_budget_mvnd = 5.00
 marketing_cost_per_visit_vnd = 1543.21
 marketing_cost_per_customer_vnd = 6944.44
-demographics = "- Age 24 to 38 urban professionals\n- Former tennis and badminton players\n- Monthly income 25M to 60M+ VND"
-schedule_habit = "- Plays 4.5 visits per month\n- Books prime weekday evenings & weekends\n- Owns personal carbon paddles"
+demographics = "- Age 24-38 urban professionals\n- Former tennis & badminton players\n- Monthly income 25M-60M+ VND"
+schedule_habit = "- Plays 4.5 visits per month\n- Prime evening & weekend slots\n- Owns personal carbon paddles"
 main_case_need = "Improve skills and find good opponents"
 pain_points = "- Evening courts are 95% full at peak\n- Hard to find equal-skill 4th players\n- Lacks structured ranked leagues"
 derived_demand = "- Skill-verified 4-player matchmaking\n- Reliable peak court availability\n- Ranked leagues & advanced drills"
@@ -307,11 +307,11 @@ baseline_monthly_revenue_mvnd = 201.60
 baseline_marketing_budget_mvnd = 8.50
 marketing_cost_per_visit_vnd = 3373.02
 marketing_cost_per_customer_vnd = 6746.03
-demographics = "- Age 21 to 32 office & agency staff\n- Socializes in 4 to 8 friend groups\n- Monthly income 12M to 30M VND"
-schedule_habit = "- Plays 2.0 visits per month\n- Books late afternoons & evenings\n- Highest food & drink spend (11.5k/visit)"
+demographics = "- Age 21-32 office & agency staff\n- Socializes in 4-8 friend groups\n- Monthly income 12M-30M VND"
+schedule_habit = "- Plays 2.0 visits per month\n- Books late afternoons & evenings\n- Highest F&B spend (11.5k/visit)"
 main_case_need = "Play with friends and enjoy the atmosphere"
 pain_points = "- Cheaper peak rivals tempt groups away\n- Last-minute 4th-player dropouts\n- No loyalty perks for repeat bookings"
-derived_demand = "- Easy group booking & bill splitting\n- Drop-in open play to fill 4-player games\n- Lively cafe hangout & member perks"
+derived_demand = "- Easy group booking & bill splitting\n- Open-play 4-player game matching\n- Lively cafe hangout & member perks"
 
 [[personas]]
 id = "trend_explorers"
@@ -334,11 +334,11 @@ baseline_monthly_revenue_mvnd = 77.22
 baseline_marketing_budget_mvnd = 7.50
 marketing_cost_per_visit_vnd = 6313.13
 marketing_cost_per_customer_vnd = 6944.44
-demographics = "- Age 18 to 26 students & young creators\n- Discovers pickleball on TikTok & IG\n- Flexible daytime hours, budget-aware"
-schedule_habit = "- Plays only 1.1 visits per month\n- Most visit once or twice then churn\n- Highest paddle rental spend (5.2k/visit)"
+demographics = "- Age 18-26 students & creators\n- Discovers pickleball on TikTok & IG\n- Flexible daytime, budget-aware"
+schedule_habit = "- Plays only 1.1 visits per month\n- Most visit once or twice then churn\n- Highest rental spend (5.2k/visit)"
 main_case_need = "Try something seen online; many visit once or twice"
-pain_points = "- Highest Marketing Cost (6,313 VND/visit)\n- 160k daytime rate is too high for students\n- Intimidated by experienced players"
-derived_demand = "- Affordable weekday daytime student rates\n- Beginner-only social mixer sessions\n- Easy starter equipment & 2nd-visit hook"
+pain_points = "- Highest Mktg Cost (6,313 VND/visit)\n- 160k daytime rate prices out students\n- Intimidated by experienced players"
+derived_demand = "- Daytime student discounts (115k/hr)\n- Beginner-only social mixer sessions\n- Starter paddle rental & 2nd-visit hook"
 
 [[personas]]
 id = "families"
@@ -361,11 +361,11 @@ baseline_monthly_revenue_mvnd = 55.08
 baseline_marketing_budget_mvnd = 4.00
 marketing_cost_per_visit_vnd = 6172.84
 marketing_cost_per_customer_vnd = 7407.41
-demographics = "- Parents age 33 to 50 with kids age 8 to 16\n- Affluent urban HCMC households\n- Values safety, shade & coaching"
-schedule_habit = "- Plays 1.2 visits per month on weekends\n- Prefers morning & afternoon slots\n- Highest coaching spend (25.2k/visit)"
+demographics = "- Parents age 33-50, kids age 8-16\n- Affluent urban HCMC households\n- Values safety, shade & coaching"
+schedule_habit = "- Plays 1.2 visits/month on weekends\n- Prefers morning & afternoon slots\n- Highest coaching spend (25.2k/visit)"
 main_case_need = "A welcoming activity and beginner lessons"
 pain_points = "- Fast adult games intimidate children\n- Lacks structured junior lesson tracks\n- Needs shaded family seating areas"
-derived_demand = "- Dedicated family & junior beginner lessons\n- Safe weekend family court blocks\n- Shaded spectator seating & refreshments"
+derived_demand = "- Family & junior beginner clinics\n- Safe weekend family court blocks\n- Shaded family seating & refreshments"
 
 # ------------------------------------------------------------------------------
 # 4. DERIVED MUTUAL DEMAND PILLARS (CROSS-SEGMENT CUSTOMER NEEDS)

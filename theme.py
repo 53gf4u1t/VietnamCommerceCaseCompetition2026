@@ -329,7 +329,10 @@ def apply_latte_theme_to_figure(fig: mfigure.Figure) -> None:
 
 
 def _themed_savefig(self: mfigure.Figure, *args, **kwargs):
-    """Wrapper around `Figure.savefig` that applies the active Catppuccin theme (`Mocha` or `Latte`)."""
+    """Wrapper around `Figure.savefig` that applies the active Catppuccin theme (`Mocha` or `Latte`) at high poster DPI (>= 320)."""
+    req_dpi = kwargs.get("dpi")
+    base_dpi = float(req_dpi) if isinstance(req_dpi, (int, float)) else float(self.dpi or 320.0)
+    kwargs["dpi"] = max(base_dpi, 320.0)
     active = get_theme()
     if active == "Latte":
         apply_latte_theme_to_figure(self)
