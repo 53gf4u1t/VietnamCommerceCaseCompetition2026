@@ -1,84 +1,84 @@
-row_code,statement,line_item,row_type,agg_mode,unit,FY 2027 (Y1),FY 2028 (Y2),FY 2029 (Y3),FY 2030 (Y4),FY 2031 (Y5)
-KI_HDR,KEY INDICATORS,KEY INDICATORS & MILESTONES,header,none,,,,,,
-MEM_COURTS,KEY INDICATORS,  Active Courts in Operation (6 to 20 in Feb-28),input_linked,end_stock,Courts,6.0,20.0,20.0,20.0,20.0
-MEM_CNT,KEY INDICATORS,  Active Paying Members (PICK! Social @ 399k/mo),input_linked,end_stock,Members,807.3248,1488.938,1827.0284,2087.7131,2217.7501
-KI_EQ,KEY INDICATORS,"  Equity Funding (500M Signing Jan-27 + 7,500M Expansion Oct-27)",input_linked,flow,M VND,8000.0,0.0,0.0,0.0,0.0
-KI_CASH,KEY INDICATORS,  Cash Reserves at End of Period (Cash in Hand),grand_total,end_stock,M VND,4123.7374,9621.8724,20828.3814,31719.6785,42871.5572
-IS_HDR,INCOME STATEMENT,"STATEMENT 1 - INCOME STATEMENT (PROFIT & LOSS, M VND)",header,none,,,,,,
-REV_1A,INCOME STATEMENT,"  Revenue: Court Hire - Venue 1 (6 Courts, Adaptive Pricing)",input_linked,flow,M VND,5480.8467,5439.9594,5398.2746,5347.7621,5311.9167
-REV_1B,INCOME STATEMENT,"  Revenue: Court Hire - Venue 2 (14 Courts, Opens Feb-28)",input_linked,flow,M VND,0.0,8713.1329,12595.9741,12478.1115,12394.4723
-REV_2,INCOME STATEMENT,  Revenue: PICK! Social Subscriptions & Seasonal Tournaments (May-27+),input_linked,flow,M VND,2069.3937,5775.0228,8263.2468,9586.9939,10525.4202
-REV_3,INCOME STATEMENT,  Revenue: Paddle Rental and Balls (Scales to 20 Courts),input,flow,M VND,222.3077,483.054,520.1099,514.3716,513.5501
-REV_4,INCOME STATEMENT,  Revenue: Coaching Services (Scales to 20 Courts + Studio),input,flow,M VND,1705.3683,3701.6021,3838.7188,3907.2267,3875.9431
-REV_5,INCOME STATEMENT,  Revenue: Food and Drinks (Scales to 20 Courts + Cafe),input,flow,M VND,1134.5122,2439.1441,2614.6919,2595.095,2598.4313
-REV_TOT,INCOME STATEMENT,Total Revenue,subtotal,flow,M VND,10612.4287,26551.9154,33231.016,34429.5607,35219.7337
-COGS_1,INCOME STATEMENT,  Costs (COGS): Coach Fees (Paid per Lesson),input,flow,M VND,890.6503,1937.5958,2016.6449,2029.9181,2029.808
-COGS_2,INCOME STATEMENT,  Costs (COGS): Food and Drink Supplies,input,flow,M VND,452.1137,979.1034,1039.9289,1042.2574,1041.4558
-COGS_3,INCOME STATEMENT,  Costs (COGS): Payment Processing (~1.50% Rev) & Consumables,input_linked,flow,M VND,226.5491,570.954,727.3842,753.1681,762.0236
-COGS_4,INCOME STATEMENT,"  Costs (COGS): Partner Courts, Member Leagues & Seasonal Tournaments",input_linked,flow,M VND,829.0251,1960.2584,2563.7156,2950.0484,3209.5146
-COGS_TOT,INCOME STATEMENT,Total Costs (COGS),subtotal,flow,M VND,2398.3382,5447.9116,6347.6736,6775.392,7042.802
+row_code,statement,line_item,row_type,agg_mode,unit,FY 2027,FY 2028,FY 2029,FY 2030,FY 2031
+KI_HDR,KEY INDICATORS,KEY INDICATORS,header,none,,,,,,
+MEM_COURTS,KEY INDICATORS,  Active Courts in Operation,input_linked,end_stock,Courts,6.0,20.0,20.0,20.0,20.0
+MEM_CNT,KEY INDICATORS,  Active Paying Members,input_linked,end_stock,Members,807.3248,1488.938,1827.0284,2087.7131,2217.7501
+KI_EQ,KEY INDICATORS,  Equity Funding,input_linked,flow,M VND,8000.0,0.0,0.0,0.0,0.0
+KI_CASH,KEY INDICATORS,  Cash Reserves at End of Period,grand_total,end_stock,M VND,4123.7374,9621.8724,20828.3814,31719.6785,42871.5572
+IS_HDR,INCOME STATEMENT,STATEMENT 1 - INCOME STATEMENT,header,none,,,,,,
+REV_1A,INCOME STATEMENT,  Court hire: Venue 1,input_linked,flow,M VND,5480.8467,5439.9594,5398.2746,5347.7621,5311.9167
+REV_1B,INCOME STATEMENT,  Court hire: Venue 2,input_linked,flow,M VND,0.0,8713.1329,12595.9741,12478.1115,12394.4723
+REV_2,INCOME STATEMENT,  PICK! Social subscriptions & seasonal tournaments,input_linked,flow,M VND,2069.3937,5775.0228,8263.2468,9586.9939,10525.4202
+REV_3,INCOME STATEMENT,  Paddle rental and balls,input,flow,M VND,222.3077,483.054,520.1099,514.3716,513.5501
+REV_4,INCOME STATEMENT,  Coaching,input,flow,M VND,1705.3683,3701.6021,3838.7188,3907.2267,3875.9431
+REV_5,INCOME STATEMENT,  Food and drinks,input,flow,M VND,1134.5122,2439.1441,2614.6919,2595.095,2598.4313
+REV_TOT,INCOME STATEMENT,Total Projected Revenue,subtotal,flow,M VND,10612.4287,26551.9154,33231.016,34429.5607,35219.7337
+COGS_1,INCOME STATEMENT,  Coach fees,input,flow,M VND,890.6503,1937.5958,2016.6449,2029.9181,2029.808
+COGS_2,INCOME STATEMENT,  Food and drink supplies,input,flow,M VND,452.1137,979.1034,1039.9289,1042.2574,1041.4558
+COGS_3,INCOME STATEMENT,  Payment gateway fees & court consumables,input_linked,flow,M VND,226.5491,570.954,727.3842,753.1681,762.0236
+COGS_4,INCOME STATEMENT,"  Partner courts, member leagues & seasonal tournaments",input_linked,flow,M VND,829.0251,1960.2584,2563.7156,2950.0484,3209.5146
+COGS_TOT,INCOME STATEMENT,Total Cost of Goods Sold,subtotal,flow,M VND,2398.3382,5447.9116,6347.6736,6775.392,7042.802
 GP_TOT,INCOME STATEMENT,Gross Profit,total,flow,M VND,8214.0904,21104.0038,26883.3424,27654.1687,28176.9318
-GP_PCT,INCOME STATEMENT,  Gross Margin (%),pct,pct,%,77.4007,79.482,80.8983,80.321,80.0033
-OPEX_1A,INCOME STATEMENT,"  Facility OpEx: Rent - Venue 1 Lease (6 Courts, 150M/mo)",input,flow,M VND,1800.0,1800.0,1800.0,1800.0,1800.0
-OPEX_1B,INCOME STATEMENT,"  Facility OpEx: Rent - Venue 2 Lease (14 Courts, 330M/mo Oct-27+)",input_linked,flow,M VND,990.0,3960.0,3960.0,3960.0,3960.0
-OPEX_2,INCOME STATEMENT,"  Facility OpEx: Utilities - Electricity, Lighting & Water",input,flow,M VND,488.2314,1502.1119,1719.6212,1780.098,1806.3141
-OPEX_3,INCOME STATEMENT,  Facility OpEx: Insurance & Facility Maintenance,input,flow,M VND,240.8198,801.2876,868.1825,890.142,897.5498
-OPEX_TOT,INCOME STATEMENT,Subtotal Facility Operating Expenses (OpEx),subtotal,flow,M VND,3519.0512,8063.3995,8347.8037,8430.24,8463.8639
-SGA_1,INCOME STATEMENT,  Expenses (SG&A): Staff & Payroll (Venue 1 + Venue 2 Feb-28+),input,flow,M VND,1556.4496,4396.515,4925.2989,4898.2516,4929.5139
-SGA_2,INCOME STATEMENT,  Expenses (SG&A): Tech Support & Administration (Base),input,flow,M VND,120.1102,121.0903,118.5753,120.6223,118.4858
-SGA_3,INCOME STATEMENT,  Expenses (SG&A): Marketing & Growth (Social & Segments),input,flow,M VND,544.9361,712.086,598.7431,655.3146,708.7617
-SGA_4,INCOME STATEMENT,  Expenses (SG&A): PICK! Social Dev & Migration (Jan-Jun 2027),input_linked,flow,M VND,987.6957,0.0,0.0,0.0,0.0
-SGA_5,INCOME STATEMENT,"  Expenses (SG&A): PICK! Social Cloud, OTP & Community Ops (May-27+)",input_linked,flow,M VND,193.6135,317.7584,319.093,319.5722,322.3741
-SGA_6,INCOME STATEMENT,  Expenses (SG&A): Legal / Ward Noise & U-18 Safety Compliance,input_linked,flow,M VND,109.174,152.7861,153.3778,160.156,178.3765
-SGA_TOT,INCOME STATEMENT,Subtotal Expenses (SG&A),subtotal,flow,M VND,3511.9791,5700.2358,6115.0881,6153.9168,6257.5119
-OPEX_SGA_TOT,INCOME STATEMENT,Total Operating Expenses (OpEx + SG&A),subtotal,flow,M VND,7031.0303,13763.6353,14462.8918,14584.1567,14721.3758
-ALL_COST_TOT,INCOME STATEMENT,Total Operating Costs (COGS + OpEx + SG&A),subtotal,flow,M VND,9429.3686,19211.5469,20810.5654,21359.5487,21764.1778
-EBITDA_TOT,INCOME STATEMENT,Net Operating Income (EBITDA),grand_total,flow,M VND,1183.0601,7340.3685,12420.4506,13070.012,13455.5559
-EBITDA_PCT,INCOME STATEMENT,  EBITDA Margin (%),pct,pct,%,11.1479,27.6453,37.3761,37.9616,38.2046
-DA_EXP,INCOME STATEMENT,  Other Expenses: Depreciation & Amortization (D&A),formula,flow,M VND,64.0,1347.3333,1464.0,1464.0,1464.0
-EBT_TOT,INCOME STATEMENT,Net Income Before Taxes (EBT),subtotal,flow,M VND,1119.0601,5993.0352,10956.4506,11606.012,11991.5559
-TAX_EXP,INCOME STATEMENT,  Taxes: Corporate Income Tax (Vietnam 20.0% Statutory CIT),formula,flow,M VND,230.5615,1198.607,2191.2901,2321.2024,2398.3112
-NET_INC,INCOME STATEMENT,Net Income,grand_total,flow,M VND,888.4986,4794.4281,8765.1605,9284.8096,9593.2447
-NET_PCT,INCOME STATEMENT,  Net Margin (%),pct,pct,%,8.3722,18.0568,26.3764,26.9676,27.2383
-BS_HDR,BALANCE SHEET,"STATEMENT 2 - BALANCE SHEET (END OF PERIOD, M VND)",header,none,,,,,,
-BS_CASH,BALANCE SHEET,  Cash and Cash Equivalents (Cash Reserves),formula,end_stock,M VND,4123.7374,9621.8724,20828.3814,31719.6785,42871.5572
-BS_INV,BALANCE SHEET,  Inventory (1-Mo F&B Supplies & Court Equipment),input,end_stock,M VND,40.4998,88.6955,86.0603,96.8234,95.876
-BS_PRE,BALANCE SHEET,  Prepaid Expenses & Lease Security Deposit (150M to 480M Oct-27+),input_linked,end_stock,M VND,480.0,480.0,480.0,480.0,480.0
+GP_PCT,INCOME STATEMENT,  Gross Margin,pct,pct,%,77.4007,79.482,80.8983,80.321,80.0033
+OPEX_1A,INCOME STATEMENT,  Venue 1 lease,input,flow,M VND,1800.0,1800.0,1800.0,1800.0,1800.0
+OPEX_1B,INCOME STATEMENT,  Venue 2 lease,input_linked,flow,M VND,990.0,3960.0,3960.0,3960.0,3960.0
+OPEX_2,INCOME STATEMENT,"  Electricity, lighting and water",input,flow,M VND,488.2314,1502.1119,1719.6212,1780.098,1806.3141
+OPEX_3,INCOME STATEMENT,  Maintenance and insurance,input,flow,M VND,240.8198,801.2876,868.1825,890.142,897.5498
+OPEX_TOT,INCOME STATEMENT,Subtotal Facility Operating Expenses,subtotal,flow,M VND,3519.0512,8063.3995,8347.8037,8430.24,8463.8639
+SGA_1,INCOME STATEMENT,  Staff wages,input,flow,M VND,1556.4496,4396.515,4925.2989,4898.2516,4929.5139
+SGA_2,INCOME STATEMENT,  Booking system and administration,input,flow,M VND,120.1102,121.0903,118.5753,120.6223,118.4858
+SGA_3,INCOME STATEMENT,  Marketing,input,flow,M VND,544.9361,712.086,598.7431,655.3146,708.7617
+SGA_4,INCOME STATEMENT,  PICK! Social development & migration,input_linked,flow,M VND,987.6957,0.0,0.0,0.0,0.0
+SGA_5,INCOME STATEMENT,"  PICK! Social cloud, OTP, maintenance & uni ops",input_linked,flow,M VND,193.6135,317.7584,319.093,319.5722,322.3741
+SGA_6,INCOME STATEMENT,  Ward noise-complaint legal handling & U-18 safety,input_linked,flow,M VND,109.174,152.7861,153.3778,160.156,178.3765
+SGA_TOT,INCOME STATEMENT,"Subtotal Selling, General & Administrative Expenses",subtotal,flow,M VND,3511.9791,5700.2358,6115.0881,6153.9168,6257.5119
+OPEX_SGA_TOT,INCOME STATEMENT,Total Operating Expenses,subtotal,flow,M VND,7031.0303,13763.6353,14462.8918,14584.1567,14721.3758
+ALL_COST_TOT,INCOME STATEMENT,Total Operating Costs,subtotal,flow,M VND,9429.3686,19211.5469,20810.5654,21359.5487,21764.1778
+EBITDA_TOT,INCOME STATEMENT,Net Operating Income,grand_total,flow,M VND,1183.0601,7340.3685,12420.4506,13070.012,13455.5559
+EBITDA_PCT,INCOME STATEMENT,  Operating Margin,pct,pct,%,11.1479,27.6453,37.3761,37.9616,38.2046
+DA_EXP,INCOME STATEMENT,  Depreciation & Amortization,formula,flow,M VND,64.0,1347.3333,1464.0,1464.0,1464.0
+EBT_TOT,INCOME STATEMENT,Net Income Before Taxes,subtotal,flow,M VND,1119.0601,5993.0352,10956.4506,11606.012,11991.5559
+TAX_EXP,INCOME STATEMENT,  Corporate Income Tax Expense,formula,flow,M VND,230.5615,1198.607,2191.2901,2321.2024,2398.3112
+NET_INC,INCOME STATEMENT,Net Income After Tax,grand_total,flow,M VND,888.4986,4794.4281,8765.1605,9284.8096,9593.2447
+NET_PCT,INCOME STATEMENT,  Net Margin,pct,pct,%,8.3722,18.0568,26.3764,26.9676,27.2383
+BS_HDR,BALANCE SHEET,STATEMENT 2 - BALANCE SHEET,header,none,,,,,,
+BS_CASH,BALANCE SHEET,  Cash and Cash Equivalents,formula,end_stock,M VND,4123.7374,9621.8724,20828.3814,31719.6785,42871.5572
+BS_INV,BALANCE SHEET,  Inventory,input,end_stock,M VND,40.4998,88.6955,86.0603,96.8234,95.876
+BS_PRE,BALANCE SHEET,  Prepaid Expenses & Lease Security Deposit,input_linked,end_stock,M VND,480.0,480.0,480.0,480.0,480.0
 BS_CA_TOT,BALANCE SHEET,Total Current Assets,subtotal,end_stock,M VND,4644.2371,10190.568,21394.4417,32296.5019,43447.4332
-BS_PPE,BALANCE SHEET,"  Equipment / PP&E (+7,000M Fit-Out Oct-27-Jan-28, Net of D&A)",input_linked,end_stock,M VND,5506.0,5908.6667,4444.6667,2980.6667,1516.6667
+BS_PPE,BALANCE SHEET,"  Equipment & Leasehold Improvements, Net",input_linked,end_stock,M VND,5506.0,5908.6667,4444.6667,2980.6667,1516.6667
 BS_INTANG,BALANCE SHEET,  Intangible Assets,input,end_stock,M VND,0.0,0.0,0.0,0.0,0.0
-BS_LTA_TOT,BALANCE SHEET,Total Long-Term (Fixed) Assets,subtotal,end_stock,M VND,5506.0,5908.6667,4444.6667,2980.6667,1516.6667
+BS_LTA_TOT,BALANCE SHEET,Total Long-Term Assets,subtotal,end_stock,M VND,5506.0,5908.6667,4444.6667,2980.6667,1516.6667
 BS_ASSETS_TOT,BALANCE SHEET,TOTAL ASSETS,total,end_stock,M VND,10150.2371,16099.2347,25839.1084,35277.1686,44964.0999
-BS_AP,BALANCE SHEET,  Accounts Payable (1-Mo Supplies & Payment Gateway),input,end_stock,M VND,62.2122,150.4495,146.9412,161.249,161.1059
-BS_ACC,BALANCE SHEET,  Accrued Coaching & Staff Payables (1-Mo Coach Fees),input,end_stock,M VND,73.9649,172.2514,157.7898,166.8203,183.5412
-BS_TAX_PAST,BALANCE SHEET,  Income Taxes Payable - Past FY (Settled in April),formula,end_stock,M VND,230.5615,1198.607,2191.2901,2321.2024,2398.3112
-BS_TAX_CURR,BALANCE SHEET,  Income Taxes Payable - Current FY (Accrued 20% CIT),formula,end_stock,M VND,0.0,0.0,0.0,0.0,0.0
+BS_AP,BALANCE SHEET,  Accounts Payable,input,end_stock,M VND,62.2122,150.4495,146.9412,161.249,161.1059
+BS_ACC,BALANCE SHEET,  Accrued Coaching & Staff Payables,input,end_stock,M VND,73.9649,172.2514,157.7898,166.8203,183.5412
+BS_TAX_PAST,BALANCE SHEET,  Income Taxes Payable - Prior Fiscal Year,formula,end_stock,M VND,230.5615,1198.607,2191.2901,2321.2024,2398.3112
+BS_TAX_CURR,BALANCE SHEET,  Income Taxes Payable - Current Fiscal Year,formula,end_stock,M VND,0.0,0.0,0.0,0.0,0.0
 BS_LIAB_TOT,BALANCE SHEET,TOTAL LIABILITIES,subtotal,end_stock,M VND,366.7385,1521.3079,2496.0211,2649.2717,2742.9583
-BS_CAP,BALANCE SHEET,"  Contributed Capital (Equity Rounds: +500M Jan-27 & +7,500M Oct-27)",input_linked,end_stock,M VND,8500.0,8500.0,8500.0,8500.0,8500.0
-BS_RE,BALANCE SHEET,  Retained Earnings (Cumulative After-Tax Profit),formula,end_stock,M VND,1283.4986,6077.9267,14843.0872,24127.8968,33721.1416
+BS_CAP,BALANCE SHEET,  Contributed Capital,input_linked,end_stock,M VND,8500.0,8500.0,8500.0,8500.0,8500.0
+BS_RE,BALANCE SHEET,  Retained Earnings,formula,end_stock,M VND,1283.4986,6077.9267,14843.0872,24127.8968,33721.1416
 BS_EQ_TOT,BALANCE SHEET,TOTAL OWNER'S EQUITY,subtotal,end_stock,M VND,9783.4986,14577.9267,23343.0872,32627.8968,42221.1416
 BS_LE_TOT,BALANCE SHEET,TOTAL LIABILITIES & OWNER'S EQUITY,total,end_stock,M VND,10150.2371,16099.2347,25839.1084,35277.1686,44964.0999
-BS_CHK,BALANCE SHEET,  Check (Total Assets - Total L&E),formula,end_stock,M VND,0.0,0.0,0.0,-0.0,-0.0
-CF_HDR,CASH FLOW,STATEMENT 3 - CASH FLOW STATEMENT (M VND),header,none,,,,,,
+BS_CHK,BALANCE SHEET,  Balance Sheet Check,formula,end_stock,M VND,0.0,0.0,0.0,-0.0,-0.0
+CF_HDR,CASH FLOW,STATEMENT 3 - CASH FLOW STATEMENT,header,none,,,,,,
 CF_START,CASH FLOW,Starting Cash Balance,formula,start_stock,M VND,500.0,4123.7374,9621.8724,20828.3814,31719.6785
-CF_NI,CASH FLOW,  (+) Net Income,formula,flow,M VND,888.4986,4794.4281,8765.1605,9284.8096,9593.2447
-CF_DA,CASH FLOW,  (+) D&A (Non-Cash Expense),formula,flow,M VND,64.0,1347.3333,1464.0,1464.0,1464.0
-CF_NWC,CASH FLOW,"  (-) Change in Working Capital (Lease Deposit, Inventory, Payables & CIT)",formula,flow,M VND,78.7612,-1106.3736,-977.3484,-142.4876,-94.634
+CF_NI,CASH FLOW,  Net Income After Tax,formula,flow,M VND,888.4986,4794.4281,8765.1605,9284.8096,9593.2447
+CF_DA,CASH FLOW,  Depreciation & Amortization,formula,flow,M VND,64.0,1347.3333,1464.0,1464.0,1464.0
+CF_NWC,CASH FLOW,  Change in Working Capital,formula,flow,M VND,78.7612,-1106.3736,-977.3484,-142.4876,-94.634
 CF_OCF,CASH FLOW,Total Operating Cash Flow,subtotal,flow,M VND,873.7374,7248.1351,11206.5089,10891.2972,11151.8787
-CF_CAPEX,CASH FLOW,"  (-) CAPEX to PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27-Jan-28)",input_linked,flow,M VND,-5250.0,-1750.0,0.0,0.0,0.0
+CF_CAPEX,CASH FLOW,  Capital Expenditures,input_linked,flow,M VND,-5250.0,-1750.0,0.0,0.0,0.0
 CF_ICF,CASH FLOW,Total Investing Cash Flow,subtotal,flow,M VND,-5250.0,-1750.0,0.0,0.0,0.0
-CF_EQ,CASH FLOW,"  (+) Equity Funding (Investor Minh Tran: +500M Jan-27 & +7,500M Oct-27)",input_linked,flow,M VND,8000.0,0.0,0.0,0.0,0.0
+CF_EQ,CASH FLOW,  Equity Financing,input_linked,flow,M VND,8000.0,0.0,0.0,0.0,0.0
 CF_FCF,CASH FLOW,Total Financing Cash Flow,subtotal,flow,M VND,8000.0,0.0,0.0,0.0,0.0
-CF_NET,CASH FLOW,Net Cash Flow (Total Cash Movements),total,flow,M VND,3623.7374,5498.1351,11206.5089,10891.2972,11151.8787
-CF_END,CASH FLOW,ENDING CASH BALANCE (Cash Reserves),grand_total,end_stock,M VND,4123.7374,9621.8724,20828.3814,31719.6785,42871.5572
+CF_NET,CASH FLOW,Net Cash Flow,total,flow,M VND,3623.7374,5498.1351,11206.5089,10891.2972,11151.8787
+CF_END,CASH FLOW,ENDING CASH BALANCE,grand_total,end_stock,M VND,4123.7374,9621.8724,20828.3814,31719.6785,42871.5572
 CF_END_CASE,CASH FLOW,  Memo: Case Baseline Cash Reserves,formula,end_stock,M VND,2376.8461,3812.8669,5196.1109,6519.557,7749.0473
-TX_HDR,TAX ESTIMATIONS,SUPPLEMENTARY - VIETNAM CIT (20%) & VAT TAX SCHEDULE (M VND),header,none,,,,,,
-TX_EBT,TAX ESTIMATIONS,  Taxable Income (EBT = EBITDA - D&A),formula,flow,M VND,1119.0601,5993.0352,10956.4506,11606.012,11991.5559
-TX_CIT_EXP,TAX ESTIMATIONS,  Effective Monthly CIT Expense (20.0% Statutory Rate),formula,flow,M VND,230.5615,1198.607,2191.2901,2321.2024,2398.3112
-TX_CIT_CURR,TAX ESTIMATIONS,  Preliminary Income Tax Due (Current FY Accrued),formula,end_stock,M VND,0.0,0.0,0.0,0.0,0.0
-TX_CIT_PAID,TAX ESTIMATIONS,  Year-End CIT Payment (Paid in April of Next FY),formula,flow,M VND,0.0,230.5615,1198.607,2191.2901,2321.2024
-TX_CIT_PAST,TAX ESTIMATIONS,  Taxes Due for Previous FY (Balance Sheet Payable),formula,end_stock,M VND,230.5615,1198.607,2191.2901,2321.2024,2398.3112
-TX_VAT_OUT,TAX ESTIMATIONS,  VAT Collected on Revenue (8.0% Effective Output VAT),formula,flow,M VND,848.9943,2124.1532,2658.4813,2754.3649,2817.5787
-TX_VAT_IN,TAX ESTIMATIONS,  VAT Paid on Transactions & Fit-Out CapEx (10.0% Input VAT),formula,flow,M VND,1212.3095,1447.465,1371.5244,1427.1223,1462.6479
-TX_VAT_REC,TAX ESTIMATIONS,  VAT Receivable (Recoverable Input VAT Credit Carryforward),formula,end_stock,M VND,519.4913,0.0,0.0,0.0,0.0
+TX_HDR,TAX ESTIMATIONS,STATEMENT 4 - TAX SCHEDULE,header,none,,,,,,
+TX_EBT,TAX ESTIMATIONS,  Taxable Income,formula,flow,M VND,1119.0601,5993.0352,10956.4506,11606.012,11991.5559
+TX_CIT_EXP,TAX ESTIMATIONS,  Corporate Income Tax Expense,formula,flow,M VND,230.5615,1198.607,2191.2901,2321.2024,2398.3112
+TX_CIT_CURR,TAX ESTIMATIONS,  Current Fiscal Year Accrued Income Tax,formula,end_stock,M VND,0.0,0.0,0.0,0.0,0.0
+TX_CIT_PAID,TAX ESTIMATIONS,  Annual Corporate Income Tax Settlement,formula,flow,M VND,0.0,230.5615,1198.607,2191.2901,2321.2024
+TX_CIT_PAST,TAX ESTIMATIONS,  Prior Fiscal Year Income Tax Payable,formula,end_stock,M VND,230.5615,1198.607,2191.2901,2321.2024,2398.3112
+TX_VAT_OUT,TAX ESTIMATIONS,  Output VAT Collected on Revenue,formula,flow,M VND,848.9943,2124.1532,2658.4813,2754.3649,2817.5787
+TX_VAT_IN,TAX ESTIMATIONS,  Input VAT Paid on Purchases & CapEx,formula,flow,M VND,1212.3095,1447.465,1371.5244,1427.1223,1462.6479
+TX_VAT_REC,TAX ESTIMATIONS,  Recoverable Input VAT Credit Carryforward,formula,end_stock,M VND,519.4913,0.0,0.0,0.0,0.0
 TX_VAT_REM,TAX ESTIMATIONS,  Total VAT Remitted to State Treasury,subtotal,flow,M VND,156.1762,157.1969,1286.9569,1327.2426,1354.9307

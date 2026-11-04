@@ -60,38 +60,38 @@ Instead of sampling monthly subscriber counts independently, each Monte Carlo tr
 
 | Category | Line Item | Cost Behavior | Case Baseline `/mo` | PICK! Social Dev (`Jan-27`) | PICK! Social Launch (`May-27`) | 20-Court Steady (`Dec-28`) | 5-Year Total | % of Revenue | Source |
 |---|---|---|---:|---:|---:|---:|---:|---:|---|
-| Revenue Line 1A (Venue 1) | Court hire: Venue 1 (6 Courts, Adaptive Pricing) | Revenue (Dynamic) | `435.00` | `457.35` | `473.92` | `454.38` | `26,978.76` | `19.26%` | Adaptive Pricing Model |
-| Revenue Line 1B (Venue 2 New) | Court hire: Venue 2 (14 Courts, Opens Feb-28) | Revenue (Venue 2 Ramp) | `0.00` | `0.00` | `0.00` | `1,060.23` | `46,181.69` | `32.98%` | Adaptive Pricing & Venue 2 |
-| Revenue Line 2 (PICK! Social) | PICK! Social subscriptions (399k/mo) & seasonal tournaments | Revenue (PICK! Social Launch+) | `0.00` | `0.00` | `140.17` | `644.93` | `36,220.08` | `25.86%` | Case Exhibit 3 & Assumptions |
-| Revenue Line 3 | Paddle rental and balls (Scales 6 to 20 Courts) | Revenue (Ancillary) | `15.00` | `18.98` | `17.10` | `44.72` | `2,253.39` | `1.61%` | Case Exhibit 1 & Segment Model |
-| Revenue Line 4 | Coaching (Scales 6 to 20 Courts + Coaching Studio) | Revenue (Services) | `115.00` | `140.85` | `147.72` | `325.18` | `17,028.86` | `12.16%` | Case Exhibit 1 & Segment Model |
-| Revenue Line 5 | Food and drinks (Scales 6 to 20 Courts + Specialty Cafe) | Revenue (F&B) | `75.00` | `93.83` | `96.44` | `219.58` | `11,381.87` | `8.13%` | Case Exhibit 1 & Segment Model |
-| **TOTAL REVENUE** | **Total Projected Revenue (20-Court Network + PICK! Social)** | Subtotal | `640.00` | `711.01` | `875.35` | `2,749.02` | **`140,044.65`** | `100.00%` | Calculated Subtotal |
-| Direct Service Costs | Coach fees (paid per lesson, ~52.17% of Coaching) | Variable (COGS) | `60.00` | `74.15` | `79.08` | `172.25` | `8,904.62` | `6.36%` | Case Exhibit 1 Ratios |
-| Sold Inventory | Food and drink supplies (~40.0% of F&B Revenue) | Variable (COGS) | `30.00` | `37.10` | `37.32` | `88.70` | `4,554.86` | `3.25%` | Case Exhibit 1 Ratios |
-| Payment & Consumables | Payment gateway fees (~1.50% of Rev) & court consumables | Variable (COGS) | `15.00` | `15.56` | `18.38` | `61.75` | `3,040.08` | `2.17%` | Case Exhibit 1 & Assumptions |
-| Partner Courts & Events (New) | Partner courts (@ 200k/hr), member leagues & seasonal tournaments | Variable (COGS, May-27+) | `0.00` | `0.00` | `47.53` | `263.83` | `11,512.56` | `8.22%` | Case Exhibit 3 & Event Plan |
-| **TOTAL COGS** | **Total Cost of Goods Sold (Direct Variable)** | Subtotal | `105.00` | `126.81` | `182.31` | `586.53` | **`28,012.12`** | `20.00%` | Calculated Subtotal |
-| **GROSS PROFIT** | **Gross Profit (5-Year Gross Margin = 80.00%)** | Profit Line | `535.00` | `584.20` | `693.04` | `2,162.50` | **`112,032.54`** | `80.00%` | Calculated Subtotal |
-| Rent - Venue 1 (6 Courts) | Venue 1 lease (Existing 6-Court Club) | Fixed (OpEx) | `150.00` | `150.00` | `150.00` | `150.00` | `9,000.00` | `6.43%` | Case Exhibit 1 |
-| Rent - Venue 2 (14 Courts New) | Venue 2 lease (New 14-Court Club, Starts Oct-27) | Fixed (OpEx, Oct-27+) | `0.00` | `0.00` | `0.00` | `330.00` | `16,830.00` | `12.02%` | Venue 2 Lease Terms |
-| Utilities (6 to 20 Courts) | Electricity, lighting and water (Venue 1 + Venue 2 from Feb-28) | Mostly Fixed (OpEx) | `40.00` | `39.24` | `38.29` | `141.88` | `7,296.38` | `5.21%` | Case Exhibit 1 & Venue 2 Plan |
-| Insurance & Upkeep (6 to 20 Courts) | Maintenance and insurance (Venue 1 + Venue 2 from Feb-28) | Fixed (OpEx) | `20.00` | `20.01` | `19.58` | `69.65` | `3,697.98` | `2.64%` | Case Exhibit 1 & Venue 2 Plan |
-| **SUBTOTAL OpEx** | **Subtotal Facility Operating Expenses (OpEx)** | Subtotal | `210.00` | `209.25` | `207.86` | `691.54` | **`36,824.36`** | `26.29%` | Calculated Subtotal |
-| Staff & Payroll (6 to 20 Courts) | Staff wages (Venue 1 130M + Venue 2 280M from Feb-28) | Fixed (SG&A) | `130.00` | `129.60` | `129.73` | `404.90` | `20,706.03` | `14.79%` | Case Exhibit 1 & Venue 2 Plan |
-| Tech Support & Admin | Booking system and administration (Base) | Fixed (SG&A) | `10.00` | `10.02` | `10.15` | `10.12` | `598.88` | `0.43%` | Case Exhibit 1 |
-| Marketing & Growth | Marketing (Social & Community) | Variable (SG&A) | `25.00` | `48.84` | `44.01` | `50.43` | `3,219.84` | `2.30%` | Case Exhibit 1 & Marketing Model |
-| PICK! Social Dev (New) | PICK! Social development & migration (Jan-Jun 2027) | PICK! Social Dev (Jan-Jun 27) | `0.00` | `153.99` | `161.17` | `0.00` | `987.70` | `0.71%` | Platform Build Schedule |
-| PICK! Social OpEx (New) | PICK! Social cloud, OTP, maintenance & uni ops (May-27+) | PICK! Social OpEx (May-27+) | `0.00` | `0.00` | `16.70` | `26.79` | `1,472.41` | `1.05%` | Platform Build Schedule |
-| Legal & Safety Compliance (New) | Ward noise-complaint legal handling & U-18 safety | External Risk (SG&A) | `0.00` | `11.02` | `9.68` | `12.12` | `753.87` | `0.54%` | Risk & Compliance Assumptions |
-| **SUBTOTAL SG&A** | **Subtotal Selling, General, Admin, PICK! Social & Compliance** | Subtotal | `165.00` | `353.47` | `371.45` | `504.37` | **`27,738.73`** | `19.81%` | Calculated Subtotal |
-| **OPEX + SG&A** | **Total Operating Expenses (Facility OpEx + SG&A)** | Subtotal | `375.00` | `562.72` | `579.31` | `1,195.90` | **`64,563.09`** | `46.10%` | Calculated Subtotal |
-| **TOTAL ALL COSTS** | **Total Monthly Operating Costs (COGS + OpEx + SG&A)** | Subtotal | `480.00` | `689.54` | `761.62` | `1,782.43` | **`92,575.21`** | `66.10%` | Calculated Subtotal |
-| **OPERATING PROFIT** | **Net Operating Income (EBITDA) [5-Year Margin = 33.90%]** | Operating Profit | `160.00` | `21.48` | `113.73` | `966.59` | **`47,469.45`** | `33.90%` | Calculated Subtotal |
-| **D&A EXPENSE** | **Depreciation & Amortization (D&A - Circular 45/2013/TT-BTC)** | Non-Cash Expense | `5.33` | `5.33` | `5.33` | `122.00` | **`5,803.33`** | `4.14%` | MOF Circular 45/2013 |
-| **TAXABLE INCOME (EBT)** | **Net Income Before Taxes (EBT = EBITDA - D&A)** | Pre-Tax Profit | `154.67` | `16.14` | `108.39` | `844.59` | **`41,666.11`** | `29.75%` | Calculated Subtotal |
-| **VIETNAM CIT (20%)** | **Corporate Income Tax Expense (Vietnam Law 67/2025/QH15 @ 20.0%)** | Statutory Tax | `30.93` | `3.23` | `21.68` | `168.92` | **`8,339.97`** | `5.96%` | Vietnam CIT Law (20%) |
-| **NET INCOME** | **Net Income After Tax [5-Year Net Margin = 23.80%]** | Bottom-Line Profit | `123.73` | `12.91` | `86.71` | `675.68` | **`33,326.14`** | `23.80%` | Calculated Subtotal |
+| Revenue Line 1A | Court hire: Venue 1 | Revenue (Court Hire) | `435.00` | `457.35` | `473.92` | `454.38` | `26,978.76` | `19.26%` | Adaptive Pricing Model |
+| Revenue Line 1B | Court hire: Venue 2 | Revenue (Court Hire) | `0.00` | `0.00` | `0.00` | `1,060.23` | `46,181.69` | `32.98%` | Venue 2 Expansion Plan |
+| Revenue Line 2 | PICK! Social subscriptions & seasonal tournaments | Revenue (Subscription) | `0.00` | `0.00` | `140.17` | `644.93` | `36,220.08` | `25.86%` | Case Exhibit 3 |
+| Revenue Line 3 | Paddle rental and balls | Revenue (Ancillary) | `15.00` | `18.98` | `17.10` | `44.72` | `2,253.39` | `1.61%` | Case Exhibit 1 |
+| Revenue Line 4 | Coaching | Revenue (Services) | `115.00` | `140.85` | `147.72` | `325.18` | `17,028.86` | `12.16%` | Case Exhibit 1 |
+| Revenue Line 5 | Food and drinks | Revenue (F&B) | `75.00` | `93.83` | `96.44` | `219.58` | `11,381.87` | `8.13%` | Case Exhibit 1 |
+| **TOTAL REVENUE** | **Total Projected Revenue** | Subtotal | `640.00` | `711.01` | `875.35` | `2,749.02` | **`140,044.65`** | `100.00%` | Calculated Subtotal |
+| Direct Service Costs | Coach fees | Variable (COGS) | `60.00` | `74.15` | `79.08` | `172.25` | `8,904.62` | `6.36%` | Case Exhibit 1 |
+| Sold Inventory | Food and drink supplies | Variable (COGS) | `30.00` | `37.10` | `37.32` | `88.70` | `4,554.86` | `3.25%` | Case Exhibit 1 |
+| Payment & Consumables | Payment gateway fees & court consumables | Variable (COGS) | `15.00` | `15.56` | `18.38` | `61.75` | `3,040.08` | `2.17%` | Case Exhibit 1 |
+| Partner Courts & Events | Partner courts, member leagues & seasonal tournaments | Variable (COGS) | `0.00` | `0.00` | `47.53` | `263.83` | `11,512.56` | `8.22%` | Case Exhibit 3 |
+| **TOTAL COGS** | **Total Cost of Goods Sold** | Subtotal | `105.00` | `126.81` | `182.31` | `586.53` | **`28,012.12`** | `20.00%` | Calculated Subtotal |
+| **GROSS PROFIT** | **Gross Profit** | Profit Line | `535.00` | `584.20` | `693.04` | `2,162.50` | **`112,032.54`** | `80.00%` | Calculated Subtotal |
+| Rent - Venue 1 | Venue 1 lease | Fixed (OpEx) | `150.00` | `150.00` | `150.00` | `150.00` | `9,000.00` | `6.43%` | Case Exhibit 1 |
+| Rent - Venue 2 | Venue 2 lease | Fixed (OpEx) | `0.00` | `0.00` | `0.00` | `330.00` | `16,830.00` | `12.02%` | Venue 2 Lease Terms |
+| Utilities | Electricity, lighting and water | Mostly Fixed (OpEx) | `40.00` | `39.24` | `38.29` | `141.88` | `7,296.38` | `5.21%` | Case Exhibit 1 |
+| Insurance & Upkeep | Maintenance and insurance | Fixed (OpEx) | `20.00` | `20.01` | `19.58` | `69.65` | `3,697.98` | `2.64%` | Case Exhibit 1 |
+| **SUBTOTAL OpEx** | **Subtotal Facility Operating Expenses** | Subtotal | `210.00` | `209.25` | `207.86` | `691.54` | **`36,824.36`** | `26.29%` | Calculated Subtotal |
+| Staff & Payroll | Staff wages | Fixed (SG&A) | `130.00` | `129.60` | `129.73` | `404.90` | `20,706.03` | `14.79%` | Case Exhibit 1 |
+| Tech Support & Admin | Booking system and administration | Fixed (SG&A) | `10.00` | `10.02` | `10.15` | `10.12` | `598.88` | `0.43%` | Case Exhibit 1 |
+| Marketing & Growth | Marketing | Variable (SG&A) | `25.00` | `48.84` | `44.01` | `50.43` | `3,219.84` | `2.30%` | Case Exhibit 1 |
+| PICK! Social Dev | PICK! Social development & migration | Project Dev (SG&A) | `0.00` | `153.99` | `161.17` | `0.00` | `987.70` | `0.71%` | Platform Build Schedule |
+| PICK! Social OpEx | PICK! Social cloud, OTP, maintenance & uni ops | Recurring (SG&A) | `0.00` | `0.00` | `16.70` | `26.79` | `1,472.41` | `1.05%` | Platform Build Schedule |
+| Legal & Safety Compliance | Ward noise-complaint legal handling & U-18 safety | Compliance (SG&A) | `0.00` | `11.02` | `9.68` | `12.12` | `753.87` | `0.54%` | Compliance Schedule |
+| **SUBTOTAL SG&A** | **Subtotal Selling, General & Administrative Expenses** | Subtotal | `165.00` | `353.47` | `371.45` | `504.37` | **`27,738.73`** | `19.81%` | Calculated Subtotal |
+| **OPEX + SG&A** | **Total Operating Expenses** | Subtotal | `375.00` | `562.72` | `579.31` | `1,195.90` | **`64,563.09`** | `46.10%` | Calculated Subtotal |
+| **TOTAL ALL COSTS** | **Total Operating Costs** | Subtotal | `480.00` | `689.54` | `761.62` | `1,782.43` | **`92,575.21`** | `66.10%` | Calculated Subtotal |
+| **OPERATING PROFIT** | **Net Operating Income** | Operating Profit | `160.00` | `21.48` | `113.73` | `966.59` | **`47,469.45`** | `33.90%` | Calculated Subtotal |
+| **D&A EXPENSE** | **Depreciation & Amortization** | Non-Cash Expense | `5.33` | `5.33` | `5.33` | `122.00` | **`5,803.33`** | `4.14%` | MOF Circular 45/2013 |
+| **TAXABLE INCOME** | **Net Income Before Taxes** | Pre-Tax Profit | `154.67` | `16.14` | `108.39` | `844.59` | **`41,666.11`** | `29.75%` | Calculated Subtotal |
+| **VIETNAM CIT** | **Corporate Income Tax Expense** | Statutory Tax | `30.93` | `3.23` | `21.68` | `168.92` | **`8,339.97`** | `5.96%` | Vietnam CIT Law |
+| **NET INCOME** | **Net Income After Tax** | Bottom-Line Profit | `123.73` | `12.91` | `86.71` | `675.68` | **`33,326.14`** | `23.80%` | Calculated Subtotal |
 
 ---
 

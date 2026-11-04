@@ -1683,198 +1683,198 @@ def build_financial_model(
 
     line_items = (
         _rec(
-            "REVENUE", "Revenue", "Revenue Line 1A (Venue 1)",
-            "Court hire: Venue 1 (6 Courts, Adaptive Pricing)", "Revenue (Dynamic)",
+            "REVENUE", "Revenue", "Revenue Line 1A",
+            "Court hire: Venue 1", "Revenue (Court Hire)",
             case_court_hire, m_v1_court,
             "6 existing courts optimized via Adaptive Pricing + scaled by monthly macro trend I_t",
         ),
         _rec(
-            "REVENUE", "Revenue", "Revenue Line 1B (Venue 2 New)",
-            "Court hire: Venue 2 (14 Courts, Opens Feb-28)", "Revenue (Venue 2 Ramp)",
+            "REVENUE", "Revenue", "Revenue Line 1B",
+            "Court hire: Venue 2", "Revenue (Court Hire)",
             0.0, m_v2_court,
             "14 new courts opening Feb-28 after 4-month build (Oct 2027 - Jan 2028), ramping over 6-9 months",
         ),
         _rec(
-            "REVENUE", "Revenue", "Revenue Line 2 (PICK! Social)",
-            "PICK! Social subscriptions (399k/mo) & seasonal tournaments", "Revenue (PICK! Social Launch+)",
+            "REVENUE", "Revenue", "Revenue Line 2",
+            "PICK! Social subscriptions & seasonal tournaments", "Revenue (Subscription)",
             0.0, m_mem_rev,
             f"Launches May-27; free member tournament entry + 350k non-member quarterly tournament fees; reaches {mc.m24_end_y2_subscribers:,.0f} members by Dec-28",
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 3",
-            "Paddle rental and balls (Scales 6 to 20 Courts)", "Revenue (Ancillary)",
+            "Paddle rental and balls", "Revenue (Ancillary)",
             paddle_balls, m_paddle,
             "Equipment rentals & ball sales across Venue 1 (6 courts) + Venue 2 (14 courts from Feb-28)",
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 4",
-            "Coaching (Scales 6 to 20 Courts + Coaching Studio)", "Revenue (Services)",
+            "Coaching", "Revenue (Services)",
             coaching, m_coach_rev,
             "Individual, group & junior coaching across Venue 1 + Venue 2 coaching facilities",
         ),
         _rec(
             "REVENUE", "Revenue", "Revenue Line 5",
-            "Food and drinks (Scales 6 to 20 Courts + Specialty Cafe)", "Revenue (F&B)",
+            "Food and drinks", "Revenue (F&B)",
             food_drinks, m_fnb_rev,
             "Courtside beverages & specialty cafe sales across Venue 1 + Venue 2",
         ),
         _rec(
             "SUMMARY", "Revenue", "TOTAL REVENUE",
-            "Total Projected Revenue (20-Court Network + PICK! Social)", "Subtotal",
+            "Total Projected Revenue", "Subtotal",
             case_total_rev, m_tot_rev,
             f"Grows from {m_tot_rev[0]:.2f}M (Jan-27) to {m_tot_rev[13]:,.2f}M (Feb-28 Venue 2 Open) and {m_tot_rev[23]:,.2f}M (Dec-28)",
         ),
 
         _rec(
             "COGS", "COGS", "Direct Service Costs",
-            "Coach fees (paid per lesson, ~52.17% of Coaching)", "Variable (COGS)",
+            "Coach fees", "Variable (COGS)",
             case_coach_fees, m_coach_cogs,
             "52.17% of Coaching revenue across both clubs",
         ),
         _rec(
             "COGS", "COGS", "Sold Inventory",
-            "Food and drink supplies (~40.0% of F&B Revenue)", "Variable (COGS)",
+            "Food and drink supplies", "Variable (COGS)",
             case_fb_supplies, m_fnb_cogs,
             "40.00% of Food & drinks revenue across both clubs",
         ),
         _rec(
             "COGS", "COGS", "Payment & Consumables",
-            "Payment gateway fees (~1.50% of Rev) & court consumables", "Variable (COGS)",
+            "Payment gateway fees & court consumables", "Variable (COGS)",
             case_pay_consumables, m_pay_cons,
             "1.50% payment gateway fee on all revenue + ball/grip consumables across active courts",
         ),
         _rec(
-            "COGS", "COGS", "Partner Courts & Events (New)",
-            "Partner courts (@ 200k/hr), member leagues & seasonal tournaments", "Variable (COGS, May-27+)",
+            "COGS", "COGS", "Partner Courts & Events",
+            "Partner courts, member leagues & seasonal tournaments", "Variable (COGS)",
             0.0, m_mem_event,
             "Monthly member leagues/partner courts + quarterly seasonal tournament organization (45M in 6-court / 85M in 20-court)",
         ),
         _rec(
             "SUMMARY", "COGS", "TOTAL COGS",
-            "Total Cost of Goods Sold (Direct Variable)", "Subtotal",
+            "Total Cost of Goods Sold", "Subtotal",
             case_total_cogs, m_tot_cogs,
             "Direct variable cost of coaching, F&B, payment processing, consumables & member events",
         ),
         _rec(
             "SUMMARY", "FS-Month", "GROSS PROFIT",
-            f"Gross Profit (5-Year Gross Margin = {(m_gp.sum()/tot_5y_rev)*100:.2f}%)", "Profit Line",
+            "Gross Profit", "Profit Line",
             case_gross_profit, m_gp,
             "Total Revenue minus Total Direct Variable COGS",
         ),
 
         _rec(
-            "OPEX", "SG&A / OpEx", "Rent - Venue 1 (6 Courts)",
-            "Venue 1 lease (Existing 6-Court Club)", "Fixed (OpEx)",
+            "OPEX", "SG&A / OpEx", "Rent - Venue 1",
+            "Venue 1 lease", "Fixed (OpEx)",
             case_venue_lease, m_v1_lease,
             "Fixed VND 150.0M/month lease for Venue 1 (Case Baseline)",
         ),
         _rec(
-            "OPEX", "SG&A / OpEx", "Rent - Venue 2 (14 Courts New)",
-            "Venue 2 lease (New 14-Court Club, Starts Oct-27)", "Fixed (OpEx, Oct-27+)",
+            "OPEX", "SG&A / OpEx", "Rent - Venue 2",
+            "Venue 2 lease", "Fixed (OpEx)",
             0.0, m_v2_lease,
             "Fixed VND 330.0M/month 5-year lease starting Oct 2027",
         ),
         _rec(
-            "OPEX", "SG&A / OpEx", "Utilities (6 to 20 Courts)",
-            "Electricity, lighting and water (Venue 1 + Venue 2 from Feb-28)", "Mostly Fixed (OpEx)",
+            "OPEX", "SG&A / OpEx", "Utilities",
+            "Electricity, lighting and water", "Mostly Fixed (OpEx)",
             case_utilities, m_util,
             "40M/mo Venue 1 + ~95M/mo Venue 2 (from Feb-28) + commercial utility inflation drift",
         ),
         _rec(
-            "OPEX", "SG&A / OpEx", "Insurance & Upkeep (6 to 20 Courts)",
-            "Maintenance and insurance (Venue 1 + Venue 2 from Feb-28)", "Fixed (OpEx)",
+            "OPEX", "SG&A / OpEx", "Insurance & Upkeep",
+            "Maintenance and insurance", "Fixed (OpEx)",
             case_maint_ins, m_maint,
             "20M/mo Venue 1 + 48M/mo Venue 2 (from Feb-28) + upkeep inflation drift",
         ),
         _rec(
             "SUMMARY", "SG&A / OpEx", "SUBTOTAL OpEx",
-            "Subtotal Facility Operating Expenses (OpEx)", "Subtotal",
+            "Subtotal Facility Operating Expenses", "Subtotal",
             case_total_opex, m_tot_opex,
             "210M/mo (Jan-Sep 27) to 540M/mo (Oct 27-Jan 28 Fit-Out) to ~692M/mo (Feb 28+ 20-Court Operations)",
         ),
 
         _rec(
-            "SGA", "SG&A", "Staff & Payroll (6 to 20 Courts)",
-            "Staff wages (Venue 1 130M + Venue 2 280M from Feb-28)", "Fixed (SG&A)",
+            "SGA", "SG&A", "Staff & Payroll",
+            "Staff wages", "Fixed (SG&A)",
             case_staff_wages, m_staff,
             "130M/mo Venue 1 crew + 280M/mo Venue 2 site manager, front desk, baristas & cleaning (from Feb-28)",
         ),
         _rec(
             "SGA", "SG&A", "Tech Support & Admin",
-            "Booking system and administration (Base)", "Fixed (SG&A)",
+            "Booking system and administration", "Fixed (SG&A)",
             case_booking_admin, m_admin,
             "Case Baseline administrative & office overhead (10.0M VND/month)",
         ),
         _rec(
             "SGA", "SG&A", "Marketing & Growth",
-            "Marketing (Social & Community)", "Variable (SG&A)",
+            "Marketing", "Variable (SG&A)",
             case_marketing, m_mkt,
             "Social media (TikTok/Instagram) & community marketing spend",
         ),
         _rec(
-            "SGA", "SG&A", "PICK! Social Dev (New)",
-            "PICK! Social development & migration (Jan-Jun 2027)", "PICK! Social Dev (Jan-Jun 27)",
+            "SGA", "SG&A", "PICK! Social Dev",
+            "PICK! Social development & migration", "Project Dev (SG&A)",
             0.0, m_plat_dev,
             "Pay-as-needed 6-month sprint drawdown + milestone holdback + expected contingency",
         ),
         _rec(
-            "SGA", "SG&A", "PICK! Social OpEx (New)",
-            "PICK! Social cloud, OTP, maintenance & uni ops (May-27+)", "PICK! Social OpEx (May-27+)",
+            "SGA", "SG&A", "PICK! Social OpEx",
+            "PICK! Social cloud, OTP, maintenance & uni ops", "Recurring (SG&A)",
             0.0, m_plat_rec,
             "16.5M/mo in May-Jun 27 to 26.5M/mo Jul 27+ (Cloud, OTP, SaaS, Uni Ops & Maintenance Retainer)",
         ),
         _rec(
-            "SGA", "SG&A", "Legal & Safety Compliance (New)",
-            "Ward noise-complaint legal handling & U-18 safety", "External Risk (SG&A)",
+            "SGA", "SG&A", "Legal & Safety Compliance",
+            "Ward noise-complaint legal handling & U-18 safety", "Compliance (SG&A)",
             0.0, m_ext_leg_saf,
             "Post-21:00 ward noise mediation/acoustic upkeep (~6.5M-9.4M/mo) + U-18 safety compliance (~3.2M-4.3M/mo)",
         ),
         _rec(
             "SUMMARY", "SG&A", "SUBTOTAL SG&A",
-            "Subtotal Selling, General, Admin, PICK! Social & Compliance", "Subtotal",
+            "Subtotal Selling, General & Administrative Expenses", "Subtotal",
             case_total_sga, m_tot_sga,
             "Consolidated 2-club payroll, admin, marketing, PICK! Social dev/OpEx & legal/safety compliance",
         ),
 
         _rec(
             "SUMMARY", "FS-Month", "OPEX + SG&A",
-            "Total Operating Expenses (Facility OpEx + SG&A)", "Subtotal",
+            "Total Operating Expenses", "Subtotal",
             case_total_opex + case_total_sga, m_tot_opex_sga,
             "Consolidated Facility OpEx + SG&A across 20 courts and PICK! Social platform",
         ),
         _rec(
             "SUMMARY", "FS-Month", "TOTAL ALL COSTS",
-            "Total Monthly Operating Costs (COGS + OpEx + SG&A)", "Subtotal",
+            "Total Operating Costs", "Subtotal",
             case_total_costs, m_tot_costs,
             "All direct variable COGS, facility OpEx, SG&A, PICK! Social & external compliance costs",
         ),
         _rec(
             "SUMMARY", "FS-Month", "OPERATING PROFIT",
-            f"Net Operating Income (EBITDA) [5-Year Margin = {(m_ebitda.sum()/tot_5y_rev)*100:.2f}%]", "Operating Profit",
+            "Net Operating Income", "Operating Profit",
             case_ebitda, m_ebitda,
             f"Y3 Annual EBITDA = {mc.y3_annual_ebitda_mean_mvnd:,.1f}M VND (vs Investor Minh Tran 3,500M target)",
         ),
         _rec(
             "SUMMARY", "FS-Month", "D&A EXPENSE",
-            "Depreciation & Amortization (D&A - Circular 45/2013/TT-BTC)", "Non-Cash Expense",
+            "Depreciation & Amortization", "Non-Cash Expense",
             da, m_da,
             "5.33M/mo Venue 1 equipment + 116.67M/mo Venue 2 7,000M fit-out over 60-month lease (from Feb-28)",
         ),
         _rec(
-            "SUMMARY", "FS-Month", "TAXABLE INCOME (EBT)",
-            "Net Income Before Taxes (EBT = EBITDA - D&A)", "Pre-Tax Profit",
+            "SUMMARY", "FS-Month", "TAXABLE INCOME",
+            "Net Income Before Taxes", "Pre-Tax Profit",
             case_ebt, m_ebt,
             "Operating profit after straight-line depreciation and before Vietnam 20% Corporate Income Tax",
         ),
         _rec(
-            "SUMMARY", "Taxes", "VIETNAM CIT (20%)",
-            "Corporate Income Tax Expense (Vietnam Law 67/2025/QH15 @ 20.0%)", "Statutory Tax",
+            "SUMMARY", "Taxes", "VIETNAM CIT",
+            "Corporate Income Tax Expense", "Statutory Tax",
             case_taxes, m_taxes,
             "20.0% statutory Vietnam CIT accrued monthly into Current FY Tax Payable and settled in April of next FY",
         ),
         _rec(
             "SUMMARY", "FS-Month", "NET INCOME",
-            f"Net Income After Tax [5-Year Net Margin = {(m_net_inc.sum()/tot_5y_rev)*100:.2f}%]", "Bottom-Line Profit",
+            "Net Income After Tax", "Bottom-Line Profit",
             case_net_income, m_net_inc,
             "Bottom-line profit after D&A and 20% Vietnam statutory Corporate Income Tax",
         ),
@@ -1884,34 +1884,34 @@ def build_financial_model(
         if "D&A" in li.template_category:
             return "MOF Circular 45/2013"
         if "CIT" in li.template_category:
-            return "Vietnam CIT Law (20%)"
+            return "Vietnam CIT Law"
         if li.section == "SUMMARY":
             return "Calculated Subtotal"
-        if "Venue 1 (" in li.line_item and "Court hire" in li.line_item:
+        if "Court hire: Venue 1" in li.line_item:
             return "Adaptive Pricing Model"
-        if "Venue 2 (" in li.line_item and "Court hire" in li.line_item:
-            return "Adaptive Pricing & Venue 2"
+        if "Court hire: Venue 2" in li.line_item:
+            return "Venue 2 Expansion Plan"
         if "PICK! Social subscriptions" in li.line_item:
-            return "Case Exhibit 3 & Assumptions"
+            return "Case Exhibit 3"
         if li.section == "REVENUE":
-            return "Case Exhibit 1 & Segment Model"
+            return "Case Exhibit 1"
         if "Coach fees" in li.line_item or "Food and drink supplies" in li.line_item:
-            return "Case Exhibit 1 Ratios"
+            return "Case Exhibit 1"
         if "Payment gateway" in li.line_item:
-            return "Case Exhibit 1 & Assumptions"
+            return "Case Exhibit 1"
         if "Partner courts" in li.line_item:
-            return "Case Exhibit 3 & Event Plan"
+            return "Case Exhibit 3"
         if "Venue 1 lease" in li.line_item or "Booking system" in li.line_item:
             return "Case Exhibit 1"
         if "Venue 2 lease" in li.line_item:
             return "Venue 2 Lease Terms"
         if "Marketing" in li.line_item:
-            return "Case Exhibit 1 & Marketing Model"
+            return "Case Exhibit 1"
         if "PICK! Social" in li.line_item:
             return "Platform Build Schedule"
         if "Ward noise" in li.line_item:
-            return "Risk & Compliance Assumptions"
-        return "Case Exhibit 1 & Venue 2 Plan"
+            return "Compliance Schedule"
+        return "Case Exhibit 1"
 
     line_items_df = pd.DataFrame([
         {
@@ -1919,9 +1919,9 @@ def build_financial_model(
             "Line Item": r.line_item,
             "Cost Behavior": r.behavior,
             "Case Baseline": round(r.case_baseline_monthly_mvnd, 2),
-            "PICK! Social Dev (Jan-27)": round(r.m1_build_monthly_mvnd, 2),
-            "PICK! Social Launch (May-27)": round(r.m5_launch_monthly_mvnd, 2),
-            "20-Court Steady (Dec-28)": round(r.m24_end_y2_monthly_mvnd, 2),
+            "Jan-27": round(r.m1_build_monthly_mvnd, 2),
+            "May-27": round(r.m5_launch_monthly_mvnd, 2),
+            "Dec-28": round(r.m24_end_y2_monthly_mvnd, 2),
             "5-Year Total": round(r.five_year_total_mvnd, 2),
             "% of Revenue": round(r.pct_of_5y_revenue, 2),
             "Source": _source_for_li(r),
@@ -2191,115 +2191,115 @@ def build_financial_model(
     # Row specifications for Financial Statements - Monthly (FS-Month) & Annual (FS-Annual):
     three_stmt_rows: list[tuple[str, str, str, str, str, float | None, np.ndarray | None]] = [
         # ==================== KEY INDICATORS ====================
-        ("KI_HDR", "KEY INDICATORS", "KEY INDICATORS & MILESTONES", "header", "none", None, None),
-        ("MEM_COURTS", "KEY INDICATORS", "  Active Courts in Operation (6 to 20 in Feb-28)", "input_linked", "end_stock", 6.0, venue_scaling.active_courts_60m.astype(float)),
-        ("MEM_CNT", "KEY INDICATORS", "  Active Paying Members (PICK! Social @ 399k/mo)", "input_linked", "end_stock", 0.0, mc.active_subscribers_mean),
-        ("KI_EQ", "KEY INDICATORS", "  Equity Funding (500M Signing Jan-27 + 7,500M Expansion Oct-27)", "input_linked", "flow", 0.0, eq_funding_arr),
-        ("KI_CASH", "KEY INDICATORS", "  Cash Reserves at End of Period (Cash in Hand)", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
+        ("KI_HDR", "KEY INDICATORS", "KEY INDICATORS", "header", "none", None, None),
+        ("MEM_COURTS", "KEY INDICATORS", "  Active Courts in Operation", "input_linked", "end_stock", 6.0, venue_scaling.active_courts_60m.astype(float)),
+        ("MEM_CNT", "KEY INDICATORS", "  Active Paying Members", "input_linked", "end_stock", 0.0, mc.active_subscribers_mean),
+        ("KI_EQ", "KEY INDICATORS", "  Equity Funding", "input_linked", "flow", 0.0, eq_funding_arr),
+        ("KI_CASH", "KEY INDICATORS", "  Cash Reserves at End of Period", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
 
         # ==================== INCOME STATEMENT ====================
-        ("IS_HDR", "INCOME STATEMENT", "STATEMENT 1 - INCOME STATEMENT (PROFIT & LOSS, M VND)", "header", "none", None, None),
-        ("REV_1A", "INCOME STATEMENT", "  Revenue: Court Hire - Venue 1 (6 Courts, Adaptive Pricing)", "input_linked", "flow", case_court_hire, m_v1_court),
-        ("REV_1B", "INCOME STATEMENT", "  Revenue: Court Hire - Venue 2 (14 Courts, Opens Feb-28)", "input_linked", "flow", 0.0, m_v2_court),
-        ("REV_2", "INCOME STATEMENT", "  Revenue: PICK! Social Subscriptions & Seasonal Tournaments (May-27+)", "input_linked", "flow", 0.0, m_mem_rev),
-        ("REV_3", "INCOME STATEMENT", "  Revenue: Paddle Rental and Balls (Scales to 20 Courts)", "input", "flow", paddle_balls, m_paddle),
-        ("REV_4", "INCOME STATEMENT", "  Revenue: Coaching Services (Scales to 20 Courts + Studio)", "input", "flow", coaching, m_coach_rev),
-        ("REV_5", "INCOME STATEMENT", "  Revenue: Food and Drinks (Scales to 20 Courts + Cafe)", "input", "flow", food_drinks, m_fnb_rev),
-        ("REV_TOT", "INCOME STATEMENT", "Total Revenue", "subtotal", "flow", case_total_rev, m_tot_rev),
+        ("IS_HDR", "INCOME STATEMENT", "STATEMENT 1 - INCOME STATEMENT", "header", "none", None, None),
+        ("REV_1A", "INCOME STATEMENT", "  Court hire: Venue 1", "input_linked", "flow", case_court_hire, m_v1_court),
+        ("REV_1B", "INCOME STATEMENT", "  Court hire: Venue 2", "input_linked", "flow", 0.0, m_v2_court),
+        ("REV_2", "INCOME STATEMENT", "  PICK! Social subscriptions & seasonal tournaments", "input_linked", "flow", 0.0, m_mem_rev),
+        ("REV_3", "INCOME STATEMENT", "  Paddle rental and balls", "input", "flow", paddle_balls, m_paddle),
+        ("REV_4", "INCOME STATEMENT", "  Coaching", "input", "flow", coaching, m_coach_rev),
+        ("REV_5", "INCOME STATEMENT", "  Food and drinks", "input", "flow", food_drinks, m_fnb_rev),
+        ("REV_TOT", "INCOME STATEMENT", "Total Projected Revenue", "subtotal", "flow", case_total_rev, m_tot_rev),
 
-        ("COGS_1", "INCOME STATEMENT", "  Costs (COGS): Coach Fees (Paid per Lesson)", "input", "flow", case_coach_fees, m_coach_cogs),
-        ("COGS_2", "INCOME STATEMENT", "  Costs (COGS): Food and Drink Supplies", "input", "flow", case_fb_supplies, m_fnb_cogs),
-        ("COGS_3", "INCOME STATEMENT", "  Costs (COGS): Payment Processing (~1.50% Rev) & Consumables", "input_linked", "flow", case_pay_consumables, m_pay_cons),
-        ("COGS_4", "INCOME STATEMENT", "  Costs (COGS): Partner Courts, Member Leagues & Seasonal Tournaments", "input_linked", "flow", 0.0, m_mem_event),
-        ("COGS_TOT", "INCOME STATEMENT", "Total Costs (COGS)", "subtotal", "flow", case_total_cogs, m_tot_cogs),
+        ("COGS_1", "INCOME STATEMENT", "  Coach fees", "input", "flow", case_coach_fees, m_coach_cogs),
+        ("COGS_2", "INCOME STATEMENT", "  Food and drink supplies", "input", "flow", case_fb_supplies, m_fnb_cogs),
+        ("COGS_3", "INCOME STATEMENT", "  Payment gateway fees & court consumables", "input_linked", "flow", case_pay_consumables, m_pay_cons),
+        ("COGS_4", "INCOME STATEMENT", "  Partner courts, member leagues & seasonal tournaments", "input_linked", "flow", 0.0, m_mem_event),
+        ("COGS_TOT", "INCOME STATEMENT", "Total Cost of Goods Sold", "subtotal", "flow", case_total_cogs, m_tot_cogs),
 
         ("GP_TOT", "INCOME STATEMENT", "Gross Profit", "total", "flow", case_gross_profit, m_gp),
-        ("GP_PCT", "INCOME STATEMENT", "  Gross Margin (%)", "pct", "pct", (case_gross_profit / case_total_rev) * 100.0, m_gp_pct),
+        ("GP_PCT", "INCOME STATEMENT", "  Gross Margin", "pct", "pct", (case_gross_profit / case_total_rev) * 100.0, m_gp_pct),
 
-        ("OPEX_1A", "INCOME STATEMENT", "  Facility OpEx: Rent - Venue 1 Lease (6 Courts, 150M/mo)", "input", "flow", case_venue_lease, m_v1_lease),
-        ("OPEX_1B", "INCOME STATEMENT", "  Facility OpEx: Rent - Venue 2 Lease (14 Courts, 330M/mo Oct-27+)", "input_linked", "flow", 0.0, m_v2_lease),
-        ("OPEX_2", "INCOME STATEMENT", "  Facility OpEx: Utilities - Electricity, Lighting & Water", "input", "flow", case_utilities, m_util),
-        ("OPEX_3", "INCOME STATEMENT", "  Facility OpEx: Insurance & Facility Maintenance", "input", "flow", case_maint_ins, m_maint),
-        ("OPEX_TOT", "INCOME STATEMENT", "Subtotal Facility Operating Expenses (OpEx)", "subtotal", "flow", case_total_opex, m_tot_opex),
+        ("OPEX_1A", "INCOME STATEMENT", "  Venue 1 lease", "input", "flow", case_venue_lease, m_v1_lease),
+        ("OPEX_1B", "INCOME STATEMENT", "  Venue 2 lease", "input_linked", "flow", 0.0, m_v2_lease),
+        ("OPEX_2", "INCOME STATEMENT", "  Electricity, lighting and water", "input", "flow", case_utilities, m_util),
+        ("OPEX_3", "INCOME STATEMENT", "  Maintenance and insurance", "input", "flow", case_maint_ins, m_maint),
+        ("OPEX_TOT", "INCOME STATEMENT", "Subtotal Facility Operating Expenses", "subtotal", "flow", case_total_opex, m_tot_opex),
 
-        ("SGA_1", "INCOME STATEMENT", "  Expenses (SG&A): Staff & Payroll (Venue 1 + Venue 2 Feb-28+)", "input", "flow", case_staff_wages, m_staff),
-        ("SGA_2", "INCOME STATEMENT", "  Expenses (SG&A): Tech Support & Administration (Base)", "input", "flow", case_booking_admin, m_admin),
-        ("SGA_3", "INCOME STATEMENT", "  Expenses (SG&A): Marketing & Growth (Social & Segments)", "input", "flow", case_marketing, m_mkt),
-        ("SGA_4", "INCOME STATEMENT", "  Expenses (SG&A): PICK! Social Dev & Migration (Jan-Jun 2027)", "input_linked", "flow", 0.0, m_plat_dev),
-        ("SGA_5", "INCOME STATEMENT", "  Expenses (SG&A): PICK! Social Cloud, OTP & Community Ops (May-27+)", "input_linked", "flow", 0.0, m_plat_rec),
-        ("SGA_6", "INCOME STATEMENT", "  Expenses (SG&A): Legal / Ward Noise & U-18 Safety Compliance", "input_linked", "flow", 0.0, m_ext_leg_saf),
-        ("SGA_TOT", "INCOME STATEMENT", "Subtotal Expenses (SG&A)", "subtotal", "flow", case_total_sga, m_tot_sga),
+        ("SGA_1", "INCOME STATEMENT", "  Staff wages", "input", "flow", case_staff_wages, m_staff),
+        ("SGA_2", "INCOME STATEMENT", "  Booking system and administration", "input", "flow", case_booking_admin, m_admin),
+        ("SGA_3", "INCOME STATEMENT", "  Marketing", "input", "flow", case_marketing, m_mkt),
+        ("SGA_4", "INCOME STATEMENT", "  PICK! Social development & migration", "input_linked", "flow", 0.0, m_plat_dev),
+        ("SGA_5", "INCOME STATEMENT", "  PICK! Social cloud, OTP, maintenance & uni ops", "input_linked", "flow", 0.0, m_plat_rec),
+        ("SGA_6", "INCOME STATEMENT", "  Ward noise-complaint legal handling & U-18 safety", "input_linked", "flow", 0.0, m_ext_leg_saf),
+        ("SGA_TOT", "INCOME STATEMENT", "Subtotal Selling, General & Administrative Expenses", "subtotal", "flow", case_total_sga, m_tot_sga),
 
-        ("OPEX_SGA_TOT", "INCOME STATEMENT", "Total Operating Expenses (OpEx + SG&A)", "subtotal", "flow", case_total_opex + case_total_sga, m_tot_opex_sga),
-        ("ALL_COST_TOT", "INCOME STATEMENT", "Total Operating Costs (COGS + OpEx + SG&A)", "subtotal", "flow", case_total_costs, m_tot_costs),
+        ("OPEX_SGA_TOT", "INCOME STATEMENT", "Total Operating Expenses", "subtotal", "flow", case_total_opex + case_total_sga, m_tot_opex_sga),
+        ("ALL_COST_TOT", "INCOME STATEMENT", "Total Operating Costs", "subtotal", "flow", case_total_costs, m_tot_costs),
 
-        ("EBITDA_TOT", "INCOME STATEMENT", "Net Operating Income (EBITDA)", "grand_total", "flow", case_ebitda, m_ebitda),
-        ("EBITDA_PCT", "INCOME STATEMENT", "  EBITDA Margin (%)", "pct", "pct", (case_ebitda / case_total_rev) * 100.0, m_ebitda_pct),
-        ("DA_EXP", "INCOME STATEMENT", "  Other Expenses: Depreciation & Amortization (D&A)", "formula", "flow", da, m_da),
-        ("EBT_TOT", "INCOME STATEMENT", "Net Income Before Taxes (EBT)", "subtotal", "flow", case_ebt, m_ebt),
-        ("TAX_EXP", "INCOME STATEMENT", "  Taxes: Corporate Income Tax (Vietnam 20.0% Statutory CIT)", "formula", "flow", case_taxes, m_taxes),
-        ("NET_INC", "INCOME STATEMENT", "Net Income", "grand_total", "flow", case_net_income, m_net_inc),
-        ("NET_PCT", "INCOME STATEMENT", "  Net Margin (%)", "pct", "pct", (case_net_income / case_total_rev) * 100.0, m_net_margin_pct),
+        ("EBITDA_TOT", "INCOME STATEMENT", "Net Operating Income", "grand_total", "flow", case_ebitda, m_ebitda),
+        ("EBITDA_PCT", "INCOME STATEMENT", "  Operating Margin", "pct", "pct", (case_ebitda / case_total_rev) * 100.0, m_ebitda_pct),
+        ("DA_EXP", "INCOME STATEMENT", "  Depreciation & Amortization", "formula", "flow", da, m_da),
+        ("EBT_TOT", "INCOME STATEMENT", "Net Income Before Taxes", "subtotal", "flow", case_ebt, m_ebt),
+        ("TAX_EXP", "INCOME STATEMENT", "  Corporate Income Tax Expense", "formula", "flow", case_taxes, m_taxes),
+        ("NET_INC", "INCOME STATEMENT", "Net Income After Tax", "grand_total", "flow", case_net_income, m_net_inc),
+        ("NET_PCT", "INCOME STATEMENT", "  Net Margin", "pct", "pct", (case_net_income / case_total_rev) * 100.0, m_net_margin_pct),
 
         # ==================== BALANCE SHEET ====================
-        ("BS_HDR", "BALANCE SHEET", "STATEMENT 2 - BALANCE SHEET (END OF PERIOD, M VND)", "header", "none", None, None),
-        ("BS_CASH", "BALANCE SHEET", "  Cash and Cash Equivalents (Cash Reserves)", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
-        ("BS_INV", "BALANCE SHEET", "  Inventory (1-Mo F&B Supplies & Court Equipment)", "input", "end_stock", bs.inventory_mvnd, inv_arr),
-        ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Security Deposit (150M to 480M Oct-27+)", "input_linked", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
+        ("BS_HDR", "BALANCE SHEET", "STATEMENT 2 - BALANCE SHEET", "header", "none", None, None),
+        ("BS_CASH", "BALANCE SHEET", "  Cash and Cash Equivalents", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
+        ("BS_INV", "BALANCE SHEET", "  Inventory", "input", "end_stock", bs.inventory_mvnd, inv_arr),
+        ("BS_PRE", "BALANCE SHEET", "  Prepaid Expenses & Lease Security Deposit", "input_linked", "end_stock", bs.prepaid_expenses_mvnd, prepaid_arr),
         ("BS_CA_TOT", "BALANCE SHEET", "Total Current Assets", "subtotal", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd, tot_curr_assets_arr),
-        ("BS_PPE", "BALANCE SHEET", "  Equipment / PP&E (+7,000M Fit-Out Oct-27-Jan-28, Net of D&A)", "input_linked", "end_stock", bs.equipment_ppe_gross_mvnd - da, ppe_net_arr),
+        ("BS_PPE", "BALANCE SHEET", "  Equipment & Leasehold Improvements, Net", "input_linked", "end_stock", bs.equipment_ppe_gross_mvnd - da, ppe_net_arr),
         ("BS_INTANG", "BALANCE SHEET", "  Intangible Assets", "input", "end_stock", bs.intangible_assets_mvnd, intang_arr),
-        ("BS_LTA_TOT", "BALANCE SHEET", "Total Long-Term (Fixed) Assets", "subtotal", "end_stock", bs.equipment_ppe_gross_mvnd - da + bs.intangible_assets_mvnd, tot_lt_assets_arr),
+        ("BS_LTA_TOT", "BALANCE SHEET", "Total Long-Term Assets", "subtotal", "end_stock", bs.equipment_ppe_gross_mvnd - da + bs.intangible_assets_mvnd, tot_lt_assets_arr),
         ("BS_ASSETS_TOT", "BALANCE SHEET", "TOTAL ASSETS", "total", "end_stock", bs.starting_cash_mvnd + case_ebitda + bs.inventory_mvnd + bs.prepaid_expenses_mvnd + bs.equipment_ppe_gross_mvnd - da, tot_assets_arr),
 
-        ("BS_AP", "BALANCE SHEET", "  Accounts Payable (1-Mo Supplies & Payment Gateway)", "input", "end_stock", bs.accounts_payable_mvnd, ap_arr),
-        ("BS_ACC", "BALANCE SHEET", "  Accrued Coaching & Staff Payables (1-Mo Coach Fees)", "input", "end_stock", bs.accrued_expenses_payable_mvnd, accrued_arr),
-        ("BS_TAX_PAST", "BALANCE SHEET", "  Income Taxes Payable - Past FY (Settled in April)", "formula", "end_stock", 0.0, tax_past_fy_arr),
-        ("BS_TAX_CURR", "BALANCE SHEET", "  Income Taxes Payable - Current FY (Accrued 20% CIT)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
+        ("BS_AP", "BALANCE SHEET", "  Accounts Payable", "input", "end_stock", bs.accounts_payable_mvnd, ap_arr),
+        ("BS_ACC", "BALANCE SHEET", "  Accrued Coaching & Staff Payables", "input", "end_stock", bs.accrued_expenses_payable_mvnd, accrued_arr),
+        ("BS_TAX_PAST", "BALANCE SHEET", "  Income Taxes Payable - Prior Fiscal Year", "formula", "end_stock", 0.0, tax_past_fy_arr),
+        ("BS_TAX_CURR", "BALANCE SHEET", "  Income Taxes Payable - Current Fiscal Year", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
         ("BS_LIAB_TOT", "BALANCE SHEET", "TOTAL LIABILITIES", "subtotal", "end_stock", bs.accounts_payable_mvnd + bs.accrued_expenses_payable_mvnd + case_taxes, tot_liab_arr),
 
-        ("BS_CAP", "BALANCE SHEET", "  Contributed Capital (Equity Rounds: +500M Jan-27 & +7,500M Oct-27)", "input_linked", "end_stock", bs.contributed_capital_mvnd, contrib_cap_arr),
-        ("BS_RE", "BALANCE SHEET", "  Retained Earnings (Cumulative After-Tax Profit)", "formula", "end_stock", bs.starting_retained_earnings_mvnd + case_net_income, ret_earn_arr),
+        ("BS_CAP", "BALANCE SHEET", "  Contributed Capital", "input_linked", "end_stock", bs.contributed_capital_mvnd, contrib_cap_arr),
+        ("BS_RE", "BALANCE SHEET", "  Retained Earnings", "formula", "end_stock", bs.starting_retained_earnings_mvnd + case_net_income, ret_earn_arr),
         ("BS_EQ_TOT", "BALANCE SHEET", "TOTAL OWNER'S EQUITY", "subtotal", "end_stock", bs.contributed_capital_mvnd + bs.starting_retained_earnings_mvnd + case_net_income, tot_equity_arr),
         ("BS_LE_TOT", "BALANCE SHEET", "TOTAL LIABILITIES & OWNER'S EQUITY", "total", "end_stock", bs.accounts_payable_mvnd + bs.accrued_expenses_payable_mvnd + case_taxes + bs.contributed_capital_mvnd + bs.starting_retained_earnings_mvnd + case_net_income, tot_liab_and_eq_arr),
-        ("BS_CHK", "BALANCE SHEET", "  Check (Total Assets - Total L&E)", "formula", "end_stock", 0.0, bs_check_arr),
+        ("BS_CHK", "BALANCE SHEET", "  Balance Sheet Check", "formula", "end_stock", 0.0, bs_check_arr),
 
         # ==================== CASH FLOW STATEMENT ====================
-        ("CF_HDR", "CASH FLOW", "STATEMENT 3 - CASH FLOW STATEMENT (M VND)", "header", "none", None, None),
+        ("CF_HDR", "CASH FLOW", "STATEMENT 3 - CASH FLOW STATEMENT", "header", "none", None, None),
         ("CF_START", "CASH FLOW", "Starting Cash Balance", "formula", "start_stock", bs.starting_cash_mvnd, start_cash_arr),
-        ("CF_NI", "CASH FLOW", "  (+) Net Income", "formula", "flow", case_net_income, m_net_inc),
-        ("CF_DA", "CASH FLOW", "  (+) D&A (Non-Cash Expense)", "formula", "flow", da, m_da),
-        ("CF_NWC", "CASH FLOW", "  (-) Change in Working Capital (Lease Deposit, Inventory, Payables & CIT)", "formula", "flow", -case_taxes, nwc_change_arr),
+        ("CF_NI", "CASH FLOW", "  Net Income After Tax", "formula", "flow", case_net_income, m_net_inc),
+        ("CF_DA", "CASH FLOW", "  Depreciation & Amortization", "formula", "flow", da, m_da),
+        ("CF_NWC", "CASH FLOW", "  Change in Working Capital", "formula", "flow", -case_taxes, nwc_change_arr),
         ("CF_OCF", "CASH FLOW", "Total Operating Cash Flow", "subtotal", "flow", case_ebitda, ocf_arr),
-        ("CF_CAPEX", "CASH FLOW", "  (-) CAPEX to PP&E (Venue 2 Fit-Out: -1,750M/mo Oct-27-Jan-28)", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
+        ("CF_CAPEX", "CASH FLOW", "  Capital Expenditures", "input_linked", "flow", -bs.monthly_capex_mvnd, icf_arr),
         ("CF_ICF", "CASH FLOW", "Total Investing Cash Flow", "subtotal", "flow", -bs.monthly_capex_mvnd, icf_arr),
-        ("CF_EQ", "CASH FLOW", "  (+) Equity Funding (Investor Minh Tran: +500M Jan-27 & +7,500M Oct-27)", "input_linked", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
+        ("CF_EQ", "CASH FLOW", "  Equity Financing", "input_linked", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
         ("CF_FCF", "CASH FLOW", "Total Financing Cash Flow", "subtotal", "flow", bs.monthly_equity_funding_mvnd - bs.monthly_dividends_mvnd, fcf_arr),
-        ("CF_NET", "CASH FLOW", "Net Cash Flow (Total Cash Movements)", "total", "flow", case_ebitda, net_cf_arr),
-        ("CF_END", "CASH FLOW", "ENDING CASH BALANCE (Cash Reserves)", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
+        ("CF_NET", "CASH FLOW", "Net Cash Flow", "total", "flow", case_ebitda, net_cf_arr),
+        ("CF_END", "CASH FLOW", "ENDING CASH BALANCE", "grand_total", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_arr),
         ("CF_END_CASE", "CASH FLOW", "  Memo: Case Baseline Cash Reserves", "formula", "end_stock", bs.starting_cash_mvnd + case_ebitda, end_cash_case_arr),
 
         # ==================== TAX ESTIMATIONS (VIETNAM CIT & VAT) ====================
-        ("TX_HDR", "TAX ESTIMATIONS", "SUPPLEMENTARY - VIETNAM CIT (20%) & VAT TAX SCHEDULE (M VND)", "header", "none", None, None),
-        ("TX_EBT", "TAX ESTIMATIONS", "  Taxable Income (EBT = EBITDA - D&A)", "formula", "flow", case_ebt, m_ebt),
-        ("TX_CIT_EXP", "TAX ESTIMATIONS", "  Effective Monthly CIT Expense (20.0% Statutory Rate)", "formula", "flow", case_taxes, m_taxes),
-        ("TX_CIT_CURR", "TAX ESTIMATIONS", "  Preliminary Income Tax Due (Current FY Accrued)", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
-        ("TX_CIT_PAID", "TAX ESTIMATIONS", "  Year-End CIT Payment (Paid in April of Next FY)", "formula", "flow", 0.0, cit_cash_paid_arr),
-        ("TX_CIT_PAST", "TAX ESTIMATIONS", "  Taxes Due for Previous FY (Balance Sheet Payable)", "formula", "end_stock", 0.0, tax_past_fy_arr),
-        ("TX_VAT_OUT", "TAX ESTIMATIONS", "  VAT Collected on Revenue (8.0% Effective Output VAT)", "formula", "flow", case_total_rev * tax_cfg.vat_output_rate, vat_output_arr),
-        ("TX_VAT_IN", "TAX ESTIMATIONS", "  VAT Paid on Transactions & Fit-Out CapEx (10.0% Input VAT)", "formula", "flow", (case_fb_supplies + case_pay_consumables + case_total_opex + case_booking_admin + case_marketing) * tax_cfg.vat_input_rate, vat_input_arr),
-        ("TX_VAT_REC", "TAX ESTIMATIONS", "  VAT Receivable (Recoverable Input VAT Credit Carryforward)", "formula", "end_stock", 0.0, vat_receivable_arr),
+        ("TX_HDR", "TAX ESTIMATIONS", "STATEMENT 4 - TAX SCHEDULE", "header", "none", None, None),
+        ("TX_EBT", "TAX ESTIMATIONS", "  Taxable Income", "formula", "flow", case_ebt, m_ebt),
+        ("TX_CIT_EXP", "TAX ESTIMATIONS", "  Corporate Income Tax Expense", "formula", "flow", case_taxes, m_taxes),
+        ("TX_CIT_CURR", "TAX ESTIMATIONS", "  Current Fiscal Year Accrued Income Tax", "formula", "end_stock", case_taxes, tax_curr_fy_arr),
+        ("TX_CIT_PAID", "TAX ESTIMATIONS", "  Annual Corporate Income Tax Settlement", "formula", "flow", 0.0, cit_cash_paid_arr),
+        ("TX_CIT_PAST", "TAX ESTIMATIONS", "  Prior Fiscal Year Income Tax Payable", "formula", "end_stock", 0.0, tax_past_fy_arr),
+        ("TX_VAT_OUT", "TAX ESTIMATIONS", "  Output VAT Collected on Revenue", "formula", "flow", case_total_rev * tax_cfg.vat_output_rate, vat_output_arr),
+        ("TX_VAT_IN", "TAX ESTIMATIONS", "  Input VAT Paid on Purchases & CapEx", "formula", "flow", (case_fb_supplies + case_pay_consumables + case_total_opex + case_booking_admin + case_marketing) * tax_cfg.vat_input_rate, vat_input_arr),
+        ("TX_VAT_REC", "TAX ESTIMATIONS", "  Recoverable Input VAT Credit Carryforward", "formula", "end_stock", 0.0, vat_receivable_arr),
         ("TX_VAT_REM", "TAX ESTIMATIONS", "  Total VAT Remitted to State Treasury", "subtotal", "flow", max(0.0, case_total_rev * tax_cfg.vat_output_rate - (case_fb_supplies + case_pay_consumables + case_total_opex + case_booking_admin + case_marketing) * tax_cfg.vat_input_rate), vat_remitted_arr),
     ]
 
     # Build FS-Month DataFrame (60 Months strictly: Jan-27 to Dec-31)
     # and FS-Annual DataFrame (5 Fiscal Years strictly: FY 2027 to FY 2031)
     year_labels = (
-        "FY 2027 (Y1)",
-        "FY 2028 (Y2)",
-        "FY 2029 (Y3)",
-        "FY 2030 (Y4)",
-        "FY 2031 (Y5)",
+        "FY 2027",
+        "FY 2028",
+        "FY 2029",
+        "FY 2030",
+        "FY 2031",
     )
     month_records = []
     annual_records = []

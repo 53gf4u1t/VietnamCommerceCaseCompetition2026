@@ -314,51 +314,51 @@ def _line_item_source_label(li) -> str:
     if "D&A" in li.template_category:
         return "MOF Circular 45/2013"
     if "CIT" in li.template_category:
-        return "Vietnam CIT Law (20%)"
+        return "Vietnam CIT Law"
     if li.section == "SUMMARY":
         return "Calculated Subtotal"
-    if "Venue 1 (" in li.line_item and "Court hire" in li.line_item:
+    if "Court hire: Venue 1" in li.line_item:
         return "Adaptive Pricing Model"
-    if "Venue 2 (" in li.line_item and "Court hire" in li.line_item:
-        return "Adaptive Pricing & Venue 2"
+    if "Court hire: Venue 2" in li.line_item:
+        return "Venue 2 Expansion Plan"
     if "PICK! Social subscriptions" in li.line_item:
-        return "Case Exhibit 3 & Assumptions"
+        return "Case Exhibit 3"
     if li.section == "REVENUE":
-        return "Case Exhibit 1 & Segment Model"
+        return "Case Exhibit 1"
     if "Coach fees" in li.line_item or "Food and drink supplies" in li.line_item:
-        return "Case Exhibit 1 Ratios"
+        return "Case Exhibit 1"
     if "Payment gateway" in li.line_item:
-        return "Case Exhibit 1 & Assumptions"
+        return "Case Exhibit 1"
     if "Partner courts" in li.line_item:
-        return "Case Exhibit 3 & Event Plan"
+        return "Case Exhibit 3"
     if "Venue 1 lease" in li.line_item or "Booking system" in li.line_item:
         return "Case Exhibit 1"
     if "Venue 2 lease" in li.line_item:
         return "Venue 2 Lease Terms"
     if "Marketing" in li.line_item:
-        return "Case Exhibit 1 & Marketing Model"
+        return "Case Exhibit 1"
     if "PICK! Social" in li.line_item:
         return "Platform Build Schedule"
     if "Ward noise" in li.line_item:
-        return "Risk & Compliance Assumptions"
-    return "Case Exhibit 1 & Venue 2 Plan"
+        return "Compliance Schedule"
+    return "Case Exhibit 1"
 
 
 _THREE_STMT_SUBHEADERS: dict[str, str] = {
-    "REV_1A": "REVENUE STREAMS (COURT HIRE, PICK! SOCIAL & ANCILLARY)",
-    "COGS_1": "DIRECT COST OF GOODS SOLD (VARIABLE COGS)",
-    "OPEX_1A": "FACILITY OPERATING EXPENSES (FIXED & SEMI-FIXED OPEX)",
-    "SGA_1": "SELLING, GENERAL, ADMIN, PLATFORM & COMPLIANCE (SG&A)",
-    "DA_EXP": "DEPRECIATION (D&A), TAXABLE INCOME (EBT) & CORPORATE INCOME TAX",
-    "BS_CASH": "ASSETS - CURRENT ASSETS (CASH, INVENTORY & LEASE DEPOSIT)",
-    "BS_PPE": "ASSETS - LONG-TERM (FIXED) ASSETS (PP&E NET OF D&A)",
-    "BS_AP": "LIABILITIES - CURRENT OPERATING & TAX PAYABLES",
-    "BS_CAP": "OWNER'S EQUITY - CONTRIBUTED CAPITAL & RETAINED EARNINGS",
-    "CF_START": "OPERATING ACTIVITIES (NET INCOME, D&A & WORKING CAPITAL)",
-    "CF_CAPEX": "INVESTING ACTIVITIES (VENUE 2 TURNKEY FIT-OUT CAPEX)",
-    "CF_EQ": "FINANCING ACTIVITIES & ENDING CASH RESERVES",
-    "TX_EBT": "CORPORATE INCOME TAX SCHEDULE (VIETNAM CIT LAW 67/2025/QH15 @ 20.0%)",
-    "TX_VAT_OUT": "VALUE-ADDED TAX SCHEDULE (8.0% OUTPUT VAT VS. 10.0% INPUT VAT - LAW 48/2024/QH15)",
+    "REV_1A": "REVENUE STREAMS",
+    "COGS_1": "COST OF GOODS SOLD",
+    "OPEX_1A": "FACILITY OPERATING EXPENSES",
+    "SGA_1": "SELLING, GENERAL & ADMINISTRATIVE EXPENSES",
+    "DA_EXP": "DEPRECIATION, TAXES & NET INCOME",
+    "BS_CASH": "CURRENT ASSETS",
+    "BS_PPE": "LONG-TERM ASSETS",
+    "BS_AP": "CURRENT LIABILITIES",
+    "BS_CAP": "OWNER'S EQUITY",
+    "CF_START": "OPERATING ACTIVITIES",
+    "CF_CAPEX": "INVESTING ACTIVITIES",
+    "CF_EQ": "FINANCING ACTIVITIES",
+    "TX_EBT": "CORPORATE INCOME TAX SCHEDULE",
+    "TX_VAT_OUT": "VALUE-ADDED TAX SCHEDULE",
 }
 
 
@@ -370,9 +370,9 @@ def plot_drivers_and_cost_breakdown_sheet(
     """
     Render Sheet 1: Hierarchical single-table Income Statement Structure
     (Revenue, COGS, Facility OpEx, SG&A, D&A & Taxes across Case Baseline,
-    PICK! Social Dev, PICK! Social Launch, 20-Court Steady State, 5-Year Total, % of Revenue & Source).
+    Jan-27, May-27, Dec-28, 5-Year Total, % of Revenue & Source).
     """
-    col_widths = [0.110, 0.215, 0.095, 0.066, 0.090, 0.098, 0.088, 0.068, 0.058, 0.112]
+    col_widths = [0.115, 0.225, 0.095, 0.068, 0.082, 0.082, 0.082, 0.072, 0.062, 0.117]
     empty_10 = [""] * 10
 
     rows: list[tuple[str, list[str]]] = [
@@ -381,9 +381,9 @@ def plot_drivers_and_cost_breakdown_sheet(
             "Line Item",
             "Cost Behavior",
             "Case Baseline",
-            "PICK! Social Dev (Jan-27)",
-            "PICK! Social Launch (May-27)",
-            "20-Court Steady (Dec-28)",
+            "Jan-27",
+            "May-27",
+            "Dec-28",
             "5-Year Total",
             "% of Revenue",
             "Source",
@@ -394,23 +394,23 @@ def plot_drivers_and_cost_breakdown_sheet(
     for li in res.line_items:
         if li.section == "REVENUE" and "REVENUE" not in seen_sections:
             seen_sections.add("REVENUE")
-            rows.append(("sub_hdr", ["SECTION 1 - REVENUE STREAMS (COURT HIRE, PICK! SOCIAL & ANCILLARY)"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 1 - REVENUE STREAMS"] + [""] * 9))
         elif li.section == "COGS" and "COGS" not in seen_sections:
             seen_sections.add("COGS")
             rows.append(("stmt_gap", empty_10))
-            rows.append(("sub_hdr", ["SECTION 2 - DIRECT COST OF GOODS SOLD (VARIABLE COGS) & GROSS PROFIT"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 2 - COST OF GOODS SOLD & GROSS PROFIT"] + [""] * 9))
         elif li.section == "OPEX" and "OPEX" not in seen_sections:
             seen_sections.add("OPEX")
             rows.append(("stmt_gap", empty_10))
-            rows.append(("sub_hdr", ["SECTION 3 - FACILITY OPERATING EXPENSES (FIXED & SEMI-FIXED OPEX)"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 3 - FACILITY OPERATING EXPENSES"] + [""] * 9))
         elif li.section == "SGA" and "SGA" not in seen_sections:
             seen_sections.add("SGA")
             rows.append(("stmt_gap", empty_10))
-            rows.append(("sub_hdr", ["SECTION 4 - SELLING, GENERAL, ADMIN, PLATFORM & COMPLIANCE (SG&A)"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 4 - SELLING, GENERAL & ADMINISTRATIVE EXPENSES"] + [""] * 9))
         elif "D&A" in li.template_category and "DA_TAX" not in seen_sections:
             seen_sections.add("DA_TAX")
             rows.append(("stmt_gap", empty_10))
-            rows.append(("sub_hdr", ["SECTION 5 - DEPRECIATION (D&A), TAXABLE INCOME (EBT), VIETNAM CIT (20%) & NET INCOME"] + [""] * 9))
+            rows.append(("sub_hdr", ["SECTION 5 - DEPRECIATION, TAXES & NET INCOME"] + [""] * 9))
 
         if li.section == "SUMMARY":
             if "GROSS PROFIT" in li.template_category:
@@ -419,7 +419,17 @@ def plot_drivers_and_cost_breakdown_sheet(
                 rstyle = "grand_total"
             else:
                 rstyle = "subtotal"
-        elif "New" in li.template_category or "PICK! Social" in li.template_category or "Adaptive Pricing" in li.line_item or "Payment gateway" in li.line_item:
+        elif li.template_category in (
+            "Revenue Line 1A",
+            "Revenue Line 1B",
+            "Revenue Line 2",
+            "Payment & Consumables",
+            "Partner Courts & Events",
+            "Rent - Venue 2",
+            "PICK! Social Dev",
+            "PICK! Social OpEx",
+            "Legal & Safety Compliance",
+        ):
             rstyle = "linked"
         else:
             rstyle = "input"
@@ -498,10 +508,10 @@ def plot_fs_month_projection_sheet(
     """
     col_widths = [0.268, 0.044] + [0.046] * 12 + [0.068, 0.068]
     y1_months = list(res.month_labels[:12])
-    period_hdrs = ["Unit"] + y1_months + ["Dec-28 (End Y2)", "Dec-31 (End Y5)"]
+    period_hdrs = ["Unit"] + y1_months + ["Dec-28", "Dec-31"]
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["Line Item / Financial Metric"] + period_hdrs),
+        ("col_hdr", ["Line Item"] + period_hdrs),
     ]
 
     for _, df_row in res.fs_month_df.iterrows():
@@ -575,7 +585,7 @@ def plot_fs_month_projection_sheet(
         row_height_in=0.28,
         out_path=output_dir / "02_fs_month_60m_projection_sheet.png",
         font_size=7.3,
-        title="Monthly 3-Statement Financial Projections (Year 1 + Y2 & Y5 Snapshots)",
+        title="Monthly 3-Statement Financial Projections",
     )
 
 
@@ -589,17 +599,10 @@ def plot_fs_annual_and_structure_dashboard(
     (Standard Annual Income Statement, Balance Sheet, Cash Flow Statement & Tax Schedule for FY 2027 to FY 2031).
     """
     col_widths = [0.365, 0.060, 0.115, 0.115, 0.115, 0.115, 0.115]
-    period_hdrs = [
-        "Unit",
-        "FY 2027 (Y1)",
-        "FY 2028 (Y2)",
-        "FY 2029 (Y3)",
-        "FY 2030 (Y4)",
-        "FY 2031 (Y5)",
-    ]
+    period_hdrs = ["Unit"] + list(res.year_labels)
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["Line Item / Financial Metric"] + period_hdrs),
+        ("col_hdr", ["Line Item"] + period_hdrs),
     ]
 
     for _, df_row in res.fs_annual_df.iterrows():
@@ -665,7 +668,7 @@ def plot_fs_annual_and_structure_dashboard(
         row_height_in=0.29,
         out_path=output_dir / "03_fs_annual_5y_projection_sheet.png",
         font_size=7.8,
-        title="Annual 5-Year 3-Statement Financial Projections (FY 2027 - FY 2031)",
+        title="Annual 5-Year 3-Statement Financial Projections",
     )
 
 
