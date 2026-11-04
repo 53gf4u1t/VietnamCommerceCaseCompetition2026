@@ -1734,7 +1734,7 @@ def plot_executive_solution_master_roadmap(
         {
             "type": "task",
             "id": "5.2a",
-            "name": "Continuous ML Segment Budgeting & 4-Persona Content (Social 35% & Trend 30%)",
+            "name": "Continuous ML Segment Budgeting & 4-Persona Content",
             "window": "Jan 27 - Dec 31",
             "metric": "42M-82M/mo -> 21,618 Visits/mo",
             "start": 0.0,
@@ -1782,7 +1782,7 @@ def plot_executive_solution_master_roadmap(
         {
             "type": "task",
             "id": "5.3a",
-            "name": "Core Platform Build & Simultaneous QA (Booking, Skill Match, Split-Pay)",
+            "name": "Core Platform Build & Simultaneous QA",
             "window": "Jan 27 - Apr 27",
             "metric": "676.2M Base (4.0 Months)",
             "start": 0.0,
@@ -1806,7 +1806,7 @@ def plot_executive_solution_master_roadmap(
         {
             "type": "task",
             "id": "5.3c",
-            "name": "Live PICK! Social Operations: 399k/mo Membership, Leagues & Continuous Dev",
+            "name": "Live PICK! Social Operations & Continuous Dev",
             "window": "May 27 - Dec 31",
             "metric": "645M/mo (Y2) -> 948M/mo (Y5)",
             "start": 4.0,
@@ -1830,7 +1830,7 @@ def plot_executive_solution_master_roadmap(
         {
             "type": "task",
             "id": "5.4a",
-            "name": "Venue 1 6-Court Operations & Phase 1 Proof Gate (+500M Cash Buffer)",
+            "name": "Venue 1 6-Court Operations & Phase 1 Proof Gate",
             "window": "Jan 27 - Sep 27",
             "metric": "+500M Tranche 1 (9 Months)",
             "start": 0.0,
@@ -1842,7 +1842,7 @@ def plot_executive_solution_master_roadmap(
         {
             "type": "task",
             "id": "5.4b",
-            "name": "Venue 2 14-Court Construction, 28-Day Cure, Canopy, Cafe & PCCC",
+            "name": "Venue 2 14-Court Construction",
             "window": "Oct 27 - Jan 28",
             "metric": "+7,500M Tranche 2 (7.0B Fit-Out)",
             "start": 9.0,
@@ -1878,11 +1878,11 @@ def plot_executive_solution_master_roadmap(
     ]
 
     n_rows = len(rows_spec)
-    fig, ax = plt.subplots(figsize=(26.0, 11.8), dpi=240)
+    fig, ax = plt.subplots(figsize=(22.5, 11.2), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
     ax.set_facecolor("#181825")
 
-    x_left_min = -21.5
+    x_left_min = -13.9
     x_right_max = 28.05
     hdr_top = n_rows + 1.65
     hdr_mid = n_rows + 0.65
@@ -1978,10 +1978,8 @@ def plot_executive_solution_master_roadmap(
 
     # Left WBS Table Header
     col_defs = [
-        ("ID", -21.5, -20.1, "center"),
-        ("SOLUTION PILLAR / PHASED INITIATIVE (WBS)", -20.1, -7.8, "left"),
-        ("WINDOW", -7.8, -5.0, "center"),
-        ("TARGET IMPACT & KPI", -5.0, 0.0, "center"),
+        ("ID", -13.9, -12.5, "center"),
+        ("SOLUTION PILLAR / PHASED INITIATIVE (WBS)", -12.5, 0.0, "left"),
     ]
     ax.add_patch(
         patches.Rectangle(
@@ -2001,7 +1999,7 @@ def plot_executive_solution_master_roadmap(
             c_title,
             ha="center",
             va="center",
-            fontsize=8.2,
+            fontsize=8.4,
             fontweight="bold",
             color="#cdd6f4",
             zorder=5,
@@ -2031,10 +2029,8 @@ def plot_executive_solution_master_roadmap(
             ax.add_patch(
                 patches.Rectangle((x_left_min, y_bot), 0.22, 1.0, facecolor=r["color"], edgecolor="none", zorder=5)
             )
-            ax.text(-20.8, y_mid, r["id"], ha="center", va="center", fontsize=8.2, fontweight="bold", color=r["color"], zorder=5)
-            ax.text(-19.9, y_mid, r["name"], ha="left", va="center", fontsize=7.6, fontweight="bold", color="#cdd6f4", zorder=5)
-            ax.text(-6.4, y_mid, r["window"], ha="center", va="center", fontsize=7.3, fontweight="bold", color="#bac2de", zorder=5)
-            ax.text(-2.5, y_mid, r["metric"], ha="center", va="center", fontsize=7.5, fontweight="bold", color=r["color"], zorder=5)
+            ax.text(-13.2, y_mid, r["id"], ha="center", va="center", fontsize=8.4, fontweight="bold", color=r["color"], zorder=5)
+            ax.text(-12.3, y_mid, r["name"], ha="left", va="center", fontsize=7.8, fontweight="bold", color="#cdd6f4", zorder=5)
 
             # Thin summary span bar on Gantt side (just like 01_pick_social & 01_venue_scaling)
             ax.add_patch(
@@ -2065,12 +2061,10 @@ def plot_executive_solution_master_roadmap(
             )
             ax.axhline(y_bot, color="#313244", linewidth=0.55, zorder=1)
 
-            ax.text(-20.8, y_mid, r["id"], ha="center", va="center", fontsize=7.4, fontweight="bold", color="#a6adc8", zorder=5)
-            ax.plot([-19.75, -19.75], [y_bot + 0.16, y_top - 0.16], color=r["color"], linewidth=1.15, alpha=0.8, zorder=4)
-            ax.plot([-19.75, -19.50], [y_mid, y_mid], color=r["color"], linewidth=1.0, alpha=0.8, zorder=4)
-            ax.text(-19.35, y_mid, r["name"], ha="left", va="center", fontsize=7.2, fontweight="bold", color="#cdd6f4", zorder=5)
-            ax.text(-6.4, y_mid, r["window"], ha="center", va="center", fontsize=7.1, color="#a6adc8", zorder=5)
-            ax.text(-2.5, y_mid, r["metric"], ha="center", va="center", fontsize=7.2, fontweight="bold", color="#bac2de", zorder=5)
+            ax.text(-13.2, y_mid, r["id"], ha="center", va="center", fontsize=7.6, fontweight="bold", color="#a6adc8", zorder=5)
+            ax.plot([-12.15, -12.15], [y_bot + 0.16, y_top - 0.16], color=r["color"], linewidth=1.15, alpha=0.8, zorder=4)
+            ax.plot([-12.15, -11.90], [y_mid, y_mid], color=r["color"], linewidth=1.0, alpha=0.8, zorder=4)
+            ax.text(-11.75, y_mid, r["name"], ha="left", va="center", fontsize=7.4, fontweight="bold", color="#cdd6f4", zorder=5)
 
             bar_h = 0.56
             bar_y = y_mid - bar_h / 2.0
@@ -2090,36 +2084,6 @@ def plot_executive_solution_master_roadmap(
                     zorder=4,
                 )
             )
-            if bw >= 3.8:
-                ax.text(
-                    r["start"] + bw / 2.0,
-                    y_mid,
-                    r["bar_text"],
-                    ha="center",
-                    va="center",
-                    fontsize=7.2,
-                    fontweight="bold",
-                    color="#cdd6f4" if is_h else "#11111b",
-                    bbox=dict(
-                        boxstyle="round,pad=0.10",
-                        facecolor="#1e1e2e" if is_h else r["color"],
-                        edgecolor="none",
-                        alpha=0.92 if is_h else 1.0,
-                    ),
-                    zorder=8,
-                )
-            else:
-                ax.text(
-                    r["end"] + 0.18,
-                    y_mid,
-                    r["bar_text"],
-                    ha="left",
-                    va="center",
-                    fontsize=7.2,
-                    fontweight="bold",
-                    color="#cdd6f4",
-                    zorder=8,
-                )
 
     ax.plot([x_left_min, 28.0], [0.0, 0.0], color="#585b70", linewidth=1.1, zorder=5)
 
@@ -2129,18 +2093,6 @@ def plot_executive_solution_master_roadmap(
     ax.axvline(13.0, ymin=0.05, ymax=0.92, color="#fab387", linewidth=2.0, linestyle="--", zorder=6)
 
     # Bottom summary pills
-    ax.text(
-        -10.75,
-        -0.78,
-        "PHASE 1 (M1-M9): Prove Demand on 6 Courts (+500M)  |  PHASE 2 (M10-M14): Build 14-Court Venue 2 (+7,500M)",
-        ha="center",
-        va="center",
-        fontsize=7.5,
-        fontweight="bold",
-        color="#cdd6f4",
-        bbox=dict(boxstyle="round,pad=0.28", facecolor="#313244", edgecolor="#585b70", linewidth=1.1),
-        zorder=9,
-    )
     ax.text(
         4.0,
         -0.78,
@@ -2191,9 +2143,8 @@ def plot_executive_solution_master_roadmap(
     )
 
     ax.set_title(
-        "Integrated 4-Pillar Master Implementation Gantt Schedule (Months M1-M24 + Years 3-5 Steady-State)\n"
-        "Staggered Sequencing of Adaptive Pricing, Segment Marketing, PICK! Social Platform & Phased 14-Court Second Venue Expansion",
-        fontsize=12.2,
+        "Solution Implementation Schedule",
+        fontsize=14.0,
         fontweight="bold",
         color="#cdd6f4",
         pad=14,
