@@ -67,14 +67,14 @@ def plot_venue_scaling_gantt_chart(
                 display_rows.append(("task", t))
 
     n_rows = len(display_rows)
-    fig_w = 28.0
-    fig_h = 14.5
+    fig_w = 24.5
+    fig_h = 14.0
     fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
     ax.set_facecolor("#181825")
 
     # Timeline x-axis displays Weeks 0..24 from Q4 2027 Kickoff (Oct 2027 - Mar 2028)
-    x_left_min = -30.0
+    x_left_min = -22.5
     x_right_max = 24.05
     hdr_top = n_rows + 1.65
     hdr_mid = n_rows + 0.65
@@ -167,12 +167,8 @@ def plot_venue_scaling_gantt_chart(
         ax.axvline(m_boundary, ymin=0.06, ymax=0.92, color="#585b70", linewidth=1.0, zorder=2)
 
     col_defs = [
-        ("ID", -30.0, -28.7, "center"),
-        ("STAGE / CONSTRUCTION & FIT-OUT TASK (WBS)", -28.7, -14.2, "left"),
-        ("CORE DELIVERABLE & SPEC", -14.2, -6.0, "left"),
-        ("WKS", -6.0, -4.8, "center"),
-        ("WINDOW", -4.8, -2.6, "center"),
-        ("CAPEX (M VND)", -2.6, 0.0, "center"),
+        ("STAGE / CONSTRUCTION & FIT-OUT TASK (WBS)", -22.5, -8.2, "left"),
+        ("CORE DELIVERABLE & SPEC", -8.2, 0.0, "left"),
     ]
     ax.add_patch(
         mpatches.Rectangle(
@@ -192,7 +188,7 @@ def plot_venue_scaling_gantt_chart(
             c_title,
             ha="center",
             va="center",
-            fontsize=8.1,
+            fontsize=8.3,
             fontweight="bold",
             color="#cdd6f4",
             zorder=5,
@@ -229,40 +225,16 @@ def plot_venue_scaling_gantt_chart(
                     zorder=5,
                 )
             )
-            ax.text(-29.35, y_mid, st.stage_id, ha="center", va="center", fontsize=8.1, fontweight="bold", color=st.color, zorder=5)
-            ax.text(-28.5, y_mid, f"{st.name.upper()}", ha="left", va="center", fontsize=6.8, fontweight="bold", color="#cdd6f4", zorder=5)
+            ax.text(-22.1, y_mid, f"{st.name.upper()}", ha="left", va="center", fontsize=7.0, fontweight="bold", color="#cdd6f4", zorder=5)
             ax.text(
-                -14.0,
+                -8.0,
                 y_mid,
                 f"Share of 7,000M Fit-Out CapEx: {st.budget_share_pct:.1f}% ({st.task_count} Tasks)" if st.stage_capex_mvnd > 0 else "Post-Opening 6-to-9 Month Capacity Fill-Up Phase",
                 ha="left",
                 va="center",
-                fontsize=6.9,
+                fontsize=7.1,
                 fontweight="bold",
                 color=st.color,
-                zorder=5,
-            )
-            ax.text(-5.40, y_mid, f"{st.span_weeks:.1f}w", ha="center", va="center", fontsize=7.5, fontweight="bold", color=st.color, zorder=5)
-            ax.text(
-                -3.70,
-                y_mid,
-                f"{st.start_date.strftime('%b %d')}-{st.end_date.strftime('%b %d')}",
-                ha="center",
-                va="center",
-                fontsize=6.8,
-                fontweight="bold",
-                color="#bac2de",
-                zorder=5,
-            )
-            ax.text(
-                -1.30,
-                y_mid,
-                f"{st.stage_capex_mvnd:,.1f}M" if st.stage_capex_mvnd > 0 else "Operating Ramp",
-                ha="center",
-                va="center",
-                fontsize=7.2,
-                fontweight="bold",
-                color="#cdd6f4",
                 zorder=5,
             )
 
@@ -298,35 +270,20 @@ def plot_venue_scaling_gantt_chart(
             )
             ax.axhline(y_bot, color="#313244", linewidth=0.55, zorder=1)
 
-            id_col = "#f38ba8" if t.is_critical_path else "#a6adc8"
-            ax.text(-29.35, y_mid, t.id, ha="center", va="center", fontsize=7.5, fontweight="bold", color=id_col, zorder=5)
-            ax.plot([-28.10, -28.10], [y_bot + 0.16, y_top - 0.16], color=t.stage_color, linewidth=1.15, alpha=0.75, zorder=4)
-            ax.plot([-28.10, -27.86], [y_mid, y_mid], color=t.stage_color, linewidth=1.0, alpha=0.75, zorder=4)
+            ax.plot([-21.95, -21.95], [y_bot + 0.16, y_top - 0.16], color=t.stage_color, linewidth=1.15, alpha=0.75, zorder=4)
+            ax.plot([-21.95, -21.70], [y_mid, y_mid], color=t.stage_color, linewidth=1.0, alpha=0.75, zorder=4)
             ax.text(
-                -27.72,
+                -21.55,
                 y_mid,
                 t.name,
                 ha="left",
                 va="center",
-                fontsize=6.8,
+                fontsize=7.0,
                 fontweight="bold" if t.is_critical_path else "normal",
                 color="#cdd6f4",
                 zorder=5,
             )
-            ax.text(-14.0, y_mid, t.core_deliverable, ha="left", va="center", fontsize=6.6, color="#bac2de", zorder=5)
-            ax.text(-5.40, y_mid, f"{t.duration_weeks:.1f}w", ha="center", va="center", fontsize=7.2, fontweight="bold", color="#cdd6f4", zorder=5)
-            ax.text(-3.70, y_mid, f"W{t.start_week + 1:g}-W{t.end_week:g}", ha="center", va="center", fontsize=6.8, color="#a6adc8", zorder=5)
-            ax.text(
-                -1.30,
-                y_mid,
-                f"{t.capex_mvnd:,.1f}M" if t.capex_mvnd > 0 else "Fill-Up Ramp",
-                ha="center",
-                va="center",
-                fontsize=7.0,
-                fontweight="bold",
-                color="#bac2de",
-                zorder=5,
-            )
+            ax.text(-8.0, y_mid, t.core_deliverable, ha="left", va="center", fontsize=6.8, color="#bac2de", zorder=5)
 
             disp_start = min(t.start_week, 23.8)
             disp_end = min(t.end_week, 24.0)
@@ -353,62 +310,7 @@ def plot_venue_scaling_gantt_chart(
                 )
             )
 
-            bar_label = f"{t.id} ({t.duration_weeks:.1f}w)" if t.end_week <= 24.0 else f"{t.id} (Continues to W{t.end_week:.0f} / Sep 2028)"
-            if disp_w >= 2.8:
-                lbl_col = "#cdd6f4" if hatch_pat else "#11111b"
-                ax.text(
-                    disp_start + disp_w / 2.0,
-                    y_mid,
-                    bar_label,
-                    ha="center",
-                    va="center",
-                    fontsize=7.1,
-                    fontweight="bold",
-                    color=lbl_col,
-                    bbox=dict(boxstyle="round,pad=0.08", facecolor="#1e1e2e", edgecolor="none", alpha=0.80) if hatch_pat else None,
-                    zorder=6,
-                )
-            elif disp_start >= 22.0 or (14.0 <= t.end_week <= 16.5):
-                ax.text(
-                    disp_start - 0.18,
-                    y_mid,
-                    bar_label,
-                    ha="right",
-                    va="center",
-                    fontsize=7.0,
-                    fontweight="bold",
-                    color="#cdd6f4",
-                    zorder=6,
-                )
-            else:
-                ax.text(
-                    disp_end + 0.14,
-                    y_mid,
-                    bar_label,
-                    ha="left",
-                    va="center",
-                    fontsize=7.0,
-                    fontweight="bold",
-                    color="#cdd6f4",
-                    zorder=6,
-                )
-
     ax.plot([x_left_min, 24.0], [0.0, 0.0], color="#585b70", linewidth=1.1, zorder=5)
-
-    # Bottom summary pill under left WBS table
-    ax.text(
-        -12.8,
-        -0.85,
-        "4-MONTH BUILD (OCT 2027 - JAN 2028): 7,000.0M VND Fit-Out Split Evenly = 1,750.0M VND/Mo  |  "
-        "5-YEAR LEASE: 330.0M VND/Mo (from Oct-27)  |  RESERVE: 1,000.0M VND (500M Jan-27 + 500M Oct-27)",
-        ha="center",
-        va="center",
-        fontsize=7.9,
-        fontweight="bold",
-        color="#cdd6f4",
-        bbox=dict(boxstyle="round,pad=0.30", facecolor="#313244", edgecolor="#585b70", linewidth=1.1),
-        zorder=9,
-    )
 
     # Highlight Week 16 (End of Jan 2028 = 14-Court Club Fit-Out Complete, Scaling 6 -> 20 Courts)
     ax.axvline(16.0, ymin=0.04, ymax=0.92, color="#f38ba8", linewidth=2.4, linestyle="--", zorder=7)
@@ -445,9 +347,8 @@ def plot_venue_scaling_gantt_chart(
     )
 
     ax.set_title(
-        "Second Club Facility Construction, Surface Curing & Operational Ramp Schedule\n"
-        "Turnkey Engineering Milestones, Parallel Fit-Out Workflows & Capacity Fill-Up Trajectory",
-        fontsize=12.0,
+        "Second Club Construction & Fit-Out Schedule",
+        fontsize=14.0,
         fontweight="bold",
         color="#cdd6f4",
         pad=14,
@@ -474,7 +375,14 @@ def plot_court_capacity_and_fill_up_ramp(
     """
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(20.2, 7.6), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(wspace=0.22)
+    plt.subplots_adjust(wspace=0.22, top=0.885, bottom=0.10)
+    fig.suptitle(
+        "Court Capacity Expansion & Second Club Monthly Revenue Ramp",
+        fontsize=13.8,
+        fontweight="bold",
+        color="#cdd6f4",
+        y=0.962,
+    )
 
     x_m = np.arange(1, 61)
     tick_idx = [0, 8, 13, 21, 35, 47, 59]
@@ -536,7 +444,7 @@ def plot_court_capacity_and_fill_up_ramp(
     ax_left.set_ylim(0, 26.8)
     ax_left.set_ylabel("Number of Courts (Physical vs. Effective Filled)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_left.set_title(
-        "Panel A: Physical Court Capacity Expansion & Effective Utilization Ramp",
+        "Physical Court Capacity Expansion & Effective Utilization Ramp",
         fontsize=10.6,
         fontweight="bold",
         color="#cdd6f4",
@@ -601,7 +509,7 @@ def plot_court_capacity_and_fill_up_ramp(
     ax_right.set_ylim(-60, 2220)
     ax_right.set_ylabel("Venue 2 Monthly Revenue (M VND / Month)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_title(
-        "Panel B: Second Club Monthly Revenue Ramp by Stream",
+        "Second Club Monthly Revenue Ramp by Stream",
         fontsize=10.6,
         fontweight="bold",
         color="#cdd6f4",
@@ -630,7 +538,14 @@ def plot_capex_allocation_and_unit_economics(
     """
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(20.4, 7.6), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(wspace=0.22)
+    plt.subplots_adjust(wspace=0.22, top=0.885, bottom=0.10)
+    fig.suptitle(
+        "Second Club CapEx Allocation & Monthly Capital Deployment",
+        fontsize=13.8,
+        fontweight="bold",
+        color="#cdd6f4",
+        y=0.962,
+    )
 
     # -------------------------------------------------------------------------
     # PANEL A: 7,000M VND Fit-Out CapEx Breakdown by Construction Stage
@@ -680,7 +595,7 @@ def plot_capex_allocation_and_unit_economics(
     ax_left.set_xlim(0, 3950)
     ax_left.set_xlabel("Capital Allocation in Millions of VND (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_left.set_title(
-        "Panel A: Expansion Capital Allocation by Construction Stage & Cash Reserve",
+        "Expansion Capital Allocation by Construction Stage & Cash Reserve",
         fontsize=10.6,
         fontweight="bold",
         color="#cdd6f4",
@@ -758,7 +673,7 @@ def plot_capex_allocation_and_unit_economics(
     ax_right.set_ylim(0, 2500)
     ax_right.set_ylabel("Monthly Venue 2 Outflow (M VND / Month)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_title(
-        "Panel B: Monthly Construction Capital Deployment & Facility Operating Outflows",
+        "Monthly Construction Capital Deployment & Facility Operating Outflows",
         fontsize=10.6,
         fontweight="bold",
         color="#cdd6f4",

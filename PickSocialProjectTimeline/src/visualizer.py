@@ -66,16 +66,13 @@ def plot_master_gantt_chart(
                 display_rows.append(("task", t))
 
     n_rows = len(display_rows)
-    fig_h = 16.0
-    fig_w = 28.5
+    fig_h = 15.2
+    fig_w = 24.0
     fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
     ax.set_facecolor("#181825")
 
-    # Coordinate system:
-    #   [-26.0, 0.0] : Left WBS structured columns (with Base / Buffered Cost column)
-    #   [0.0, 24.0]  : Weeks W1 to W24 (Jan 2027 to Jun 2027)
-    x_left_min = -26.0
+    x_left_min = -18.6
     x_right_max = 24.05
     hdr_top = n_rows + 1.65
     hdr_mid = n_rows + 0.65
@@ -171,12 +168,8 @@ def plot_master_gantt_chart(
 
     # Left Table Header Banner (Unified height from hdr_bot to hdr_top)
     col_defs = [
-        ("ID", -26.0, -24.7, "center"),
-        ("STAGE / ENGINEERING TASK (WBS)", -24.7, -13.4, "left"),
-        ("CORE FEATURE / DELIVERABLE", -13.4, -6.1, "left"),
-        ("WKS", -6.1, -4.9, "center"),
-        ("WINDOW", -4.9, -3.0, "center"),
-        ("COST: BASE / BUFFER", -3.0, 0.0, "center"),
+        ("STAGE / ENGINEERING TASK (WBS)", -18.6, -7.3, "left"),
+        ("CORE FEATURE / DELIVERABLE", -7.3, 0.0, "left"),
     ]
     ax.add_patch(
         mpatches.Rectangle(
@@ -196,7 +189,7 @@ def plot_master_gantt_chart(
             c_title,
             ha="center",
             va="center",
-            fontsize=7.6 if "BUFFER" in c_title else 8.2,
+            fontsize=8.3,
             fontweight="bold",
             color="#cdd6f4",
             zorder=5,
@@ -236,69 +229,25 @@ def plot_master_gantt_chart(
                 )
             )
             ax.text(
-                -25.35,
-                y_mid,
-                st.stage_id,
-                ha="center",
-                va="center",
-                fontsize=8.1,
-                fontweight="bold",
-                color=st.color,
-                zorder=5,
-            )
-            ax.text(
-                -24.5,
+                -18.2,
                 y_mid,
                 f"{st.name.upper()}",
                 ha="left",
                 va="center",
-                fontsize=7.3,
+                fontsize=7.5,
                 fontweight="bold",
                 color="#cdd6f4",
                 zorder=5,
             )
             ax.text(
-                -13.2,
+                -7.1,
                 y_mid,
                 f"Effort: {st.sum_person_weeks:.1f} person-wks ({st.task_count} Tasks)",
                 ha="left",
                 va="center",
-                fontsize=7.2,
-                fontweight="bold",
-                color=st.color,
-                zorder=5,
-            )
-            ax.text(
-                -5.50,
-                y_mid,
-                f"{st.span_weeks:.1f}w",
-                ha="center",
-                va="center",
-                fontsize=7.8,
-                fontweight="bold",
-                color=st.color,
-                zorder=5,
-            )
-            ax.text(
-                -3.95,
-                y_mid,
-                f"{st.start_date.strftime('%b %d')}-{st.end_date.strftime('%b %d')}",
-                ha="center",
-                va="center",
-                fontsize=7.0,
-                fontweight="bold",
-                color="#bac2de",
-                zorder=5,
-            )
-            ax.text(
-                -1.50,
-                y_mid,
-                f"{st.base_total_cost_mvnd:.1f}M / {st.buffered_total_cost_mvnd:.1f}M",
-                ha="center",
-                va="center",
                 fontsize=7.3,
                 fontweight="bold",
-                color="#cdd6f4",
+                color=st.color,
                 zorder=5,
             )
 
@@ -332,70 +281,26 @@ def plot_master_gantt_chart(
             )
             ax.axhline(y_bot, color="#313244", linewidth=0.55, zorder=1)
 
-            id_color = "#f38ba8" if t.is_critical_path else "#a6adc8"
+            ax.plot([-18.05, -18.05], [y_bot + 0.16, y_top - 0.16], color=t.stage_color, linewidth=1.15, alpha=0.75, zorder=4)
+            ax.plot([-18.05, -17.82], [y_mid, y_mid], color=t.stage_color, linewidth=1.0, alpha=0.75, zorder=4)
             ax.text(
-                -25.35,
-                y_mid,
-                t.id,
-                ha="center",
-                va="center",
-                fontsize=7.5,
-                fontweight="bold",
-                color=id_color,
-                zorder=5,
-            )
-            ax.plot([-24.15, -24.15], [y_bot + 0.16, y_top - 0.16], color=t.stage_color, linewidth=1.15, alpha=0.75, zorder=4)
-            ax.plot([-24.15, -23.92], [y_mid, y_mid], color=t.stage_color, linewidth=1.0, alpha=0.75, zorder=4)
-            ax.text(
-                -23.78,
+                -17.68,
                 y_mid,
                 t.name,
                 ha="left",
                 va="center",
-                fontsize=7.0,
+                fontsize=7.2,
                 fontweight="bold" if t.is_critical_path or t.is_simultaneous_qa else "normal",
                 color="#cdd6f4",
                 zorder=5,
             )
             ax.text(
-                -13.2,
+                -7.1,
                 y_mid,
                 t.core_feature,
                 ha="left",
                 va="center",
-                fontsize=7.0,
-                color="#bac2de",
-                zorder=5,
-            )
-            ax.text(
-                -5.50,
-                y_mid,
-                f"{t.duration_weeks:.1f}w",
-                ha="center",
-                va="center",
-                fontsize=7.5,
-                fontweight="bold",
-                color="#cdd6f4",
-                zorder=5,
-            )
-            ax.text(
-                -3.95,
-                y_mid,
-                f"W{t.start_week + 1:g}-W{t.end_week:g}",
-                ha="center",
-                va="center",
-                fontsize=7.0,
-                color="#a6adc8",
-                zorder=5,
-            )
-            ax.text(
-                -1.50,
-                y_mid,
-                f"{t.base_total_cost_mvnd:.1f}M / {t.buffered_total_cost_mvnd:.1f}M",
-                ha="center",
-                va="center",
                 fontsize=7.1,
-                fontweight="bold",
                 color="#bac2de",
                 zorder=5,
             )
@@ -423,65 +328,8 @@ def plot_master_gantt_chart(
             )
             ax.add_patch(rect)
 
-            # Presentation-clean label (Task ID & duration only - no citation keys)
-            bar_label = f"{t.id} ({t.duration_weeks:.1f}w)"
-            if t.duration_weeks >= 2.5 or t.end_week >= 23.5:
-                lbl_bg = "#1e1e2e" if t.is_simultaneous_qa else "none"
-                lbl_col = "#cdd6f4" if t.is_simultaneous_qa else "#11111b"
-                ax.text(
-                    t.start_week + t.duration_weeks / 2.0,
-                    y_mid,
-                    bar_label,
-                    ha="center",
-                    va="center",
-                    fontsize=7.2,
-                    fontweight="bold",
-                    color=lbl_col,
-                    bbox=dict(boxstyle="round,pad=0.10", facecolor=lbl_bg, edgecolor="none", alpha=0.88) if t.is_simultaneous_qa else None,
-                    zorder=6,
-                )
-            elif 14.0 <= t.end_week <= 16.5:
-                ax.text(
-                    t.start_week - 0.16,
-                    y_mid,
-                    bar_label,
-                    ha="right",
-                    va="center",
-                    fontsize=7.1,
-                    fontweight="bold",
-                    color="#cdd6f4",
-                    zorder=6,
-                )
-            else:
-                ax.text(
-                    t.end_week + 0.14,
-                    y_mid,
-                    bar_label,
-                    ha="left",
-                    va="center",
-                    fontsize=7.1,
-                    fontweight="bold",
-                    color="#cdd6f4",
-                    zorder=6,
-                )
-
     # Outer bottom border across table + Gantt
     ax.plot([x_left_min, 24.0], [0.0, 0.0], color="#585b70", linewidth=1.1, zorder=5)
-
-    # Total project budget summary pill on bottom left under table
-    ax.text(
-        -11.1,
-        -0.85,
-        f"4-MONTH CORE BUILD (S1-S4): {res.core_build_base_cost_mvnd:.2f}M Base / {res.core_build_buffered_cost_mvnd:.2f}M Buffered   |   "
-        f"FULL 6-MONTH LIFECYCLE (S1-S6): {res.total_base_cost_mvnd:.2f}M Base + {res.total_buffer_mvnd:.2f}M Buffer (+{res.weighted_buffer_pct:.1f}%) = {res.total_buffered_cost_mvnd:.2f}M VND",
-        ha="center",
-        va="center",
-        fontsize=8.0,
-        fontweight="bold",
-        color="#cdd6f4",
-        bbox=dict(boxstyle="round,pad=0.30", facecolor="#313244", edgecolor="#585b70", linewidth=1.1),
-        zorder=9,
-    )
 
     # Highlight Week 16 (End of Month 4 = Target Product Completion & Entry into Migration) - NO ICONS
     ax.axvline(16.0, ymin=0.04, ymax=0.92, color="#f38ba8", linewidth=2.4, linestyle="--", zorder=7)
@@ -520,9 +368,8 @@ def plot_master_gantt_chart(
     )
 
     ax.set_title(
-        "PICK! Social & Adaptive Booking Platform - Production Engineering Schedule & Work Breakdown Structure\n"
-        "Phased Engineering Delivery Across Core Platform Build, Legacy Migration & Continuous Operations",
-        fontsize=12.2,
+        "PICK! Social Platform Engineering Schedule",
+        fontsize=14.0,
         fontweight="bold",
         color="#cdd6f4",
         pad=14,
@@ -548,7 +395,14 @@ def plot_stage_effort_and_concurrency(
     """
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(18.5, 6.8), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(wspace=0.22)
+    plt.subplots_adjust(wspace=0.22, top=0.88, bottom=0.10)
+    fig.suptitle(
+        "PICK! Social Engineering Effort Allocation & Active Track Concurrency",
+        fontsize=13.8,
+        fontweight="bold",
+        color="#cdd6f4",
+        y=0.962,
+    )
 
     core_stages = [s for s in res.stage_summaries if s.stage_id in ("S1", "S2", "S3", "S4")]
     labels = [s.short_name.split(". ", 1)[-1] for s in core_stages]
@@ -606,7 +460,7 @@ def plot_stage_effort_and_concurrency(
     ax_left.set_xlim(0, 72)
     ax_left.set_xlabel("Share of Core Engineering Effort (%)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_left.set_title(
-        "Panel A: PICK! Social Dev Effort Allocation vs. Industry Benchmark",
+        "PICK! Social Dev Effort Allocation vs. Industry Benchmark",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -645,7 +499,7 @@ def plot_stage_effort_and_concurrency(
     ax_right.set_ylabel("Simultaneous Active Workstreams", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_xlabel("Project Timeline Weeks", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_title(
-        "Panel B: Simultaneous Development, Continuous QA & Migration Concurrency",
+        "Simultaneous Development, Continuous QA & Migration Concurrency",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -677,7 +531,7 @@ def plot_cost_estimation_and_cashflow_allocation(
     """
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(20.4, 7.8), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(wspace=0.22)
+    plt.subplots_adjust(wspace=0.22, top=0.885, bottom=0.10)
 
     # --------------------------------------------------------------------------
     # PANEL A: Stage-by-Stage Cost Estimation (Base Cost + Contingency Buffer)
@@ -736,7 +590,7 @@ def plot_cost_estimation_and_cashflow_allocation(
     ax_left.set_xlim(0, 860)
     ax_left.set_xlabel("Estimated Cost (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_left.set_title(
-        "Panel A: Stage Cost Estimation Breakdown: Base Cost vs. Risk Contingency",
+        "Stage Cost Estimation Breakdown: Base Cost vs. Risk Contingency",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -879,7 +733,7 @@ def plot_cost_estimation_and_cashflow_allocation(
     ax_right.set_ylabel("Monthly Allocated Cost Outflow (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_right.set_xlabel("Build & Migration Schedule vs. Steady-State Operations", fontsize=9.3, fontweight="bold", color="#bac2de")
     ax_right.set_title(
-        "Panel B: Leveled Monthly Cost Allocation & Recurring Platform Operating Expenses",
+        "Leveled Monthly Cost Allocation & Recurring Platform Operating Expenses",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -889,11 +743,11 @@ def plot_cost_estimation_and_cashflow_allocation(
     ax_right.legend(loc="upper right", fontsize=7.6, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
 
     fig.suptitle(
-        "PICK! Social & Adaptive Booking Platform - Cost Estimation, Risk Contingency & Leveled Cash Allocation",
-        fontsize=12.5,
+        "PICK! Social Platform Cost Estimation & Monthly Cash Allocation",
+        fontsize=13.8,
         fontweight="bold",
         color="#cdd6f4",
-        y=0.99,
+        y=0.962,
     )
 
     out_path = output_dir / "03_cost_estimation_and_cashflow_allocation.png"

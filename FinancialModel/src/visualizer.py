@@ -685,7 +685,14 @@ def plot_revenue_costs_profit_comparison_charts(
     """
     fig, (ax_ann, ax_mon) = plt.subplots(2, 1, figsize=(19.4, 14.0), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(hspace=0.34)
+    plt.subplots_adjust(hspace=0.30, top=0.92, bottom=0.06)
+    fig.suptitle(
+        "Annual & Monthly Revenue, Cost Structure & Profit Comparison",
+        fontsize=14.5,
+        fontweight="bold",
+        color="#cdd6f4",
+        y=0.965,
+    )
 
     BASE_BAR_GREY = "#585b70"
     BASE_BAR_EDGE = "#7f849c"
@@ -923,7 +930,7 @@ def plot_revenue_costs_profit_comparison_charts(
     ax_ann.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
     ax_ann.legend(loc="upper left", ncol=4, fontsize=7.5, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
     ax_ann.set_title(
-        "Panel A: Annual Revenue by Line, Costs by Category & Profit Comparison",
+        "Annual Revenue by Line, Costs by Category & Profit Comparison",
         fontsize=11.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -1088,7 +1095,7 @@ def plot_revenue_costs_profit_comparison_charts(
     ax_mon.grid(axis="y", linestyle="--", alpha=0.8, color="#313244", zorder=1)
     ax_mon.legend(loc="upper left", ncol=4, fontsize=7.3, frameon=True, facecolor="#1e1e2e", edgecolor="#45475a")
     ax_mon.set_title(
-        "Panel B: Monthly Revenue by Line, Costs by Category & Profit Trajectory",
+        "Monthly Revenue by Line, Costs by Category & Profit Trajectory",
         fontsize=11.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -1121,7 +1128,7 @@ def plot_membership_and_monte_carlo_distributions(
     mc = res.mc
     fig, ((ax_a, ax_b), (ax_c, ax_d)) = plt.subplots(2, 2, figsize=(20.0, 12.6), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(wspace=0.20, hspace=0.30)
+    plt.subplots_adjust(wspace=0.20, hspace=0.28, top=0.915, bottom=0.07)
 
     x_m = np.arange(1, 61)
     tick_idx = [0, 5, 11, 23, 35, 47, 59]
@@ -1197,7 +1204,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_a.set_ylim(-50, float(np.max(mc.active_subscribers_p95)) * 1.20)
     ax_a.set_ylabel("Active Paying Members (Subscribers)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_a.set_title(
-        "Panel A: Active Paying Subscriber Cohort Evolution",
+        "Active Paying Subscriber Cohort Evolution",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -1282,7 +1289,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_b.set_ylim(0, float(np.max(mc.total_rev_p95)) * 1.22)
     ax_b.set_ylabel("Monthly Revenue (M VND)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_b.set_title(
-        "Panel B: Monthly Total Revenue & PICK! Social Subscription Trajectory",
+        "Monthly Total Revenue & PICK! Social Subscription Trajectory",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -1333,7 +1340,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_c.set_ylim(-125, 415)
     ax_c.set_ylabel("Subscribers / Month", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_c.set_title(
-        "Panel C: Monthly Subscriber Acquisition vs. Churn Flow Dynamics",
+        "Monthly Subscriber Acquisition vs. Churn Flow Dynamics",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -1459,7 +1466,7 @@ def plot_membership_and_monte_carlo_distributions(
     ax_d.set_ylim(min(-2900.0, float(np.min(mc.stress_annual_ebitda_p05)) * 1.55), float(np.max(mc.annual_ebitda_p95)) * 1.36)
     ax_d.set_ylabel("Annual Operating Profit / EBITDA (M VND / Year)", fontsize=9.5, fontweight="bold", color="#bac2de")
     ax_d.set_title(
-        "Panel D: Annual Operating Profit Across Scenarios vs. Investor Target",
+        "Annual Operating Profit Across Scenarios vs. Investor Target",
         fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
@@ -1470,10 +1477,10 @@ def plot_membership_and_monte_carlo_distributions(
 
     fig.suptitle(
         "Membership Cohort Dynamics, Revenue Trajectory & Operating Profit Robustness",
-        fontsize=12.6,
+        fontsize=14.2,
         fontweight="bold",
         color="#cdd6f4",
-        y=0.99,
+        y=0.962,
     )
 
     out_path = output_dir / "05_membership_and_monte_carlo_distributions.png"
@@ -1582,7 +1589,7 @@ def plot_monthly_cash_balance_and_externals(
     )
     ax1.set_ylim(-2500, float(np.max(mc.ending_cash_p95)) * 1.18)
     ax1.set_title(
-        "Panel A: Cumulative Cash Reserves Trajectory Across Scenarios",
+        "Cumulative Cash Reserves Trajectory Across Scenarios",
         fontsize=11.2,
         fontweight="bold",
         color="#cdd6f4",
@@ -1602,7 +1609,7 @@ def plot_monthly_cash_balance_and_externals(
     ax2.plot(x_m, res.monthly_net_cash_flow_model, color="#f9e2af", linewidth=2.0, marker="o", markersize=3.5, label="Net Monthly Cash Flow (OCF + ICF + FCF)")
     ax2.axhline(0, color="#cdd6f4", linewidth=1.1)
     ax2.set_title(
-        "Panel B: Monthly Operating, Investing & Financing Cash Flow Components",
+        "Monthly Operating, Investing & Financing Cash Flow Components",
         fontsize=11.2,
         fontweight="bold",
         color="#cdd6f4",
@@ -1640,7 +1647,7 @@ def plot_monthly_cash_balance_and_externals(
     ax3_twin.set_ylabel("Legal, Noise & Safety Reserve (M VND/mo)", fontsize=9.5, fontweight="bold", color="#cba6f7")
     ax3.set_xlabel("60-Month Projection Horizon (Jan 2027 - Dec 2031)", fontsize=10.0, fontweight="bold", color="#bac2de")
     ax3.set_title(
-        "Panel C: Macro Market Demand Trend & Regulatory Compliance Provisions",
+        "Macro Market Demand Trend & Regulatory Compliance Provisions",
         fontsize=11.2,
         fontweight="bold",
         color="#cdd6f4",
@@ -1878,11 +1885,11 @@ def plot_executive_solution_master_roadmap(
     ]
 
     n_rows = len(rows_spec)
-    fig, ax = plt.subplots(figsize=(22.5, 11.2), dpi=240)
+    fig, ax = plt.subplots(figsize=(21.5, 11.2), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
     ax.set_facecolor("#181825")
 
-    x_left_min = -13.9
+    x_left_min = -12.5
     x_right_max = 28.05
     hdr_top = n_rows + 1.65
     hdr_mid = n_rows + 0.65
@@ -1978,7 +1985,6 @@ def plot_executive_solution_master_roadmap(
 
     # Left WBS Table Header
     col_defs = [
-        ("ID", -13.9, -12.5, "center"),
         ("SOLUTION PILLAR / PHASED INITIATIVE (WBS)", -12.5, 0.0, "left"),
     ]
     ax.add_patch(
@@ -2029,8 +2035,7 @@ def plot_executive_solution_master_roadmap(
             ax.add_patch(
                 patches.Rectangle((x_left_min, y_bot), 0.22, 1.0, facecolor=r["color"], edgecolor="none", zorder=5)
             )
-            ax.text(-13.2, y_mid, r["id"], ha="center", va="center", fontsize=8.4, fontweight="bold", color=r["color"], zorder=5)
-            ax.text(-12.3, y_mid, r["name"], ha="left", va="center", fontsize=7.8, fontweight="bold", color="#cdd6f4", zorder=5)
+            ax.text(-12.1, y_mid, r["name"], ha="left", va="center", fontsize=7.8, fontweight="bold", color="#cdd6f4", zorder=5)
 
             # Thin summary span bar on Gantt side (just like 01_pick_social & 01_venue_scaling)
             ax.add_patch(
@@ -2061,10 +2066,9 @@ def plot_executive_solution_master_roadmap(
             )
             ax.axhline(y_bot, color="#313244", linewidth=0.55, zorder=1)
 
-            ax.text(-13.2, y_mid, r["id"], ha="center", va="center", fontsize=7.6, fontweight="bold", color="#a6adc8", zorder=5)
-            ax.plot([-12.15, -12.15], [y_bot + 0.16, y_top - 0.16], color=r["color"], linewidth=1.15, alpha=0.8, zorder=4)
-            ax.plot([-12.15, -11.90], [y_mid, y_mid], color=r["color"], linewidth=1.0, alpha=0.8, zorder=4)
-            ax.text(-11.75, y_mid, r["name"], ha="left", va="center", fontsize=7.4, fontweight="bold", color="#cdd6f4", zorder=5)
+            ax.plot([-11.95, -11.95], [y_bot + 0.16, y_top - 0.16], color=r["color"], linewidth=1.15, alpha=0.8, zorder=4)
+            ax.plot([-11.95, -11.70], [y_mid, y_mid], color=r["color"], linewidth=1.0, alpha=0.8, zorder=4)
+            ax.text(-11.55, y_mid, r["name"], ha="left", va="center", fontsize=7.4, fontweight="bold", color="#cdd6f4", zorder=5)
 
             bar_h = 0.56
             bar_y = y_mid - bar_h / 2.0

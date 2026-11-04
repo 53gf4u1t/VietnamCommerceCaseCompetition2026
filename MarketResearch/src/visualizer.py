@@ -71,25 +71,17 @@ def plot_hcmc_market_positioning_bubble_chart(
         width_ratios=[1.20, 1.0],
         left=0.048,
         right=0.978,
-        top=0.865,
-        bottom=0.095,
+        top=0.915,
+        bottom=0.085,
         wspace=0.33,
     )
 
     fig.suptitle(
-        "Section 1 (Our Market): HCMC Pickleball Competitive Landscape & Vietnam TAM - SAM - SOM Sizing",
+        "HCMC Market Positioning & TAM - SAM - SOM Sizing",
         fontsize=15.5,
         fontweight="bold",
         color="#cdd6f4",
-        y=0.955,
-    )
-    fig.text(
-        0.5,
-        0.914,
-        "Current HCMC Club Positioning (Peak Court Price vs. Multi-Platform Social Attention & Revenue Size) and 2026-2029 Market Growth Forecast",
-        ha="center",
-        fontsize=10.4,
-        color="#a6adc8",
+        y=0.965,
     )
 
     # ==========================================================================
@@ -299,7 +291,7 @@ def plot_hcmc_market_positioning_bubble_chart(
     ax_a.set_xlim(122, 336)
     ax_a.set_ylim(-14.5, 104.5)
     ax_a.set_title(
-        "Panel A: HCMC Competitive Positioning (Peak Court Price vs. Multi-Platform Reach & Revenue)",
+        "HCMC Competitive Positioning (Peak Court Price vs. Multi-Platform Reach & Revenue)",
         fontsize=11.6,
         fontweight="bold",
         color="#cdd6f4",
@@ -397,7 +389,7 @@ def plot_hcmc_market_positioning_bubble_chart(
         )
 
     ax_b.set_title(
-        "Panel B: Vietnam TAM, HCMC SAM & Obtainable SOM Sizing (Log Scale, Billion VND/Year)",
+        "Vietnam TAM, HCMC SAM & Obtainable SOM Sizing (Log Scale, Billion VND/Year)",
         fontsize=11.6,
         fontweight="bold",
         color="#cdd6f4",
@@ -427,37 +419,29 @@ def plot_customer_personas_and_mutual_demand(
         & Implied Marketing Cost per Visit (VND/visit).
     """
     _apply_clean_style()
-    fig = plt.figure(figsize=(18.6, 10.1), dpi=320)
+    fig = plt.figure(figsize=(20.2, 10.6), dpi=320)
     fig.patch.set_facecolor("#1e1e2e")
 
     gs = gridspec.GridSpec(
         2,
         2,
         figure=fig,
-        height_ratios=[0.96, 0.96],
+        height_ratios=[1.15, 0.82],
         width_ratios=[1.0, 1.08],
         left=0.036,
         right=0.985,
-        top=0.910,
-        bottom=0.062,
+        top=0.935,
+        bottom=0.060,
         wspace=0.15,
-        hspace=0.19,
+        hspace=0.17,
     )
 
     fig.suptitle(
-        "Section 2 (Our Customers): HCMC Customer Profiles, Unit Economics & Derived Mutual Demand",
-        fontsize=15.8,
+        "Customer Segment Profiles, Unit Economics & Mutual Demand",
+        fontsize=14.8,
         fontweight="bold",
         color="#cdd6f4",
         y=0.968,
-    )
-    fig.text(
-        0.5,
-        0.936,
-        "4 Customer Segments (3,600 Unique Customers & 7,596 Visits/Month), Per-Visit Spend Breakdown & Data-Driven Priority Focus",
-        ha="center",
-        fontsize=10.8,
-        color="#a6adc8",
     )
 
     # ==========================================================================
@@ -478,7 +462,7 @@ def plot_customer_personas_and_mutual_demand(
         (
             "banner",
             [
-                "PANEL A: CUSTOMER SEGMENT PROFILES, RETENTION FRICTIONS & DERIVED MUTUAL DEMAND (ORDERED BY STRATEGIC PRIORITY)",
+                "CUSTOMER SEGMENT PROFILES, RETENTION FRICTIONS & DERIVED MUTUAL DEMAND (ORDERED BY STRATEGIC PRIORITY)",
                 "",
                 "",
                 "",
@@ -590,7 +574,7 @@ def plot_customer_personas_and_mutual_demand(
                 cells[0],
                 ha="left",
                 va="center",
-                fontsize=11.2,
+                fontsize=10.5,
                 fontweight="bold",
                 color="#f5f7ff",
             )
@@ -602,13 +586,13 @@ def plot_customer_personas_and_mutual_demand(
                 bg = "#2b3048"
                 fg = "#f5f7ff"
                 fw = "bold"
-                fs = 9.6
+                fs = 9.1
                 ha = "center"
             elif rtype == "footer":
                 bg = "#1f332c"
                 fg = "#a6e3a1" if c_idx in (0, 5, 6) else "#cdd6f4"
                 fw = "bold"
-                fs = 8.95
+                fs = 8.5
                 ha = "center" if c_idx in (0, 3) else "left"
             else:
                 if rtype == "row_priority1":
@@ -648,7 +632,7 @@ def plot_customer_personas_and_mutual_demand(
                     fg = "#cdd6f4"
                     fw = "normal"
                     ha = "left"
-                fs = 9.05
+                fs = 8.55
 
             ax_tbl.add_patch(
                 mpatches.Rectangle(
@@ -671,7 +655,7 @@ def plot_customer_personas_and_mutual_demand(
                 fontsize=fs,
                 fontweight=fw,
                 color=fg,
-                linespacing=1.14,
+                linespacing=1.18,
             )
             cx += cw
 
@@ -724,10 +708,10 @@ def plot_customer_personas_and_mutual_demand(
             f"Total: {p.total_spend_per_visit_kvnd:.0f}k VND/visit\n(Court {p.court_hire_per_visit_kvnd:.1f}k + Ancillary {p.ancillary_per_visit_kvnd:.1f}k)",
             ha="center",
             va="bottom",
-            fontsize=8.0,
+            fontsize=7.6,
             fontweight="bold",
             color="#cdd6f4",
-            linespacing=1.22,
+            linespacing=1.20,
         )
         ax_b.text(
             i,
@@ -735,7 +719,7 @@ def plot_customer_personas_and_mutual_demand(
             f"Court: {p.court_hire_per_visit_kvnd:.1f}k",
             ha="center",
             va="center",
-            fontsize=7.9,
+            fontsize=7.5,
             fontweight="bold",
             color="#11111b",
         )
@@ -746,7 +730,7 @@ def plot_customer_personas_and_mutual_demand(
                 f"Coach: {p.coaching_per_visit_kvnd:.1f}k",
                 ha="center",
                 va="center",
-                fontsize=7.7,
+                fontsize=7.3,
                 fontweight="bold",
                 color="#11111b",
             )
@@ -757,22 +741,22 @@ def plot_customer_personas_and_mutual_demand(
                 f"{p.fnb_per_visit_kvnd:.1f}k",
                 ha="center",
                 va="center",
-                fontsize=7.5,
+                fontsize=7.2,
                 fontweight="bold",
                 color="#11111b",
             )
 
     ax_b.set_xticks(x_pos)
-    ax_b.set_xticklabels(seg_labels, fontsize=8.8, fontweight="bold", color="#cdd6f4")
+    ax_b.set_xticklabels(seg_labels, fontsize=8.3, fontweight="bold", color="#cdd6f4")
     ax_b.set_xlim(-0.56, len(segs) - 0.44)
-    ax_b.set_ylim(0, 126)
-    ax_b.set_ylabel("Spend per Player Visit (kVND / Visit)", fontsize=10.0, color="#bac2de")
+    ax_b.set_ylim(0, 128)
+    ax_b.set_ylabel("Spend per Player Visit (kVND / Visit)", fontsize=9.3, color="#bac2de")
     ax_b.set_title(
-        "Panel B: Per-Visit Spend Breakdown by Segment (Case Exhibit 1 & Exhibit 4 Reconciled)",
-        fontsize=11.5,
+        "Per-Visit Spend Breakdown by Segment (Case Exhibit 1 & Exhibit 4 Reconciled)",
+        fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
-        pad=12,
+        pad=10,
     )
     ax_b.legend(
         loc="upper right",
@@ -780,7 +764,7 @@ def plot_customer_personas_and_mutual_demand(
         frameon=True,
         facecolor="#1e1e2e",
         edgecolor="#45475a",
-        fontsize=7.9,
+        fontsize=7.5,
     )
 
     # ==========================================================================
@@ -836,7 +820,7 @@ def plot_customer_personas_and_mutual_demand(
                 f"{val:.1f}%",
                 ha="center",
                 va="bottom",
-                fontsize=7.7,
+                fontsize=7.3,
                 fontweight="bold",
                 color=col_hex,
             )
@@ -866,31 +850,31 @@ def plot_customer_personas_and_mutual_demand(
             badge_txt,
             ha="center",
             va="bottom",
-            fontsize=7.6,
+            fontsize=7.2,
             fontweight="bold",
             color=b_col,
-            linespacing=1.22,
-            bbox=dict(boxstyle="round,pad=0.28", facecolor="#1e1e2e", edgecolor=b_edge, linewidth=1.1, alpha=0.95),
+            linespacing=1.20,
+            bbox=dict(boxstyle="round,pad=0.26", facecolor="#1e1e2e", edgecolor=b_edge, linewidth=1.1, alpha=0.95),
         )
 
     ax_c.set_xticks(x_pos)
-    ax_c.set_xticklabels(seg_labels, fontsize=8.8, fontweight="bold", color="#cdd6f4")
+    ax_c.set_xticklabels(seg_labels, fontsize=8.3, fontweight="bold", color="#cdd6f4")
     ax_c.set_xlim(-0.56, len(segs) - 0.44)
-    ax_c.set_ylim(0, 74)
-    ax_c.set_ylabel("Segment Share of Club Total (%)", fontsize=10.0, color="#bac2de")
+    ax_c.set_ylim(0, 75)
+    ax_c.set_ylabel("Segment Share of Club Total (%)", fontsize=9.3, color="#bac2de")
     ax_c.set_title(
-        "Panel C: Customer, Visit & Revenue Share (%) + Marketing Cost per Visit Priority Justification",
-        fontsize=11.5,
+        "Customer, Visit & Revenue Share (%) + Marketing Cost per Visit Priority Justification",
+        fontsize=10.8,
         fontweight="bold",
         color="#cdd6f4",
-        pad=12,
+        pad=10,
     )
     ax_c.legend(
         loc="upper right",
         frameon=True,
         facecolor="#1e1e2e",
         edgecolor="#45475a",
-        fontsize=7.9,
+        fontsize=7.5,
     )
 
     out_path = output_dir / "02_customer_personas_and_mutual_demand.png"

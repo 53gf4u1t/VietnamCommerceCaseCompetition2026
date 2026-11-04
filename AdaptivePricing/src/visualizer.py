@@ -122,22 +122,14 @@ def plot_assumptions_distributions(
     Chart 1: 8-Panel (2x4) Overview of All Configured Probability Distributions.
     """
     fig, axes = plt.subplots(2, 4, figsize=(21, 9.8), dpi=220)
-    fig.subplots_adjust(hspace=0.38, wspace=0.26, top=0.88, bottom=0.08, left=0.05, right=0.98)
+    fig.subplots_adjust(hspace=0.35, wspace=0.26, top=0.915, bottom=0.08, left=0.05, right=0.98)
 
     fig.suptitle(
         "Stochastic Court Demand & Pricing Assumption Distributions",
         fontsize=15.0,
         fontweight="bold",
         color=PALETTE["navy"],
-        y=0.965,
-    )
-    fig.text(
-        0.5,
-        0.925,
-        "Empirical Histograms Overlaid with Configured Truncated Normal Density Functions Across Simulation Trajectories",
-        ha="center",
-        fontsize=10.2,
-        color=PALETTE["slate"],
+        y=0.962,
     )
 
     # 1. Monthly Booked Hours
@@ -146,7 +138,7 @@ def plot_assumptions_distributions(
         sim.monthly_booked_hours,
         cfg.baseline_pricing.target_monthly_booked_hours_mean,
         cfg.baseline_pricing.target_monthly_booked_hours_std,
-        "A. Monthly Booked Court-Hours",
+        "Monthly Booked Court-Hours",
         "Booked Court-Hours per 6-Court Unit (Scale x3.33 for 20 Courts)",
         PALETTE["ml_blue"],
         unit_suffix=" hrs",
@@ -159,7 +151,7 @@ def plot_assumptions_distributions(
         sim.monthly_wd_daytime_util * 100.0,
         cfg.weekday_daytime.mean * 100.0,
         cfg.weekday_daytime.std * 100.0,
-        "B. Weekday Daytime Utilization",
+        "Weekday Daytime Utilization",
         "Court Utilization (% of Active Capacity)",
         PALETTE["ml_teal"],
         unit_suffix="%",
@@ -172,7 +164,7 @@ def plot_assumptions_distributions(
         sim.monthly_wd_evening_util * 100.0,
         cfg.weekday_evening.mean * 100.0,
         cfg.weekday_evening.std * 100.0,
-        "C. Weekday Evening Utilization",
+        "Weekday Evening Utilization",
         "Court Utilization (% of Active Capacity)",
         PALETTE["orange"],
         unit_suffix="%",
@@ -185,7 +177,7 @@ def plot_assumptions_distributions(
         sim.monthly_weekend_util * 100.0,
         cfg.weekend.mean * 100.0,
         cfg.weekend.std * 100.0,
-        "D. Weekend Utilization",
+        "Weekend Utilization",
         "Court Utilization (% of Active Capacity)",
         PALETTE["purple"],
         unit_suffix="%",
@@ -209,7 +201,7 @@ def plot_assumptions_distributions(
         xg = np.linspace(sub_a.min() - 0.002, sub_a.max() + 0.002, 150)
         ax_a.plot(xg, norm.pdf(xg, loc=m_a, scale=s_a), color=r_col, linewidth=2.0, label=f"{r_lbl}: a ~ N({m_a:.3f}, {s_a:.3f})")
 
-    ax_a.set_title("E. Price Sensitivity Slopes by Regime", fontsize=10.0, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax_a.set_title("Price Sensitivity Slopes by Regime", fontsize=10.0, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax_a.set_xlabel("Price Slope a (Courts per k VND per 6-Court Unit)", fontsize=8.8, color=PALETTE["slate"])
     ax_a.set_ylabel("Density", fontsize=8.5, color=PALETTE["slate"])
     ax_a.grid(True)
@@ -221,7 +213,7 @@ def plot_assumptions_distributions(
         sim.sampled_daily_multipliers.reshape(-1),
         cfg.daily_random_multiplier.mean,
         cfg.daily_random_multiplier.std,
-        "F. Daily Demand Multiplier",
+        "Daily Demand Multiplier",
         "Daily Demand Factor m_d",
         PALETTE["emerald"],
         unit_suffix="x",
@@ -234,7 +226,7 @@ def plot_assumptions_distributions(
         sim.sampled_hourly_shocks.reshape(-1),
         cfg.hourly_random_shock.mean,
         cfg.hourly_random_shock.std,
-        "G. Hourly Demand Shock",
+        "Hourly Demand Shock",
         "Hourly Demand Shock s_{d,h}",
         PALETTE["amber"],
         unit_suffix="x",
@@ -255,7 +247,7 @@ def plot_assumptions_distributions(
             linewidth=0.7,
             label=f"{r_lbl}: b = {sub_b.mean():.2f} +/- {sub_b.std():.2f}",
         )
-    ax_b.set_title("H. Anchor-Constrained Intercepts by Regime", fontsize=10.0, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax_b.set_title("Anchor-Constrained Intercepts by Regime", fontsize=10.0, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax_b.set_xlabel("Intercept b = Q_0 - a * x_0 (per 6-Court Unit)", fontsize=8.8, color=PALETTE["slate"])
     ax_b.set_ylabel("Density", fontsize=8.5, color=PALETTE["slate"])
     ax_b.grid(True)
@@ -277,22 +269,14 @@ def plot_demand_curves_variations(
     with Dual Capacity Scaling (6 Courts in M1-M13 -> 20 Courts in M14-M60) and Implied Hourly Revenue Frontiers.
     """
     fig, axes = plt.subplots(2, 3, figsize=(20.5, 11.2), dpi=220)
-    fig.subplots_adjust(hspace=0.36, wspace=0.28, top=0.88, bottom=0.07, left=0.05, right=0.94)
+    fig.subplots_adjust(hspace=0.34, wspace=0.28, top=0.915, bottom=0.07, left=0.05, right=0.94)
 
     fig.suptitle(
-        "Regime Price-Demand Elasticity Curves & Implied Hourly Revenue Frontiers",
+        "Regime Price-Demand Elasticity Curves & Hourly Revenue Frontiers",
         fontsize=15.0,
         fontweight="bold",
         color=PALETTE["navy"],
-        y=0.965,
-    )
-    fig.text(
-        0.5,
-        0.925,
-        "Normalized to Active Court Utilization (Scales from 6 Courts in Months 1-13 to 20 Courts in Months 14-60)",
-        ha="center",
-        fontsize=10.2,
-        color=PALETTE["slate"],
+        y=0.962,
     )
 
     x_grid = np.linspace(75.0, 320.0, 240)
@@ -309,8 +293,8 @@ def plot_demand_curves_variations(
     regimes_meta = [
         {
             "id": 0,
-            "title_top": "A. Weekday Daytime Demand Elasticity",
-            "title_bot": "D. Weekday Daytime Revenue Frontier",
+            "title_top": "Weekday Daytime Demand Elasticity",
+            "title_bot": "Weekday Daytime Revenue Frontier",
             "x0": cfg.baseline_pricing.off_peak_price_kvnd,
             "u0": cfg.weekday_daytime.mean,
             "color": PALETTE["ml_teal"],
@@ -318,8 +302,8 @@ def plot_demand_curves_variations(
         },
         {
             "id": 1,
-            "title_top": "B. Weekday Evening Demand Elasticity",
-            "title_bot": "E. Weekday Evening Revenue Frontier",
+            "title_top": "Weekday Evening Demand Elasticity",
+            "title_bot": "Weekday Evening Revenue Frontier",
             "x0": cfg.baseline_pricing.peak_price_kvnd,
             "u0": cfg.weekday_evening.mean,
             "color": PALETTE["orange"],
@@ -327,8 +311,8 @@ def plot_demand_curves_variations(
         },
         {
             "id": 2,
-            "title_top": "C. Weekend Demand Elasticity",
-            "title_bot": "F. Weekend Revenue Frontier",
+            "title_top": "Weekend Demand Elasticity",
+            "title_bot": "Weekend Revenue Frontier",
             "x0": cfg.baseline_pricing.peak_price_kvnd,
             "u0": cfg.weekend.mean,
             "color": PALETTE["purple"],
@@ -532,7 +516,7 @@ def plot_daily_revenue_comparison(
     Chart 3: Daily Revenue Double-Bar Chart & Cumulative Monthly Trajectory with Dual 6-Court / 20-Court Scaling.
     """
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(18.5, 10.2), dpi=220, gridspec_kw={"height_ratios": [1.35, 1.0]})
-    fig.subplots_adjust(hspace=0.34, top=0.88, bottom=0.07, left=0.06, right=0.93)
+    fig.subplots_adjust(hspace=0.32, top=0.915, bottom=0.07, left=0.06, right=0.93)
 
     base_total_m = eval_res.mean_baseline_monthly_rev_kvnd / 1000.0
     ml_total_m = eval_res.mean_ml_monthly_rev_kvnd / 1000.0
@@ -540,19 +524,11 @@ def plot_daily_revenue_comparison(
     lift_pct = (lift_m / base_total_m) * 100.0
 
     fig.suptitle(
-        "Daily & Cumulative Monthly Court Hire Revenue: Case Baseline vs. ML Adaptive Pricing",
+        "Daily & Monthly Court Revenue: Case Baseline vs. ML Adaptive Pricing",
         fontsize=15.0,
         fontweight="bold",
         color=PALETTE["navy"],
         y=0.965,
-    )
-    fig.text(
-        0.5,
-        0.925,
-        "Evaluated on Out-of-Sample Held-Out Test Trajectories Across Active Court Capacity (6 Courts -> 20 Courts from Feb-28)",
-        ha="center",
-        fontsize=10.2,
-        color=PALETTE["slate"],
     )
 
     days = np.arange(1, cfg.simulation.days_per_month + 1)
@@ -618,7 +594,7 @@ def plot_daily_revenue_comparison(
     handles, labels = ax1.get_legend_handles_labels()
     ax1.legend(handles=handles + [weekend_patch], loc="upper left", fontsize=8.8, ncol=3, framealpha=0.94)
 
-    ax1.set_title("A. Daily Court Hire Revenue Comparison", fontsize=11.5, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax1.set_title("Daily Court Hire Revenue Comparison", fontsize=11.5, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax1.set_xticks(days)
     ax1.set_xticklabels(x_labels, fontsize=7.8)
     ax1.set_ylabel("Daily Revenue: 6-Court Phase (M VND)", fontsize=9.8)
@@ -652,7 +628,7 @@ def plot_daily_revenue_comparison(
         arrowprops=dict(arrowstyle="->", color=PALETTE["ml_blue"], lw=1.5),
     )
 
-    ax2.set_title("B. Cumulative Monthly Court Revenue Trajectory", fontsize=11.5, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax2.set_title("Cumulative Monthly Court Revenue Trajectory", fontsize=11.5, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax2.set_xticks(days)
     ax2.set_xticklabels([f"Day {d}" for d in days], fontsize=8.0)
     ax2.set_ylabel("Cumulative Revenue: 6-Court Phase (M VND)", fontsize=9.8)
@@ -683,22 +659,14 @@ def plot_monthly_calendar_heatmap(
     fig, (ax_top, ax_bot) = plt.subplots(
         2, 1, figsize=(18.5, 8.8), dpi=220, gridspec_kw={"height_ratios": [1.05, 1.25]}
     )
-    fig.subplots_adjust(hspace=0.38, top=0.86, bottom=0.09, left=0.08, right=0.90)
+    fig.subplots_adjust(hspace=0.34, top=0.905, bottom=0.08, left=0.08, right=0.90)
 
     fig.suptitle(
-        "Consolidated Hourly Court Pricing Schedule & Diurnal Utilization Profile",
+        "Hourly Court Pricing Schedule & Diurnal Utilization Profile",
         fontsize=15.0,
         fontweight="bold",
         color=PALETTE["navy"],
         y=0.96,
-    )
-    fig.text(
-        0.5,
-        0.915,
-        "Recommended Hourly Price Schedule (Weekday vs. Weekend Day) & Resulting Court Utilization Lift Across Active Capacity",
-        ha="center",
-        fontsize=10.2,
-        color=PALETTE["slate"],
     )
 
     hours = cfg.simulation.hours_array
@@ -783,14 +751,14 @@ def plot_monthly_calendar_heatmap(
     ax_top.grid(which="major", visible=False)
     ax_top.tick_params(which="minor", bottom=False, left=False)
     ax_top.set_title(
-        "A. Hourly Court Rental Price Schedule: Weekday vs. Weekend Day (k VND / Court-Hour)",
+        "Hourly Court Rental Price Schedule: Weekday vs. Weekend Day (k VND / Court-Hour)",
         fontsize=11.2,
         fontweight="bold",
         color=PALETTE["navy"],
         pad=10,
     )
 
-    cbar_ax = fig.add_axes([0.915, 0.52, 0.015, 0.34])
+    cbar_ax = fig.add_axes([0.915, 0.535, 0.015, 0.37])
     cbar = fig.colorbar(im, cax=cbar_ax)
     cbar.set_label("Price (k VND / Hr)", fontsize=8.8, fontweight="bold", color=PALETTE["navy"])
     cbar.ax.tick_params(labelsize=8.0)
@@ -864,7 +832,7 @@ def plot_monthly_calendar_heatmap(
     )
 
     ax_bot.set_title(
-        "B. Hourly Court Utilization Comparison Across Operating Hours (% of Active Capacity)",
+        "Hourly Court Utilization Comparison Across Operating Hours (% of Active Capacity)",
         fontsize=11.2,
         fontweight="bold",
         color=PALETTE["navy"],
@@ -898,7 +866,7 @@ def plot_occupancy_and_stress_test(
     Chart 5: Regime Utilization Shift & Downside Demand Stress Test.
     """
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18.0, 6.8), dpi=220)
-    fig.subplots_adjust(wspace=0.28, top=0.83, bottom=0.12, left=0.06, right=0.94)
+    fig.subplots_adjust(wspace=0.28, top=0.895, bottom=0.10, left=0.06, right=0.94)
 
     fig.suptitle(
         "Regime Court Utilization Lift & Downside Demand Stress Test",
@@ -906,14 +874,6 @@ def plot_occupancy_and_stress_test(
         fontweight="bold",
         color=PALETTE["navy"],
         y=0.96,
-    )
-    fig.text(
-        0.5,
-        0.90,
-        "Evaluating Off-Peak Daytime Court Filling and Revenue Resilience Under Lower Demand Conditions",
-        ha="center",
-        fontsize=10.0,
-        color=PALETTE["slate"],
     )
 
     # Panel A: Utilization by Regime
@@ -959,7 +919,7 @@ def plot_occupancy_and_stress_test(
         arrowprops=dict(arrowstyle="->", color=PALETTE["ml_teal"], lw=1.3),
     )
 
-    ax1.set_title("A. Court Utilization Rate by Operating Regime", fontsize=11.2, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax1.set_title("Court Utilization Rate by Operating Regime", fontsize=11.2, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax1.set_xticks(x)
     ax1.set_xticklabels(regimes, fontsize=8.8)
     ax1.set_ylabel("Court Utilization (% of Active Capacity)", fontsize=9.5)
@@ -994,7 +954,7 @@ def plot_occupancy_and_stress_test(
         ax2.text(x2[i] - 0.21, h_b + 8, f"{h_b:.1f}M\n(20 Courts: {h_b*20/6:,.0f}M)", ha="center", va="bottom", fontsize=7.6, color=PALETTE["slate"], fontweight="bold")
         ax2.text(x2[i] + 0.21, h_m + 8, f"{h_m:.1f}M (+{pct:.1f}%)\n(20 Courts: {h_m*20/6:,.0f}M)", ha="center", va="bottom", fontsize=7.6, color=PALETTE["ml_blue"], fontweight="bold")
 
-    ax2.set_title("B. Monthly Court Revenue Under Normal & Downside Demand", fontsize=11.2, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax2.set_title("Monthly Court Revenue Under Normal & Downside Demand", fontsize=11.2, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax2.set_xticks(x2)
     ax2.set_xticklabels(scenarios, fontsize=9.2)
     ax2.set_ylabel("Monthly Court Revenue: 6-Court Phase (M VND)", fontsize=9.5)
@@ -1022,22 +982,14 @@ def plot_ml_model_diagnostics(
     """
     m = eval_res.ml_metrics
     fig, axes = plt.subplots(2, 2, figsize=(18.5, 11.2), dpi=220)
-    fig.subplots_adjust(hspace=0.35, wspace=0.25, top=0.88, bottom=0.07, left=0.06, right=0.97)
+    fig.subplots_adjust(hspace=0.32, wspace=0.25, top=0.915, bottom=0.07, left=0.06, right=0.97)
 
     fig.suptitle(
-        "Adaptive Pricing Machine Learning Model Validation & Diagnostics",
+        "Adaptive Pricing ML Model Validation & Diagnostics",
         fontsize=14.8,
         fontweight="bold",
         color=PALETTE["navy"],
         y=0.965,
-    )
-    fig.text(
-        0.5,
-        0.922,
-        "Out-of-Sample Generalization, Prediction Residuals, Permutation Feature Importance & Convergence Profile",
-        ha="center",
-        fontsize=10.0,
-        color=PALETTE["slate"],
     )
 
     # Panel A: Out-of-Sample Parity Plot
@@ -1082,7 +1034,7 @@ def plot_ml_model_diagnostics(
         bbox=dict(boxstyle="round,pad=0.4", facecolor="#1e1e2e", edgecolor=PALETTE["ml_blue"], lw=1.2, alpha=0.95),
     )
 
-    ax_a.set_title("A. Out-of-Sample Parity: Predicted vs. Optimal Price", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax_a.set_title("Out-of-Sample Parity: Predicted vs. Optimal Price", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax_a.set_xlabel("True Optimal Counterfactual Price x* (Thousand VND)", fontsize=9.2)
     ax_a.set_ylabel("ML Predicted Adaptive Price (Thousand VND)", fontsize=9.2)
     ax_a.set_xlim(80, 308)
@@ -1122,7 +1074,7 @@ def plot_ml_model_diagnostics(
         bbox=dict(boxstyle="round,pad=0.4", facecolor="#1e1e2e", edgecolor=PALETTE["ml_teal"], lw=1.2, alpha=0.95),
     )
 
-    ax_b.set_title("B. Out-of-Sample Prediction Residual Distribution", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax_b.set_title("Out-of-Sample Prediction Residual Distribution", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax_b.set_xlabel("Prediction Error (Thousand VND)", fontsize=9.2)
     ax_b.set_ylabel("Density", fontsize=9.2)
     ax_b.set_xlim(-32, 46)
@@ -1159,7 +1111,7 @@ def plot_ml_model_diagnostics(
     ax_c.set_yticks(y_pos)
     ax_c.set_yticklabels(sorted_names, fontsize=8.5, fontweight="bold")
     ax_c.set_xlim(0, max(sorted_means + sorted_stds) * 1.18)
-    ax_c.set_title("C. Permutation Feature Importance on Test Set", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax_c.set_title("Permutation Feature Importance on Test Set", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax_c.set_xlabel("Mean Drop in Test R^2 When Feature is Randomly Permuted", fontsize=9.2)
     ax_c.grid(True, axis="x")
 
@@ -1193,7 +1145,7 @@ def plot_ml_model_diagnostics(
         bbox=dict(boxstyle="round,pad=0.4", facecolor="#1e1e2e", edgecolor=PALETTE["slate"], lw=1.0, alpha=0.95),
     )
 
-    ax_d.set_title("D. Boosting Learning Curve & Generalization Gap", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
+    ax_d.set_title("Boosting Learning Curve & Generalization Gap", fontsize=11.0, fontweight="bold", color=PALETTE["navy"], pad=8)
     ax_d.set_xlabel("Boosting Iterations (Number of Trees)", fontsize=9.2)
     ax_d.set_ylabel("Root Mean Squared Error (Thousand VND)", fontsize=9.2)
     ax_d.grid(True)
