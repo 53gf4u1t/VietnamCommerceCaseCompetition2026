@@ -448,6 +448,8 @@ def plot_customer_personas_and_mutual_demand(
     # PANEL A (Top Half, Spans Both Columns): Compact High-Readability Grid Table
     # ==========================================================================
     ax_tbl = fig.add_subplot(gs[0, :])
+    tbl_pos = ax_tbl.get_position()
+    ax_tbl.set_position([0.008, tbl_pos.y0, 0.985 - 0.008, tbl_pos.height])
     ax_tbl.set_facecolor("#1e1e2e")
     ax_tbl.axis("off")
 
@@ -459,18 +461,6 @@ def plot_customer_personas_and_mutual_demand(
     ordered_personas = sorted(cfg.personas, key=lambda p: p.priority_rank)
 
     table_rows: list[tuple[str, list[str]]] = [
-        (
-            "banner",
-            [
-                "CUSTOMER SEGMENT PROFILES, RETENTION FRICTIONS & DERIVED MUTUAL DEMAND (ORDERED BY STRATEGIC PRIORITY)",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-            ],
-        ),
         (
             "header",
             [
@@ -548,7 +538,7 @@ def plot_customer_personas_and_mutual_demand(
         )
     )
 
-    row_weights = [0.38, 0.56, 1.02, 1.02, 1.02, 1.02, 0.88]
+    row_weights = [0.58, 1.04, 1.04, 1.04, 1.04, 0.90]
     tot_weight = sum(row_weights)
     curr_y = 1.0
 

@@ -329,20 +329,118 @@ def apply_latte_theme_to_figure(fig: mfigure.Figure) -> None:
 
 
 def _themed_savefig(self: mfigure.Figure, *args, **kwargs):
-    """Wrapper around `Figure.savefig` that applies the active Catppuccin theme (`Mocha` or `Latte`) at high poster DPI (>= 320)."""
+    """
+    Wrapper around `Figure.savefig` that applies the active Catppuccin theme (`Mocha` or `Latte`),
+    renders the content area tightly, and attaches a standardized, pixel-identical Header Section
+    across the top of every saved image.
+    """
+    import io
+    import matplotlib.font_manager as fm
+    from PIL import Image, ImageDraw, ImageFont
+
     req_dpi = kwargs.get("dpi")
     base_dpi = float(req_dpi) if isinstance(req_dpi, (int, float)) else float(self.dpi or 320.0)
-    kwargs["dpi"] = max(base_dpi, 320.0)
+    render_dpi = max(base_dpi, 320.0)
+
+    # 1. Extract main chart title from `fig._suptitle` or top-center figure text and remove from content render
+    header_title = ""
+    if getattr(self, "_suptitle", None) is not None:
+        header_title = self._suptitle.get_text().strip()
+        if self._suptitle in self.texts:
+            self.texts.remove(self._suptitle)
+        self._suptitle = None
+
+    remaining_texts = []
+    for txt in list(self.texts):
+        pos = txt.get_position()
+        if len(pos) >= 2 and float(pos[1]) >= 0.935 and txt.get_ha() == "center":
+            if not header_title:
+                header_title = txt.get_text().strip()
+        else:
+            remaining_texts.append(txt)
+    self.texts = remaining_texts
+
+    header_title = " ".join(header_title.split())
+
+    # 2. Apply active Catppuccin theme (`Latte` or `Mocha`)
     active = get_theme()
     if active == "Latte":
         apply_latte_theme_to_figure(self)
-        if "facecolor" in kwargs:
-            kwargs["facecolor"] = _map_color(kwargs["facecolor"], FACE_MOCHA_TO_LATTE, preserve_alpha=False)
-        else:
-            kwargs["facecolor"] = "#eff1f5"
-        if "edgecolor" in kwargs:
-            kwargs["edgecolor"] = _map_color(kwargs["edgecolor"], FACE_MOCHA_TO_LATTE, preserve_alpha=False)
-    return _ORIG_SAVEFIG(self, *args, **kwargs)
+        bg_hex = "#eff1f5"
+        hdr_bg_rgb = (230, 233, 239)      # #e6e9ef (Latte Mantle)
+        hdr_border_rgb = (188, 192, 204)  # #bcc0cc (Latte Surface1)
+        hdr_text_rgb = (76, 79, 105)      # #4c4f69 (Latte Text)
+        canvas_bg_rgb = (239, 241, 245)   # #eff1f5 (Latte Base)
+    else:
+        bg_hex = "#1e1e2e"
+        hdr_bg_rgb = (24, 24, 37)         # #181825 (Mocha Mantle)
+        hdr_border_rgb = (69, 71, 90)     # #45475a (Mocha Surface1)
+        hdr_text_rgb = (205, 214, 244)    # #cdd6f4 (Mocha Text)
+        canvas_bg_rgb = (30, 30, 46)      # #1e1e2e (Mocha Base)
+
+    # 3. Render the content-only figure into an in-memory PNG buffer
+    buf = io.BytesIO()
+    save_kwargs = dict(kwargs)
+    save_kwargs["dpi"] = render_dpi
+    save_kwargs["format"] = "png"
+    save_kwargs["bbox_inches"] = "tight"
+    save_kwargs["pad_inches"] = 0.03
+    save_kwargs["facecolor"] = bg_hex
+    save_kwargs["edgecolor"] = bg_hex
+    _ORIG_SAVEFIG(self, buf, **save_kwargs)
+    buf.seek(0)
+
+    content_img = Image.open(buf).convert("RGB")
+    arr = np.asarray(content_img, dtype=np.int16)
+    bg_arr = np.array(canvas_bg_rgb, dtype=np.int16)
+    mask = np.any(np.abs(arr - bg_arr) > 2, axis=2)
+    if np.any(mask):
+        ys, xs = np.where(mask)
+        content_img = content_img.crop((int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1))
+
+    # 4. Normalize content width and compose with the universal Header Section
+    TARGET_W = 6400
+    PAD_X = 64
+    HEADER_H = 188 if header_title else 0
+    BORDER_H = 4 if header_title else 0
+    PAD_TOP = 38 if header_title else 48
+    PAD_BOTTOM = 48
+
+    content_target_w = TARGET_W - 2 * PAD_X
+    scale = content_target_w / float(max(1, content_img.width))
+    content_target_h = max(1, int(round(content_img.height * scale)))
+    content_resized = content_img.resize((content_target_w, content_target_h), Image.Resampling.LANCZOS)
+
+    total_h = HEADER_H + PAD_TOP + content_target_h + PAD_BOTTOM
+    final_img = Image.new("RGB", (TARGET_W, total_h), canvas_bg_rgb)
+    draw = ImageDraw.Draw(final_img)
+
+    if header_title:
+        # Header section background and bottom divider rule
+        draw.rectangle([0, 0, TARGET_W, HEADER_H - BORDER_H], fill=hdr_bg_rgb)
+        draw.rectangle([0, HEADER_H - BORDER_H, TARGET_W, HEADER_H], fill=hdr_border_rgb)
+
+        ttf_path = fm.findfont(fm.FontProperties(family="sans-serif", weight="bold"))
+        font_sz = 82
+        font = ImageFont.truetype(ttf_path, size=font_sz)
+        bbox = draw.textbbox((TARGET_W // 2, (HEADER_H - BORDER_H) // 2), header_title, font=font, anchor="mm")
+        while (bbox[2] - bbox[0]) > (TARGET_W - 2 * PAD_X) and font_sz > 48:
+            font_sz -= 2
+            font = ImageFont.truetype(ttf_path, size=font_sz)
+            bbox = draw.textbbox((TARGET_W // 2, (HEADER_H - BORDER_H) // 2), header_title, font=font, anchor="mm")
+
+        draw.text(
+            (TARGET_W // 2, (HEADER_H - BORDER_H) // 2),
+            header_title,
+            font=font,
+            fill=hdr_text_rgb,
+            anchor="mm",
+        )
+
+    final_img.paste(content_resized, (PAD_X, HEADER_H + PAD_TOP))
+    out_target = args[0] if args else kwargs.get("fname")
+    final_img.save(out_target, format="PNG", dpi=(320, 320))
+    return None
 
 
 def install_theme_hook() -> None:

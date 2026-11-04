@@ -78,6 +78,7 @@ def _render_pure_table(
     row_height_in: float,
     out_path: Path,
     font_size: float = 8.2,
+    title: str = "",
 ) -> Path:
     """
     Render a hierarchical financial table with variable row heights, visual gaps
@@ -89,6 +90,8 @@ def _render_pure_table(
     fig_height = max(2.0, total_weight * row_height_in)
     fig = plt.figure(figsize=(fig_width, fig_height), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
+    if title:
+        fig.suptitle(title, fontsize=15.0, fontweight="bold", color="#cdd6f4")
     ax = fig.add_axes([0.0, 0.0, 1.0, 1.0])
     ax.set_facecolor("#1e1e2e")
 
@@ -373,10 +376,6 @@ def plot_drivers_and_cost_breakdown_sheet(
     empty_10 = [""] * 10
 
     rows: list[tuple[str, list[str]]] = [
-        ("sec_hdr", [
-            "INCOME STATEMENT STRUCTURE: REVENUE, COGS, FACILITY OPEX, SG&A, D&A & TAXES (M VND)",
-            "", "", "", "", "", "", "", "", "",
-        ]),
         ("col_hdr", [
             "Category",
             "Line Item",
@@ -479,10 +478,11 @@ def plot_drivers_and_cost_breakdown_sheet(
         col_widths=col_widths,
         align_fn=_align_s1,
         style_fn=_style_s1,
-        fig_width=21.0,
-        row_height_in=0.33,
+        fig_width=22.4,
+        row_height_in=0.275,
         out_path=output_dir / "01_revenue_cogs_opex_sga_sheet.png",
         font_size=7.9,
+        title="Income Statement Structure: Revenue, COGS, OpEx, SG&A & Taxes",
     )
 
 
@@ -575,6 +575,7 @@ def plot_fs_month_projection_sheet(
         row_height_in=0.28,
         out_path=output_dir / "02_fs_month_60m_projection_sheet.png",
         font_size=7.3,
+        title="Monthly 3-Statement Financial Projections (Year 1 + Y2 & Y5 Snapshots)",
     )
 
 
@@ -664,6 +665,7 @@ def plot_fs_annual_and_structure_dashboard(
         row_height_in=0.29,
         out_path=output_dir / "03_fs_annual_5y_projection_sheet.png",
         font_size=7.8,
+        title="Annual 5-Year 3-Statement Financial Projections (FY 2027 - FY 2031)",
     )
 
 
@@ -683,9 +685,9 @@ def plot_revenue_costs_profit_comparison_charts(
       - Panel A: 5-Year Annual Comparison (FY 2027 to FY 2031)
       - Panel B: Monthly Trajectory Across Year 1 & Year 2 (Months 1-24: Jan-27 to Dec-28)
     """
-    fig, (ax_ann, ax_mon) = plt.subplots(2, 1, figsize=(19.4, 14.0), dpi=240)
+    fig, (ax_ann, ax_mon) = plt.subplots(2, 1, figsize=(21.5, 11.2), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(hspace=0.30, top=0.92, bottom=0.06)
+    plt.subplots_adjust(left=0.055, right=0.985, hspace=0.28, top=0.92, bottom=0.06)
     fig.suptitle(
         "Annual & Monthly Revenue, Cost Structure & Profit Comparison",
         fontsize=14.5,
@@ -1126,9 +1128,9 @@ def plot_membership_and_monte_carlo_distributions(
         vs. -30% Lower Demand Stress Test vs. Investor Minh Tran's 3,500M VND Year 3 Target).
     """
     mc = res.mc
-    fig, ((ax_a, ax_b), (ax_c, ax_d)) = plt.subplots(2, 2, figsize=(20.0, 12.6), dpi=240)
+    fig, ((ax_a, ax_b), (ax_c, ax_d)) = plt.subplots(2, 2, figsize=(21.2, 11.2), dpi=240)
     fig.patch.set_facecolor("#1e1e2e")
-    plt.subplots_adjust(wspace=0.20, hspace=0.28, top=0.915, bottom=0.07)
+    plt.subplots_adjust(left=0.055, right=0.985, wspace=0.18, hspace=0.28, top=0.915, bottom=0.07)
 
     x_m = np.arange(1, 61)
     tick_idx = [0, 5, 11, 23, 35, 47, 59]
@@ -1505,9 +1507,9 @@ def plot_monthly_cash_balance_and_externals(
     tick_idx = list(range(0, 60, 4)) + [59]
     tick_lbls = [res.month_labels[i] for i in tick_idx]
 
-    fig, axes = plt.subplots(3, 1, figsize=(18.5, 13.5), dpi=220, sharex=True)
+    fig, axes = plt.subplots(3, 1, figsize=(21.2, 11.6), dpi=220, sharex=True)
     fig.patch.set_facecolor("#1e1e2e")
-    fig.subplots_adjust(hspace=0.26, top=0.92, bottom=0.06)
+    fig.subplots_adjust(left=0.055, right=0.985, hspace=0.25, top=0.92, bottom=0.06)
 
     # Panel A: 60-Month Ending Cash Balance Trajectory
     ax1 = axes[0]
