@@ -501,7 +501,7 @@ def plot_fs_month_projection_sheet(
     period_hdrs = ["Unit"] + y1_months + ["Dec-28 (End Y2)", "Dec-31 (End Y5)"]
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["FINANCIAL STATEMENTS - MONTHLY (YEAR 1 + END Y2 & END Y5 SNAPSHOTS)"] + period_hdrs),
+        ("col_hdr", ["Line Item / Financial Metric"] + period_hdrs),
     ]
 
     for _, df_row in res.fs_month_df.iterrows():
@@ -599,7 +599,7 @@ def plot_fs_annual_and_structure_dashboard(
     ]
 
     rows: list[tuple[str, list[str]]] = [
-        ("col_hdr", ["FINANCIAL STATEMENTS - ANNUAL (FY 2027 TO FY 2031)"] + period_hdrs),
+        ("col_hdr", ["Line Item / Financial Metric"] + period_hdrs),
     ]
 
     for _, df_row in res.fs_annual_df.iterrows():
@@ -2148,12 +2148,11 @@ def plot_executive_solution_master_roadmap(
         zorder=9,
     )
 
-    ax.set_title(
+    fig.suptitle(
         "Solution Implementation Schedule",
-        fontsize=14.0,
+        fontsize=15.0,
         fontweight="bold",
         color="#cdd6f4",
-        pad=14,
     )
     ax.axis("off")
 

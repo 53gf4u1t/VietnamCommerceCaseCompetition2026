@@ -327,31 +327,11 @@ def plot_venue_scaling_gantt_chart(
         zorder=9,
     )
 
-    legend_handles = [
-        mpatches.Patch(facecolor="#89b4fa", edgecolor="#11111b", label="Stage 1: Handover, Acoustic Design & PCCC Permits (455.0M / 6.5%)"),
-        mpatches.Patch(facecolor="#cba6f7", edgecolor="#11111b", label="Stage 2: Earthworks, 14-Court Slab Pour & 28-Day Cure (2,170.0M / 31.0%)"),
-        mpatches.Patch(facecolor="#a6e3a1", edgecolor="#11111b", hatch="///", label="Stage 3: Canopy Roof, 3-Phase MEP, LED, Cafe & Coaching (2,310.0M / 33.0%)"),
-        mpatches.Patch(facecolor="#fab387", edgecolor="#11111b", label="Stage 4: Cushioned Acrylic Surfacing & STC-32 Acoustics (1,505.0M / 21.5%)"),
-        mpatches.Patch(facecolor="#f38ba8", edgecolor="#11111b", label="Stage 5: PCCC Final Audit, POS Integration & Launch (560.0M / 8.0%)"),
-        mpatches.Patch(facecolor="#94e2d5", edgecolor="#11111b", label="Stage 6: 6-to-9 Month Capacity Fill-Up Ramp (Feb 2028 - Sep 2028)"),
-    ]
-    ax.legend(
-        handles=legend_handles,
-        loc="lower left",
-        bbox_to_anchor=(0.0, -0.048),
-        ncol=3,
-        fontsize=7.8,
-        frameon=True,
-        facecolor="#181825",
-        edgecolor="#45475a",
-    )
-
-    ax.set_title(
+    fig.suptitle(
         "Second Club Construction & Fit-Out Schedule",
-        fontsize=14.0,
+        fontsize=15.0,
         fontweight="bold",
         color="#cdd6f4",
-        pad=14,
     )
     ax.axis("off")
 

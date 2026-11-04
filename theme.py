@@ -360,6 +360,12 @@ def _themed_savefig(self: mfigure.Figure, *args, **kwargs):
             remaining_texts.append(txt)
     self.texts = remaining_texts
 
+    if not header_title and len(self.axes) == 1:
+        ax0_title = self.axes[0].get_title().strip()
+        if ax0_title:
+            header_title = ax0_title
+            self.axes[0].set_title("")
+
     header_title = " ".join(header_title.split())
 
     # 2. Apply active Catppuccin theme (`Latte` or `Mocha`)

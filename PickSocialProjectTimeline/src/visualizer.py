@@ -346,33 +346,11 @@ def plot_master_gantt_chart(
         zorder=9,
     )
 
-    # Legend at bottom
-    legend_handles = [
-        mpatches.Patch(facecolor="#89b4fa", edgecolor="#11111b", label="Stage 1: Planning, Architecture & Specs (112.0M Base / 130.5M Buffer)"),
-        mpatches.Patch(facecolor="#cba6f7", edgecolor="#11111b", label="Stage 2: Infra, DevOps & Auth (82.8M Base / 95.2M Buffer)"),
-        mpatches.Patch(facecolor="#a6e3a1", edgecolor="#11111b", label="Stage 3: Core Dev & Simultaneous QA (362.8M Base / 440.0M Buffer)"),
-        mpatches.Patch(facecolor="#94e2d5", edgecolor="#11111b", hatch="///", label="Simultaneous QA / Continuous Testing Track"),
-        mpatches.Patch(facecolor="#fab387", edgecolor="#11111b", label="Stage 4: Final E2E, Load Test & UAT (118.6M Base / 144.1M Buffer)"),
-        mpatches.Patch(facecolor="#f38ba8", edgecolor="#11111b", label="Stage 5: Legacy Migration & Cutover (97.0M Base / 116.3M Buffer)"),
-        mpatches.Patch(facecolor="#74c7ec", edgecolor="#11111b", label="Stage 6: Hypercare, Feedback & Continuous Ops (138.0M Base / 162.9M Buffer)"),
-    ]
-    ax.legend(
-        handles=legend_handles,
-        loc="lower left",
-        bbox_to_anchor=(0.0, -0.045),
-        ncol=4,
-        fontsize=7.7,
-        frameon=True,
-        facecolor="#181825",
-        edgecolor="#45475a",
-    )
-
-    ax.set_title(
+    fig.suptitle(
         "PICK! Social Platform Engineering Schedule",
-        fontsize=14.0,
+        fontsize=15.0,
         fontweight="bold",
         color="#cdd6f4",
-        pad=14,
     )
     ax.axis("off")
 
